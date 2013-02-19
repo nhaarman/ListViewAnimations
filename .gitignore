@@ -1,0 +1,75 @@
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+assets/
+
+.settings
+eclipsebin
+
+bin
+gen
+build
+out
+lib
+local.properties
+
+target
+pom.xml.*
+release.properties
+
+.idea
+*.iml
+classes
+
+obj
+
+.DS_Store
+
+#ignore thumbnails created by windows
+Thumbs.db
+#Ignore files build by Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+example/.classpath
+example/.project
+example/proguard-project.txt
+*/.classpath
+*.project
+*proguard-project.txt
