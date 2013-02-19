@@ -30,6 +30,7 @@ import android.widget.ListView;
 public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
 	private Context mContext;
+	private Handler mHandler;
 
 	private ListView mListView;
 
@@ -45,6 +46,7 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	public AnimationAdapter(Context context, ArrayList<T> items) {
 		super(items);
 		mContext = context;
+		mHandler = new Handler();
 
 		mPreviousLastVisiblePosition = -1;
 		mAnimationStartMillis = -1;
@@ -82,7 +84,7 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 		animation.setStartTime(mAnimationStartMillis);
 		animation.setStartOffset(delayMillis);
 
-		new Handler().postDelayed(new Runnable() {
+		mHandler.postDelayed(new Runnable() {
 
 			@Override
 			public void run() {
