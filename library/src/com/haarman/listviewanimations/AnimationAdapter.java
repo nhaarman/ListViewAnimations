@@ -84,20 +84,7 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 		animation.setStartTime(mAnimationStartMillis);
 		animation.setStartOffset(delayMillis);
 
-		mHandler.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				mDoneAnimatingViewsSinceAnimationStart++;
-
-				if (mAnimatingViewsSinceAnimationStart == mDoneAnimatingViewsSinceAnimationStart) {
-					mAnimatingViewsSinceAnimationStart = 0;
-					mDoneAnimatingViewsSinceAnimationStart = 0;
-					mAnimationStartMillis = -1;
-					mPreviousLastVisiblePosition = mListView.getLastVisiblePosition();
-				}
-			}
-		}, delayMillis - AnimationUtils.currentAnimationTimeMillis() + mAnimationStartMillis + animation.getDuration());
+		mHandler.postDelayed(mEndAnimationRunnable, delayMillis - AnimationUtils.currentAnimationTimeMillis() + mAnimationStartMillis + animation.getDuration());
 
 		view.setAnimation(animation);
 		mAnimatingViewsSinceAnimationStart++;
@@ -116,5 +103,19 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	protected abstract int getRowInAnimationResId();
 
 	protected abstract long getAnimationDelayMillis();
+
+	private Runnable mEndAnimationRunnable = new Runnable() {
+		@Override
+		public void run() {
+			mDoneAnimatingViewsSinceAnimationStart++;
+
+			if (mAnimatingViewsSinceAnimationStart == mDoneAnimatingViewsSinceAnimationStart) {
+				mAnimatingViewsSinceAnimationStart = 0;
+				mDoneAnimatingViewsSinceAnimationStart = 0;
+				mAnimationStartMillis = -1;
+				mPreviousLastVisiblePosition = mListView.getLastVisiblePosition();
+			}
+		}
+	};
 
 }
