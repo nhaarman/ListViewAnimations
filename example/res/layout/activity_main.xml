@@ -27,4 +27,11 @@
         android:onClick="onLeftInClicked"
         android:text="@string/leftin" />
 
+    <Button
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:onClick="onGoogleCardsClicked"
+        android:text="@string/googlecards" />
+
 </LinearLayout>

@@ -4,5 +4,6 @@
     <string name="bottomin">BottomIn</string>
     <string name="rightin">RightIn</string>
     <string name="leftin">LeftIn</string>
+    <string name="googlecards">Google Cards</string>
 
 </resources>

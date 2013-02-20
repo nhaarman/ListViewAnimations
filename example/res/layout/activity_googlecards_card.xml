@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_background_white"
+    android:orientation="vertical"
+    android:padding="16dp" >
+
+    <TextView
+        android:id="@+id/activity_googlecards_card_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/activity_googlecards_card_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop" />
+
+</LinearLayout>
