@@ -56,7 +56,11 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
 	public void setListView(ListView listView) {
 		mListView = listView;
-		mListView.setDivider(null);
+		if (mListView.getDivider() != null) {
+			int dividerHeight = mListView.getDividerHeight();
+			mListView.setDivider(null);
+			mListView.setDividerHeight(dividerHeight);
+		}
 	}
 
 	@Override
