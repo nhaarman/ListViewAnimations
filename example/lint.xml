@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="IconLocation" severity="ignore" />
+    <issue id="Overdraw" severity="ignore" />
+    <issue id="SelectableText" severity="ignore" />
+</lint>
