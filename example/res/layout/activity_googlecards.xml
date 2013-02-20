@@ -7,4 +7,4 @@
     android:clipToPadding="false"
     android:dividerHeight="16dp"
     android:padding="16dp"
-    android:scrollbarStyle="outsideInset" />
+    android:scrollbarStyle="outsideOverlay" />
