@@ -25,8 +25,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.PropertyValuesHolder;
 
 public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
@@ -83,25 +81,23 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
 		if (position > mLastAnimatedPosition) {
-			animateView(view, parent);
+			animateView(parent, view);
 			mLastAnimatedPosition = position;
 		}
 	}
 
-	private void animateView(final View view, ViewGroup parent) {
+	private void animateView(ViewGroup parent, View view) {
 		if (mAnimationStartMillis == -1) {
 			mAnimationStartMillis = System.currentTimeMillis();
 		}
 
 		view.setVisibility(View.INVISIBLE);
-		PropertyValuesHolder translatePropertyValuesHolder = getTranslatePropertyValuesHolder(parent);
-		PropertyValuesHolder alphaPropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0, 1);
-		ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(view, translatePropertyValuesHolder, alphaPropertyValuesHolder);
-		objectAnimator.setStartDelay(calculateAnimationDelay());
-		objectAnimator.addListener(new AnimatorListener(view));
-		objectAnimator.start();
+		Animator animator = getAnimator(parent, view);
+		animator.setStartDelay(calculateAnimationDelay());
+		animator.addListener(new AnimatorListener(view));
+		animator.start();
 
-		mAnimators.put((Integer) view.getTag(), objectAnimator);
+		mAnimators.put((Integer) view.getTag(), animator);
 	}
 
 	private long calculateAnimationDelay() {
@@ -154,13 +150,14 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	protected abstract long getAnimationDelayMillis();
 
 	/**
-	 * Get the PropertyValuesHolder which contains translate properties to apply
-	 * to rows.
+	 * Get the Animator to apply to the rows.
 	 * 
 	 * @param parent
-	 *            the ViewGroup which is the parent of the row.
+	 *            The parent of the view
+	 * @param view
+	 *            The view as retrieved by getView()
 	 */
-	protected abstract PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent);
+	protected abstract Animator getAnimator(ViewGroup parent, View view);
 
 	private class AnimatorListener implements com.nineoldandroids.animation.Animator.AnimatorListener {
 
