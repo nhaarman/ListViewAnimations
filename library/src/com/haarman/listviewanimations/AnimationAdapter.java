@@ -30,14 +30,15 @@ import com.nineoldandroids.animation.PropertyValuesHolder;
 
 public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
+	private static final long INITIALDELAYMILLIS = 150;
+
 	private Context mContext;
 
 	private ListView mListView;
 
 	private SparseArray<Animator> mAnimators;
-	private int mPreviousLastVisiblePosition;
 	private long mAnimationStartMillis;
-	private int mAnimatingViewsSinceAnimationStart;
+	private int mLastAnimatedPosition;
 
 	public AnimationAdapter(Context context) {
 		this(context, null);
@@ -48,9 +49,8 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 		mContext = context;
 		mAnimators = new SparseArray<Animator>();
 
-		mPreviousLastVisiblePosition = -1;
 		mAnimationStartMillis = -1;
-		mAnimatingViewsSinceAnimationStart = 0;
+		mLastAnimatedPosition = -1;
 	}
 
 	public void setListView(ListView listView) {
@@ -82,47 +82,111 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
-		if (position > mPreviousLastVisiblePosition && position >= mListView.getFirstVisiblePosition()) {
+		if (position > mLastAnimatedPosition) {
 			animateView(view, parent);
+			mLastAnimatedPosition = position;
 		}
 	}
 
-	private void animateView(View view, ViewGroup parent) {
+	private void animateView(final View view, ViewGroup parent) {
 		if (mAnimationStartMillis == -1) {
 			mAnimationStartMillis = System.currentTimeMillis();
 		}
 
-		view.setAlpha(0);
-
+		view.setVisibility(View.INVISIBLE);
 		PropertyValuesHolder translatePropertyValuesHolder = getTranslatePropertyValuesHolder(parent);
 		PropertyValuesHolder alphaPropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0, 1);
 		ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(view, translatePropertyValuesHolder, alphaPropertyValuesHolder);
 		objectAnimator.setStartDelay(calculateAnimationDelay());
+		objectAnimator.addListener(new AnimatorListener(view));
 		objectAnimator.start();
 
 		mAnimators.put((Integer) view.getTag(), objectAnimator);
-		mAnimatingViewsSinceAnimationStart++;
 	}
-
-	protected abstract PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent);
 
 	private long calculateAnimationDelay() {
 		long delay;
 		int numberOfItems = mListView.getLastVisiblePosition() - mListView.getFirstVisiblePosition();
-		if (numberOfItems + 1 < mAnimatingViewsSinceAnimationStart) {
+		if (numberOfItems + 1 < mLastAnimatedPosition) {
 			delay = getAnimationDelayMillis();
 		} else {
-			long delaySinceStart = mAnimatingViewsSinceAnimationStart * getAnimationDelayMillis();
-			delay = mAnimationStartMillis + delaySinceStart - System.currentTimeMillis();
+			long delaySinceStart = mLastAnimatedPosition * getAnimationDelayMillis();
+			delay = mAnimationStartMillis + INITIALDELAYMILLIS + delaySinceStart - System.currentTimeMillis();
 		}
 		return delay;
 	}
 
+	/**
+	 * Returns the context associated with this array adapter. The context is
+	 * used to create views from the resource passed to the constructor.
+	 * 
+	 * @return The Context associated with this adapter.
+	 */
 	public Context getContext() {
 		return mContext;
 	}
 
+	/**
+	 * Get a View that displays the data at the specified position in the data
+	 * set. You can either create a View manually or inflate it from an XML
+	 * layout file. When the View is inflated, the parent View (GridView,
+	 * ListView...) will apply default layout parameters unless you use
+	 * {@link android.view.LayoutInflater#inflate(int, android.view.ViewGroup, boolean)}
+	 * to specify a root view and to prevent attachment to the root.
+	 * 
+	 * @param position
+	 *            The position of the item within the adapter's data set of the
+	 *            item whose view we want.
+	 * @param convertView
+	 *            The old view to reuse, if possible. Note: You should check
+	 *            that this view is non-null and of an appropriate type before
+	 *            using. If it is not possible to convert this view to display
+	 *            the correct data, this method can create a new view.
+	 * @param parent
+	 *            The parent that this view will eventually be attached to
+	 * @return A View corresponding to the data at the specified position.
+	 */
 	protected abstract View getItemView(int position, View convertView, ViewGroup parent);
 
+	/**
+	 * Get the delay in milliseconds before an animation of a row should start.
+	 */
 	protected abstract long getAnimationDelayMillis();
+
+	/**
+	 * Get the PropertyValuesHolder which contains translate properties to apply
+	 * to rows.
+	 * 
+	 * @param parent
+	 *            the ViewGroup which is the parent of the row.
+	 */
+	protected abstract PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent);
+
+	private class AnimatorListener implements com.nineoldandroids.animation.Animator.AnimatorListener {
+
+		private View mView;
+
+		public AnimatorListener(View view) {
+			mView = view;
+		}
+
+		@Override
+		public void onAnimationStart(Animator animation) {
+			mView.setVisibility(View.VISIBLE);
+			animation.removeAllListeners();
+		}
+
+		@Override
+		public void onAnimationEnd(Animator animation) {
+		}
+
+		@Override
+		public void onAnimationCancel(Animator animation) {
+		}
+
+		@Override
+		public void onAnimationRepeat(Animator animation) {
+		}
+
+	}
 }
