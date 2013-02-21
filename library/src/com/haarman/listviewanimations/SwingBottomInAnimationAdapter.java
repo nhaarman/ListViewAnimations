@@ -17,9 +17,10 @@ package com.haarman.listviewanimations;
 
 import java.util.ArrayList;
 
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
-
-import com.haarman.listviewanimations.R;
+import android.view.View;
+import android.view.ViewGroup;
 
 public abstract class SwingBottomInAnimationAdapter<T> extends AnimationAdapter<T> {
 
@@ -32,13 +33,13 @@ public abstract class SwingBottomInAnimationAdapter<T> extends AnimationAdapter<
 	}
 
 	@Override
-	protected int getRowInAnimationResId() {
-		return R.anim.swing_bottom_in;
+	protected long getAnimationDelayMillis() {
+		return 150;
 	}
 
 	@Override
-	protected long getAnimationDelayMillis() {
-		return 150;
+	protected PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent) {
+		return PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, 500, 0);
 	}
 
 }

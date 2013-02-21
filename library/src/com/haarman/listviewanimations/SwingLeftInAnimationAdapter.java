@@ -17,9 +17,10 @@ package com.haarman.listviewanimations;
 
 import java.util.ArrayList;
 
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
-
-import com.haarman.listviewanimations.R;
+import android.view.View;
+import android.view.ViewGroup;
 
 public abstract class SwingLeftInAnimationAdapter<T> extends AnimationAdapter<T> {
 
@@ -32,13 +33,12 @@ public abstract class SwingLeftInAnimationAdapter<T> extends AnimationAdapter<T>
 	}
 
 	@Override
-	protected int getRowInAnimationResId() {
-		return R.anim.swing_left_in;
-	}
-
-	@Override
 	protected long getAnimationDelayMillis() {
 		return 100;
 	}
 
+	@Override
+	protected PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent) {
+		return PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0 - parent.getWidth(), 0);
+	}
 }

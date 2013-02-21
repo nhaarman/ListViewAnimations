@@ -18,26 +18,25 @@ package com.haarman.listviewanimations;
 import java.util.ArrayList;
 
 import junit.framework.Assert;
-
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
-import android.os.Handler;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 
 public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
 	private Context mContext;
-	private Handler mHandler;
 
 	private ListView mListView;
 
+	private SparseArray<Animator> mAnimators;
 	private int mPreviousLastVisiblePosition;
 	private long mAnimationStartMillis;
 	private int mAnimatingViewsSinceAnimationStart;
-	private int mDoneAnimatingViewsSinceAnimationStart;
 
 	public AnimationAdapter(Context context) {
 		this(context, null);
@@ -46,12 +45,11 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	public AnimationAdapter(Context context, ArrayList<T> items) {
 		super(items);
 		mContext = context;
-		mHandler = new Handler();
+		mAnimators = new SparseArray<Animator>();
 
 		mPreviousLastVisiblePosition = -1;
 		mAnimationStartMillis = -1;
 		mAnimatingViewsSinceAnimationStart = 0;
-		mDoneAnimatingViewsSinceAnimationStart = 0;
 	}
 
 	public void setListView(ListView listView) {
@@ -67,35 +65,57 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	public final View getView(int position, View convertView, ViewGroup parent) {
 		Assert.assertNotNull("Call setListView() on this AnimationAdapter before setAdapter()!", mListView);
 
+		if (convertView != null) {
+			int previousPosition = (Integer) convertView.getTag();
+			Animator animator = mAnimators.get(previousPosition);
+			if (animator != null) {
+				animator.end();
+			}
+			mAnimators.remove(previousPosition);
+		}
+
 		View itemView = getItemView(position, convertView, parent);
-		animateViewIfNecessary(itemView, position);
+		itemView.setTag(position);
+		animateViewIfNecessary(position, itemView, parent);
 		return itemView;
 	}
 
-	private void animateViewIfNecessary(View view, int position) {
+	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
 		if (position > mPreviousLastVisiblePosition && position >= mListView.getFirstVisiblePosition()) {
-			animateView(view);
+			animateView(view, parent);
 		}
 	}
 
-	private void animateView(View view) {
+	private void animateView(View view, ViewGroup parent) {
 		if (mAnimationStartMillis == -1) {
-			mAnimationStartMillis = AnimationUtils.currentAnimationTimeMillis();
+			mAnimationStartMillis = System.currentTimeMillis();
 		}
 
-		long delayMillis = calculateAnimationDelay();
-		Animation animation = AnimationUtils.loadAnimation(mContext, getRowInAnimationResId());
-		animation.setStartTime(mAnimationStartMillis);
-		animation.setStartOffset(delayMillis);
+		view.setAlpha(0);
 
-		mHandler.postDelayed(mEndAnimationRunnable, delayMillis - AnimationUtils.currentAnimationTimeMillis() + mAnimationStartMillis + animation.getDuration());
+		PropertyValuesHolder translatePropertyValuesHolder = getTranslatePropertyValuesHolder(parent);
+		PropertyValuesHolder alphaPropertyValuesHolder = PropertyValuesHolder.ofFloat(View.ALPHA, 0, 1);
 
-		view.setAnimation(animation);
+		ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(view, translatePropertyValuesHolder, alphaPropertyValuesHolder);
+		objectAnimator.setStartDelay(calculateAnimationDelay());
+		objectAnimator.start();
+
+		mAnimators.put((Integer) view.getTag(), objectAnimator);
 		mAnimatingViewsSinceAnimationStart++;
 	}
 
+	protected abstract PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent);
+
 	private long calculateAnimationDelay() {
-		return mAnimatingViewsSinceAnimationStart * getAnimationDelayMillis();
+		long delay;
+		int numberOfItems = mListView.getLastVisiblePosition() - mListView.getFirstVisiblePosition();
+		if (numberOfItems + 1 < mAnimatingViewsSinceAnimationStart) {
+			delay = getAnimationDelayMillis();
+		} else {
+			long delaySinceStart = mAnimatingViewsSinceAnimationStart * getAnimationDelayMillis();
+			delay = mAnimationStartMillis + delaySinceStart - System.currentTimeMillis();
+		}
+		return delay;
 	}
 
 	public Context getContext() {
@@ -104,22 +124,5 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
 	protected abstract View getItemView(int position, View convertView, ViewGroup parent);
 
-	protected abstract int getRowInAnimationResId();
-
 	protected abstract long getAnimationDelayMillis();
-
-	private Runnable mEndAnimationRunnable = new Runnable() {
-		@Override
-		public void run() {
-			mDoneAnimatingViewsSinceAnimationStart++;
-
-			if (mAnimatingViewsSinceAnimationStart == mDoneAnimatingViewsSinceAnimationStart) {
-				mAnimatingViewsSinceAnimationStart = 0;
-				mDoneAnimatingViewsSinceAnimationStart = 0;
-				mAnimationStartMillis = -1;
-				mPreviousLastVisiblePosition = mListView.getLastVisiblePosition();
-			}
-		}
-	};
-
 }
