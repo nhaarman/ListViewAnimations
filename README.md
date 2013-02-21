@@ -6,8 +6,9 @@ Feel free to use it all you want in your Android apps provided that you cite thi
 
 Setup
 -----
-* In Eclipse, just import the library as an Android library project. Project > Clean to generate the binaries 
-you need, like R.java, etc.
+* In Eclipse, just import the library as an Android library project.
+* Add the [NineOldAndroids][2] library as a dependency to this project.
+* Project > Clean to generate the binaries you need, like R.java, etc.
 * Then, just add ListViewAnimations as a dependency to your existing project and you're good to go!
 
 Usage
@@ -29,7 +30,7 @@ Example:
 	}
 	
 	
-	class MyAnimationAdapter extends AnimationAdapter<String>{
+	class MyAnimationAdapter extends AnimationAdapter<String> {
 	
 		public MyAnimationAdapter(Context context){
 			super(context);
@@ -46,8 +47,8 @@ Example:
 		}
 		
 		@Override
-		protected int getRowInAnimationResId() {
-			return R.anim.my_anim;
+		protected PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent) {
+			return PropertyValuesHolder.ofFloat("translationY", 500, 0);
 		}
 
 		@Override
@@ -82,3 +83,4 @@ License
 	limitations under the License.
 
  [1]: https://play.google.com/store/apps/details?id=com.haarman.listviewanimations
+ [2]: http://nineoldandroids.com/
