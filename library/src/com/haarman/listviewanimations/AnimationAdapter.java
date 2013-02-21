@@ -18,14 +18,15 @@ package com.haarman.listviewanimations;
 import java.util.ArrayList;
 
 import junit.framework.Assert;
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.PropertyValuesHolder;
 
 public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
@@ -94,8 +95,7 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 		view.setAlpha(0);
 
 		PropertyValuesHolder translatePropertyValuesHolder = getTranslatePropertyValuesHolder(parent);
-		PropertyValuesHolder alphaPropertyValuesHolder = PropertyValuesHolder.ofFloat(View.ALPHA, 0, 1);
-
+		PropertyValuesHolder alphaPropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0, 1);
 		ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(view, translatePropertyValuesHolder, alphaPropertyValuesHolder);
 		objectAnimator.setStartDelay(calculateAnimationDelay());
 		objectAnimator.start();
