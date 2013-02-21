@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 
 import com.nineoldandroids.animation.PropertyValuesHolder;
 
-public abstract class SwingBottomInAnimationAdapter<T> extends AnimationAdapter<T> {
+public abstract class SwingBottomInAnimationAdapter<T> extends PropertyValuesAnimationAdapter<T> {
 
 	public SwingBottomInAnimationAdapter(Context context) {
 		super(context);

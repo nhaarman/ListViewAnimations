@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 
 import com.nineoldandroids.animation.PropertyValuesHolder;
 
-public abstract class SwingLeftInAnimationAdapter<T> extends AnimationAdapter<T> {
+public abstract class SwingLeftInAnimationAdapter<T> extends PropertyValuesAnimationAdapter<T> {
 
 	public SwingLeftInAnimationAdapter(Context context) {
 		super(context);
