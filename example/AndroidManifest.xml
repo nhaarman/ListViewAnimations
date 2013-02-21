@@ -4,7 +4,7 @@
     android:versionName="1.1" >
 
     <uses-sdk
-        android:minSdkVersion="1"
+        android:minSdkVersion="4"
         android:targetSdkVersion="17" />
 
     <application
