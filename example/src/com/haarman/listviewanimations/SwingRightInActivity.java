@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -37,7 +38,7 @@ public class SwingRightInActivity extends ListActivity {
 
 	private ArrayList<String> getItems() {
 		ArrayList<String> items = new ArrayList<String>();
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 1000; i++) {
 			items.add(String.valueOf(i));
 		}
 		return items;
@@ -53,9 +54,7 @@ public class SwingRightInActivity extends ListActivity {
 		protected View getItemView(int position, View convertView, ViewGroup parent) {
 			TextView tv = (TextView) convertView;
 			if (tv == null) {
-				tv = new TextView(getContext());
-				tv.setTextSize(30);
-				tv.setPadding(10, 10, 10, 10);
+				tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.list_row, parent, false);
 			}
 			tv.setText(getItem(position));
 			return tv;
