@@ -23,39 +23,92 @@ Example:
 		setContentView(R.layout.main);
 		
 		ListView listView = (ListView) findViewById(R.id.mylistview);
-		MyAnimationAdapter mAdapter = new MyAnimationAdapter(this);
-		mAdapter.setListView(listView);
-
-		mAdapter.addAll("A", "B", "C", "D", "E", "F", "G"); 
+		MyAnimationAdapter myAdapter = new MyAnimationAdapter(this);
+		myAdapter.setListView(listView);
+		listView.setAdapter(myAdapter);
+	
+		myAdapter.addAll("A", "B", "C", "D", "E", "F", "G"); 
 	}
 	
+* Using `AnimationAdapter`: 
 	
-	class MyAnimationAdapter extends AnimationAdapter<String> {
 	
-		public MyAnimationAdapter(Context context){
-			super(context);
-		}
+		class MyAnimationAdapter extends AnimationAdapter<String> {
 		
-		@Override
-		protected View getItemView(int position, View convertView, ViewGroup parent) {
-			TextView tv = (TextView) convertView;
-			if(tv == null){
-				tv = new TextView(getContext());
+			public MyAnimationAdapter(Context context){
+				super(context);
 			}
-			tv.setText(getItem(position));
-			return tv;
+			
+			@Override
+			protected View getItemView(int position, View convertView, ViewGroup parent) {
+				TextView tv = (TextView) convertView;
+				if(tv == null){
+					tv = new TextView(getContext());
+				}
+				tv.setText(getItem(position));
+				return tv;
+			}
+			
+			@Override
+			protected abstract Animator getAnimator(ViewGroup parent, View view){
+				PropertyValuesHolder translatePropertyValuesHolder = PropertyValuesHolder.ofFloat("translationY", 500, 0);
+				PropertyValuesHolder alphaPropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0, 1);
+				return ObjectAnimator.ofPropertyValuesHolder(view, translatePropertyValuesHolder, alphaPropertyValuesHolder);
+			}
+
+			@Override
+			protected long getAnimationDelayMillis() {
+				return 150;
+			}
 		}
+	
+* Using `ResourceAnimationAdapter`:
+
+		class MyAnimationAdapter extends ResourceAnimationAdapter<String> {
 		
-		@Override
-		protected PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent) {
-			return PropertyValuesHolder.ofFloat("translationY", 500, 0);
+			public MyAnimationAdapter(Context context){
+				super(context);
+			}
+			
+			@Override
+			protected View getItemView(int position, View convertView, ViewGroup parent) {
+				/* Stuff */
+			}
+			
+			@Override
+			protected abstract int getAnimationResourceId(){
+				return R.anim.myanim;
+			}
+
+			@Override
+			protected long getAnimationDelayMillis() {
+				return 150;
+			}
+		}
+	
+* Using `PropertyValuesAnimationAdapter`:
+
+		class MyAnimationAdapter extends ResourceAnimationAdapter<String> {
+		
+			public MyAnimationAdapter(Context context){
+				super(context);
+			}
+			
+			@Override
+			protected View getItemView(int position, View convertView, ViewGroup parent) {
+				/* Stuff */
+			}
+			
+			protected abstract PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent){
+				return PropertyValuesHolder.ofFloat("translationY", 500, 0);
+			}
+
+			@Override
+			protected long getAnimationDelayMillis() {
+				return 150;
+			}
 		}
 
-		@Override
-		protected long getAnimationDelayMillis() {
-			return 150;
-		}
-	}
 	
 Note
 -----
