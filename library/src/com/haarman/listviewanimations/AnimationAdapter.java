@@ -64,6 +64,8 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	public final View getView(int position, View convertView, ViewGroup parent) {
 		Assert.assertNotNull("Call setListView() on this AnimationAdapter before setAdapter()!", mListView);
 
+		System.out.println("getVIew: " + position);
+
 		if (convertView != null) {
 			int previousPosition = (Integer) convertView.getTag();
 			Animator animator = mAnimators.get(previousPosition);
@@ -94,7 +96,8 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 		view.setVisibility(View.INVISIBLE);
 		Animator animator = getAnimator(parent, view);
 		animator.setStartDelay(calculateAnimationDelay());
-		animator.addListener(new AnimatorListener(view));
+		AnimatorListener animatorListener = new AnimatorListener(view);
+		animator.addListener(animatorListener);
 		animator.start();
 
 		mAnimators.put((Integer) view.getTag(), animator);
@@ -106,10 +109,10 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 		if (numberOfItems + 1 < mLastAnimatedPosition) {
 			delay = getAnimationDelayMillis();
 		} else {
-			long delaySinceStart = mLastAnimatedPosition * getAnimationDelayMillis();
+			long delaySinceStart = (mLastAnimatedPosition + 1) * getAnimationDelayMillis();
 			delay = mAnimationStartMillis + INITIALDELAYMILLIS + delaySinceStart - System.currentTimeMillis();
 		}
-		return delay;
+		return Math.max(0, delay);
 	}
 
 	/**
@@ -169,6 +172,7 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
 		@Override
 		public void onAnimationStart(Animator animation) {
+			System.out.println("start " + mView.getTag());
 			mView.setVisibility(View.VISIBLE);
 			animation.removeAllListeners();
 		}
