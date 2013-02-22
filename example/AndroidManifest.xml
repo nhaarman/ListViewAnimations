@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.haarman.listviewanimations"
-    android:versionCode="3"
-    android:versionName="1.1" >
+    android:versionCode="4"
+    android:versionName="1.2" >
 
     <uses-sdk
         android:minSdkVersion="4"
