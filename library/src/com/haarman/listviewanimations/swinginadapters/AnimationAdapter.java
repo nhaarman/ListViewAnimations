@@ -15,16 +15,15 @@
  */
 package com.haarman.listviewanimations.swinginadapters;
 
-import java.util.ArrayList;
-
 import junit.framework.Assert;
 import android.content.Context;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.haarman.listviewanimations.ArrayAdapter;
+import com.haarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -34,7 +33,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
  * they are first shown. The Animators applied are to be specified in
  * getAnimators(ViewGroup, View), plus an alpha transition.
  */
-public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
+public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private static final long INITIALDELAYMILLIS = 150;
 
@@ -46,12 +45,8 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	private long mAnimationStartMillis;
 	private int mLastAnimatedPosition;
 
-	public AnimationAdapter(Context context) {
-		this(context, null);
-	}
-
-	public AnimationAdapter(Context context, ArrayList<T> items) {
-		super(items);
+	public AnimationAdapter(BaseAdapter baseAdapter, Context context) {
+		super(baseAdapter);
 		mContext = context;
 		mAnimators = new SparseArray<Animator>();
 
@@ -81,7 +76,8 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 			mAnimators.remove(previousPosition);
 		}
 
-		View itemView = getItemView(position, convertView, parent);
+		// View itemView = getItemView(position, convertView, parent);
+		View itemView = super.getView(position, convertView, parent);
 		itemView.setTag(position);
 		animateViewIfNecessary(position, itemView, parent);
 		return itemView;
@@ -149,28 +145,6 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	public Context getContext() {
 		return mContext;
 	}
-
-	/**
-	 * Get a View that displays the data at the specified position in the data
-	 * set. You can either create a View manually or inflate it from an XML
-	 * layout file. When the View is inflated, the parent View (GridView,
-	 * ListView...) will apply default layout parameters unless you use
-	 * {@link android.view.LayoutInflater#inflate(int, android.view.ViewGroup, boolean)}
-	 * to specify a root view and to prevent attachment to the root.
-	 * 
-	 * @param position
-	 *            The position of the item within the adapter's data set of the
-	 *            item whose view we want.
-	 * @param convertView
-	 *            The old view to reuse, if possible. Note: You should check
-	 *            that this view is non-null and of an appropriate type before
-	 *            using. If it is not possible to convert this view to display
-	 *            the correct data, this method can create a new view.
-	 * @param parent
-	 *            The parent that this view will eventually be attached to
-	 * @return A View corresponding to the data at the specified position.
-	 */
-	protected abstract View getItemView(int position, View convertView, ViewGroup parent);
 
 	/**
 	 * Get the delay in milliseconds before an animation of a view should start.

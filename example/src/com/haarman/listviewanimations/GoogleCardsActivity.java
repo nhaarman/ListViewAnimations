@@ -19,9 +19,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,15 +30,21 @@ import android.widget.TextView;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 public class GoogleCardsActivity extends Activity {
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_googlecards);
 
 		ListView listView = (ListView) findViewById(R.id.activity_googlecards_listview);
-		GoogleCardsAdapter mAdapter = new GoogleCardsAdapter(this, getItems());
-		mAdapter.setListView(listView);
-		listView.setAdapter(mAdapter);
+		GoogleCardsAdapter googleCardsAdapter = new GoogleCardsAdapter(this);
+
+		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(googleCardsAdapter, this);
+		swingBottomInAnimationAdapter.setListView(listView);
+
+		listView.setAdapter(swingBottomInAnimationAdapter);
+
+		googleCardsAdapter.addAll(getItems());
 	}
 
 	private ArrayList<String> getItems() {
@@ -51,21 +55,19 @@ public class GoogleCardsActivity extends Activity {
 		return items;
 	}
 
-	private class GoogleCardsAdapter extends SwingBottomInAnimationAdapter<String> {
+	private class GoogleCardsAdapter extends ArrayAdapter<String> {
+
+		private Context mContext;
 
 		public GoogleCardsAdapter(Context context) {
-			super(context);
-		}
-
-		public GoogleCardsAdapter(Context context, ArrayList<String> items) {
-			super(context, items);
+			mContext = context;
 		}
 
 		@Override
-		protected View getItemView(int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = convertView;
 			if (view == null) {
-				view = LayoutInflater.from(getContext()).inflate(R.layout.activity_googlecards_card, parent, false);
+				view = LayoutInflater.from(mContext).inflate(R.layout.activity_googlecards_card, parent, false);
 			}
 
 			TextView textView = (TextView) view.findViewById(R.id.activity_googlecards_card_textview);
@@ -93,6 +95,5 @@ public class GoogleCardsActivity extends Activity {
 
 			return view;
 		}
-
 	}
 }

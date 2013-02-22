@@ -15,11 +15,10 @@
  */
 package com.haarman.listviewanimations.swinginadapters;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 
 import com.nineoldandroids.animation.Animator;
 
@@ -27,14 +26,10 @@ import com.nineoldandroids.animation.Animator;
  * An implementation of AnimationAdapter which applies a single Animator to
  * views.
  */
-public abstract class SingleAnimationAdapter<T> extends AnimationAdapter<T> {
+public abstract class SingleAnimationAdapter extends AnimationAdapter {
 
-	public SingleAnimationAdapter(Context context, ArrayList<T> items) {
-		super(context, items);
-	}
-
-	public SingleAnimationAdapter(Context context) {
-		super(context);
+	public SingleAnimationAdapter(BaseAdapter baseAdapter, Context context) {
+		super(baseAdapter, context);
 	}
 
 	@Override

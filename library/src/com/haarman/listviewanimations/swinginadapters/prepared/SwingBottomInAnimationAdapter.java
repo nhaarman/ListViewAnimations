@@ -15,11 +15,10 @@
  */
 package com.haarman.listviewanimations.swinginadapters.prepared;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 
 import com.haarman.listviewanimations.swinginadapters.SingleAnimationAdapter;
 import com.nineoldandroids.animation.Animator;
@@ -29,14 +28,10 @@ import com.nineoldandroids.animation.ObjectAnimator;
  * An implementation of the AnimationAdapter class which applies a
  * swing-in-from-bottom-animation to views.
  */
-public abstract class SwingBottomInAnimationAdapter<T> extends SingleAnimationAdapter<T> {
+public class SwingBottomInAnimationAdapter extends SingleAnimationAdapter {
 
-	public SwingBottomInAnimationAdapter(Context context) {
-		super(context);
-	}
-
-	public SwingBottomInAnimationAdapter(Context context, ArrayList<T> items) {
-		super(context, items);
+	public SwingBottomInAnimationAdapter(BaseAdapter baseAdapter, Context context) {
+		super(baseAdapter, context);
 	}
 
 	@Override
