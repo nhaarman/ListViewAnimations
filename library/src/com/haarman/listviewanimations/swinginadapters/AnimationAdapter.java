@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations;
+package com.haarman.listviewanimations.swinginadapters;
 
 import java.util.ArrayList;
 
@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.haarman.listviewanimations.ArrayAdapter;
 import com.nineoldandroids.animation.Animator;
 
 public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {

@@ -29,6 +29,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+
+
 public class GoogleCardsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

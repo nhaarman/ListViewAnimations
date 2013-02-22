@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
+
 public class SwingRightInActivity extends ListActivity {
 
 	@Override

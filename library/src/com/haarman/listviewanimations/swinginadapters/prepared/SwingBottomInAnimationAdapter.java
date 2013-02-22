@@ -13,39 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations;
+package com.haarman.listviewanimations.swinginadapters.prepared;
 
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorInflater;
+import com.haarman.listviewanimations.swinginadapters.PropertyValuesAnimationAdapter;
+import com.nineoldandroids.animation.PropertyValuesHolder;
 
-/**
- * An implementation of AnimationAdapter which bases the animations on
- * resources.
- */
-public abstract class ResourceAnimationAdapter<T> extends AnimationAdapter<T> {
+public abstract class SwingBottomInAnimationAdapter<T> extends PropertyValuesAnimationAdapter<T> {
 
-	public ResourceAnimationAdapter(Context context) {
+	public SwingBottomInAnimationAdapter(Context context) {
 		super(context);
 	}
 
-	public ResourceAnimationAdapter(Context context, ArrayList<T> items) {
+	public SwingBottomInAnimationAdapter(Context context, ArrayList<T> items) {
 		super(context, items);
 	}
 
 	@Override
-	protected Animator getAnimator(ViewGroup parent, View view) {
-		return AnimatorInflater.loadAnimator(getContext(), getAnimationResourceId());
+	protected long getAnimationDelayMillis() {
+		return 150;
 	}
 
-	/**
-	 * Get the resource id of the animation to apply to the rows.
-	 */
-	protected abstract int getAnimationResourceId();
+	@Override
+	protected PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent) {
+		return PropertyValuesHolder.ofFloat("translationY", 500, 0);
+	}
 
 }

@@ -13,7 +13,17 @@ Setup
 
 Usage
 -----
-Simply extend one of the `AnimationAdapter` classes, assign it to a `ListView`, and call `setListView` on the adapter.
+Simply extend one of the `AnimationAdapter` classes, call `setListView` on the adapter, and assign it to a `ListView`.
+
+* Simple:
+ * SwingBottomInAnimationAdapter
+ * SwingRightInAnimationAdapter
+ * SwingLeftInAnimationAdapter
+ 
+* Custom:
+ * ResourceAnimationAdapter
+ * PropertyValuesAnimationAdapter
+ * AnimationAdapter
 
 Example:
 -----
@@ -30,85 +40,22 @@ Example:
 		myAdapter.addAll("A", "B", "C", "D", "E", "F", "G"); 
 	}
 	
-* Using `AnimationAdapter`: 
-	
-	
-		class MyAnimationAdapter extends AnimationAdapter<String> {
+	class MyAnimationAdapter extends SwingBottomInAnimationAdapter<String>{
 		
-			public MyAnimationAdapter(Context context){
-				super(context);
-			}
-			
-			@Override
-			protected View getItemView(int position, View convertView, ViewGroup parent) {
-				TextView tv = (TextView) convertView;
-				if(tv == null){
-					tv = new TextView(getContext());
-				}
-				tv.setText(getItem(position));
-				return tv;
-			}
-			
-			@Override
-			protected abstract Animator getAnimator(ViewGroup parent, View view){
-				PropertyValuesHolder translatePropertyValuesHolder = PropertyValuesHolder.ofFloat("translationY", 500, 0);
-				PropertyValuesHolder alphaPropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0, 1);
-				return ObjectAnimator.ofPropertyValuesHolder(view, translatePropertyValuesHolder, alphaPropertyValuesHolder);
-			}
-
-			@Override
-			protected long getAnimationDelayMillis() {
-				return 150;
-			}
+		public MyAnimationAdapter(Context context){
+			super(context);
 		}
-	
-* Using `ResourceAnimationAdapter`:
-
-		class MyAnimationAdapter extends ResourceAnimationAdapter<String> {
 		
-			public MyAnimationAdapter(Context context){
-				super(context);
+		@Override
+		protected View getItemView(int position, View convertView, ViewGroup parent) {
+			TextView tv = (TextView) convertView;
+			if (tv == null) {
+				tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.list_row, parent, false);
 			}
-			
-			@Override
-			protected View getItemView(int position, View convertView, ViewGroup parent) {
-				/* Stuff */
-			}
-			
-			@Override
-			protected abstract int getAnimationResourceId(){
-				return R.anim.myanim;
-			}
-
-			@Override
-			protected long getAnimationDelayMillis() {
-				return 150;
-			}
+			tv.setText(getItem(position));
+			return tv;
 		}
-	
-* Using `PropertyValuesAnimationAdapter`:
-
-		class MyAnimationAdapter extends ResourceAnimationAdapter<String> {
-		
-			public MyAnimationAdapter(Context context){
-				super(context);
-			}
-			
-			@Override
-			protected View getItemView(int position, View convertView, ViewGroup parent) {
-				/* Stuff */
-			}
-			
-			protected abstract PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent){
-				return PropertyValuesHolder.ofFloat("translationY", 500, 0);
-			}
-
-			@Override
-			protected long getAnimationDelayMillis() {
-				return 150;
-			}
-		}
-
+	}
 	
 Note
 -----
