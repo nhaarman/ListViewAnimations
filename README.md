@@ -4,10 +4,11 @@ ListViewAnimations ([Play Store Demo][1])
 ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
 Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
 
+ListViewAnimations uses the [NineOldAndroids][2] library to support devices <3.0.
+
 Setup
 -----
 * In Eclipse, just import the library as an Android library project.
-* Add the [NineOldAndroids][2] library as a dependency to this project.
 * Project > Clean to generate the binaries you need, like R.java, etc.
 * Then, just add ListViewAnimations as a dependency to your existing project and you're good to go!
 
@@ -24,7 +25,7 @@ Simple:
 Custom:
 
 * ResourceAnimationAdapter
-* PropertyValuesAnimationAdapter
+* SingleAnimationAdapter
 * AnimationAdapter
 
 Example:
