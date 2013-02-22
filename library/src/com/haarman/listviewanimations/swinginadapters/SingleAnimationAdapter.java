@@ -33,7 +33,7 @@ public abstract class SingleAnimationAdapter extends AnimationAdapter {
 	}
 
 	@Override
-	protected Animator[] getAnimators(ViewGroup parent, View view) {
+	public Animator[] getAnimators(ViewGroup parent, View view) {
 		Animator animator = getAnimator(parent, view);
 		return new Animator[] { animator };
 	}

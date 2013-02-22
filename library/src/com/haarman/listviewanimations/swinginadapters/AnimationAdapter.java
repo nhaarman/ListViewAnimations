@@ -45,6 +45,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	private long mAnimationStartMillis;
 	private int mLastAnimatedPosition;
 
+	private boolean mHasParentAnimationAdapter;
+
 	public AnimationAdapter(BaseAdapter baseAdapter, Context context) {
 		super(baseAdapter);
 		mContext = context;
@@ -52,6 +54,10 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 		mAnimationStartMillis = -1;
 		mLastAnimatedPosition = -1;
+
+		if (baseAdapter instanceof AnimationAdapter) {
+			((AnimationAdapter) baseAdapter).setHasParentAnimationAdapter(true);
+		}
 	}
 
 	public void setListView(ListView listView) {
@@ -76,7 +82,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 			mAnimators.remove(previousPosition);
 		}
 
-		// View itemView = getItemView(position, convertView, parent);
 		View itemView = super.getView(position, convertView, parent);
 		itemView.setTag(position);
 		animateViewIfNecessary(position, itemView, parent);
@@ -84,7 +89,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	}
 
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
-		if (position > mLastAnimatedPosition) {
+		if (position > mLastAnimatedPosition && !mHasParentAnimationAdapter) {
 			animateView(parent, view);
 			mLastAnimatedPosition = position;
 		}
@@ -97,9 +102,17 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 		hideView(view);
 
+		Animator[] childAnimators;
+		if (decoratedBaseAdapter instanceof AnimationAdapter) {
+			childAnimators = ((AnimationAdapter) decoratedBaseAdapter).getAnimators(parent, view);
+		} else {
+			childAnimators = new Animator[0];
+		}
 		Animator[] animators = getAnimators(parent, view);
+		Animator alphaAnimator = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
+
 		AnimatorSet set = new AnimatorSet();
-		set.playTogether(withAlphaAnimator(animators, view));
+		set.playTogether(concatAnimators(childAnimators, animators, alphaAnimator));
 		set.setStartDelay(calculateAnimationDelay());
 		set.start();
 
@@ -114,13 +127,20 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		set.start();
 	}
 
-	private Animator[] withAlphaAnimator(Animator[] animators, View view) {
-		Animator[] allAnimators = new Animator[animators.length + 1];
-		for (int i = 0; i < animators.length; ++i) {
+	private Animator[] concatAnimators(Animator[] childAnimators, Animator[] animators, Animator alphaAnimator) {
+		Animator[] allAnimators = new Animator[childAnimators.length + animators.length + 1];
+		int i;
+
+		for (i = 0; i < animators.length; ++i) {
 			allAnimators[i] = animators[i];
 		}
 
-		allAnimators[animators.length] = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
+		for (int j = 0; j < childAnimators.length; ++j) {
+			allAnimators[i] = childAnimators[j];
+			++i;
+		}
+
+		allAnimators[allAnimators.length - 1] = alphaAnimator;
 		return allAnimators;
 	}
 
@@ -134,6 +154,16 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 			delay = mAnimationStartMillis + INITIALDELAYMILLIS + delaySinceStart - System.currentTimeMillis();
 		}
 		return Math.max(0, delay);
+	}
+
+	/**
+	 * Set whether this AnimationAdapter is encapsulated by another
+	 * AnimationAdapter. When this is set to true, this AnimationAdapter does
+	 * not apply any animations to the views. Should not be set explicitly, the
+	 * AnimationAdapter class manages this by itself.
+	 */
+	public void setHasParentAnimationAdapter(boolean hasParentAnimationAdapter) {
+		mHasParentAnimationAdapter = hasParentAnimationAdapter;
 	}
 
 	/**
@@ -160,6 +190,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	 * @param view
 	 *            The view that will be animated, as retrieved by getView()
 	 */
-	protected abstract Animator[] getAnimators(ViewGroup parent, View view);
+	public abstract Animator[] getAnimators(ViewGroup parent, View view);
 
 }
