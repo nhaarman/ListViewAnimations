@@ -64,8 +64,6 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	public final View getView(int position, View convertView, ViewGroup parent) {
 		Assert.assertNotNull("Call setListView() on this AnimationAdapter before setAdapter()!", mListView);
 
-		System.out.println("getVIew: " + position);
-
 		if (convertView != null) {
 			int previousPosition = (Integer) convertView.getTag();
 			Animator animator = mAnimators.get(previousPosition);
@@ -172,7 +170,6 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
 		@Override
 		public void onAnimationStart(Animator animation) {
-			System.out.println("start " + mView.getTag());
 			mView.setVisibility(View.VISIBLE);
 			animation.removeAllListeners();
 		}
