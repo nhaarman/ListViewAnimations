@@ -29,6 +29,11 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
+/**
+ * An ArrayAdapter class which applies multiple Animators at once to views when
+ * they are first shown. The Animators applied are to be specified in
+ * getAnimators(ViewGroup, View), plus an alpha transition.
+ */
 public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
 	private static final long INITIALDELAYMILLIS = 150;
@@ -95,9 +100,10 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 		}
 
 		hideView(view);
+
 		Animator[] animators = getAnimators(parent, view);
 		AnimatorSet set = new AnimatorSet();
-		set.playTogether(animators);
+		set.playTogether(withAlphaAnimator(animators, view));
 		set.setStartDelay(calculateAnimationDelay());
 		set.start();
 
@@ -110,6 +116,16 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 		set.play(animator);
 		set.setDuration(0);
 		set.start();
+	}
+
+	private Animator[] withAlphaAnimator(Animator[] animators, View view) {
+		Animator[] allAnimators = new Animator[animators.length + 1];
+		for (int i = 0; i < animators.length; ++i) {
+			allAnimators[i] = animators[i];
+		}
+
+		allAnimators[animators.length] = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
+		return allAnimators;
 	}
 
 	private long calculateAnimationDelay() {
@@ -157,17 +173,18 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	protected abstract View getItemView(int position, View convertView, ViewGroup parent);
 
 	/**
-	 * Get the delay in milliseconds before an animation of a row should start.
+	 * Get the delay in milliseconds before an animation of a view should start.
 	 */
 	protected abstract long getAnimationDelayMillis();
 
 	/**
-	 * Get the Animator to apply to the rows.
+	 * Get the Animators to apply to the views. In addition to the returned
+	 * Animators, an alpha transition will be applied to the view.
 	 * 
 	 * @param parent
 	 *            The parent of the view
 	 * @param view
-	 *            The view as retrieved by getView()
+	 *            The view that will be animated, as retrieved by getView()
 	 */
 	protected abstract Animator[] getAnimators(ViewGroup parent, View view);
 

@@ -22,8 +22,6 @@ import android.widget.BaseAdapter;
 
 /**
  * A true ArrayList adapter providing access to all ArrayList methods.
- * 
- * @author Niek Haarman
  */
 public abstract class ArrayAdapter<T> extends BaseAdapter {
 

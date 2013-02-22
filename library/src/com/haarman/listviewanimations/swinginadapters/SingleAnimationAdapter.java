@@ -22,38 +22,35 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
- * An implementation of AnimationAdapter which bases the animations on a
- * PropertyValuesHolder and applies an alpha transition.
+ * An implementation of AnimationAdapter which applies a single Animator to
+ * views.
  */
-public abstract class PropertyValuesAnimationAdapter<T> extends AnimationAdapter<T> {
+public abstract class SingleAnimationAdapter<T> extends AnimationAdapter<T> {
 
-	public PropertyValuesAnimationAdapter(Context context, ArrayList<T> items) {
+	public SingleAnimationAdapter(Context context, ArrayList<T> items) {
 		super(context, items);
 	}
 
-	public PropertyValuesAnimationAdapter(Context context) {
+	public SingleAnimationAdapter(Context context) {
 		super(context);
 	}
 
 	@Override
 	protected Animator[] getAnimators(ViewGroup parent, View view) {
-		Animator translateAnimator = getTranslateAnimator(parent, view);
-		Animator alphaAnimator = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
-		return new Animator[] { translateAnimator, alphaAnimator };
+		Animator animator = getAnimator(parent, view);
+		return new Animator[] { animator };
 	}
 
 	/**
-	 * Get the PropertyValuesHolder which contains translate properties to apply
-	 * to rows.
+	 * Get the Animator to apply to the view.
 	 * 
 	 * @param parent
-	 *            the ViewGroup which is the parent of the row.
+	 *            the ViewGroup which is the parent of the view.
 	 * @param view
-	 *            the view that will be animated.
+	 *            the view that will be animated, as retrieved by getView().
 	 */
-	protected abstract Animator getTranslateAnimator(ViewGroup parent, View view);
+	protected abstract Animator getAnimator(ViewGroup parent, View view);
 
 }

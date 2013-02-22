@@ -44,7 +44,7 @@ public abstract class ResourceAnimationAdapter<T> extends AnimationAdapter<T> {
 	}
 
 	/**
-	 * Get the resource id of the animation to apply to the rows.
+	 * Get the resource id of the animation to apply to the views.
 	 */
 	protected abstract int getAnimationResourceId();
 

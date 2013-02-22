@@ -21,11 +21,15 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.haarman.listviewanimations.swinginadapters.PropertyValuesAnimationAdapter;
+import com.haarman.listviewanimations.swinginadapters.SingleAnimationAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 
-public abstract class SwingRightInAnimationAdapter<T> extends PropertyValuesAnimationAdapter<T> {
+/**
+ * An implementation of the AnimationAdapter class which applies a
+ * swing-in-from-the-right-animation to views.
+ */
+public abstract class SwingRightInAnimationAdapter<T> extends SingleAnimationAdapter<T> {
 
 	public SwingRightInAnimationAdapter(Context context) {
 		super(context);
@@ -41,7 +45,7 @@ public abstract class SwingRightInAnimationAdapter<T> extends PropertyValuesAnim
 	}
 
 	@Override
-	protected Animator getTranslateAnimator(ViewGroup parent, View view) {
+	protected Animator getAnimator(ViewGroup parent, View view) {
 		return ObjectAnimator.ofFloat(view, "translationX", parent.getWidth(), 0);
 	}
 }
