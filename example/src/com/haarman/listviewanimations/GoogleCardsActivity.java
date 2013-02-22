@@ -31,7 +31,6 @@ import android.widget.TextView;
 
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
-
 public class GoogleCardsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,11 +94,5 @@ public class GoogleCardsActivity extends Activity {
 			return view;
 		}
 
-	}
-
-	public static int dpToPx(Context context, int dp) {
-		Resources r = context.getResources();
-		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
-		return (int) px;
 	}
 }
