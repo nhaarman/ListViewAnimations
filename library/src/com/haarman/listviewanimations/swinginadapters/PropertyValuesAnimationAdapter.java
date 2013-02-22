@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.PropertyValuesHolder;
 
 /**
  * An implementation of AnimationAdapter which bases the animations on a
@@ -40,10 +39,10 @@ public abstract class PropertyValuesAnimationAdapter<T> extends AnimationAdapter
 	}
 
 	@Override
-	protected Animator getAnimator(ViewGroup parent, View view) {
-		PropertyValuesHolder translatePropertyValuesHolder = getTranslatePropertyValuesHolder(parent);
-		PropertyValuesHolder alphaPropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0, 1);
-		return ObjectAnimator.ofPropertyValuesHolder(view, translatePropertyValuesHolder, alphaPropertyValuesHolder);
+	protected Animator[] getAnimators(ViewGroup parent, View view) {
+		Animator translateAnimator = getTranslateAnimator(parent, view);
+		Animator alphaAnimator = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
+		return new Animator[] { translateAnimator, alphaAnimator };
 	}
 
 	/**
@@ -52,7 +51,9 @@ public abstract class PropertyValuesAnimationAdapter<T> extends AnimationAdapter
 	 * 
 	 * @param parent
 	 *            the ViewGroup which is the parent of the row.
+	 * @param view
+	 *            the view that will be animated.
 	 */
-	protected abstract PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent);
+	protected abstract Animator getTranslateAnimator(ViewGroup parent, View view);
 
 }

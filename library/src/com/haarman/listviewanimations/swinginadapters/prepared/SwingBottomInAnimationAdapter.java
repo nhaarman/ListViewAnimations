@@ -18,10 +18,12 @@ package com.haarman.listviewanimations.swinginadapters.prepared;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.haarman.listviewanimations.swinginadapters.PropertyValuesAnimationAdapter;
-import com.nineoldandroids.animation.PropertyValuesHolder;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 public abstract class SwingBottomInAnimationAdapter<T> extends PropertyValuesAnimationAdapter<T> {
 
@@ -39,8 +41,8 @@ public abstract class SwingBottomInAnimationAdapter<T> extends PropertyValuesAni
 	}
 
 	@Override
-	protected PropertyValuesHolder getTranslatePropertyValuesHolder(ViewGroup parent) {
-		return PropertyValuesHolder.ofFloat("translationY", 500, 0);
+	protected Animator getTranslateAnimator(ViewGroup parent, View view) {
+		return ObjectAnimator.ofFloat(view, "translationY", 500, 0);
 	}
 
 }

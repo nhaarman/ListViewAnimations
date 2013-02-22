@@ -39,8 +39,8 @@ public abstract class ResourceAnimationAdapter<T> extends AnimationAdapter<T> {
 	}
 
 	@Override
-	protected Animator getAnimator(ViewGroup parent, View view) {
-		return AnimatorInflater.loadAnimator(getContext(), getAnimationResourceId());
+	protected Animator[] getAnimators(ViewGroup parent, View view) {
+		return new Animator[] { AnimatorInflater.loadAnimator(getContext(), getAnimationResourceId()) };
 	}
 
 	/**
