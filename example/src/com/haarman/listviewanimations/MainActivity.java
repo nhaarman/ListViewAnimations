@@ -43,6 +43,11 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
+	public void onBottomRightInClicked(View view) {
+		Intent intent = new Intent(this, SwingBottomRightInActivity.class);
+		startActivity(intent);
+	}
+
 	public void onGoogleCardsClicked(View view) {
 		Intent intent = new Intent(this, GoogleCardsActivity.class);
 		startActivity(intent);
