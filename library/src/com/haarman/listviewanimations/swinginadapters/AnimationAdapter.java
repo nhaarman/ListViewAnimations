@@ -27,6 +27,7 @@ import android.widget.ListView;
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 
@@ -93,16 +94,22 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 			mAnimationStartMillis = System.currentTimeMillis();
 		}
 
-		view.setVisibility(View.INVISIBLE);
+		hideView(view);
 		Animator[] animators = getAnimators(parent, view);
 		AnimatorSet set = new AnimatorSet();
 		set.playTogether(animators);
 		set.setStartDelay(calculateAnimationDelay());
-		AnimatorListener animatorListener = new AnimatorListener(view);
-		set.addListener(animatorListener);
 		set.start();
 
 		mAnimators.put((Integer) view.getTag(), set);
+	}
+
+	private void hideView(View view) {
+		ObjectAnimator animator = ObjectAnimator.ofFloat(view, "alpha", 0);
+		AnimatorSet set = new AnimatorSet();
+		set.play(animator);
+		set.setDuration(0);
+		set.start();
 	}
 
 	private long calculateAnimationDelay() {
@@ -164,31 +171,4 @@ public abstract class AnimationAdapter<T> extends ArrayAdapter<T> {
 	 */
 	protected abstract Animator[] getAnimators(ViewGroup parent, View view);
 
-	private class AnimatorListener implements com.nineoldandroids.animation.Animator.AnimatorListener {
-
-		private View mView;
-
-		public AnimatorListener(View view) {
-			mView = view;
-		}
-
-		@Override
-		public void onAnimationStart(Animator animation) {
-			mView.setVisibility(View.VISIBLE);
-			animation.removeListener(this);
-		}
-
-		@Override
-		public void onAnimationEnd(Animator animation) {
-		}
-
-		@Override
-		public void onAnimationCancel(Animator animation) {
-		}
-
-		@Override
-		public void onAnimationRepeat(Animator animation) {
-		}
-
-	}
 }
