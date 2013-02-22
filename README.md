@@ -16,14 +16,14 @@ Usage
 Simply extend one of the `AnimationAdapter` classes, call `setListView` on the adapter, and assign it to a `ListView`.
 
 Simple:
- * SwingBottomInAnimationAdapter
- * SwingRightInAnimationAdapter
- * SwingLeftInAnimationAdapter
+* SwingBottomInAnimationAdapter
+* SwingRightInAnimationAdapter
+* SwingLeftInAnimationAdapter
  
 Custom:
- * ResourceAnimationAdapter
- * PropertyValuesAnimationAdapter
- * AnimationAdapter
+* ResourceAnimationAdapter
+* PropertyValuesAnimationAdapter
+* AnimationAdapter
 
 Example:
 -----
