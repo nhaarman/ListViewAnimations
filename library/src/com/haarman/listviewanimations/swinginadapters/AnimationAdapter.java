@@ -16,7 +16,6 @@
 package com.haarman.listviewanimations.swinginadapters;
 
 import junit.framework.Assert;
-import android.content.Context;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +36,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private static final long INITIALDELAYMILLIS = 150;
 
-	private Context mContext;
-
 	private ListView mListView;
 
 	private SparseArray<Animator> mAnimators;
@@ -47,9 +44,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private boolean mHasParentAnimationAdapter;
 
-	public AnimationAdapter(BaseAdapter baseAdapter, Context context) {
+	public AnimationAdapter(BaseAdapter baseAdapter) {
 		super(baseAdapter);
-		mContext = context;
 		mAnimators = new SparseArray<Animator>();
 
 		mAnimationStartMillis = -1;
@@ -71,20 +67,24 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	@Override
 	public final View getView(int position, View convertView, ViewGroup parent) {
-		Assert.assertNotNull("Call setListView() on this AnimationAdapter before setAdapter()!", mListView);
+		if (!mHasParentAnimationAdapter) {
+			Assert.assertNotNull("Call setListView() on this AnimationAdapter before setAdapter()!", mListView);
 
-		if (convertView != null) {
-			int previousPosition = (Integer) convertView.getTag();
-			Animator animator = mAnimators.get(previousPosition);
-			if (animator != null) {
-				animator.end();
+			if (convertView != null) {
+				int previousPosition = (Integer) convertView.getTag();
+				Animator animator = mAnimators.get(previousPosition);
+				if (animator != null) {
+					animator.end();
+				}
+				mAnimators.remove(previousPosition);
 			}
-			mAnimators.remove(previousPosition);
 		}
 
 		View itemView = super.getView(position, convertView, parent);
-		itemView.setTag(position);
-		animateViewIfNecessary(position, itemView, parent);
+		if (!mHasParentAnimationAdapter) {
+			itemView.setTag(position);
+			animateViewIfNecessary(position, itemView, parent);
+		}
 		return itemView;
 	}
 
@@ -164,16 +164,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	 */
 	public void setHasParentAnimationAdapter(boolean hasParentAnimationAdapter) {
 		mHasParentAnimationAdapter = hasParentAnimationAdapter;
-	}
-
-	/**
-	 * Returns the context associated with this array adapter. The context is
-	 * used to create views from the resource passed to the constructor.
-	 * 
-	 * @return The Context associated with this adapter.
-	 */
-	public Context getContext() {
-		return mContext;
 	}
 
 	/**

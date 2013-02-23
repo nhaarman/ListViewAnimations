@@ -15,7 +15,6 @@
  */
 package com.haarman.listviewanimations.swinginadapters.prepared;
 
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -30,8 +29,8 @@ import com.nineoldandroids.animation.ObjectAnimator;
  */
 public class SwingRightInAnimationAdapter extends SingleAnimationAdapter {
 
-	public SwingRightInAnimationAdapter(BaseAdapter baseAdapter, Context context) {
-		super(baseAdapter, context);
+	public SwingRightInAnimationAdapter(BaseAdapter baseAdapter) {
+		super(baseAdapter);
 	}
 
 	@Override
