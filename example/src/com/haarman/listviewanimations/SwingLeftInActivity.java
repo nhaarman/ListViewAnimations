@@ -35,7 +35,7 @@ public class SwingLeftInActivity extends ListActivity {
 
 		MyListAdapter mAdapter = new MyListAdapter(this, getItems());
 
-		SwingLeftInAnimationAdapter swingLeftInAnimationAdapter = new SwingLeftInAnimationAdapter(mAdapter, this);
+		SwingLeftInAnimationAdapter swingLeftInAnimationAdapter = new SwingLeftInAnimationAdapter(mAdapter);
 		swingLeftInAnimationAdapter.setListView(getListView());
 
 		getListView().setAdapter(swingLeftInAnimationAdapter);

@@ -39,7 +39,7 @@ public class GoogleCardsActivity extends Activity {
 		ListView listView = (ListView) findViewById(R.id.activity_googlecards_listview);
 		GoogleCardsAdapter googleCardsAdapter = new GoogleCardsAdapter(this);
 
-		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(googleCardsAdapter, this);
+		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(googleCardsAdapter);
 		swingBottomInAnimationAdapter.setListView(listView);
 
 		listView.setAdapter(swingBottomInAnimationAdapter);

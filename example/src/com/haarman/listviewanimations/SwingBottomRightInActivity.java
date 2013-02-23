@@ -38,12 +38,13 @@ public class SwingBottomRightInActivity extends ListActivity {
 		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
 		SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(swingBottomInAnimationAdapter);
 		
-		//Or in short notation:
+		// Or in short notation:
 		swingRightInAnimationAdapter = 
 			new SwingRightInAnimationAdapter(
 				new SwingBottomInAnimationAdapter(
 						new MyListAdapter(this, getItems())));
 
+		// Assing the ListView to the AnimationAdapter and vice versa
 		swingRightInAnimationAdapter.setListView(getListView());
 		getListView().setAdapter(swingRightInAnimationAdapter);
 	}

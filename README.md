@@ -17,7 +17,7 @@ Usage
 This library uses the [Decorator Pattern][3] to stack multiple `AnimationAdapter`s on each other:
 
 * Implement your own `BaseAdapter`, or reuse an existing one.
-* Stack multiple `AnimationAdapter`s on eachother, with your `BaseAdapter` as a base.
+* Stack multiple `AnimationAdapter`s on each other, with your `BaseAdapter` as a base.
 * Set the `ListView` to your last `AnimationAdapter`.
 * Set your last `AnimationAdapter` to the `ListView`.
 
@@ -33,12 +33,13 @@ Example:
 		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
 		SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(swingBottomInAnimationAdapter);
 		
-		//Or in short notation:
+		// Or in short notation:
 		swingRightInAnimationAdapter = 
 			new SwingRightInAnimationAdapter(
 				new SwingBottomInAnimationAdapter(
 						new MyListAdapter(this, getItems())));
 		
+		// Assign the ListView to the AnimationAdapter and vice versa
 		swingRightInAnimationAdapter.setListView(getListView());
 		getListView().setAdapter(swingRightInAnimationAdapter);
 	}

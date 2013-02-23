@@ -35,7 +35,7 @@ public class SwingBottomInActivity extends ListActivity {
 
 		MyListAdapter mAdapter = new MyListAdapter(this, getItems());
 
-		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter, this);
+		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
 		swingBottomInAnimationAdapter.setListView(getListView());
 
 		getListView().setAdapter(swingBottomInAnimationAdapter);
