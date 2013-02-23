@@ -14,10 +14,12 @@ Setup
 
 Usage
 -----
-* Implement your own BaseAdapter, or reuse an existing one.
-* Stack multiple AnimationAdapters on eachother, with your BaseAdapter as a base.
-* Set the ListView to your last AnimationAdapter.
-* Set your last AnimationAdapter to the ListView.
+This library uses the [Decorator Pattern][3] to stack multiple `AnimationAdapter`s on each other:
+
+* Implement your own `BaseAdapter`, or reuse an existing one.
+* Stack multiple `AnimationAdapter`s on eachother, with your `BaseAdapter` as a base.
+* Set the `ListView` to your last `AnimationAdapter`.
+* Set your last `AnimationAdapter` to the `ListView`.
 
 Example:
 -----
@@ -27,9 +29,15 @@ Example:
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		MyListAdapter mAdapter = new MyListAdapter(this, Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J"));
-		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter, this);
-		SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(swingBottomInAnimationAdapter, this);
+		MyListAdapter mAdapter = new MyListAdapter(this, getItems());
+		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
+		SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(swingBottomInAnimationAdapter);
+		
+		//Or in short notation:
+		swingRightInAnimationAdapter = 
+			new SwingRightInAnimationAdapter(
+				new SwingBottomInAnimationAdapter(
+						new MyListAdapter(this, getItems())));
 		
 		swingRightInAnimationAdapter.setListView(getListView());
 		getListView().setAdapter(swingRightInAnimationAdapter);
@@ -54,7 +62,18 @@ Example:
 			return tv;
 		}
 	}
-	
+
+Custom AnimationAdapters
+-----
+Instead of using the ready-made adapters in the `.swinginadapters.prepared` package, you can also implement your own `AnimationAdapter`.
+Implement one of the following classes:
+
+* `ResourceAnimationAdapter`
+* `SingleAnimationAdapter`
+* `AnimationAdapter`
+
+See the examples.
+
 Note
 -----
 * Using the one of the `AnimationAdapter` classes will hide the dividers between your listitems.
@@ -82,3 +101,4 @@ License
 
  [1]: https://play.google.com/store/apps/details?id=com.haarman.listviewanimations
  [2]: http://nineoldandroids.com/
+ [3]: http://en.wikipedia.org/wiki/Decorator_pattern
