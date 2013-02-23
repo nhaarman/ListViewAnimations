@@ -34,6 +34,9 @@ import com.nineoldandroids.animation.ObjectAnimator;
  */
 public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
+	protected static final long DEFAULTANIMATIONDELAYMILLIS = 100;
+	protected static final long DEFAULTANIMATIONDURATIONMILLIS = 300;
+
 	private static final long INITIALDELAYMILLIS = 150;
 
 	private ListView mListView;
@@ -114,6 +117,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		AnimatorSet set = new AnimatorSet();
 		set.playTogether(concatAnimators(childAnimators, animators, alphaAnimator));
 		set.setStartDelay(calculateAnimationDelay());
+		set.setDuration(getAnimationDurationMillis());
 		set.start();
 
 		mAnimators.put((Integer) view.getTag(), set);
@@ -170,6 +174,11 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	 * Get the delay in milliseconds before an animation of a view should start.
 	 */
 	protected abstract long getAnimationDelayMillis();
+
+	/**
+	 * Get the duration of the animation in milliseconds.
+	 */
+	protected abstract long getAnimationDurationMillis();
 
 	/**
 	 * Get the Animators to apply to the views. In addition to the returned
