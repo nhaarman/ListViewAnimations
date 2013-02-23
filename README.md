@@ -14,46 +14,41 @@ Setup
 
 Usage
 -----
-Simply extend one of the `AnimationAdapter` classes, call `setListView` on the adapter, and assign it to a `ListView`.
-
-Simple:
-
-* SwingBottomInAnimationAdapter
-* SwingRightInAnimationAdapter
-* SwingLeftInAnimationAdapter
- 
-Custom:
-
-* ResourceAnimationAdapter
-* SingleAnimationAdapter
-* AnimationAdapter
+* Implement your own BaseAdapter, or reuse an existing one.
+* Stack multiple AnimationAdapters on eachother, with your BaseAdapter as a base.
+* Set the ListView to your last AnimationAdapter.
+* Set your last AnimationAdapter to the ListView.
 
 Example:
 -----
 
-	public void onCreate(Bundle savedInstanceState){
+	/* This example will stack two animations on top of eachother */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+
+		MyListAdapter mAdapter = new MyListAdapter(this, Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J"));
+		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter, this);
+		SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(swingBottomInAnimationAdapter, this);
 		
-		ListView listView = (ListView) findViewById(R.id.mylistview);
-		MyAnimationAdapter myAdapter = new MyAnimationAdapter(this);
-		myAdapter.setListView(listView);
-		listView.setAdapter(myAdapter);
-	
-		myAdapter.addAll("A", "B", "C", "D", "E", "F", "G"); 
+		swingRightInAnimationAdapter.setListView(getListView());
+		getListView().setAdapter(swingRightInAnimationAdapter);
 	}
 	
-	class MyAnimationAdapter extends SwingBottomInAnimationAdapter<String>{
-		
-		public MyAnimationAdapter(Context context){
-			super(context);
+	private class MyListAdapter extends com.haarman.listviewanimations.ArrayAdapter<String> {
+
+		private Context mContext;
+
+		public MyListAdapter(Context context, ArrayList<String> items) {
+			super(items);
+			mContext = context;
 		}
-		
+
 		@Override
-		protected View getItemView(int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView tv = (TextView) convertView;
 			if (tv == null) {
-				tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.list_row, parent, false);
+				tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
 			}
 			tv.setText(getItem(position));
 			return tv;
