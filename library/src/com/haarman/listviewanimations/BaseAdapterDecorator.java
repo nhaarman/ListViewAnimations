@@ -19,88 +19,103 @@ import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 public abstract class BaseAdapterDecorator extends BaseAdapter {
 
-	protected final BaseAdapter decoratedBaseAdapter;
+	protected final BaseAdapter mDecoratedBaseAdapter;
+
+	private ListView mListView;
 
 	public BaseAdapterDecorator(BaseAdapter baseAdapter) {
-		decoratedBaseAdapter = baseAdapter;
+		mDecoratedBaseAdapter = baseAdapter;
+	}
+
+	public void setListView(ListView listView) {
+		mListView = listView;
+
+		if (mDecoratedBaseAdapter instanceof BaseAdapterDecorator) {
+			((BaseAdapterDecorator) mDecoratedBaseAdapter).setListView(listView);
+		}
+	}
+
+	public ListView getListView() {
+		return mListView;
 	}
 
 	@Override
 	public int getCount() {
-		return decoratedBaseAdapter.getCount();
+		return mDecoratedBaseAdapter.getCount();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return decoratedBaseAdapter.getItem(position);
+		return mDecoratedBaseAdapter.getItem(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return decoratedBaseAdapter.getItemId(position);
+		return mDecoratedBaseAdapter.getItemId(position);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		return decoratedBaseAdapter.getView(position, convertView, parent);
+		return mDecoratedBaseAdapter.getView(position, convertView, parent);
 	}
 
 	@Override
 	public boolean areAllItemsEnabled() {
-		return decoratedBaseAdapter.areAllItemsEnabled();
+		return mDecoratedBaseAdapter.areAllItemsEnabled();
 	}
 
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		return decoratedBaseAdapter.getDropDownView(position, convertView, parent);
+		return mDecoratedBaseAdapter.getDropDownView(position, convertView, parent);
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		return decoratedBaseAdapter.getItemViewType(position);
+		return mDecoratedBaseAdapter.getItemViewType(position);
 	}
 
 	@Override
 	public int getViewTypeCount() {
-		return decoratedBaseAdapter.getViewTypeCount();
+		return mDecoratedBaseAdapter.getViewTypeCount();
 	}
 
 	@Override
 	public boolean hasStableIds() {
-		return decoratedBaseAdapter.hasStableIds();
+		return mDecoratedBaseAdapter.hasStableIds();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return decoratedBaseAdapter.isEmpty();
+		return mDecoratedBaseAdapter.isEmpty();
 	}
 
 	@Override
 	public boolean isEnabled(int position) {
-		return decoratedBaseAdapter.isEnabled(position);
+		return mDecoratedBaseAdapter.isEnabled(position);
 	}
 
 	@Override
 	public void notifyDataSetChanged() {
-		decoratedBaseAdapter.notifyDataSetChanged();
+		mDecoratedBaseAdapter.notifyDataSetChanged();
 	}
 
 	@Override
 	public void notifyDataSetInvalidated() {
-		decoratedBaseAdapter.notifyDataSetInvalidated();
+		mDecoratedBaseAdapter.notifyDataSetInvalidated();
 	}
 
 	@Override
 	public void registerDataSetObserver(DataSetObserver observer) {
-		decoratedBaseAdapter.registerDataSetObserver(observer);
+		mDecoratedBaseAdapter.registerDataSetObserver(observer);
 	}
 
 	@Override
 	public void unregisterDataSetObserver(DataSetObserver observer) {
-		decoratedBaseAdapter.unregisterDataSetObserver(observer);
+		mDecoratedBaseAdapter.unregisterDataSetObserver(observer);
 	}
 
 }

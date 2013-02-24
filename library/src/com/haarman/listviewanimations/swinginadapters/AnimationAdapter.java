@@ -39,8 +39,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private static final long INITIALDELAYMILLIS = 150;
 
-	private ListView mListView;
-
 	private SparseArray<Animator> mAnimators;
 	private long mAnimationStartMillis;
 	private int mLastAnimatedPosition;
@@ -59,19 +57,20 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		}
 	}
 
+	@Override
 	public void setListView(ListView listView) {
-		mListView = listView;
-		if (mListView.getDivider() != null) {
-			int dividerHeight = mListView.getDividerHeight();
-			mListView.setDivider(null);
-			mListView.setDividerHeight(dividerHeight);
+		super.setListView(listView);
+		if (getListView().getDivider() != null) {
+			int dividerHeight = getListView().getDividerHeight();
+			getListView().setDivider(null);
+			getListView().setDividerHeight(dividerHeight);
 		}
 	}
 
 	@Override
 	public final View getView(int position, View convertView, ViewGroup parent) {
 		if (!mHasParentAnimationAdapter) {
-			Assert.assertNotNull("Call setListView() on this AnimationAdapter before setAdapter()!", mListView);
+			Assert.assertNotNull("Call setListView() on this AnimationAdapter before setAdapter()!", getListView());
 
 			if (convertView != null) {
 				int previousPosition = (Integer) convertView.getTag();
@@ -106,8 +105,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		hideView(view);
 
 		Animator[] childAnimators;
-		if (decoratedBaseAdapter instanceof AnimationAdapter) {
-			childAnimators = ((AnimationAdapter) decoratedBaseAdapter).getAnimators(parent, view);
+		if (mDecoratedBaseAdapter instanceof AnimationAdapter) {
+			childAnimators = ((AnimationAdapter) mDecoratedBaseAdapter).getAnimators(parent, view);
 		} else {
 			childAnimators = new Animator[0];
 		}
@@ -150,7 +149,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private long calculateAnimationDelay() {
 		long delay;
-		int numberOfItems = mListView.getLastVisiblePosition() - mListView.getFirstVisiblePosition();
+		int numberOfItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
 		if (numberOfItems + 1 < mLastAnimatedPosition) {
 			delay = getAnimationDelayMillis();
 		} else {
