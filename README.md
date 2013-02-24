@@ -5,6 +5,7 @@ ListViewAnimations is an Open Source Android library that allows developers to e
 Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
 
 ListViewAnimations uses the [NineOldAndroids][2] library to support devices <3.0.
+It also uses Roman Nurik's BETA [SwipeDismissListViewTouchListener][5] to support swipe to dismiss.
 
 Setup
 -----
@@ -109,3 +110,4 @@ License
  [2]: http://nineoldandroids.com/
  [3]: http://en.wikipedia.org/wiki/Decorator_pattern
  [4]: https://bitbucket.org/nhaarman/listviewanimations/downloads
+ [5]: https://gist.github.com/romannurik/2980593
