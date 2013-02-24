@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations;
+package com.haarman.listviewanimations.itemmanipulationexamples;
 
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.haarman.listviewanimations.ArrayAdapter;
+import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.itemmanipulationadapters.SwipeDismissAdapter;
-import com.haarman.listviewanimations.itemmanipulationadapters.SwipeDismissAdapter.OnDismissCallback;
+import com.haarman.listviewanimations.itemmanipulationadapters.SwipeDismissListViewTouchListener.OnDismissCallback;
 
 public class SwipeDismissActivity extends MyListActivity {
 	@Override

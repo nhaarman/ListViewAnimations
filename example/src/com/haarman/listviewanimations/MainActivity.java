@@ -15,6 +15,13 @@
  */
 package com.haarman.listviewanimations;
 
+import com.haarman.listviewanimations.itemmanipulationexamples.SwipeDismissActivity;
+import com.haarman.listviewanimations.swinginexamples.GoogleCardsActivity;
+import com.haarman.listviewanimations.swinginexamples.SwingBottomInActivity;
+import com.haarman.listviewanimations.swinginexamples.SwingBottomRightInActivity;
+import com.haarman.listviewanimations.swinginexamples.SwingLeftInActivity;
+import com.haarman.listviewanimations.swinginexamples.SwingRightInActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
