@@ -7,38 +7,45 @@
     android:padding="8dp" >
 
     <Button
-        android:layout_width="130dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:onClick="onBottomInClicked"
         android:text="@string/bottomin" />
 
     <Button
-        android:layout_width="130dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:onClick="onRightInClicked"
         android:text="@string/rightin" />
 
     <Button
-        android:layout_width="130dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:onClick="onLeftInClicked"
         android:text="@string/leftin" />
 
     <Button
-        android:layout_width="130dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:onClick="onBottomRightInClicked"
         android:text="@string/bottomrightin" />
 
     <Button
-        android:layout_width="130dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:onClick="onGoogleCardsClicked"
         android:text="@string/googlecards" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:onClick="onSwipeDismissClicked"
+        android:text="@string/swipedismiss" />
 
 </LinearLayout>

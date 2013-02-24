@@ -6,5 +6,6 @@
     <string name="leftin">LeftIn</string>
     <string name="bottomrightin">BottomRightin</string>
     <string name="googlecards">Google Cards</string>
+    <string name="swipedismiss">Swipe to Dismiss</string>
 
 </resources>

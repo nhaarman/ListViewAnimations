@@ -15,65 +15,23 @@
  */
 package com.haarman.listviewanimations;
 
-import java.util.ArrayList;
-
-import android.app.ListActivity;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.BaseAdapter;
 
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
 
-public class SwingBottomRightInActivity extends ListActivity {
+public class SwingBottomRightInActivity extends MyListActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		MyListAdapter mAdapter = new MyListAdapter(this, getItems());
+		BaseAdapter mAdapter = createListAdapter();
 		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
 		SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(swingBottomInAnimationAdapter);
-		
-		// Or in short notation:
-		swingRightInAnimationAdapter = 
-			new SwingRightInAnimationAdapter(
-				new SwingBottomInAnimationAdapter(
-						new MyListAdapter(this, getItems())));
 
-		// Assing the ListView to the AnimationAdapter and vice versa
 		swingRightInAnimationAdapter.setListView(getListView());
 		getListView().setAdapter(swingRightInAnimationAdapter);
-	}
-
-	private ArrayList<String> getItems() {
-		ArrayList<String> items = new ArrayList<String>();
-		for (int i = 0; i < 1000; i++) {
-			items.add(String.valueOf(i));
-		}
-		return items;
-	}
-
-	private class MyListAdapter extends ArrayAdapter<String> {
-
-		private Context mContext;
-
-		public MyListAdapter(Context context, ArrayList<String> items) {
-			super(items);
-			mContext = context;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			TextView tv = (TextView) convertView;
-			if (tv == null) {
-				tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
-			}
-			tv.setText(getItem(position));
-			return tv;
-		}
 	}
 }

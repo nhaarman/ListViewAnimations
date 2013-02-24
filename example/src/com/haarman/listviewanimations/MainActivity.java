@@ -52,4 +52,9 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, GoogleCardsActivity.class);
 		startActivity(intent);
 	}
+
+	public void onSwipeDismissClicked(View view) {
+		Intent intent = new Intent(this, SwipeDismissActivity.class);
+		startActivity(intent);
+	}
 }

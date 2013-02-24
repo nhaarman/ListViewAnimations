@@ -4,7 +4,7 @@
     android:versionName="1.4" >
 
     <uses-sdk
-        android:minSdkVersion="4"
+        android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
     <application
@@ -24,6 +24,7 @@
         <activity android:name="com.haarman.listviewanimations.SwingRightInActivity" />
         <activity android:name="com.haarman.listviewanimations.SwingBottomRightInActivity" />
         <activity android:name="com.haarman.listviewanimations.GoogleCardsActivity" />
+        <activity android:name="com.haarman.listviewanimations.SwipeDismissActivity" />
     </application>
 
 </manifest>
