@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.itemmanipulationadapters;
+package com.haarman.listviewanimations.itemmanipulation;
 
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.haarman.listviewanimations.BaseAdapterDecorator;
-import com.haarman.listviewanimations.itemmanipulationadapters.SwipeDismissListViewTouchListener.OnDismissCallback;
+import com.haarman.listviewanimations.itemmanipulation.SwipeDismissListViewTouchListener.OnDismissCallback;
 
 /**
  * Adds an option to swipe items in a ListView away. This does nothing more than
