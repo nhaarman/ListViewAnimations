@@ -12,12 +12,17 @@ Setup
 * Project > Clean to generate the binaries you need, like R.java, etc.
 * Then, just add ListViewAnimations as a dependency to your existing project and you're good to go!
 
+Or:
+
+* Download the .jar file from the [Downloads page][4]
+* Add the .jar to your project's `libs` folder.
+
 Usage
 -----
 This library uses the [Decorator Pattern][3] to stack multiple `AnimationAdapter`s on each other:
 
 * Implement your own `BaseAdapter`, or reuse an existing one.
-* Stack multiple `AnimationAdapter`s on each other, with your `BaseAdapter` as a base.
+* Stack multiple `BaseAdapterDecorator`s on each other, with your `BaseAdapter` as a base.
 * Set the `ListView` to your last `AnimationAdapter`.
 * Set your last `AnimationAdapter` to the `ListView`.
 
@@ -103,3 +108,4 @@ License
  [1]: https://play.google.com/store/apps/details?id=com.haarman.listviewanimations
  [2]: http://nineoldandroids.com/
  [3]: http://en.wikipedia.org/wiki/Decorator_pattern
+ [4]: https://bitbucket.org/nhaarman/listviewanimations/downloads
