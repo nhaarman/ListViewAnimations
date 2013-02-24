@@ -1,6 +1,8 @@
 <resources>
 
     <string name="app_name">ListViewAnimationsExample</string>
+    <string name="swingin">Swing In Adapters</string>
+    <string name="itemmanipulation">Item manipulation</string>
     <string name="bottomin">BottomIn</string>
     <string name="rightin">RightIn</string>
     <string name="leftin">LeftIn</string>

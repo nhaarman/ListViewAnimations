@@ -13,31 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations;
+package com.haarman.listviewanimations.swinginexamples;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity;
-import com.haarman.listviewanimations.swinginexamples.SwingInExamplesActivity;
+import com.haarman.listviewanimations.R;
 
-public class MainActivity extends Activity {
+public class SwingInExamplesActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_examples_swingin);
 	}
 
-	public void onSwingInClicked(View view) {
-		Intent intent = new Intent(this, SwingInExamplesActivity.class);
+	public void onBottomInClicked(View view) {
+		Intent intent = new Intent(this, SwingBottomInActivity.class);
 		startActivity(intent);
 	}
 
-	public void onItemManipulationClicked(View view) {
-		Intent intent = new Intent(this, ItemManipulationsExamplesActivity.class);
+	public void onRightInClicked(View view) {
+		Intent intent = new Intent(this, SwingRightInActivity.class);
+		startActivity(intent);
+	}
+
+	public void onLeftInClicked(View view) {
+		Intent intent = new Intent(this, SwingLeftInActivity.class);
+		startActivity(intent);
+	}
+
+	public void onBottomRightInClicked(View view) {
+		Intent intent = new Intent(this, SwingBottomRightInActivity.class);
+		startActivity(intent);
+	}
+
+	public void onGoogleCardsClicked(View view) {
+		Intent intent = new Intent(this, GoogleCardsActivity.class);
 		startActivity(intent);
 	}
 

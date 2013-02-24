@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations;
+package com.haarman.listviewanimations.itemmanipulationexamples;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity;
-import com.haarman.listviewanimations.swinginexamples.SwingInExamplesActivity;
+import com.haarman.listviewanimations.R;
 
-public class MainActivity extends Activity {
+public class ItemManipulationsExamplesActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_examples_itemmanipulations);
 	}
 
-	public void onSwingInClicked(View view) {
-		Intent intent = new Intent(this, SwingInExamplesActivity.class);
+	public void onSwipeDismissClicked(View view) {
+		Intent intent = new Intent(this, SwipeDismissActivity.class);
 		startActivity(intent);
 	}
-
-	public void onItemManipulationClicked(View view) {
-		Intent intent = new Intent(this, ItemManipulationsExamplesActivity.class);
-		startActivity(intent);
-	}
-
 }

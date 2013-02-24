@@ -15,8 +15,11 @@
  */
 package com.haarman.listviewanimations.itemmanipulationexamples;
 
+import java.util.Arrays;
+
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.MyListActivity;
@@ -49,6 +52,7 @@ public class SwipeDismissActivity extends MyListActivity {
 			for (int position : reverseSortedPositions) {
 				mAdapter.remove(position);
 			}
+			Toast.makeText(SwipeDismissActivity.this, "Removed positions: " + Arrays.toString(reverseSortedPositions), Toast.LENGTH_SHORT).show();
 		}
 	}
 }

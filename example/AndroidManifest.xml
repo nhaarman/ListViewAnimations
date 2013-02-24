@@ -19,11 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingInExamplesActivity" />
         <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingBottomInActivity" />
-        <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingLeftInActivityngLeftInActivity" />
+        <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingLeftInActivity" />
         <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingRightInActivity" />
-        <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingBottomRightInActivitytions.SwingBottomRightInActivity" />
         <activity android:name="com.haarman.listviewanimations.swinginexamples.GoogleCardsActivity" />
+        <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity" />
         <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.SwipeDismissActivity" />
     </application>
 
