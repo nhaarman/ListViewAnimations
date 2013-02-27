@@ -57,7 +57,7 @@ public class GoogleCardsActivity extends Activity {
 		return items;
 	}
 
-	private class GoogleCardsAdapter extends ArrayAdapter<Integer> {
+	private static class GoogleCardsAdapter extends ArrayAdapter<Integer> {
 
 		private Context mContext;
 
@@ -67,15 +67,20 @@ public class GoogleCardsActivity extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder viewHolder;
 			View view = convertView;
 			if (view == null) {
 				view = LayoutInflater.from(mContext).inflate(R.layout.activity_googlecards_card, parent, false);
+				viewHolder = new ViewHolder();
+				viewHolder.textView = (TextView) view.findViewById(R.id.activity_googlecards_card_textview);
+				viewHolder.imageView = (ImageView) view.findViewById(R.id.activity_googlecards_card_imageview);
+				view.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) view.getTag();
 			}
 
-			TextView textView = (TextView) view.findViewById(R.id.activity_googlecards_card_textview);
-			textView.setText("This is card " + (getItem(position) + 1));
+			viewHolder.textView.setText("This is card " + (getItem(position) + 1));
 
-			ImageView imageView = (ImageView) view.findViewById(R.id.activity_googlecards_card_imageview);
 			int imageResId;
 			switch (getItem(position) % 5) {
 				case 0:
@@ -93,9 +98,14 @@ public class GoogleCardsActivity extends Activity {
 				default:
 					imageResId = R.drawable.img_nature5;
 			}
-			imageView.setImageResource(imageResId);
+			viewHolder.imageView.setImageResource(imageResId);
 
 			return view;
+		}
+
+		private static class ViewHolder {
+			TextView textView;
+			ImageView imageView;
 		}
 	}
 }
