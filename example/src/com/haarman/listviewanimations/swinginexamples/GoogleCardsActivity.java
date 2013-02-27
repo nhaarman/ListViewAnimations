@@ -17,12 +17,10 @@ package com.haarman.listviewanimations.swinginexamples;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
@@ -34,6 +32,7 @@ import android.widget.TextView;
 
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.R;
+import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 public class GoogleCardsActivity extends Activity {
@@ -46,7 +45,8 @@ public class GoogleCardsActivity extends Activity {
 		ListView listView = (ListView) findViewById(R.id.activity_googlecards_listview);
 
 		GoogleCardsAdapter googleCardsAdapter = new GoogleCardsAdapter(this);
-		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(googleCardsAdapter);
+		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(
+				new ScaleInAnimationAdapter(googleCardsAdapter));
 		swingBottomInAnimationAdapter.setListView(listView);
 
 		listView.setAdapter(swingBottomInAnimationAdapter);
@@ -74,20 +74,12 @@ public class GoogleCardsActivity extends Activity {
 
 			// Use 1/8th of the available memory for this memory cache.
 			final int cacheSize = maxMemory;
-			System.out.println("max: " + maxMemory);
 			mMemoryCache = new LruCache<Integer, Bitmap>(cacheSize) {
-				@SuppressLint("NewApi")
 				@Override
 				protected int sizeOf(Integer key, Bitmap bitmap) {
 					// The cache size will be measured in kilobytes rather than
 					// number of items.
-					int size;
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-						size = bitmap.getByteCount() / 1024;
-					} else {
-						size = bitmap.getRowBytes() * bitmap.getHeight() / 1024;
-					}
-					return size;
+					return bitmap.getRowBytes() * bitmap.getHeight() / 1024;
 				}
 			};
 		}
