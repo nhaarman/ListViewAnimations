@@ -71,41 +71,42 @@ public class GoogleCardsActivity extends Activity {
 			View view = convertView;
 			if (view == null) {
 				view = LayoutInflater.from(mContext).inflate(R.layout.activity_googlecards_card, parent, false);
+
 				viewHolder = new ViewHolder();
 				viewHolder.textView = (TextView) view.findViewById(R.id.activity_googlecards_card_textview);
-				viewHolder.imageView = (ImageView) view.findViewById(R.id.activity_googlecards_card_imageview);
 				view.setTag(viewHolder);
+
+				ImageView imageView = (ImageView) view.findViewById(R.id.activity_googlecards_card_imageview);
+
+				int imageResId;
+				switch (getItem(position) % 5) {
+					case 0:
+						imageResId = R.drawable.img_nature1;
+						break;
+					case 1:
+						imageResId = R.drawable.img_nature2;
+						break;
+					case 2:
+						imageResId = R.drawable.img_nature3;
+						break;
+					case 3:
+						imageResId = R.drawable.img_nature4;
+						break;
+					default:
+						imageResId = R.drawable.img_nature5;
+				}
+				imageView.setImageResource(imageResId);
 			} else {
 				viewHolder = (ViewHolder) view.getTag();
 			}
 
 			viewHolder.textView.setText("This is card " + (getItem(position) + 1));
 
-			int imageResId;
-			switch (getItem(position) % 5) {
-				case 0:
-					imageResId = R.drawable.img_nature1;
-					break;
-				case 1:
-					imageResId = R.drawable.img_nature2;
-					break;
-				case 2:
-					imageResId = R.drawable.img_nature3;
-					break;
-				case 3:
-					imageResId = R.drawable.img_nature4;
-					break;
-				default:
-					imageResId = R.drawable.img_nature5;
-			}
-			viewHolder.imageView.setImageResource(imageResId);
-
 			return view;
 		}
 
 		private static class ViewHolder {
 			TextView textView;
-			ImageView imageView;
 		}
 	}
 }
