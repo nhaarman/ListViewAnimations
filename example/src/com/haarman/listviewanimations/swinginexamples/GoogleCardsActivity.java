@@ -92,7 +92,6 @@ public class GoogleCardsActivity extends Activity {
 			};
 		}
 
-		@SuppressLint("NewApi")
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder viewHolder;
@@ -111,6 +110,12 @@ public class GoogleCardsActivity extends Activity {
 
 			viewHolder.textView.setText("This is card " + (getItem(position) + 1));
 
+			setImageView(viewHolder, position);
+
+			return view;
+		}
+
+		private void setImageView(ViewHolder viewHolder, int position) {
 			int imageResId;
 			switch (getItem(position) % 5) {
 				case 0:
@@ -128,17 +133,13 @@ public class GoogleCardsActivity extends Activity {
 				default:
 					imageResId = R.drawable.img_nature5;
 			}
+
 			Bitmap bitmap = getBitmapFromMemCache(imageResId);
 			if (bitmap == null) {
 				bitmap = BitmapFactory.decodeResource(mContext.getResources(), imageResId);
-				System.out.println("CREATING: " + (bitmap.getByteCount() / 1024));
 				addBitmapToMemoryCache(imageResId, bitmap);
-			} else {
-				System.out.println("REUSING");
 			}
-			viewHolder.imageView.setImageResource(imageResId);
-
-			return view;
+			viewHolder.imageView.setImageBitmap(bitmap);
 		}
 
 		private void addBitmapToMemoryCache(int key, Bitmap bitmap) {
