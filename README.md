@@ -4,8 +4,14 @@ ListViewAnimations ([Play Store Demo][1])
 ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
 Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
 
-ListViewAnimations uses the [NineOldAndroids][2] library to support devices <3.0.
+ListViewAnimations uses the [NineOldAndroids][2] library to support devices <3.0.  
 It also uses Roman Nurik's BETA [SwipeDismissListViewTouchListener][5] to support swipe to dismiss.
+
+Known applications using ListViewAnimations
+-----
+* TreinVerkeer ([Play Store][6])
+
+If you want your app to be listed as well please contact me via [Twitter][7] or [Google Plus][8]!
 
 Setup
 -----
@@ -24,8 +30,8 @@ This library uses the [Decorator Pattern][3] to stack multiple `AnimationAdapter
 
 * Implement your own `BaseAdapter`, or reuse an existing one.
 * Stack multiple `BaseAdapterDecorator`s on each other, with your `BaseAdapter` as a base.
-* Set the `ListView` to your last `AnimationAdapter`.
-* Set your last `AnimationAdapter` to the `ListView`.
+* Set the `ListView` to your last `BaseAdapterDecorator`.
+* Set your last `BaseAdapterDecorator` to the `ListView`.
 
 Example:
 -----
@@ -111,3 +117,6 @@ License
  [3]: http://en.wikipedia.org/wiki/Decorator_pattern
  [4]: https://bitbucket.org/nhaarman/listviewanimations/downloads
  [5]: https://gist.github.com/romannurik/2980593
+ [6]: https://play.google.com/store/apps/details?id=com.haarman.treinverkeer
+ [7]: https://www.twitter.com/niekfct
+ [8]: https://plus.google.com/106017817931984343451
