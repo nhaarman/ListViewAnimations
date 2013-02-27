@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.swinginexamples;
+package com.haarman.listviewanimations.animationinexamples;
 
 import android.os.Bundle;
 import android.widget.BaseAdapter;
 
 import com.haarman.listviewanimations.MyListActivity;
-import com.haarman.listviewanimations.swinginadapters.prepared.SwingLeftInAnimationAdapter;
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
 
-public class SwingLeftInActivity extends MyListActivity {
-
+public class SwingRightInActivity extends MyListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		BaseAdapter mAdapter = createListAdapter();
 
-		SwingLeftInAnimationAdapter swingLeftInAnimationAdapter = new SwingLeftInAnimationAdapter(mAdapter);
-		swingLeftInAnimationAdapter.setListView(getListView());
+		SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(mAdapter);
+		swingRightInAnimationAdapter.setListView(getListView());
 
-		getListView().setAdapter(swingLeftInAnimationAdapter);
+		getListView().setAdapter(swingRightInAnimationAdapter);
 	}
 }

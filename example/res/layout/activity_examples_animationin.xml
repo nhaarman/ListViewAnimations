@@ -38,6 +38,13 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:onClick="onScaleInClicked"
+        android:text="@string/scalein" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:onClick="onGoogleCardsClicked"
         android:text="@string/googlecards" />
 

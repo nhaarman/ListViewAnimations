@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations;
+package com.haarman.listviewanimations.animationinexamples;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.BaseAdapter;
 
-import com.haarman.listviewanimations.animationinexamples.AnimationInExamplesActivity;
-import com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity;
+import com.haarman.listviewanimations.MyListActivity;
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
-public class MainActivity extends Activity {
+public class SwingBottomInActivity extends MyListActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-	}
 
-	public void onSwingInClicked(View view) {
-		Intent intent = new Intent(this, AnimationInExamplesActivity.class);
-		startActivity(intent);
-	}
+		BaseAdapter mAdapter = createListAdapter();
 
-	public void onItemManipulationClicked(View view) {
-		Intent intent = new Intent(this, ItemManipulationsExamplesActivity.class);
-		startActivity(intent);
-	}
+		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
+		swingBottomInAnimationAdapter.setListView(getListView());
 
+		getListView().setAdapter(swingBottomInAnimationAdapter);
+	}
 }

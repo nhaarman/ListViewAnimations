@@ -1,12 +1,13 @@
 <resources>
 
     <string name="app_name">ListViewAnimationsExample</string>
-    <string name="swingin">Swing In Adapters</string>
+    <string name="swingin">AnimationInAdapters</string>
     <string name="itemmanipulation">Item manipulation</string>
     <string name="bottomin">BottomIn</string>
     <string name="rightin">RightIn</string>
     <string name="leftin">LeftIn</string>
     <string name="bottomrightin">BottomRightin</string>
+    <string name="scalein">ScaleIn</string>
     <string name="googlecards">Google Cards</string>
     <string name="swipedismiss">Swipe to Dismiss</string>
 

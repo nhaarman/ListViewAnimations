@@ -19,12 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingInExamplesActivity" />
-        <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingBottomInActivity" />
-        <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingBottomRightInActivity" />
-        <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingLeftInActivity" />
-        <activity android:name="com.haarman.listviewanimations.swinginexamples.SwingRightInActivity" />
-        <activity android:name="com.haarman.listviewanimations.swinginexamples.GoogleCardsActivity" />
+        <activity android:name="com.haarman.listviewanimations.animationinexamples.AnimationInExamplesActivity" />
+        <activity android:name="com.haarman.listviewanimations.animationinexamples.SwingBottomInActivity" />
+        <activity android:name="com.haarman.listviewanimations.animationinexamples.SwingBottomRightInActivity" />
+        <activity android:name="com.haarman.listviewanimations.animationinexamples.SwingLeftInActivity" />
+        <activity android:name="com.haarman.listviewanimations.animationinexamples.SwingRightInActivity" />
+        <activity android:name="com.haarman.listviewanimations.animationinexamples.ScaleInActivity" />
+        <activity android:name="com.haarman.listviewanimations.animationinexamples.GoogleCardsActivity" />
         <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity" />
         <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.SwipeDismissActivity" />
     </application>

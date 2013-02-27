@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.swinginexamples;
+package com.haarman.listviewanimations.animationinexamples;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,12 +22,12 @@ import android.view.View;
 
 import com.haarman.listviewanimations.R;
 
-public class SwingInExamplesActivity extends Activity {
+public class AnimationInExamplesActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_examples_swingin);
+		setContentView(R.layout.activity_examples_animationin);
 	}
 
 	public void onBottomInClicked(View view) {
@@ -47,6 +47,11 @@ public class SwingInExamplesActivity extends Activity {
 
 	public void onBottomRightInClicked(View view) {
 		Intent intent = new Intent(this, SwingBottomRightInActivity.class);
+		startActivity(intent);
+	}
+
+	public void onScaleInClicked(View view) {
+		Intent intent = new Intent(this, ScaleInActivity.class);
 		startActivity(intent);
 	}
 
