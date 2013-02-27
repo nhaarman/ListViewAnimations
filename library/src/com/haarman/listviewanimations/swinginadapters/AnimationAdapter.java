@@ -73,18 +73,18 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 			Assert.assertNotNull("Call setListView() on this AnimationAdapter before setAdapter()!", getListView());
 
 			if (convertView != null) {
-				int previousPosition = (Integer) convertView.getTag();
-				Animator animator = mAnimators.get(previousPosition);
+				int hashCode = convertView.hashCode();
+				Animator animator = mAnimators.get(hashCode);
 				if (animator != null) {
 					animator.end();
 				}
-				mAnimators.remove(previousPosition);
+				mAnimators.remove(hashCode);
 			}
 		}
 
 		View itemView = super.getView(position, convertView, parent);
+
 		if (!mHasParentAnimationAdapter) {
-			itemView.setTag(position);
 			animateViewIfNecessary(position, itemView, parent);
 		}
 		return itemView;
@@ -119,7 +119,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		set.setDuration(getAnimationDurationMillis());
 		set.start();
 
-		mAnimators.put((Integer) view.getTag(), set);
+		mAnimators.put(view.hashCode(), set);
 	}
 
 	private void hideView(View view) {
