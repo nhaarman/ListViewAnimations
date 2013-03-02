@@ -87,10 +87,6 @@ Implement one of the following classes:
 
 See the examples.
 
-Note
------
-* Using the one of the `AnimationAdapter` classes will hide the dividers between your listitems.
-
 Developed By
 -----
 * Niek Haarman
