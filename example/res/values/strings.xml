@@ -1,14 +1,14 @@
 <resources>
 
     <string name="app_name">ListViewAnimationsExample</string>
-    <string name="swingin">AnimationInAdapters</string>
+    <string name="swingin">Animation in adapters</string>
     <string name="itemmanipulation">Item manipulation</string>
-    <string name="bottomin">BottomIn</string>
-    <string name="rightin">RightIn</string>
-    <string name="leftin">LeftIn</string>
-    <string name="bottomrightin">BottomRightin</string>
-    <string name="scalein">ScaleIn</string>
-    <string name="googlecards">Google Cards</string>
-    <string name="swipedismiss">Swipe to Dismiss</string>
+    <string name="bottomin">Bottom in</string>
+    <string name="rightin">Right in</string>
+    <string name="leftin">Left in</string>
+    <string name="bottomrightin">Bottom right in</string>
+    <string name="scalein">Scale in</string>
+    <string name="googlecards">Google cards example</string>
+    <string name="swipedismiss">Swipe to dismiss</string>
 
 </resources>

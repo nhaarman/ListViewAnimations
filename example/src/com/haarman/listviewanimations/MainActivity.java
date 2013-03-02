@@ -31,6 +31,11 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 	}
 
+	public void onGoogleCardsExampleClicked(View view) {
+		Intent intent = new Intent(this, GoogleCardsActivity.class);
+		startActivity(intent);
+	}
+
 	public void onSwingInClicked(View view) {
 		Intent intent = new Intent(this, AnimationInExamplesActivity.class);
 		startActivity(intent);

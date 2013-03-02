@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.animationinexamples;
+package com.haarman.listviewanimations;
 
 import java.util.ArrayList;
 
@@ -32,10 +32,14 @@ import android.widget.TextView;
 
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.R;
+import com.haarman.listviewanimations.itemmanipulation.SwipeDismissAdapter;
+import com.haarman.listviewanimations.itemmanipulation.SwipeDismissListViewTouchListener.OnDismissCallback;
 import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
-public class GoogleCardsActivity extends Activity {
+public class GoogleCardsActivity extends Activity implements OnDismissCallback {
+
+	private GoogleCardsAdapter mGoogleCardsAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +48,13 @@ public class GoogleCardsActivity extends Activity {
 
 		ListView listView = (ListView) findViewById(R.id.activity_googlecards_listview);
 
-		GoogleCardsAdapter googleCardsAdapter = new GoogleCardsAdapter(this);
-		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(
-				new ScaleInAnimationAdapter(googleCardsAdapter));
+		mGoogleCardsAdapter = new GoogleCardsAdapter(this);
+		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new ScaleInAnimationAdapter(new SwipeDismissAdapter(mGoogleCardsAdapter, this)));
 		swingBottomInAnimationAdapter.setListView(listView);
 
 		listView.setAdapter(swingBottomInAnimationAdapter);
 
-		googleCardsAdapter.addAll(getItems());
+		mGoogleCardsAdapter.addAll(getItems());
 	}
 
 	private ArrayList<Integer> getItems() {
@@ -60,6 +63,13 @@ public class GoogleCardsActivity extends Activity {
 			items.add(i);
 		}
 		return items;
+	}
+
+	@Override
+	public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+		for (int position : reverseSortedPositions) {
+			mGoogleCardsAdapter.remove(position);
+		}
 	}
 
 	private static class GoogleCardsAdapter extends ArrayAdapter<Integer> {
