@@ -82,7 +82,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	 * list, in the order that they are returned by the specified collection's
 	 * Iterator.
 	 */
-	public void addAll(Collection<T> items) {
+	public void addAll(Collection<? extends T> items) {
 		mItems.addAll(items);
 		notifyDataSetChanged();
 	}
@@ -102,7 +102,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	 * Inserts all of the elements in the specified collection into the list,
 	 * starting at the specified position.
 	 */
-	public void addAll(int index, Collection<T> items) {
+	public void addAll(int index, Collection<? extends T> items) {
 		mItems.addAll(index, items);
 		notifyDataSetChanged();
 	}

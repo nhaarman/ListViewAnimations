@@ -20,7 +20,6 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import com.haarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
@@ -54,16 +53,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 		if (baseAdapter instanceof AnimationAdapter) {
 			((AnimationAdapter) baseAdapter).setHasParentAnimationAdapter(true);
-		}
-	}
-
-	@Override
-	public void setListView(ListView listView) {
-		super.setListView(listView);
-		if (getListView().getDivider() != null) {
-			int dividerHeight = getListView().getDividerHeight();
-			getListView().setDivider(null);
-			getListView().setDividerHeight(dividerHeight);
 		}
 	}
 
