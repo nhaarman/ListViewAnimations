@@ -293,7 +293,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 						ViewHelper.setAlpha(pendingDismiss.view, 1f);
 						ViewHelper.setTranslationX(pendingDismiss.view, 0);
 						lp = pendingDismiss.view.getLayoutParams();
-						lp.height = originalHeight;
+						lp.height = 0;
 						pendingDismiss.view.setLayoutParams(lp);
 					}
 
