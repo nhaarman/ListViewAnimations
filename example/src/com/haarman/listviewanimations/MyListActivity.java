@@ -19,12 +19,19 @@ import java.util.ArrayList;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class MyListActivity extends ListActivity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getListView().setDivider(null);
+	}
 
 	protected ArrayAdapter<String> createListAdapter() {
 		return new MyListAdapter(this, getItems());
