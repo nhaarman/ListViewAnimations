@@ -44,16 +44,6 @@ import com.nineoldandroids.view.ViewHelper;
  * clicks, etc.
  * 
  * <p>
- * After creating the listener, the caller should also call
- * {@link ListView#setOnScrollListener(android.widget.AbsListView.OnScrollListener)}
- * , passing in the scroll listener returned by {@link #makeScrollListener()}.
- * If a scroll listener is already assigned, the caller should still pass scroll
- * changes through to this listener. This will ensure that this
- * {@link SwipeDismissListViewTouchListener} is paused during list view
- * scrolling.
- * </p>
- * 
- * <p>
  * Example usage:
  * </p>
  * 
@@ -67,20 +57,7 @@ import com.nineoldandroids.view.ViewHelper;
  * 	}
  * });
  * listView.setOnTouchListener(touchListener);
- * listView.setOnScrollListener(touchListener.makeScrollListener());
  * </pre>
- * 
- * <p>
- * This class Requires API level 12 or later due to use of
- * {@link android.view.ViewPropertyAnimator}.
- * </p>
- * 
- * <p>
- * For a generalized {@link android.view.View.OnTouchListener} that makes any
- * view dismissable, see {@link SwipeDismissTouchListener}.
- * </p>
- * 
- * @see SwipeDismissTouchListener
  */
 @SuppressLint("Recycle")
 public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
