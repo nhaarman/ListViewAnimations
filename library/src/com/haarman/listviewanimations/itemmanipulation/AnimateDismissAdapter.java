@@ -107,7 +107,6 @@ public class AnimateDismissAdapter<T> extends ArrayAdapterDecorator<T> {
 				public void onAnimationCancel(Animator arg0) {
 				}
 			});
-			animatorSet.setDuration(2000);
 			animatorSet.start();
 		} else {
 			AnimateDismissAdapter.super.removePositions(positions);
