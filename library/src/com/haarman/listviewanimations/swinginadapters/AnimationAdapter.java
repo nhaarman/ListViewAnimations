@@ -27,8 +27,8 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
- * An ArrayAdapter class which applies multiple Animators at once to views when
- * they are first shown. The Animators applied are to be specified in
+ * A BaseAdapterDecorator class which applies multiple Animators at once to views when
+ * they are first shown. The Animators applied include the animations specified in
  * getAnimators(ViewGroup, View), plus an alpha transition.
  */
 public abstract class AnimationAdapter extends BaseAdapterDecorator {

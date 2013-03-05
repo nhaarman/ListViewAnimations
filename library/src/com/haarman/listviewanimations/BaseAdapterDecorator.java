@@ -21,6 +21,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+/**
+ * A decorator class that enables decoration of an instance of the BaseAdapter
+ * class.
+ * 
+ * Classes extending this class can override methods and provide extra
+ * functionality before or after calling the super method.
+ */
 public abstract class BaseAdapterDecorator extends BaseAdapter {
 
 	protected final BaseAdapter mDecoratedBaseAdapter;
