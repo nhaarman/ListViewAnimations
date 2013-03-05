@@ -169,4 +169,15 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
+	/**
+	 * Returns the index of the first occurrence of the specified element in
+	 * this list, or -1 if this list does not contain the element. More
+	 * formally, returns the lowest index <tt>i</tt> such that
+	 * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
+	 * or -1 if there is no such index.
+	 */
+	public int indexOf(T item) {
+		return mItems.indexOf(item);
+	}
+
 }
