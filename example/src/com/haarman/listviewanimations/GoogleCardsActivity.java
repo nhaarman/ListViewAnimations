@@ -30,11 +30,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.haarman.listviewanimations.ArrayAdapter;
-import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.itemmanipulation.SwipeDismissAdapter;
 import com.haarman.listviewanimations.itemmanipulation.SwipeDismissListViewTouchListener.OnDismissCallback;
-import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 public class GoogleCardsActivity extends Activity implements OnDismissCallback {
@@ -49,7 +46,7 @@ public class GoogleCardsActivity extends Activity implements OnDismissCallback {
 		ListView listView = (ListView) findViewById(R.id.activity_googlecards_listview);
 
 		mGoogleCardsAdapter = new GoogleCardsAdapter(this);
-		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new ScaleInAnimationAdapter(new SwipeDismissAdapter(mGoogleCardsAdapter, this)));
+		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new SwipeDismissAdapter(mGoogleCardsAdapter, this));
 		swingBottomInAnimationAdapter.setListView(listView);
 
 		listView.setAdapter(swingBottomInAnimationAdapter);
@@ -111,7 +108,6 @@ public class GoogleCardsActivity extends Activity implements OnDismissCallback {
 			}
 
 			viewHolder.textView.setText("This is card " + (getItem(position) + 1));
-
 			setImageView(viewHolder, position);
 
 			return view;
