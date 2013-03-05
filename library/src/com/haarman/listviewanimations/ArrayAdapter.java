@@ -17,6 +17,7 @@ package com.haarman.listviewanimations;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import android.widget.BaseAdapter;
 
@@ -72,8 +73,8 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	/**
 	 * Inserts the specified element at the specified position in the list.
 	 */
-	public void add(int index, T item) {
-		mItems.add(index, item);
+	public void add(int position, T item) {
+		mItems.add(position, item);
 		notifyDataSetChanged();
 	}
 
@@ -102,8 +103,8 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	 * Inserts all of the elements in the specified collection into the list,
 	 * starting at the specified position.
 	 */
-	public void addAll(int index, Collection<? extends T> items) {
-		mItems.addAll(index, items);
+	public void addAll(int position, Collection<? extends T> items) {
+		mItems.addAll(position, items);
 		notifyDataSetChanged();
 	}
 
@@ -111,8 +112,8 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	 * Inserts all of the elements into the list, starting at the specified
 	 * position.
 	 */
-	public void addAll(int index, T... items) {
-		for (int i = index; i < (items.length + index); i++) {
+	public void addAll(int position, T... items) {
+		for (int i = position; i < (items.length + position); i++) {
 			mItems.add(i, items[i]);
 		}
 		notifyDataSetChanged();
@@ -130,8 +131,8 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	 * Replaces the element at the specified position in this list with the
 	 * specified element.
 	 */
-	public void set(int index, T item) {
-		mItems.set(index, item);
+	public void set(int position, T item) {
+		mItems.set(position, item);
 		notifyDataSetChanged();
 	}
 
@@ -146,8 +147,21 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	/**
 	 * Removes the element at the specified position in the list
 	 */
-	public void remove(int index) {
-		mItems.remove(index);
+	public void remove(int position) {
+		mItems.remove(position);
+		notifyDataSetChanged();
+	}
+
+	/**
+	 * Removes all elements at the specified positions in the list
+	 */
+	public void removePositions(Collection<Integer> positions) {
+		ArrayList<Integer> positionsList = new ArrayList<Integer>(positions);
+		Collections.sort(positionsList);
+		Collections.reverse(positionsList);
+		for (int position : positionsList) {
+			mItems.remove(position);
+		}
 		notifyDataSetChanged();
 	}
 
@@ -160,6 +174,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
+
 	/**
 	 * Retains only the elements in the list that are contained in the specified
 	 * collection
@@ -170,11 +185,11 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	}
 
 	/**
-	 * Returns the index of the first occurrence of the specified element in
+	 * Returns the position of the first occurrence of the specified element in
 	 * this list, or -1 if this list does not contain the element. More
-	 * formally, returns the lowest index <tt>i</tt> such that
+	 * formally, returns the lowest position <tt>i</tt> such that
 	 * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
-	 * or -1 if there is no such index.
+	 * or -1 if there is no such position.
 	 */
 	public int indexOf(T item) {
 		return mItems.indexOf(item);
