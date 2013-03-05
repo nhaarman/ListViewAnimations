@@ -26,7 +26,7 @@ Or:
 
 Usage
 -----
-This library uses the [Decorator Pattern][3] to stack multiple `AnimationAdapter`s on each other:
+This library uses the [Decorator Pattern][3] to stack multiple `BaseAdapterDecorator`s on each other:
 
 * Implement your own `BaseAdapter`, or reuse an existing one.
 * Stack multiple `BaseAdapterDecorator`s on each other, with your `BaseAdapter` as a base.
@@ -114,5 +114,5 @@ License
  [4]: https://bitbucket.org/nhaarman/listviewanimations/downloads
  [5]: https://gist.github.com/romannurik/2980593
  [6]: https://play.google.com/store/apps/details?id=com.haarman.treinverkeer
- [7]: https://www.twitter.com/niekfct
+ [7]: https://www.twitter.com/haarmandev
  [8]: https://plus.google.com/106017817931984343451
