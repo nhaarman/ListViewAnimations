@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.itemmanipulation.SwipeDismissAdapter;
-import com.haarman.listviewanimations.itemmanipulation.SwipeDismissListViewTouchListener.OnDismissCallback;
+import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
 public class SwipeDismissActivity extends MyListActivity {
 	@Override

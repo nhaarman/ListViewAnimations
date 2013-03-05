@@ -1,5 +1,5 @@
 // THIS IS A BETA! I DON'T RECOMMEND USING IT IN PRODUCTION CODE JUST YET
- 
+
 /*
  * Copyright 2012 Roman Nurik
  *
@@ -293,22 +293,4 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 		animator.start();
 	}
 
-	/**
-	 * The callback interface used by {@link SwipeDismissListViewTouchListener}
-	 * to inform its client about a successful dismissal of one or more list
-	 * item positions.
-	 */
-	public interface OnDismissCallback {
-		/**
-		 * Called when the user has indicated they she would like to dismiss one
-		 * or more list item positions.
-		 * 
-		 * @param listView
-		 *            The originating {@link ListView}.
-		 * @param reverseSortedPositions
-		 *            An array of positions to dismiss, sorted in descending
-		 *            order for convenience.
-		 */
-		void onDismiss(ListView listView, int[] reverseSortedPositions);
-	}
 }

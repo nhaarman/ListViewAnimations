@@ -19,7 +19,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.haarman.listviewanimations.BaseAdapterDecorator;
-import com.haarman.listviewanimations.itemmanipulation.SwipeDismissListViewTouchListener.OnDismissCallback;
 
 /**
  * Adds an option to swipe items in a ListView away. This does nothing more than

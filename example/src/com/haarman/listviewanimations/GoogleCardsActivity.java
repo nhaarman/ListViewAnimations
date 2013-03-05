@@ -31,7 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.haarman.listviewanimations.itemmanipulation.SwipeDismissAdapter;
-import com.haarman.listviewanimations.itemmanipulation.SwipeDismissListViewTouchListener.OnDismissCallback;
+import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 public class GoogleCardsActivity extends Activity implements OnDismissCallback {

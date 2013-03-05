@@ -34,10 +34,12 @@ import com.haarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.itemmanipulation.AnimateDismissAdapter;
+import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
 public class AnimateDismissActivity extends Activity {
 
 	private List<Integer> mSelectedPositions;
+	private MyListAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,8 @@ public class AnimateDismissActivity extends Activity {
 		mSelectedPositions = new ArrayList<Integer>();
 
 		ListView listView = (ListView) findViewById(R.id.activity_animateremoval_listview);
-		final AnimateDismissAdapter<String> animateDismissAdapter = new AnimateDismissAdapter<String>(new MyListAdapter(MyListActivity.getItems()));
+		mAdapter = new MyListAdapter(MyListActivity.getItems());
+		final AnimateDismissAdapter<String> animateDismissAdapter = new AnimateDismissAdapter<String>(mAdapter, new MyOnDismissCallback());
 		animateDismissAdapter.setListView(listView);
 		listView.setAdapter(animateDismissAdapter);
 
@@ -56,7 +59,7 @@ public class AnimateDismissActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				animateDismissAdapter.removePositions(mSelectedPositions);
+				animateDismissAdapter.removeAll(mSelectedPositions);
 				mSelectedPositions.clear();
 			}
 		});
@@ -76,6 +79,16 @@ public class AnimateDismissActivity extends Activity {
 		});
 	}
 
+	private class MyOnDismissCallback implements OnDismissCallback {
+
+		@Override
+		public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+			for (int position : reverseSortedPositions) {
+				mAdapter.remove(position);
+			}
+		}
+	}
+
 	private class MyListAdapter extends ArrayAdapter<String> {
 
 		public MyListAdapter(ArrayList<String> items) {
@@ -93,4 +106,5 @@ public class AnimateDismissActivity extends Activity {
 			return tv;
 		}
 	}
+
 }

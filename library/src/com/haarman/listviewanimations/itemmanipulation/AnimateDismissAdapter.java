@@ -18,15 +18,15 @@ package com.haarman.listviewanimations.itemmanipulation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.Assert;
-
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 
-import com.haarman.listviewanimations.ArrayAdapter;
-import com.haarman.listviewanimations.ArrayAdapterDecorator;
+import com.haarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -34,42 +34,32 @@ import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
 
 /**
- * An ArrayAdapterDecorator class that provides animations to the removal of
- * items in the given ArrayAdapter.
+ * A BaseAdapterDecorator class that provides animations to the removal of items
+ * in the given BaseAdapter. Note that in order to apply the animations you must
+ * call one of the remove methods of this class, not of your BaseAdapter
+ * implementation.
  */
-public class AnimateDismissAdapter<T> extends ArrayAdapterDecorator<T> {
+public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
+
+	private OnDismissCallback mCallback;
 
 	/**
 	 * Create a new AnimateDismissAdapter based on the given ArrayAdapter.
+	 * 
+	 * @param callback
+	 *            The callback to trigger when the user has indicated that she
+	 *            would like to dismiss one or more list items.
 	 */
-	public AnimateDismissAdapter(ArrayAdapter<T> arrayAdapter) {
-		super(arrayAdapter);
+	public AnimateDismissAdapter(BaseAdapter baseAdapter, OnDismissCallback callback) {
+		super(baseAdapter);
+		mCallback = callback;
 	}
 
-	@Override
-	public void remove(T item) {
-		int index = indexOf(item);
-		remove(index);
-	}
-
-	@Override
 	public void remove(final int index) {
-		removePositions(Arrays.asList(index));
+		removeAll(Arrays.asList(index));
 	}
 
-	@Override
-	public void removeAll(Collection<T> items) {
-		List<Integer> positions = new ArrayList<Integer>();
-
-		for (T item : items) {
-			positions.add(indexOf(item));
-		}
-
-		removePositions(positions);
-	}
-
-	@Override
-	public void removePositions(Collection<Integer> positions) {
+	public void removeAll(Collection<Integer> positions) {
 		final List<Integer> positionsCopy = new ArrayList<Integer>(positions);
 		Assert.assertNotNull("Call setListView() on this AnimateDismissAdapter before calling setAdapter()!", getListView());
 
@@ -101,7 +91,7 @@ public class AnimateDismissAdapter<T> extends ArrayAdapterDecorator<T> {
 
 				@Override
 				public void onAnimationEnd(Animator arg0) {
-					AnimateDismissAdapter.super.removePositions(positionsCopy);
+					invokeCallback(positionsCopy);
 				}
 
 				@Override
@@ -110,8 +100,18 @@ public class AnimateDismissAdapter<T> extends ArrayAdapterDecorator<T> {
 			});
 			animatorSet.start();
 		} else {
-			AnimateDismissAdapter.super.removePositions(positionsCopy);
+			invokeCallback(positionsCopy);
 		}
+	}
+
+	private void invokeCallback(Collection<Integer> positions) {
+		ArrayList<Integer> positionsList = new ArrayList<Integer>(positions);
+		Collections.sort(positionsList);
+		int[] dismissPositions = new int[positionsList.size()];
+		for (int i = 0; i < positionsList.size(); i++) {
+			dismissPositions[i] = positionsList.get(positionsList.size() - 1 - i);
+		}
+		mCallback.onDismiss(getListView(), dismissPositions);
 	}
 
 	private List<View> getVisibleViewsForPositions(Collection<Integer> positions) {
@@ -162,5 +162,4 @@ public class AnimateDismissAdapter<T> extends ArrayAdapterDecorator<T> {
 
 		return animator;
 	}
-
 }
