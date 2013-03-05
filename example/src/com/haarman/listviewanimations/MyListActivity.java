@@ -37,7 +37,7 @@ public class MyListActivity extends ListActivity {
 		return new MyListAdapter(this, getItems());
 	}
 
-	private ArrayList<String> getItems() {
+	public static ArrayList<String> getItems() {
 		ArrayList<String> items = new ArrayList<String>();
 		for (int i = 0; i < 1000; i++) {
 			items.add(String.valueOf(i));

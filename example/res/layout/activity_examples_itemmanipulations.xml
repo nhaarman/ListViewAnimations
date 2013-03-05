@@ -13,4 +13,11 @@
         android:onClick="onSwipeDismissClicked"
         android:text="@string/swipedismiss" />
 
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:onClick="onAnimateRemovalClicked"
+        android:text="@string/animateremoval" />
+
 </LinearLayout>

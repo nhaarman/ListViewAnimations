@@ -10,5 +10,8 @@
     <string name="scalein">Scale in</string>
     <string name="googlecards">Google cards example</string>
     <string name="swipedismiss">Swipe to dismiss</string>
+    <string name="animateremoval">Animate dismiss</string>
+    
+    <string name="removeselected">Remove selected</string>
 
 </resources>

@@ -34,4 +34,9 @@ public class ItemManipulationsExamplesActivity extends Activity {
 		Intent intent = new Intent(this, SwipeDismissActivity.class);
 		startActivity(intent);
 	}
+
+	public void onAnimateRemovalClicked(View view) {
+		Intent intent = new Intent(this, AnimateDismissActivity.class);
+		startActivity(intent);
+	}
 }
