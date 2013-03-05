@@ -35,9 +35,7 @@ import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
 
 /**
  * A BaseAdapterDecorator class that provides animations to the removal of items
- * in the given BaseAdapter. Note that in order to apply the animations you must
- * call one of the remove methods of this class, not of your BaseAdapter
- * implementation.
+ * in the given BaseAdapter.
  */
 public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
 
@@ -55,11 +53,11 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
 		mCallback = callback;
 	}
 
-	public void remove(final int index) {
-		removeAll(Arrays.asList(index));
+	public void animateDismiss(int index) {
+		animateDismiss(Arrays.asList(index));
 	}
 
-	public void removeAll(Collection<Integer> positions) {
+	public void animateDismiss(Collection<Integer> positions) {
 		final List<Integer> positionsCopy = new ArrayList<Integer>(positions);
 		Assert.assertNotNull("Call setListView() on this AnimateDismissAdapter before calling setAdapter()!", getListView());
 

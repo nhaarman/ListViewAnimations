@@ -59,7 +59,7 @@ public class AnimateDismissActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				animateDismissAdapter.removeAll(mSelectedPositions);
+				animateDismissAdapter.animateDismiss(mSelectedPositions);
 				mSelectedPositions.clear();
 			}
 		});
