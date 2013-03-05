@@ -69,10 +69,11 @@ public class AnimateDismissAdapter<T> extends ArrayAdapterDecorator<T> {
 	}
 
 	@Override
-	public void removePositions(final Collection<Integer> positions) {
+	public void removePositions(Collection<Integer> positions) {
+		final List<Integer> positionsCopy = new ArrayList<Integer>(positions);
 		Assert.assertNotNull("Call setListView() on this AnimateDismissAdapter before calling setAdapter()!", getListView());
 
-		List<View> views = getVisibleViewsForPositions(positions);
+		List<View> views = getVisibleViewsForPositions(positionsCopy);
 
 		if (!views.isEmpty()) {
 			List<Animator> animators = new ArrayList<Animator>();
@@ -100,7 +101,7 @@ public class AnimateDismissAdapter<T> extends ArrayAdapterDecorator<T> {
 
 				@Override
 				public void onAnimationEnd(Animator arg0) {
-					AnimateDismissAdapter.super.removePositions(positions);
+					AnimateDismissAdapter.super.removePositions(positionsCopy);
 				}
 
 				@Override
@@ -109,7 +110,7 @@ public class AnimateDismissAdapter<T> extends ArrayAdapterDecorator<T> {
 			});
 			animatorSet.start();
 		} else {
-			AnimateDismissAdapter.super.removePositions(positions);
+			AnimateDismissAdapter.super.removePositions(positionsCopy);
 		}
 	}
 

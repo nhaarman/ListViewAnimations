@@ -174,7 +174,6 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
-
 	/**
 	 * Retains only the elements in the list that are contained in the specified
 	 * collection
