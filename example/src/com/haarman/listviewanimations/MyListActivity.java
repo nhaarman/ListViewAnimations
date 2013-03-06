@@ -60,7 +60,7 @@ public class MyListActivity extends ListActivity {
 			if (tv == null) {
 				tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
 			}
-			tv.setText(getItem(position));
+			tv.setText("This is row number " + getItem(position));
 			return tv;
 		}
 	}
