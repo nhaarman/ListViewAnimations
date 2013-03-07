@@ -27,9 +27,9 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
- * A BaseAdapterDecorator class which applies multiple Animators at once to views when
- * they are first shown. The Animators applied include the animations specified in
- * getAnimators(ViewGroup, View), plus an alpha transition.
+ * A BaseAdapterDecorator class which applies multiple Animators at once to
+ * views when they are first shown. The Animators applied include the animations
+ * specified in getAnimators(ViewGroup, View), plus an alpha transition.
  */
 public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
@@ -178,5 +178,4 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	 *            The view that will be animated, as retrieved by getView()
 	 */
 	public abstract Animator[] getAnimators(ViewGroup parent, View view);
-
 }
