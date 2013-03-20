@@ -20,9 +20,11 @@ import static com.nineoldandroids.view.ViewHelper.setAlpha;
 import static com.nineoldandroids.view.ViewHelper.setTranslationX;
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
-// Warning: a stable id for each item in the adapter is required.
-// The decorated adapter should not try to cast convertView to a particular view.
-// The undoLayout should have the same height as the content row.
+/**
+ * Warning: a stable id for each item in the adapter is required.
+ * The decorated adapter should not try to cast convertView to a particular view.
+ * The undoLayout should have the same height as the content row.
+ */
 public class ContextualUndoAdapter extends BaseAdapterDecorator implements ContextualUndoListViewTouchListener.Callback {
 
     private final int undoLayoutId;
@@ -32,10 +34,6 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     private long currentRemovedId;
     private Map<View, Animator> activeAnimators = new ConcurrentHashMap<View, Animator>();
     private DeleteItemCallback deleteItemCallback;
-
-    public interface DeleteItemCallback {
-        void deleteItem(Object itemId);
-    }
 
     public ContextualUndoAdapter(BaseAdapter baseAdapter, int undoLayoutId, int undoActionId) {
         super(baseAdapter);
@@ -69,7 +67,6 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         contextualUndoView.setItemId(itemId);
         return contextualUndoView;
     }
-
 
     protected boolean areEquals(long firstId, long secondId) {
         return firstId == secondId;
@@ -212,6 +209,10 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     public void onRestoreInstanceState(Parcelable state) {
         Bundle bundle = (Bundle) state;
         currentRemovedId = bundle.getLong("currentRemovedId", -1);
+    }
+
+    public interface DeleteItemCallback {
+        void deleteItem(Object itemId);
     }
 
     private class UndoListener implements View.OnClickListener {

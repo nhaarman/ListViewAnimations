@@ -31,36 +31,6 @@ import static com.nineoldandroids.view.ViewHelper.setAlpha;
 import static com.nineoldandroids.view.ViewHelper.setTranslationX;
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
-/**
- * A {@link android.view.View.OnTouchListener} that makes the list items in a {@link android.widget.ListView}
- * dismissable. {@link android.widget.ListView} is given special treatment because by default it handles touches
- * for its list items... i.e. it's in charge of drawing the pressed state (the list selector),
- * handling list item clicks, etc.
- * <p/>
- * <p>After creating the listener, the caller should also call
- * {@link android.widget.ListView#setOnScrollListener(android.widget.AbsListView.OnScrollListener)}, passing
- * in the scroll listener returned by {@link #makeScrollListener()}. If a scroll listener is
- * already assigned, the caller should still pass scroll changes through to this listener. This will
- * ensure that this {@link ContextualUndoListViewTouchListener} is paused during list view
- * scrolling.</p>
- * <p/>
- * <p>Example usage:</p>
- * <p/>
- * <pre>
- * ContextualUndoListViewTouchListener touchListener =
- *         new ContextualUndoListViewTouchListener(
- *                 listView,
- *                 new ContextualUndoListViewTouchListener.Callback() {
- *                     public void onDismiss(ListView listView, int[] reverseSortedPositions) {
- *                         for (int position : reverseSortedPositions) {
- *                             adapter.remove(adapter.getItem(position));
- *                         }
- *                         adapter.notifyDataSetChanged();
- *                     }
- *                 });
- * listView.setOnTouchListener(touchListener);
- * listView.setOnScrollListener(touchListener.makeScrollListener());
- */
 public class ContextualUndoListViewTouchListener implements View.OnTouchListener {
     // Cached ViewConfiguration and system-wide constant values
     private int mSlop;
@@ -81,23 +51,13 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
     private View mDownView;
     private boolean mPaused;
 
-    /**
-     * The callback interface used by {@link ContextualUndoListViewTouchListener} to inform its client
-     * about a successful dismissal of one or more list item positions.
-     */
     public interface Callback {
 
         void onViewSwiped(View dismissView, int dismissPosition);
+
         void onListScrolled();
     }
 
-    /**
-     * Constructs a new swipe-to-dismiss touch listener for the given list view.
-     *
-     * @param listView The list view whose items should be dismissable.
-     * @param callback The callback to trigger when the user has indicated that she would like to
-     *                 dismiss one or more list items.
-     */
     public ContextualUndoListViewTouchListener(ListView listView, Callback callback) {
         ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
         mSlop = vc.getScaledTouchSlop();
@@ -109,25 +69,10 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
         mCallback = callback;
     }
 
-    /**
-     * Enables or disables (pauses or resumes) watching for swipe-to-dismiss gestures.
-     *
-     * @param enabled Whether or not to watch for gestures.
-     */
     public void setEnabled(boolean enabled) {
         mPaused = !enabled;
     }
 
-    /**
-     * Returns an {@link android.widget.AbsListView.OnScrollListener} to be added to the
-     * {@link android.widget.ListView} using
-     * {@link android.widget.ListView#setOnScrollListener(android.widget.AbsListView.OnScrollListener)}.
-     * If a scroll listener is already assigned, the caller should still pass scroll changes
-     * through to this listener. This will ensure that this
-     * {@link ContextualUndoListViewTouchListener} is paused during list view scrolling.</p>
-     *
-     * @see {@link ContextualUndoListViewTouchListener}
-     */
     public AbsListView.OnScrollListener makeScrollListener() {
         return new AbsListView.OnScrollListener() {
             @Override
