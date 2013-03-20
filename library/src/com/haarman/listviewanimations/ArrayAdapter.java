@@ -15,11 +15,11 @@
  */
 package com.haarman.listviewanimations;
 
+import android.widget.BaseAdapter;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-
-import android.widget.BaseAdapter;
 
 /**
  * A true ArrayList adapter providing access to all ArrayList methods.
@@ -40,10 +40,9 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	 * items == null.
 	 */
 	public ArrayAdapter(ArrayList<T> items) {
+	    mItems = new ArrayList<T>();
 		if (items != null) {
-			mItems = items;
-		} else {
-			mItems = new ArrayList<T>();
+			mItems.addAll(items);
 		}
 	}
 
@@ -93,9 +92,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	 * they are specified.
 	 */
 	public void addAll(T... items) {
-		for (T item : items) {
-			mItems.add(item);
-		}
+        Collections.addAll(mItems, items);
 		notifyDataSetChanged();
 	}
 

@@ -21,7 +21,7 @@ Setup
 
 Or:
 
-* Download the .jar file from the [Downloads page][4]
+* [Download the .jar file][4]
 * Add the .jar to your project's `libs` folder.
 
 Usage
@@ -111,7 +111,7 @@ License
  [1]: https://play.google.com/store/apps/details?id=com.haarman.listviewanimations
  [2]: http://nineoldandroids.com/
  [3]: http://en.wikipedia.org/wiki/Decorator_pattern
- [4]: https://bitbucket.org/nhaarman/listviewanimations/downloads
+ [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-1.8.jar?raw=true
  [5]: https://gist.github.com/romannurik/2980593
  [6]: https://play.google.com/store/apps/details?id=com.haarman.treinverkeer
  [7]: https://www.twitter.com/haarmandev
