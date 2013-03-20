@@ -46,4 +46,9 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
+	public void onContextualUndoClicked(View view) {
+		Intent intent = new Intent(this, ContextualUndoActivity.class);
+		startActivity(intent);
+	}
+
 }
