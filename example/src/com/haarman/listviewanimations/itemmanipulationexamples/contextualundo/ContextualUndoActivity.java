@@ -1,4 +1,7 @@
-package com.haarman.listviewanimations;
+package com.haarman.listviewanimations.itemmanipulationexamples.contextualundo;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.haarman.listviewanimations.ArrayAdapter;
+import com.haarman.listviewanimations.MyListActivity;
+import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.itemmanipulation.contextualundo.ContextualUndoAdapter;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ContextualUndoActivity extends MyListActivity {
 

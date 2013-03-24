@@ -20,4 +20,11 @@
         android:onClick="onAnimateRemovalClicked"
         android:text="@string/animateremoval" />
 
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:onClick="onContextualUndoClicked"
+        android:text="@string/contextualundo" />
+
 </LinearLayout>

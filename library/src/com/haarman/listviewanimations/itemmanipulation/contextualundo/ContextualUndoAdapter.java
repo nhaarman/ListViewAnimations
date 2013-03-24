@@ -97,7 +97,6 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	@Override
 	public void onViewSwiped(View dismissView, int dismissPosition) {
 		ContextualUndoView contextualUndoView = (ContextualUndoView) dismissView;
-		// swipe the content view to show the contextual undo
 		if (contextualUndoView.isContentDisplayed()) {
 			restoreViewPosition(contextualUndoView);
 			contextualUndoView.displayUndo();
