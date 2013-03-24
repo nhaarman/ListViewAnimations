@@ -61,19 +61,19 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 	@Override
 	public final View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null) {
-			ContextualUndoView contextualUndoView = new ContextualUndoView(parent.getContext(), undoLayoutId);
-			contextualUndoView.findViewById(undoActionId).setOnClickListener(makeUndoListener(contextualUndoView));
+		ContextualUndoView contextualUndoView = (ContextualUndoView) convertView;
+		if (contextualUndoView == null) {
+			contextualUndoView = new ContextualUndoView(parent.getContext(), undoLayoutId);
+			contextualUndoView.findViewById(undoActionId).setOnClickListener(new UndoListener(contextualUndoView));
 			convertView = contextualUndoView;
 		}
 
-		ContextualUndoView contextualUndoView = (ContextualUndoView) convertView;
 		View contentView = super.getView(position, contextualUndoView.getContentView(), parent);
 		contextualUndoView.updateContentView(contentView);
 
 		long itemId = getItemId(position);
 
-		if (areEquals(itemId, currentRemovedId)) {
+		if (itemId == currentRemovedId) {
 			contextualUndoView.displayUndo();
 			currentRemovedView = contextualUndoView;
 		} else {
@@ -82,10 +82,6 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 		contextualUndoView.setItemId(itemId);
 		return contextualUndoView;
-	}
-
-	protected boolean areEquals(long firstId, long secondId) {
-		return firstId == secondId;
 	}
 
 	@Override
@@ -118,7 +114,6 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	}
 
 	private void removePreviousContextualUndoIfPresent() {
-		// only one undo is allowed at a time
 		if (currentRemovedView != null) {
 			onListScrolled();
 		}
@@ -173,7 +168,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 				ContextualUndoView contextualUndoView = (ContextualUndoView) dismissView;
 				long deleteItemId = contextualUndoView.getItemId();
 				for (int i = 0; i < getCount(); i++) {
-					if (areEquals(getItemId(i), deleteItemId)) {
+					if (getItemId(i) == deleteItemId) {
 						deleteItemCallback.deleteItem(getItem(i));
 					}
 				}
@@ -204,16 +199,8 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		};
 	}
 
-	public long getCurrentRemovedId() {
-		return currentRemovedId;
-	}
-
 	public void setDeleteItemCallback(DeleteItemCallback deleteItemCallback) {
 		this.deleteItemCallback = deleteItemCallback;
-	}
-
-	private View.OnClickListener makeUndoListener(ContextualUndoView contextualUndoView) {
-		return new UndoListener(contextualUndoView);
 	}
 
 	public Parcelable onSaveInstanceState() {
