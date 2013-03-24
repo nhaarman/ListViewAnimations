@@ -24,9 +24,9 @@ import android.widget.FrameLayout;
 @SuppressLint("ViewConstructor")
 public class ContextualUndoView extends FrameLayout {
 
-	private View undoView;
-	private View contentView;
-	private long itemId;
+	private View mUndoView;
+	private View mContentView;
+	private long mItemId;
 
 	public ContextualUndoView(Context context, int undoLayoutResourceId) {
 		super(context);
@@ -34,40 +34,40 @@ public class ContextualUndoView extends FrameLayout {
 	}
 
 	private void initUndo(int undoLayoutResourceId) {
-		undoView = View.inflate(getContext(), undoLayoutResourceId, null);
-		addView(undoView);
+		mUndoView = View.inflate(getContext(), undoLayoutResourceId, null);
+		addView(mUndoView);
 	}
 
 	public void updateContentView(View contentView) {
-		if (this.contentView == null) {
+		if (this.mContentView == null) {
 			addView(contentView);
 		}
-		this.contentView = contentView;
+		this.mContentView = contentView;
 	}
 
 	public View getContentView() {
-		return contentView;
+		return mContentView;
 	}
 
 	public void setItemId(long itemId) {
-		this.itemId = itemId;
+		this.mItemId = itemId;
 	}
 
 	public long getItemId() {
-		return itemId;
+		return mItemId;
 	}
 
 	public boolean isContentDisplayed() {
-		return contentView.getVisibility() == View.VISIBLE;
+		return mContentView.getVisibility() == View.VISIBLE;
 	}
 
 	public void displayUndo() {
-		contentView.setVisibility(View.GONE);
-		undoView.setVisibility(View.VISIBLE);
+		mContentView.setVisibility(View.GONE);
+		mUndoView.setVisibility(View.VISIBLE);
 	}
 
 	public void displayContentView() {
-		contentView.setVisibility(View.VISIBLE);
-		undoView.setVisibility(View.GONE);
+		mContentView.setVisibility(View.VISIBLE);
+		mUndoView.setVisibility(View.GONE);
 	}
 }
