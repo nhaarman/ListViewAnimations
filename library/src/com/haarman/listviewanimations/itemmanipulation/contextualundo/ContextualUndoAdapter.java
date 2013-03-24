@@ -91,7 +91,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		ContextualUndoListViewTouchListener contextualUndoListViewTouchListener = new ContextualUndoListViewTouchListener(listView, this);
 		listView.setOnTouchListener(contextualUndoListViewTouchListener);
 		listView.setOnScrollListener(contextualUndoListViewTouchListener.makeScrollListener());
-		listView.setRecyclerListener(makeRecyclerListener());
+		listView.setRecyclerListener(new RecycleViewListener());
 	}
 
 	@Override
@@ -104,8 +104,9 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 			removePreviousContextualUndoIfPresent();
 			setCurrentRemovedView(contextualUndoView);
 		} else {
-			// swipe again the undo view to confirm delete
-			onListScrolled();
+			if (mCurrentRemovedView != null) {
+				performRemoval();
+			}
 		}
 	}
 
@@ -116,7 +117,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 	private void removePreviousContextualUndoIfPresent() {
 		if (mCurrentRemovedView != null) {
-			onListScrolled();
+			performRemoval();
 		}
 	}
 
@@ -132,72 +133,18 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 	@Override
 	public void onListScrolled() {
-		if (mCurrentRemovedView == null) {
-			return;
+		if (mCurrentRemovedView != null) {
+			performRemoval();
 		}
-
-		final View dismissView = mCurrentRemovedView;
-
-		clearCurrentRemovedView();
-
-		final ViewGroup.LayoutParams lp = dismissView.getLayoutParams();
-		final int originalHeight = dismissView.getHeight();
-
-		ValueAnimator animator = ValueAnimator.ofInt(originalHeight, 1).setDuration(mAnimationTime);
-
-		animator.addListener(new AnimatorListenerAdapter() {
-			@Override
-			public void onAnimationEnd(Animator animation) {
-				setAnimationInactive(animation);
-				restoreViewPosition(dismissView);
-				restoreViewDimension(dismissView);
-				deleteCurrentItem();
-			}
-
-			private void setAnimationInactive(Animator animation) {
-				mActiveAnimators.remove(animation);
-			}
-
-			private void restoreViewDimension(View view) {
-				ViewGroup.LayoutParams lp;
-				lp = view.getLayoutParams();
-				lp.height = originalHeight;
-				view.setLayoutParams(lp);
-			}
-
-			private void deleteCurrentItem() {
-				ContextualUndoView contextualUndoView = (ContextualUndoView) dismissView;
-				long deleteItemId = contextualUndoView.getItemId();
-				for (int i = 0; i < getCount(); i++) {
-					if (getItemId(i) == deleteItemId) {
-						mDeleteItemCallback.deleteItem(getItem(i));
-					}
-				}
-			}
-		});
-
-		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-			@Override
-			public void onAnimationUpdate(ValueAnimator valueAnimator) {
-				lp.height = (Integer) valueAnimator.getAnimatedValue();
-				dismissView.setLayoutParams(lp);
-			}
-		});
-
-		animator.start();
-		mActiveAnimators.put(dismissView, animator);
 	}
 
-	public AbsListView.RecyclerListener makeRecyclerListener() {
-		return new AbsListView.RecyclerListener() {
-			@Override
-			public void onMovedToScrapHeap(View view) {
-				Animator animator = mActiveAnimators.get(view);
-				if (animator != null) {
-					animator.cancel();
-				}
-			}
-		};
+	private void performRemoval() {
+		ValueAnimator animator = ValueAnimator.ofInt(mCurrentRemovedView.getHeight(), 1).setDuration(mAnimationTime);
+		animator.addListener(new RemoveViewAnimatorListenerAdapter(mCurrentRemovedView));
+		animator.addUpdateListener(new RemoveViewAnimatorUpdateListener(mCurrentRemovedView));
+		animator.start();
+		mActiveAnimators.put(mCurrentRemovedView, animator);
+		clearCurrentRemovedView();
 	}
 
 	public void setDeleteItemCallback(DeleteItemCallback deleteItemCallback) {
@@ -218,6 +165,59 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	public interface DeleteItemCallback {
 		void deleteItem(Object itemId);
 	}
+
+	private class RemoveViewAnimatorListenerAdapter extends AnimatorListenerAdapter {
+
+		private final View mDismissView;
+		private final int mOriginalHeight;
+
+		public RemoveViewAnimatorListenerAdapter(View dismissView) {
+			mDismissView = dismissView;
+			mOriginalHeight = dismissView.getHeight();
+		}
+
+		@Override
+		public void onAnimationEnd(Animator animation) {
+			mActiveAnimators.remove(mDismissView);
+			restoreViewPosition(mDismissView);
+			restoreViewDimension(mDismissView);
+			deleteCurrentItem();
+		}
+
+		private void restoreViewDimension(View view) {
+			ViewGroup.LayoutParams lp;
+			lp = view.getLayoutParams();
+			lp.height = mOriginalHeight;
+			view.setLayoutParams(lp);
+		}
+
+		private void deleteCurrentItem() {
+			ContextualUndoView contextualUndoView = (ContextualUndoView) mDismissView;
+			long deleteItemId = contextualUndoView.getItemId();
+			for (int i = 0; i < getCount(); i++) {
+				if (getItemId(i) == deleteItemId) {
+					mDeleteItemCallback.deleteItem(getItem(i));
+				}
+			}
+		}
+	}
+
+	private class RemoveViewAnimatorUpdateListener implements ValueAnimator.AnimatorUpdateListener {
+
+		private final View mDismissView;
+		private final ViewGroup.LayoutParams mLayoutParams;
+
+		public RemoveViewAnimatorUpdateListener(View dismissView) {
+			mDismissView = dismissView;
+			mLayoutParams = dismissView.getLayoutParams();
+		}
+
+		@Override
+		public void onAnimationUpdate(ValueAnimator valueAnimator) {
+			mLayoutParams.height = (Integer) valueAnimator.getAnimatedValue();
+			mDismissView.setLayoutParams(mLayoutParams);
+		}
+	};
 
 	private class UndoListener implements View.OnClickListener {
 
@@ -241,6 +241,16 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 		private void animateViewComingBack() {
 			animate(mContextualUndoView).translationX(0).setDuration(mAnimationTime).setListener(null);
+		}
+	}
+
+	private class RecycleViewListener implements AbsListView.RecyclerListener {
+		@Override
+		public void onMovedToScrapHeap(View view) {
+			Animator animator = mActiveAnimators.get(view);
+			if (animator != null) {
+				animator.cancel();
+			}
 		}
 	}
 }
