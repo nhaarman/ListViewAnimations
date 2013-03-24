@@ -25,8 +25,8 @@ public class ContextualUndoActivity extends MyListActivity {
 	private class MyDeleteItemCallback implements DeleteItemCallback {
 
 		@Override
-		public void deleteItem(Object item) {
-			mAdapter.remove((String) item);
+		public void deleteItem(int position) {
+			mAdapter.remove(position);
 			mAdapter.notifyDataSetChanged();
 		}
 	}

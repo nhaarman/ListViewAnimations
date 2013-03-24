@@ -162,7 +162,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	}
 
 	public interface DeleteItemCallback {
-		void deleteItem(Object itemId);
+		public void deleteItem(int position);
 	}
 
 	private class RemoveViewAnimatorListenerAdapter extends AnimatorListenerAdapter {
@@ -192,12 +192,8 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 		private void deleteCurrentItem() {
 			ContextualUndoView contextualUndoView = (ContextualUndoView) mDismissView;
-			long deleteItemId = contextualUndoView.getItemId();
-			for (int i = 0; i < getCount(); i++) {
-				if (getItemId(i) == deleteItemId) {
-					mDeleteItemCallback.deleteItem(getItem(i));
-				}
-			}
+			int position = getListView().getPositionForView(contextualUndoView);
+			mDeleteItemCallback.deleteItem(position);
 		}
 	}
 
