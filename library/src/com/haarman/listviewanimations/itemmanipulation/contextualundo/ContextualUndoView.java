@@ -36,10 +36,6 @@ class ContextualUndoView extends FrameLayout {
 		addView(undoView);
 	}
 
-	static ContextualUndoView from(View view) {
-		return (ContextualUndoView) view;
-	}
-
 	void updateContentView(View contentView) {
 		if (this.contentView == null) {
 			addView(contentView);
