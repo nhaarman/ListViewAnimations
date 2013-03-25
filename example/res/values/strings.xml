@@ -13,5 +13,8 @@
     <string name="animateremoval">Animate dismiss</string>
     
     <string name="removeselected">Remove selected</string>
+  <string name="contextualundo">Contextual Undo</string>
+  <string name="itemdeleted">Item deleted</string>
+  <string name="taptoundo">Tap to undo</string>
 
 </resources>

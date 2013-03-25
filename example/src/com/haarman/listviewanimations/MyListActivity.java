@@ -55,6 +55,11 @@ public class MyListActivity extends ListActivity {
 		}
 
 		@Override
+		public long getItemId(int position) {
+			return getItem(position).hashCode();
+		}
+
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView tv = (TextView) convertView;
 			if (tv == null) {

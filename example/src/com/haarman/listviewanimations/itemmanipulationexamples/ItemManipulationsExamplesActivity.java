@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.haarman.listviewanimations.R;
+import com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoActivity;
 
 public class ItemManipulationsExamplesActivity extends Activity {
 
@@ -37,6 +38,11 @@ public class ItemManipulationsExamplesActivity extends Activity {
 
 	public void onAnimateRemovalClicked(View view) {
 		Intent intent = new Intent(this, AnimateDismissActivity.class);
+		startActivity(intent);
+	}
+
+	public void onContextualUndoClicked(View view) {
+		Intent intent = new Intent(this, ContextualUndoActivity.class);
 		startActivity(intent);
 	}
 }
