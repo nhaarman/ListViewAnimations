@@ -46,7 +46,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 	private final int mUndoLayoutId;
 	private final int mUndoActionId;
-	private final int mAnimationTime = 350;
+	private final int mAnimationTime = 150;
 	private ContextualUndoView mCurrentRemovedView;
 	private long mCurrentRemovedId;
 	private Map<View, Animator> mActiveAnimators = new ConcurrentHashMap<View, Animator>();
