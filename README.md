@@ -10,6 +10,7 @@ It also uses Roman Nurik's BETA [SwipeDismissListViewTouchListener][5] to suppor
 Known applications using ListViewAnimations
 -----
 * TreinVerkeer ([Play Store][6])
+* Running Coach ([Play Store][9])
 
 If you want your app to be listed as well please contact me via [Twitter][7] or [Google Plus][8]!
 
@@ -111,8 +112,9 @@ License
  [1]: https://play.google.com/store/apps/details?id=com.haarman.listviewanimations
  [2]: http://nineoldandroids.com/
  [3]: http://en.wikipedia.org/wiki/Decorator_pattern
- [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-1.8.jar?raw=true
+ [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-1.9.jar?raw=true
  [5]: https://gist.github.com/romannurik/2980593
  [6]: https://play.google.com/store/apps/details?id=com.haarman.treinverkeer
  [7]: https://www.twitter.com/haarmandev
  [8]: https://plus.google.com/106017817931984343451
+ [9]: https://play.google.com/store/apps/details?id=com.niek.runningapp
