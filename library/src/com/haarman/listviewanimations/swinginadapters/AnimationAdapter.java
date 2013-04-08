@@ -56,6 +56,21 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		}
 	}
 
+	/**
+	 * Call this method to reset animation status on all views. The next time
+	 * notifyDataSetChanged() is called on the base adapter, all views will
+	 * animate again.
+	 */
+	public void reset() {
+		mAnimators.clear();
+		mLastAnimatedPosition = -1;
+		mAnimationStartMillis = -1;
+
+		if (getDecoratedBaseAdapter() instanceof AnimationAdapter) {
+			((AnimationAdapter) getDecoratedBaseAdapter()).reset();
+		}
+	}
+
 	@Override
 	public final View getView(int position, View convertView, ViewGroup parent) {
 		boolean alreadyStarted = false;

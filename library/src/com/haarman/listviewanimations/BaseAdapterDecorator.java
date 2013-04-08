@@ -125,4 +125,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter {
 		mDecoratedBaseAdapter.unregisterDataSetObserver(observer);
 	}
 
+	public BaseAdapter getDecoratedBaseAdapter() {
+		return mDecoratedBaseAdapter;
+	}
 }
