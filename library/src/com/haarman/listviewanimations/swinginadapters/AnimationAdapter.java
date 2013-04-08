@@ -38,7 +38,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private static final long INITIALDELAYMILLIS = 150;
 
-	private SparseArray<Animator> mAnimators;
+	private SparseArray<AnimationInfo> mAnimators;
 	private long mAnimationStartMillis;
 	private int mLastAnimatedPosition;
 
@@ -46,7 +46,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	public AnimationAdapter(BaseAdapter baseAdapter) {
 		super(baseAdapter);
-		mAnimators = new SparseArray<Animator>();
+		mAnimators = new SparseArray<AnimationInfo>();
 
 		mAnimationStartMillis = -1;
 		mLastAnimatedPosition = -1;
@@ -58,22 +58,30 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	@Override
 	public final View getView(int position, View convertView, ViewGroup parent) {
+		boolean alreadyStarted = false;
+
 		if (!mHasParentAnimationAdapter) {
-			Assert.assertNotNull("Call setListView() on this AnimationAdapter before setAdapter()!", getListView());
+			Assert.assertNotNull(
+					"Call setListView() on this AnimationAdapter before setAdapter()!",
+					getListView());
 
 			if (convertView != null) {
 				int hashCode = convertView.hashCode();
-				Animator animator = mAnimators.get(hashCode);
-				if (animator != null) {
-					animator.end();
+				AnimationInfo animationInfo = mAnimators.get(hashCode);
+				if (animationInfo != null) {
+					if (animationInfo.position != position) {
+						animationInfo.animator.end();
+						mAnimators.remove(hashCode);
+					} else {
+						alreadyStarted = true;
+					}
 				}
-				mAnimators.remove(hashCode);
 			}
 		}
 
 		View itemView = super.getView(position, convertView, parent);
 
-		if (!mHasParentAnimationAdapter) {
+		if (!mHasParentAnimationAdapter && !alreadyStarted) {
 			animateViewIfNecessary(position, itemView, parent);
 		}
 		return itemView;
@@ -81,12 +89,12 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
 		if (position > mLastAnimatedPosition && !mHasParentAnimationAdapter) {
-			animateView(parent, view);
+			animateView(position, parent, view);
 			mLastAnimatedPosition = position;
 		}
 	}
 
-	private void animateView(ViewGroup parent, View view) {
+	private void animateView(int position, ViewGroup parent, View view) {
 		if (mAnimationStartMillis == -1) {
 			mAnimationStartMillis = System.currentTimeMillis();
 		}
@@ -108,7 +116,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		set.setDuration(getAnimationDurationMillis());
 		set.start();
 
-		mAnimators.put(view.hashCode(), set);
+		mAnimators.put(view.hashCode(), new AnimationInfo(position, set));
 	}
 
 	private void hideView(View view) {
@@ -119,7 +127,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		set.start();
 	}
 
-	private Animator[] concatAnimators(Animator[] childAnimators, Animator[] animators, Animator alphaAnimator) {
+	private Animator[] concatAnimators(Animator[] childAnimators, Animator[] animators,
+			Animator alphaAnimator) {
 		Animator[] allAnimators = new Animator[childAnimators.length + animators.length + 1];
 		int i;
 
@@ -138,12 +147,14 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private long calculateAnimationDelay() {
 		long delay;
-		int numberOfItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
+		int numberOfItems = getListView().getLastVisiblePosition()
+				- getListView().getFirstVisiblePosition();
 		if (numberOfItems + 1 < mLastAnimatedPosition) {
 			delay = getAnimationDelayMillis();
 		} else {
 			long delaySinceStart = (mLastAnimatedPosition + 1) * getAnimationDelayMillis();
-			delay = mAnimationStartMillis + INITIALDELAYMILLIS + delaySinceStart - System.currentTimeMillis();
+			delay = mAnimationStartMillis + INITIALDELAYMILLIS + delaySinceStart
+					- System.currentTimeMillis();
 		}
 		return Math.max(0, delay);
 	}
@@ -178,4 +189,14 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	 *            The view that will be animated, as retrieved by getView()
 	 */
 	public abstract Animator[] getAnimators(ViewGroup parent, View view);
+
+	private class AnimationInfo {
+		public int position;
+		public Animator animator;
+
+		public AnimationInfo(int position, Animator animator) {
+			this.position = position;
+			this.animator = animator;
+		}
+	}
 }
