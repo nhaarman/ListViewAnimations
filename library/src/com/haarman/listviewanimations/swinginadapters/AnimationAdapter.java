@@ -15,7 +15,6 @@
  */
 package com.haarman.listviewanimations.swinginadapters;
 
-import junit.framework.Assert;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,9 +75,9 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		boolean alreadyStarted = false;
 
 		if (!mHasParentAnimationAdapter) {
-			Assert.assertNotNull(
-					"Call setListView() on this AnimationAdapter before setAdapter()!",
-					getListView());
+			if(getListView() == null) {
+				throw new IllegalStateException("Call setListView() on this AnimationAdapter before setAdapter()!");
+			}
 
 			if (convertView != null) {
 				int hashCode = convertView.hashCode();
