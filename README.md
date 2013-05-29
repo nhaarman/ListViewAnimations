@@ -11,6 +11,8 @@ Known applications using ListViewAnimations
 -----
 * TreinVerkeer ([Play Store][6])
 * Running Coach ([Play Store][9])
+* Car Hire ([Play Store][10])
+* Voorlees Verhaaltjes ([Play Store][11])
 
 If you want your app to be listed as well please contact me via [Twitter][7] or [Google Plus][8]!
 
@@ -118,3 +120,5 @@ License
  [7]: https://www.twitter.com/haarmandev
  [8]: https://plus.google.com/106017817931984343451
  [9]: https://play.google.com/store/apps/details?id=com.niek.runningapp
+ [10]: https://play.google.com/store/apps/details?id=com.rentalcars.handset
+ [11]: https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes
