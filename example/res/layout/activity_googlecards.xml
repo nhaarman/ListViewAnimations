@@ -6,6 +6,7 @@
     android:background="#e2e2e2"
     android:clipToPadding="false"
     android:divider="@null"
+    android:fadingEdge="none"
     android:dividerHeight="16dp"
     android:padding="16dp"
     android:scrollbarStyle="outsideOverlay" />
