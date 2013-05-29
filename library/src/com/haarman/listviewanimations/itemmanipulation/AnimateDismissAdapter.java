@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.Assert;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -59,7 +58,9 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
 
 	public void animateDismiss(Collection<Integer> positions) {
 		final List<Integer> positionsCopy = new ArrayList<Integer>(positions);
-		Assert.assertNotNull("Call setListView() on this AnimateDismissAdapter before calling setAdapter()!", getListView());
+		if(getListView() == null) {
+			throw new IllegalStateException("Call setListView() on this AnimateDismissAdapter before calling setAdapter()!");
+		}
 
 		List<View> views = getVisibleViewsForPositions(positionsCopy);
 
