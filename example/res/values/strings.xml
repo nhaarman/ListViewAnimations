@@ -8,6 +8,7 @@
     <string name="leftin">Left in</string>
     <string name="bottomrightin">Bottom right in</string>
     <string name="scalein">Scale in</string>
+    <string name="alphain">Alpha in</string>
     <string name="googlecards">Google cards example</string>
     <string name="swipedismiss">Swipe to dismiss</string>
     <string name="animateremoval">Animate dismiss</string>

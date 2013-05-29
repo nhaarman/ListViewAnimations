@@ -54,4 +54,9 @@ public class AnimationInExamplesActivity extends Activity {
 		Intent intent = new Intent(this, ScaleInActivity.class);
 		startActivity(intent);
 	}
+
+    public void onAlphaInClicked(View view){
+        Intent intent = new Intent(this, AlphaInActivity.class);
+        startActivity(intent);
+    }
 }

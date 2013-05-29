@@ -7,9 +7,9 @@ import android.widget.BaseAdapter;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nineoldandroids.animation.Animator;
 
-public class AlphaAnimationAdapter extends AnimationAdapter {
+public class AlphaInAnimationAdapter extends AnimationAdapter {
 
-	public AlphaAnimationAdapter(BaseAdapter baseAdapter) {
+	public AlphaInAnimationAdapter(BaseAdapter baseAdapter) {
 		super(baseAdapter);
 	}
 

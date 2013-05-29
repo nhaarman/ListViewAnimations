@@ -25,6 +25,7 @@
         <activity android:name="com.haarman.listviewanimations.animationinexamples.SwingLeftInActivity" />
         <activity android:name="com.haarman.listviewanimations.animationinexamples.SwingRightInActivity" />
         <activity android:name="com.haarman.listviewanimations.animationinexamples.ScaleInActivity" />
+        <activity android:name="com.haarman.listviewanimations.animationinexamples.AlphaInActivity" />
         <activity android:name="com.haarman.listviewanimations.GoogleCardsActivity" />
         <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoActivity" />
         <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity" />
