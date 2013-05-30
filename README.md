@@ -14,7 +14,7 @@ Known applications using ListViewAnimations
 * Car Hire ([Play Store][10])
 * Voorlees Verhaaltjes ([Play Store][11])
 
-If you want your app to be listed as well please contact me via [Twitter][7] or [Google Plus][8]!
+If you want your app to be listed as well please contact me via [Google Plus][8]!
 
 Setup
 -----
