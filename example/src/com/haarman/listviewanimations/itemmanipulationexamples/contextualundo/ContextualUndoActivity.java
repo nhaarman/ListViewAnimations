@@ -17,7 +17,7 @@ public class ContextualUndoActivity extends MyListActivity {
 		super.onCreate(savedInstanceState);
 
 		ContextualUndoAdapter contextualUndoAdapter = new ContextualUndoAdapter(mAdapter, R.layout.undo_row, R.id.undo_row_undobutton);
-		contextualUndoAdapter.setListView(getListView());
+		contextualUndoAdapter.setAbsListView(getListView());
 		getListView().setAdapter(contextualUndoAdapter);
 		contextualUndoAdapter.setDeleteItemCallback(new MyDeleteItemCallback());
 	}

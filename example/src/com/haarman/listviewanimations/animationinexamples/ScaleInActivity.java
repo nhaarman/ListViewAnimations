@@ -30,7 +30,7 @@ public class ScaleInActivity extends MyListActivity {
 		BaseAdapter mAdapter = createListAdapter();
 
 		ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mAdapter, 0f);
-		scaleInAnimationAdapter.setListView(getListView());
+		scaleInAnimationAdapter.setAbsListView(getListView());
 
 		getListView().setAdapter(scaleInAnimationAdapter);
 	}

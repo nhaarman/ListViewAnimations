@@ -18,6 +18,7 @@ package com.haarman.listviewanimations.itemmanipulationexamples;
 import java.util.Arrays;
 
 import android.os.Bundle;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,7 +35,7 @@ public class SwipeDismissActivity extends MyListActivity {
 		ArrayAdapter<String> mAdapter = createListAdapter();
 
 		SwipeDismissAdapter swipeDismissAdapter = new SwipeDismissAdapter(mAdapter, new MyOnDismissCallback(mAdapter));
-		swipeDismissAdapter.setListView(getListView());
+		swipeDismissAdapter.setAbsListView(getListView());
 
 		getListView().setAdapter(swipeDismissAdapter);
 	}
@@ -48,7 +49,7 @@ public class SwipeDismissActivity extends MyListActivity {
 		}
 
 		@Override
-		public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+		public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
 			for (int position : reverseSortedPositions) {
 				mAdapter.remove(position);
 			}

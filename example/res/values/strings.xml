@@ -10,12 +10,13 @@
     <string name="scalein">Scale in</string>
     <string name="alphain">Alpha in</string>
     <string name="googlecards">Google cards example</string>
+    <string name="gridviewexample">GridView example</string>
     <string name="swipedismiss">Swipe to dismiss</string>
     <string name="animateremoval">Animate dismiss</string>
-    
+
     <string name="removeselected">Remove selected</string>
-  <string name="contextualundo">Contextual Undo</string>
-  <string name="itemdeleted">Item deleted</string>
-  <string name="taptoundo">Tap to undo</string>
+    <string name="contextualundo">Contextual Undo</string>
+    <string name="itemdeleted">Item deleted</string>
+    <string name="taptoundo">Tap to undo</string>
 
 </resources>

@@ -19,31 +19,35 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import com.haarman.listviewanimations.animationinexamples.AnimationInExamplesActivity;
 import com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity;
 
 public class MainActivity extends Activity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
 
-	public void onGoogleCardsExampleClicked(View view) {
-		Intent intent = new Intent(this, GoogleCardsActivity.class);
-		startActivity(intent);
-	}
+    public void onGoogleCardsExampleClicked(View view) {
+        Intent intent = new Intent(this, GoogleCardsActivity.class);
+        startActivity(intent);
+    }
 
-	public void onSwingInClicked(View view) {
-		Intent intent = new Intent(this, AnimationInExamplesActivity.class);
-		startActivity(intent);
-	}
+    public void onGridViewExampleClicked(View view) {
+        Intent intent = new Intent(this, GridViewActivity.class);
+        startActivity(intent);
+    }
 
-	public void onItemManipulationClicked(View view) {
-		Intent intent = new Intent(this, ItemManipulationsExamplesActivity.class);
-		startActivity(intent);
-	}
+    public void onSwingInClicked(View view) {
+        Intent intent = new Intent(this, AnimationInExamplesActivity.class);
+        startActivity(intent);
+    }
+
+    public void onItemManipulationClicked(View view) {
+        Intent intent = new Intent(this, ItemManipulationsExamplesActivity.class);
+        startActivity(intent);
+    }
 
 }

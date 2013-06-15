@@ -26,6 +26,7 @@ import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,7 +48,7 @@ public class GoogleCardsActivity extends Activity implements OnDismissCallback {
 
 		mGoogleCardsAdapter = new GoogleCardsAdapter(this);
 		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new SwipeDismissAdapter(mGoogleCardsAdapter, this));
-		swingBottomInAnimationAdapter.setListView(listView);
+		swingBottomInAnimationAdapter.setAbsListView(listView);
 
 		listView.setAdapter(swingBottomInAnimationAdapter);
 
@@ -63,7 +64,7 @@ public class GoogleCardsActivity extends Activity implements OnDismissCallback {
 	}
 
 	@Override
-	public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+	public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
 		for (int position : reverseSortedPositions) {
 			mGoogleCardsAdapter.remove(position);
 		}

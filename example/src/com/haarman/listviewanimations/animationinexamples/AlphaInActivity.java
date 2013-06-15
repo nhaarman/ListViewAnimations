@@ -30,7 +30,7 @@ public class AlphaInActivity extends MyListActivity {
 		BaseAdapter mAdapter = createListAdapter();
 
 		AlphaInAnimationAdapter aplhaInAnimationAdapter = new AlphaInAnimationAdapter(mAdapter);
-		aplhaInAnimationAdapter.setListView(getListView());
+		aplhaInAnimationAdapter.setAbsListView(getListView());
 
 		getListView().setAdapter(aplhaInAnimationAdapter);
 	}

@@ -30,7 +30,7 @@ public class SwingLeftInActivity extends MyListActivity {
 		BaseAdapter mAdapter = createListAdapter();
 
 		SwingLeftInAnimationAdapter swingLeftInAnimationAdapter = new SwingLeftInAnimationAdapter(mAdapter);
-		swingLeftInAnimationAdapter.setListView(getListView());
+		swingLeftInAnimationAdapter.setAbsListView(getListView());
 
 		getListView().setAdapter(swingLeftInAnimationAdapter);
 	}
