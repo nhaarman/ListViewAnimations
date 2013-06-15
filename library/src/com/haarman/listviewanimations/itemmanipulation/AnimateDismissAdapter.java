@@ -58,7 +58,7 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
 
 	public void animateDismiss(Collection<Integer> positions) {
 		final List<Integer> positionsCopy = new ArrayList<Integer>(positions);
-		if(getListView() == null) {
+		if(getAbsListView() == null) {
 			throw new IllegalStateException("Call setListView() on this AnimateDismissAdapter before calling setAdapter()!");
 		}
 
@@ -110,14 +110,14 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
 		for (int i = 0; i < positionsList.size(); i++) {
 			dismissPositions[i] = positionsList.get(positionsList.size() - 1 - i);
 		}
-		mCallback.onDismiss(getListView(), dismissPositions);
+		mCallback.onDismiss(getAbsListView(), dismissPositions);
 	}
 
 	private List<View> getVisibleViewsForPositions(Collection<Integer> positions) {
 		List<View> views = new ArrayList<View>();
-		for (int i = 0; i < getListView().getChildCount(); i++) {
-			View child = getListView().getChildAt(i);
-			if (positions.contains(getListView().getPositionForView(child))) {
+		for (int i = 0; i < getAbsListView().getChildCount(); i++) {
+			View child = getAbsListView().getChildAt(i);
+			if (positions.contains(getAbsListView().getPositionForView(child))) {
 				views.add(child);
 			}
 		}

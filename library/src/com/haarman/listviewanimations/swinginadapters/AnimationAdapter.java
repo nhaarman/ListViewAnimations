@@ -75,7 +75,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		boolean alreadyStarted = false;
 
 		if (!mHasParentAnimationAdapter) {
-			if(getListView() == null) {
+			if(getAbsListView() == null) {
 				throw new IllegalStateException("Call setListView() on this AnimationAdapter before setAdapter()!");
 			}
 
@@ -161,8 +161,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private long calculateAnimationDelay() {
 		long delay;
-		int numberOfItems = getListView().getLastVisiblePosition()
-				- getListView().getFirstVisiblePosition();
+		int numberOfItems = getAbsListView().getLastVisiblePosition()
+				- getAbsListView().getFirstVisiblePosition();
 		if (numberOfItems + 1 < mLastAnimatedPosition) {
 			delay = getAnimationDelayMillis();
 		} else {

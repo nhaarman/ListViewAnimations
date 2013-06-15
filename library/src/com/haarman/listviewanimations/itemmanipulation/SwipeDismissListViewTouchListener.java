@@ -32,6 +32,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.nineoldandroids.animation.Animator;
@@ -71,7 +72,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 	private long mAnimationTime;
 
 	// Fixed properties
-	private ListView mListView;
+	private AbsListView mListView;
 	private OnDismissCallback mCallback;
 	private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
 
@@ -95,7 +96,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 	 *            The callback to trigger when the user has indicated that she
 	 *            would like to dismiss one or more list items.
 	 */
-	public SwipeDismissListViewTouchListener(ListView listView, OnDismissCallback callback) {
+	public SwipeDismissListViewTouchListener(AbsListView listView, OnDismissCallback callback) {
 		ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
 		mSlop = vc.getScaledTouchSlop();
 		mMinFlingVelocity = vc.getScaledMinimumFlingVelocity();

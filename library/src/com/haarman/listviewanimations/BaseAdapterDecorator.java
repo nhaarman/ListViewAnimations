@@ -18,6 +18,7 @@ package com.haarman.listviewanimations;
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -32,13 +33,18 @@ public abstract class BaseAdapterDecorator extends BaseAdapter {
 
 	protected final BaseAdapter mDecoratedBaseAdapter;
 
-	private ListView mListView;
+	private AbsListView mListView;
 
 	public BaseAdapterDecorator(BaseAdapter baseAdapter) {
 		mDecoratedBaseAdapter = baseAdapter;
 	}
 
-	public void setListView(ListView listView) {
+    @Deprecated
+    @SuppressWarnings("Deprecated")
+    /**
+     * @deprecated use setAbsListView(AbsListView) instead.
+     */
+	public void setListView(AbsListView listView) {
 		mListView = listView;
 
 		if (mDecoratedBaseAdapter instanceof BaseAdapterDecorator) {
@@ -46,7 +52,20 @@ public abstract class BaseAdapterDecorator extends BaseAdapter {
 		}
 	}
 
-	public ListView getListView() {
+    public void setAbsListView(AbsListView listView){
+        mListView = listView;
+
+        if (mDecoratedBaseAdapter instanceof BaseAdapterDecorator) {
+            ((BaseAdapterDecorator) mDecoratedBaseAdapter).setAbsListView(listView);
+        }
+    }
+
+    @Deprecated
+    public AbsListView getListView(){
+        return mListView;
+    }
+
+	public AbsListView getAbsListView() {
 		return mListView;
 	}
 

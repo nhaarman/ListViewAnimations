@@ -41,7 +41,7 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
     private long mAnimationTime;
 
     // Fixed properties
-    private ListView mListView;
+    private AbsListView mListView;
     private Callback mCallback;
     private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
 
@@ -60,7 +60,7 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
         void onListScrolled();
     }
 
-    public ContextualUndoListViewTouchListener(ListView listView, Callback callback) {
+    public ContextualUndoListViewTouchListener(AbsListView listView, Callback callback) {
         ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity();

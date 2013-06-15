@@ -15,6 +15,7 @@
  */
 package com.haarman.listviewanimations.itemmanipulation;
 
+import android.widget.AbsListView;
 import android.widget.ListView;
 
 /**
@@ -33,5 +34,5 @@ public interface OnDismissCallback {
 	 *            An array of positions to dismiss, sorted in descending order
 	 *            for convenience.
 	 */
-	void onDismiss(ListView listView, int[] reverseSortedPositions);
+	void onDismiss(AbsListView listView, int[] reverseSortedPositions);
 }

@@ -29,7 +29,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import com.haarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
@@ -86,8 +85,8 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	}
 
 	@Override
-	public void setListView(ListView listView) {
-		super.setListView(listView);
+	public void setAbsListView(AbsListView listView) {
+		super.setAbsListView(listView);
 		ContextualUndoListViewTouchListener contextualUndoListViewTouchListener = new ContextualUndoListViewTouchListener(listView, this);
 		listView.setOnTouchListener(contextualUndoListViewTouchListener);
 		listView.setOnScrollListener(contextualUndoListViewTouchListener.makeScrollListener());
@@ -192,7 +191,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 		private void deleteCurrentItem() {
 			ContextualUndoView contextualUndoView = (ContextualUndoView) mDismissView;
-			int position = getListView().getPositionForView(contextualUndoView);
+			int position = getAbsListView().getPositionForView(contextualUndoView);
 			mDeleteItemCallback.deleteItem(position);
 		}
 	}
