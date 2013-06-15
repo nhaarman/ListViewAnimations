@@ -20,6 +20,7 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A true ArrayList adapter providing access to all ArrayList methods.
@@ -39,7 +40,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	 * Creates a new ArrayAdapter with the specified list, or an empty list if
 	 * items == null.
 	 */
-	public ArrayAdapter(ArrayList<T> items) {
+	public ArrayAdapter(List<T> items) {
 	    mItems = new ArrayList<T>();
 		if (items != null) {
 			mItems.addAll(items);
