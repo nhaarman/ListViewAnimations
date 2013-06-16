@@ -1,37 +1,34 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="ListViewAnimations : Easily add animations to your ListView items!" />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-    <title>ListViewAnimations</title>
+    <title>ListViewAnimations by nhaarman</title>
   </head>
 
   <body>
+    <header>
+      <div class="inner">
+        <h1>ListViewAnimations</h1>
+        <h2>Easily add animations to your ListView items!</h2>
+        <a href="https://github.com/nhaarman/ListViewAnimations" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/nhaarman/ListViewAnimations">View on GitHub</a>
-
-          <h1 id="project_title">ListViewAnimations</h1>
-          <h2 id="project_tagline">Easily add animations to your ListView items!</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/nhaarman/ListViewAnimations/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/nhaarman/ListViewAnimations/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
 <a name="listviewanimations-play-store-demo" class="anchor" href="#listviewanimations-play-store-demo"><span class="octicon octicon-link"></span></a>ListViewAnimations (<a href="https://play.google.com/store/apps/details?id=com.haarman.listviewanimations">Play Store Demo</a>)</h1>
 
 <p>ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
@@ -39,6 +36,9 @@ Feel free to use it all you want in your Android apps provided that you cite thi
 
 <p>ListViewAnimations uses the <a href="http://nineoldandroids.com/">NineOldAndroids</a> library to support devices &lt;3.0.<br>
 It also uses Roman Nurik's BETA <a href="https://gist.github.com/romannurik/2980593">SwipeDismissListViewTouchListener</a> to support swipe to dismiss.</p>
+
+<p><strong>Version 2.0 now supports GridViews! (And other implementations of AbsListView)</strong>
+<strong>It also contains an ExpandableListItemAdapter for smoothly expanding your Views!</strong></p>
 
 <h2>
 <a name="known-applications-using-listviewanimations" class="anchor" href="#known-applications-using-listviewanimations"><span class="octicon octicon-link"></span></a>Known applications using ListViewAnimations</h2>
@@ -60,7 +60,7 @@ It also uses Roman Nurik's BETA <a href="https://gist.github.com/romannurik/2980
 </ul><p>Or:</p>
 
 <ul>
-<li><a href="https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-1.9.jar?raw=true">Download the .jar file</a></li>
+<li><a href="https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.0.jar?raw=true">Download the .jar file</a></li>
 <li>Add the .jar to your project's <code>libs</code> folder.</li>
 </ul><h2>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
@@ -91,7 +91,7 @@ protected void onCreate(Bundle savedInstanceState) {
                     new MyListAdapter(this, getItems())));
 
     // Assign the ListView to the AnimationAdapter and vice versa
-    swingRightInAnimationAdapter.setListView(getListView());
+    swingRightInAnimationAdapter.setAbsListView(getListView());
     getListView().setAdapter(swingRightInAnimationAdapter);
 }
 
@@ -150,18 +150,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 </code></pre>
-      </section>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/nhaarman/ListViewAnimations/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/nhaarman/ListViewAnimations/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/nhaarman/ListViewAnimations"></a> is maintained by <a href="https://github.com/nhaarman">nhaarman</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">ListViewAnimations maintained by <a href="https://github.com/nhaarman">nhaarman</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-              <script type="text/javascript">
+            <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -171,7 +179,6 @@ limitations under the License.
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
-
 
   </body>
 </html>
