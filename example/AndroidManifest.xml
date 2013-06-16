@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.haarman.listviewanimations"
     android:versionCode="12"
-    android:versionName="1.9" >
+    android:versionName="1.9">
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -11,8 +11,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity android:name="com.haarman.listviewanimations.MainActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name="com.haarman.listviewanimations.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +31,8 @@
         <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity" />
         <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.SwipeDismissActivity" />
         <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.AnimateDismissActivity" />
-        <activity android:name="com.haarman.listviewanimations.GridViewActivity"/>
+        <activity android:name="com.haarman.listviewanimations.GridViewActivity" />
+        <activity android:name="com.haarman.listviewanimations.ExpandableListItemActivity" />
     </application>
 
 </manifest>

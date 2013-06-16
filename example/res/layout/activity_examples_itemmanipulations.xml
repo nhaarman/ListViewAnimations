@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="8dp" >
+    android:padding="8dp">
 
     <Button
         android:layout_width="150dp"
@@ -26,5 +26,12 @@
         android:layout_margin="8dp"
         android:onClick="onContextualUndoClicked"
         android:text="@string/contextualundo" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:onClick="onExpandListItemAdapterClicked"
+        android:text="@string/expandablelistitemadapter" />
 
 </LinearLayout>

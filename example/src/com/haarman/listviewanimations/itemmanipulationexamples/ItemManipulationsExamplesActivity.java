@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.haarman.listviewanimations.ExpandableListItemActivity;
 import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoActivity;
 
@@ -45,4 +46,9 @@ public class ItemManipulationsExamplesActivity extends Activity {
 		Intent intent = new Intent(this, ContextualUndoActivity.class);
 		startActivity(intent);
 	}
+
+    public void onExpandListItemAdapterClicked(View view){
+        Intent intent = new Intent(this, ExpandableListItemActivity.class);
+        startActivity(intent);
+    }
 }
