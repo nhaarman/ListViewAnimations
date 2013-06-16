@@ -13,6 +13,9 @@ import com.nineoldandroids.animation.ValueAnimator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A ListAdapter which allows items to be expanded using an animation.
+ */
 public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
     private static final int DEFAULTTITLEPARENTRESID = 10000;
@@ -27,11 +30,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
      * Creates a new ExpandableListItemAdapter with an empty list.
      */
     protected ExpandableListItemAdapter(Context context) {
-        mContext = context;
-        mTitleParentResId = DEFAULTTITLEPARENTRESID;
-        mContentParentResId = DEFAULTCONTENTPARENTRESID;
-
-        mVisibleIds = new ArrayList<Long>();
+        this(context, null);
     }
 
     /**
@@ -49,21 +48,16 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
     /**
      * Creates a new ExpandableListItemAdapter with an empty list.
-     * Uses given layout resource for the view.
+     * Uses given layout resource for the view; titleParentResId and contentParentResId should be identifiers for ViewGroups within that layout.
      */
     protected ExpandableListItemAdapter(Context context, int layoutResId, int titleParentResId, int contentParentResId) {
-        mContext = context;
-        mViewLayoutResId = layoutResId;
-        mTitleParentResId = titleParentResId;
-        mContentParentResId = contentParentResId;
-
-        mVisibleIds = new ArrayList<Long>();
+        this(context, layoutResId, titleParentResId, contentParentResId, null);
     }
 
     /**
      * Creates a new ExpandableListItemAdapter with the specified list, or an empty list if
      * items == null.
-     * Uses given layout resource for the view.
+     * Uses given layout resource for the view; titleParentResId and contentParentResId should be identifiers for ViewGroups within that layout.
      */
     protected ExpandableListItemAdapter(Context context, int layoutResId, int titleParentResId, int contentParentResId, List<T> items) {
         super(items);
@@ -126,8 +120,38 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
         return view;
     }
 
+    /**
+     * Get a View that displays the title of the data at the specified position in the data set. You can either
+     * create a View manually or inflate it from an XML layout file. When the View is inflated, the
+     * parent View (GridView, ListView...) will apply default layout parameters unless you use
+     * {@link android.view.LayoutInflater#inflate(int, android.view.ViewGroup, boolean)}
+     * to specify a root view and to prevent attachment to the root.
+     *
+     * @param position    The position of the item within the adapter's data set of the item whose view
+     *                    we want.
+     * @param convertView The old view to reuse, if possible. Note: You should check that this view
+     *                    is non-null and of an appropriate type before using. If it is not possible to convert
+     *                    this view to display the correct data, this method can create a new view.
+     * @param parent      The parent that this view will eventually be attached to
+     * @return A View corresponding to the title of the data at the specified position.
+     */
     public abstract View getTitleView(int position, View convertView, ViewGroup parent);
 
+    /**
+     * Get a View that displays the content of the data at the specified position in the data set. You can either
+     * create a View manually or inflate it from an XML layout file. When the View is inflated, the
+     * parent View (GridView, ListView...) will apply default layout parameters unless you use
+     * {@link android.view.LayoutInflater#inflate(int, android.view.ViewGroup, boolean)}
+     * to specify a root view and to prevent attachment to the root.
+     *
+     * @param position    The position of the item within the adapter's data set of the item whose view
+     *                    we want.
+     * @param convertView The old view to reuse, if possible. Note: You should check that this view
+     *                    is non-null and of an appropriate type before using. If it is not possible to convert
+     *                    this view to display the correct data, this method can create a new view.
+     * @param parent      The parent that this view will eventually be attached to
+     * @return A View corresponding to the content of the data at the specified position.
+     */
     public abstract View getContentView(int position, View convertView, ViewGroup parent);
 
     private static class ViewHolder {
