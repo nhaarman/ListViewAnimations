@@ -19,20 +19,48 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.haarman.listviewanimations.animationinexamples.AnimationInExamplesActivity" />
-        <activity android:name="com.haarman.listviewanimations.animationinexamples.SwingBottomInActivity" />
-        <activity android:name="com.haarman.listviewanimations.animationinexamples.SwingBottomRightInActivity" />
-        <activity android:name="com.haarman.listviewanimations.animationinexamples.SwingLeftInActivity" />
-        <activity android:name="com.haarman.listviewanimations.animationinexamples.SwingRightInActivity" />
-        <activity android:name="com.haarman.listviewanimations.animationinexamples.ScaleInActivity" />
-        <activity android:name="com.haarman.listviewanimations.animationinexamples.AlphaInActivity" />
-        <activity android:name="com.haarman.listviewanimations.GoogleCardsActivity" />
-        <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoActivity" />
-        <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity" />
-        <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.SwipeDismissActivity" />
-        <activity android:name="com.haarman.listviewanimations.itemmanipulationexamples.AnimateDismissActivity" />
-        <activity android:name="com.haarman.listviewanimations.GridViewActivity" />
-        <activity android:name="com.haarman.listviewanimations.ExpandableListItemActivity" />
+        <activity
+            android:name="com.haarman.listviewanimations.animationinexamples.AnimationInExamplesActivity"
+            android:label="@string/swingin" />
+        <activity
+            android:name="com.haarman.listviewanimations.animationinexamples.SwingBottomInActivity"
+            android:label="@string/bottomin" />
+        <activity
+            android:name="com.haarman.listviewanimations.animationinexamples.SwingBottomRightInActivity"
+            android:label="@string/bottomrightin" />
+        <activity
+            android:name="com.haarman.listviewanimations.animationinexamples.SwingLeftInActivity"
+            android:label="@string/leftin" />
+        <activity
+            android:name="com.haarman.listviewanimations.animationinexamples.SwingRightInActivity"
+            android:label="@string/rightin" />
+        <activity
+            android:name="com.haarman.listviewanimations.animationinexamples.ScaleInActivity"
+            android:label="@string/scalein" />
+        <activity
+            android:name="com.haarman.listviewanimations.animationinexamples.AlphaInActivity"
+            android:label="@string/alphain" />
+        <activity
+            android:name="com.haarman.listviewanimations.GoogleCardsActivity"
+            android:label="@string/googlecards" />
+        <activity
+            android:name="com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoActivity"
+            android:label="@string/contextualundo" />
+        <activity
+            android:name="com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity"
+            android:label="@string/itemmanipulation" />
+        <activity
+            android:name="com.haarman.listviewanimations.itemmanipulationexamples.SwipeDismissActivity"
+            android:label="@string/swipedismiss" />
+        <activity
+            android:name="com.haarman.listviewanimations.itemmanipulationexamples.AnimateDismissActivity"
+            android:label="@string/animateremoval" />
+        <activity
+            android:name="com.haarman.listviewanimations.GridViewActivity"
+            android:label="@string/gridviewexample" />
+        <activity
+            android:name="com.haarman.listviewanimations.ExpandableListItemActivity"
+            android:label="@string/expandablelistitemadapter" />
     </application>
 
 </manifest>
