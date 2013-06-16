@@ -7,6 +7,9 @@ Feel free to use it all you want in your Android apps provided that you cite thi
 ListViewAnimations uses the [NineOldAndroids][2] library to support devices <3.0.  
 It also uses Roman Nurik's BETA [SwipeDismissListViewTouchListener][5] to support swipe to dismiss.
 
+Version 2.0 now supports GridViews! (And other implementations of AbsListView)
+It also contains an ExpandableListItemAdapter for smoothly expanding your Views!
+
 Known applications using ListViewAnimations
 -----
 * TreinVerkeer ([Play Store][6])
@@ -55,7 +58,7 @@ Example:
 						new MyListAdapter(this, getItems())));
 		
 		// Assign the ListView to the AnimationAdapter and vice versa
-		swingRightInAnimationAdapter.setListView(getListView());
+		swingRightInAnimationAdapter.setAbsListView(getListView());
 		getListView().setAdapter(swingRightInAnimationAdapter);
 	}
 	
@@ -114,7 +117,7 @@ License
  [1]: https://play.google.com/store/apps/details?id=com.haarman.listviewanimations
  [2]: http://nineoldandroids.com/
  [3]: http://en.wikipedia.org/wiki/Decorator_pattern
- [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-1.9.jar?raw=true
+ [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.0.jar?raw=true
  [5]: https://gist.github.com/romannurik/2980593
  [6]: https://play.google.com/store/apps/details?id=com.haarman.treinverkeer
  [7]: https://www.twitter.com/haarmandev
