@@ -7,7 +7,7 @@ Feel free to use it all you want in your Android apps provided that you cite thi
 ListViewAnimations uses the [NineOldAndroids][2] library to support devices <3.0.  
 It also uses Roman Nurik's BETA [SwipeDismissListViewTouchListener][5] to support swipe to dismiss.
 
-Version 2.0 now supports GridViews! (And other implementations of AbsListView)
+Version 2.0 now supports GridViews! (And other implementations of AbsListView)  
 It also contains an ExpandableListItemAdapter for smoothly expanding your Views!
 
 Known applications using ListViewAnimations
