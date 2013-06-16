@@ -17,7 +17,6 @@ package com.haarman.listviewanimations.itemmanipulation;
 
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import com.haarman.listviewanimations.BaseAdapterDecorator;
 

@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 /**
  * A decorator class that enables decoration of an instance of the BaseAdapter
@@ -40,7 +39,6 @@ public abstract class BaseAdapterDecorator extends BaseAdapter {
 	}
 
     @Deprecated
-    @SuppressWarnings("Deprecated")
     /**
      * @deprecated use setAbsListView(AbsListView) instead.
      */

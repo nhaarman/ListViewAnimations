@@ -174,7 +174,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
             if (isVisible) {
                 animateCollapsing();
-                mVisibleIds.remove((Long) mContentParent.getTag());
+                mVisibleIds.remove(mContentParent.getTag());
             } else {
                 animateExpanding();
                 mVisibleIds.add((Long) mContentParent.getTag());
