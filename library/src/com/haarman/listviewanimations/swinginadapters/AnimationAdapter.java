@@ -15,6 +15,7 @@
  */
 package com.haarman.listviewanimations.swinginadapters;
 
+import android.os.Build;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,7 +164,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         if (numberOfItems + 1 < mLastAnimatedPosition) {
             delay = getAnimationDelayMillis();
 
-            if (getAbsListView() instanceof GridView) {
+            if (getAbsListView() instanceof GridView && Build.VERSION.SDK_INT >= 11) {
                 delay += getAnimationDelayMillis() * ((mLastAnimatedPosition + 1) % ((GridView) getAbsListView()).getNumColumns());
             }
         } else {
