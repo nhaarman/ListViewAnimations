@@ -117,10 +117,10 @@ License
  [1]: https://play.google.com/store/apps/details?id=com.haarman.listviewanimations
  [2]: http://nineoldandroids.com/
  [3]: http://en.wikipedia.org/wiki/Decorator_pattern
- [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.0.jar?raw=true
+ [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.1.jar?raw=true
  [5]: https://gist.github.com/romannurik/2980593
  [6]: https://play.google.com/store/apps/details?id=com.haarman.treinverkeer
- [7]: https://www.twitter.com/haarmandev
+ [7]: https://www.twitter.com/niekfct
  [8]: https://plus.google.com/106017817931984343451
  [9]: https://play.google.com/store/apps/details?id=com.niek.runningapp
  [10]: https://play.google.com/store/apps/details?id=com.rentalcars.handset

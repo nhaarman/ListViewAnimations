@@ -17,9 +17,9 @@ package com.haarman.listviewanimations.animationinexamples;
 
 import android.os.Bundle;
 import android.widget.BaseAdapter;
+
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
-import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 
 public class AlphaInActivity extends MyListActivity {
 

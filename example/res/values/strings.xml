@@ -2,7 +2,7 @@
 
     <string name="app_name">ListViewAnimationsExample</string>
     <string name="swingin">Animation in adapters</string>
-    <string name="itemmanipulation">Item manipulation (NEW!)</string>
+    <string name="itemmanipulation">Item manipulation</string>
     <string name="bottomin">Bottom in</string>
     <string name="rightin">Right in</string>
     <string name="leftin">Left in</string>
