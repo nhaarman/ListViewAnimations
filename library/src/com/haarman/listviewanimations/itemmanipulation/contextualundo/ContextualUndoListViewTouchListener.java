@@ -33,6 +33,10 @@ import static com.nineoldandroids.view.ViewHelper.setAlpha;
 import static com.nineoldandroids.view.ViewHelper.setTranslationX;
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
+/**
+ * An OnTouchListener for the ContextualUndoAdapter.
+ * Don't use this class directly, use ContextualUndoAdapter to wrap your BaseAdapters.
+ */
 public class ContextualUndoListViewTouchListener implements View.OnTouchListener {
     // Cached ViewConfiguration and system-wide constant values
     private int mSlop;
