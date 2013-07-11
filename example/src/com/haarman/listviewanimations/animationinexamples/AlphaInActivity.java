@@ -33,5 +33,6 @@ public class AlphaInActivity extends MyListActivity {
 		aplhaInAnimationAdapter.setAbsListView(getListView());
 
 		getListView().setAdapter(aplhaInAnimationAdapter);
+        getListView().setDivider(null);
 	}
 }
