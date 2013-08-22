@@ -17,6 +17,7 @@
 package com.haarman.listviewanimations.itemmanipulation.contextualundo;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,10 +51,15 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     private final int mUndoLayoutId;
     private final int mUndoActionId;
     private final int mAnimationTime = 150;
+    private final int mCountDownSwitcherId;
+    private final int mCountDownTextLayoutId;
+    private final int mAutoDeleteTime;
+    private CountDownTimer mAutoDeleteTimer = null;
     private ContextualUndoView mCurrentRemovedView;
     private long mCurrentRemovedId;
     private Map<View, Animator> mActiveAnimators = new ConcurrentHashMap<View, Animator>();
     private DeleteItemCallback mDeleteItemCallback;
+    private FormatCountDownCallback mFormatCountDownCallback = null;
 
     /**
      * Create a new ContextualUndoAdapter based on given parameters.
@@ -63,18 +69,47 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
      * @param undoActionId The id of the component which undoes the dismissal
      */
     public ContextualUndoAdapter(BaseAdapter baseAdapter, int undoLayoutId, int undoActionId) {
-        super(baseAdapter);
+        this(baseAdapter, undoLayoutId, undoActionId, 0, -1, -1);
+    }
 
+    /**
+     * Create a new ContextualUndoAdapter based on given parameters.
+     *
+     * @param baseAdapter  The BaseAdapter to wrap
+     * @param undoLayoutId The layout resource id to show as undo
+     * @param undoActionId The id of the component which undoes the dismissal
+     * @param autoDeleteTime The time in milliseconds that adapter will wait for user to hit undo before automatically deleting item
+     */
+    public ContextualUndoAdapter(BaseAdapter baseAdapter, int undoLayoutId, int undoActionId, int autoDeleteTime) {
+    	this(baseAdapter, undoLayoutId, undoActionId, autoDeleteTime, -1, -1);
+    }
+
+    /**
+     * Create a new ContextualUndoAdapter based on given parameters.
+     *
+     * @param baseAdapter  The BaseAdapter to wrap
+     * @param undoLayoutId The layout resource id to show as undo
+     * @param undoActionId The id of the component which undoes the dismissal
+     * @param autoDeleteTime The time in milliseconds that adapter will wait for user to hit undo before automatically deleting item
+     * @param countDownTextLayoutId The id of a Layout containing only a styled TextView to be used in the TextSwitcher which displays a count down timer to auto deletion
+     * @param countDownSwitcherId The id of the TextSwitcher in the undo layout used to display the the countdown timer for auto deletion
+     */
+    public ContextualUndoAdapter(BaseAdapter baseAdapter, int undoLayoutId, int undoActionId, int autoDeleteTime, int countDownTextLayoutId, int countDownSwitcherId) {
+    	super(baseAdapter);
+    	
         mUndoLayoutId = undoLayoutId;
         mUndoActionId = undoActionId;
         mCurrentRemovedId = -1;
+        mAutoDeleteTime = autoDeleteTime;
+        mCountDownSwitcherId = countDownSwitcherId;
+        mCountDownTextLayoutId = countDownTextLayoutId;
     }
-
+    
     @Override
     public final View getView(int position, View convertView, ViewGroup parent) {
         ContextualUndoView contextualUndoView = (ContextualUndoView) convertView;
         if (contextualUndoView == null) {
-            contextualUndoView = new ContextualUndoView(parent.getContext(), mUndoLayoutId);
+            contextualUndoView = new ContextualUndoView(parent.getContext(), mUndoLayoutId, mCountDownTextLayoutId, mCountDownSwitcherId);
             contextualUndoView.findViewById(mUndoActionId).setOnClickListener(new UndoListener(contextualUndoView));
         }
 
@@ -111,6 +146,8 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
             contextualUndoView.displayUndo();
             removePreviousContextualUndoIfPresent();
             setCurrentRemovedView(contextualUndoView);
+            if(mAutoDeleteTime > 0)
+            	startAutoDeleteTimer(contextualUndoView);
         } else {
             if (mCurrentRemovedView != null) {
                 performRemoval();
@@ -118,6 +155,29 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         }
     }
 
+    private void startAutoDeleteTimer(final ContextualUndoView deleteView){
+    	// @TODO Add countdown timer
+    	if(mAutoDeleteTimer != null){
+    		// @TODO Do something here? or deal with this case earlier?
+    	}
+    	
+    	if(mFormatCountDownCallback != null)
+    		deleteView.updateCountDownTimer(mFormatCountDownCallback.getCountDownString(-1));
+    	mAutoDeleteTimer = new CountDownTimer(mAutoDeleteTime, 1000) {
+
+    	     public void onTick(long millisUntilFinished) {
+    	    	 if(mFormatCountDownCallback != null)
+    	    		 deleteView.updateCountDownTimer(mFormatCountDownCallback.getCountDownString(millisUntilFinished));
+    	     }
+
+    	     public void onFinish() {
+    	    	 if(mFormatCountDownCallback != null)
+    	    		 deleteView.updateCountDownTimer(mFormatCountDownCallback.getCountDownString(0));
+    	         performRemoval();
+    	     }
+    	  }.start();
+    }
+    
     private void restoreViewPosition(View view) {
         setAlpha(view, 1f);
         setTranslationX(view, 0);
@@ -137,6 +197,10 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     private void clearCurrentRemovedView() {
         mCurrentRemovedView = null;
         mCurrentRemovedId = -1;
+        if(mAutoDeleteTimer != null){
+    		mAutoDeleteTimer.cancel();
+    		mAutoDeleteTimer = null;
+    	}
     }
 
     @Override
@@ -162,6 +226,14 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         mDeleteItemCallback = deleteItemCallback;
     }
 
+    /**
+     * Set the FormatCountDownCallback for this ContextualUndoAdapter. This is called when on each tick of the CountDownTimer when a
+     * swiped item should be automatically deleted
+     */
+    public void setFormatCountDownCallback(FormatCountDownCallback formatCountDownCallback) {
+        mFormatCountDownCallback = formatCountDownCallback;
+    }
+    
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
         bundle.putLong("mCurrentRemovedId", mCurrentRemovedId);
@@ -184,6 +256,17 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         public void deleteItem(int position);
     }
 
+    /**
+     * A callback interface which is used to format the Count Down to Delete timer string
+     */
+    public interface FormatCountDownCallback {
+        /**
+         * Called each tick of the CountDownTimer
+         * @param millisUntilFinished milliseconds remaining before item is automatically removed from collection 
+         */
+        public String getCountDownString(final long millisUntilFinished);
+    }
+    
     private class RemoveViewAnimatorListenerAdapter extends AnimatorListenerAdapter {
 
         private final View mDismissView;

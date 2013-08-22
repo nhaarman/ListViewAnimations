@@ -23,6 +23,8 @@ import android.view.View;
 import com.haarman.listviewanimations.ExpandableListItemActivity;
 import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoActivity;
+import com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoWithTimedDeleteActivity;
+import com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoWithTimedDeleteAndCountDownActivity;
 
 public class ItemManipulationsExamplesActivity extends Activity {
 
@@ -44,6 +46,16 @@ public class ItemManipulationsExamplesActivity extends Activity {
 
 	public void onContextualUndoClicked(View view) {
 		Intent intent = new Intent(this, ContextualUndoActivity.class);
+		startActivity(intent);
+	}
+	
+	public void onContextualUndoTimedCountDownClicked(View view) {
+		Intent intent = new Intent(this, ContextualUndoWithTimedDeleteAndCountDownActivity.class);
+		startActivity(intent);
+	}
+	
+	public void onContextualUndoTimedClicked(View view) {
+		Intent intent = new Intent(this, ContextualUndoWithTimedDeleteActivity.class);
 		startActivity(intent);
 	}
 
