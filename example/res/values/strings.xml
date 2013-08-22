@@ -16,6 +16,8 @@
 
     <string name="removeselected">Remove selected</string>
     <string name="contextualundo">Contextual Undo</string>
+    <string name="contextualundotimedcountdown">Contextual Undo With Timed Delete And Count Down</string>
+    <string name="contextualundotimed">Contextual Undo With Timed Delete</string>
     <string name="expandablelistitemadapter">Expand List Items</string>
     <string name="itemdeleted">Item deleted</string>
     <string name="taptoundo">Tap to undo</string>

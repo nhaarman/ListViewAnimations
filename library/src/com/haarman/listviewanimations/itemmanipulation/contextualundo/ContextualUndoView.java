@@ -20,22 +20,41 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextSwitcher;
+import android.widget.ViewSwitcher.ViewFactory;
 
 @SuppressLint("ViewConstructor")
 public class ContextualUndoView extends FrameLayout {
 
 	private View mUndoView;
 	private View mContentView;
+	private TextSwitcher mCountDownSwitcher = null;
 	private long mItemId;
 
-	public ContextualUndoView(Context context, int undoLayoutResourceId) {
+	public ContextualUndoView(Context context, int undoLayoutResourceId, final int countDownTextLayoutId, final int countDownSwitcherId) {
 		super(context);
-		initUndo(undoLayoutResourceId);
+		
+		initUndo(undoLayoutResourceId, countDownTextLayoutId, countDownSwitcherId);
 	}
 
-	private void initUndo(int undoLayoutResourceId) {
+	private void initUndo(int undoLayoutResourceId, final int countDownTextLayoutId, final int countDownSwitcherId) {
 		mUndoView = View.inflate(getContext(), undoLayoutResourceId, null);
 		addView(mUndoView);
+		if(countDownSwitcherId != -1){
+			mCountDownSwitcher = (TextSwitcher)mUndoView.findViewById(countDownSwitcherId);
+			mCountDownSwitcher.setFactory(new ViewFactory() {
+                
+                public View makeView() {
+                    return View.inflate(getContext(), countDownTextLayoutId, null);
+                }
+            });
+		}
+			
+	}
+	
+	public void updateCountDownTimer(final String timerText){
+		if(mCountDownSwitcher != null)
+			mCountDownSwitcher.setText(timerText);
 	}
 
 	public void updateContentView(View contentView) {
@@ -62,6 +81,7 @@ public class ContextualUndoView extends FrameLayout {
 	}
 
 	public void displayUndo() {
+		updateCountDownTimer("");
 		mContentView.setVisibility(View.GONE);
 		mUndoView.setVisibility(View.VISIBLE);
 	}
