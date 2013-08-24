@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.haarman.listviewanimations"
-    android:versionCode="15"
+    android:versionCode="16"
     android:versionName="2.2">
 
     <uses-sdk
