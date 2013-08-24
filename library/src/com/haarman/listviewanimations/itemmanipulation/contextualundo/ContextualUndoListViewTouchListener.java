@@ -126,7 +126,7 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 					}
 				}
 
-				if (mDownView != null) {
+                if (mDownView != null && mDownView instanceof ContextualUndoView) {
 					mDownX = motionEvent.getRawX();
 					mDownPosition = mListView.getPositionForView(mDownView);
 
@@ -204,6 +204,6 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 				break;
 			}
 		}
-		return false;
+    	return false;
 	}
 }
