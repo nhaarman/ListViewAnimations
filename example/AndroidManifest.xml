@@ -5,7 +5,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -46,6 +46,12 @@
         <activity
             android:name="com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoActivity"
             android:label="@string/contextualundo" />
+        <activity
+            android:name="com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoWithTimedDeleteAndCountDownActivity"
+            android:label="@string/contextualundotimedcountdown" />
+        <activity
+            android:name="com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoWithTimedDeleteActivity"
+            android:label="@string/contextualundotimed" />
         <activity
             android:name="com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity"
             android:label="@string/itemmanipulation" />

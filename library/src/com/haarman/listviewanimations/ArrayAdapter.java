@@ -23,11 +23,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A true ArrayList adapter providing access to all ArrayList methods.
+ * A true {@link ArrayList} adapter providing access to all ArrayList methods.
  */
 public abstract class ArrayAdapter<T> extends BaseAdapter {
 
-	private ArrayList<T> mItems;
+	private List<T> mItems;
 
 	/**
 	 * Creates a new ArrayAdapter with an empty list.
@@ -37,11 +37,11 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	}
 
 	/**
-	 * Creates a new ArrayAdapter with the specified list, or an empty list if
-	 * items == null.
+	 * Creates a new {@link ArrayAdapter} with a <b>copy</b> of the specified
+	 * list, or an empty list if items == null.
 	 */
 	public ArrayAdapter(List<T> items) {
-	    mItems = new ArrayList<T>();
+		mItems = new ArrayList<T>();
 		if (items != null) {
 			mItems.addAll(items);
 		}
@@ -93,7 +93,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 	 * they are specified.
 	 */
 	public void addAll(T... items) {
-        Collections.addAll(mItems, items);
+		Collections.addAll(mItems, items);
 		notifyDataSetChanged();
 	}
 
