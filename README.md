@@ -94,6 +94,10 @@ Implement one of the following classes:
 
 See the examples.
 
+Contribute
+-----
+Please do! I'm happy to review and accept pull requests.
+
 Developed By
 -----
 * Niek Haarman
