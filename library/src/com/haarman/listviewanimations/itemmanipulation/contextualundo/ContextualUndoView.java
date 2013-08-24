@@ -20,48 +20,42 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextSwitcher;
-import android.widget.ViewSwitcher.ViewFactory;
+import android.widget.TextView;
 
 @SuppressLint("ViewConstructor")
 public class ContextualUndoView extends FrameLayout {
 
 	private View mUndoView;
 	private View mContentView;
-	private TextSwitcher mCountDownSwitcher = null;
+	private TextView mCountDownTV;
+
 	private long mItemId;
 
-	public ContextualUndoView(Context context, int undoLayoutResourceId, final int countDownTextLayoutId, final int countDownSwitcherId) {
+	public ContextualUndoView(Context context, int undoLayoutResId, int countDownTextViewResId) {
 		super(context);
-		
-		initUndo(undoLayoutResourceId, countDownTextLayoutId, countDownSwitcherId);
+		initUndo(undoLayoutResId, countDownTextViewResId);
 	}
 
-	private void initUndo(int undoLayoutResourceId, final int countDownTextLayoutId, final int countDownSwitcherId) {
-		mUndoView = View.inflate(getContext(), undoLayoutResourceId, null);
+	private void initUndo(int undoLayoutResId, final int countDownTextViewResId) {
+		mUndoView = View.inflate(getContext(), undoLayoutResId, null);
 		addView(mUndoView);
-		if(countDownSwitcherId != -1){
-			mCountDownSwitcher = (TextSwitcher)mUndoView.findViewById(countDownSwitcherId);
-			mCountDownSwitcher.setFactory(new ViewFactory() {
-                
-                public View makeView() {
-                    return View.inflate(getContext(), countDownTextLayoutId, null);
-                }
-            });
+
+		if (countDownTextViewResId != -1) {
+			mCountDownTV = (TextView) mUndoView.findViewById(countDownTextViewResId);
 		}
-			
 	}
-	
-	public void updateCountDownTimer(final String timerText){
-		if(mCountDownSwitcher != null)
-			mCountDownSwitcher.setText(timerText);
+
+	public void updateCountDownTimer(String timerText) {
+		if (mCountDownTV != null) {
+			mCountDownTV.setText(timerText);
+		}
 	}
 
 	public void updateContentView(View contentView) {
-		if (this.mContentView == null) {
+		if (mContentView == null) {
 			addView(contentView);
 		}
-		this.mContentView = contentView;
+		mContentView = contentView;
 	}
 
 	public View getContentView() {
