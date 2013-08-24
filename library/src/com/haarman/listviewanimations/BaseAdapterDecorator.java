@@ -38,30 +38,13 @@ public abstract class BaseAdapterDecorator extends BaseAdapter {
 		mDecoratedBaseAdapter = baseAdapter;
 	}
 
-    @Deprecated
-    /**
-     * @deprecated use setAbsListView(AbsListView) instead.
-     */
-	public void setListView(AbsListView listView) {
+	public void setAbsListView(AbsListView listView) {
 		mListView = listView;
 
 		if (mDecoratedBaseAdapter instanceof BaseAdapterDecorator) {
-			((BaseAdapterDecorator) mDecoratedBaseAdapter).setListView(listView);
+			((BaseAdapterDecorator) mDecoratedBaseAdapter).setAbsListView(listView);
 		}
 	}
-
-    public void setAbsListView(AbsListView listView){
-        mListView = listView;
-
-        if (mDecoratedBaseAdapter instanceof BaseAdapterDecorator) {
-            ((BaseAdapterDecorator) mDecoratedBaseAdapter).setAbsListView(listView);
-        }
-    }
-
-    @Deprecated
-    public AbsListView getListView(){
-        return mListView;
-    }
 
 	public AbsListView getAbsListView() {
 		return mListView;

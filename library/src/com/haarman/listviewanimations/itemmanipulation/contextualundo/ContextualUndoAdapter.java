@@ -44,9 +44,12 @@ import com.nineoldandroids.view.ViewHelper;
  * undoLayout should have the same height as the content row.
  * <p>
  * Usage: <br>
- *  * Create a new instance of this class providing the BaseAdapter to wrap, the undo layout, and the undo button id. <br>
- *  * Call setDeleteItemCallback to be notified of when items should be removed from your collection. <br>
- *  * Set your ListView to this ContextualUndoAdapter, and set this ContextualUndoAdapter to your ListView. <br>
+ * * Create a new instance of this class providing the BaseAdapter to wrap, the
+ * undo layout, and the undo button id.<br>
+ * * Call {@link #setDeleteItemCallback(DeleteItemCallback)} to be notified of when items should be removed
+ * from your collection.<br>
+ * * Set your {@link ListView} to this ContextualUndoAdapter, and set this
+ * ContextualUndoAdapter to your ListView.<br>
  */
 public class ContextualUndoAdapter extends BaseAdapterDecorator implements ContextualUndoListViewTouchListener.Callback {
 
@@ -77,6 +80,9 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	 * @param baseAdapter  The {@link BaseAdapter} to wrap
 	 * @param undoLayoutId The layout resource id to show as undo
 	 * @param undoActionId The id of the component which undoes the dismissal
+	 *            The layout resource id to show as undo
+	 * @param undoActionId
+	 *            The id of the component which undoes the dismissal
 	 */
 	public ContextualUndoAdapter(BaseAdapter baseAdapter, int undoLayoutId, int undoActionId) {
 		this(baseAdapter, undoLayoutId, undoActionId, -1, -1, null);
@@ -239,13 +245,15 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		mCurrentRemovedId = bundle.getLong("mCurrentRemovedId", -1);
 	}
 
-	/**
+	/**	
 	 * A callback interface which is used to notify when items should be removed from the collection.
 	 */
 	public interface DeleteItemCallback {
 		/**
 		 * Called when an item should be removed from the collection.
-		 * @param position the position of the item that should be removed.
+		 * 
+		 * @param position
+		 *            the position of the item that should be removed.
 		 */
 		public void deleteItem(int position);
 	}
