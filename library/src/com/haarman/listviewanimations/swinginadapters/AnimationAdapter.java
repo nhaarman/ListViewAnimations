@@ -26,7 +26,6 @@ import com.haarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.view.ViewHelper;
 
 /**
  * A BaseAdapterDecorator class which applies multiple Animators at once to
@@ -38,11 +37,11 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	protected static final long DEFAULTANIMATIONDELAYMILLIS = 100;
 	protected static final long DEFAULTANIMATIONDURATIONMILLIS = 300;
 	private static final long INITIALDELAYMILLIS = 150;
-
 	private SparseArray<AnimationInfo> mAnimators;
 	private long mAnimationStartMillis;
 	private int mLastAnimatedPosition;
 	private boolean mHasParentAnimationAdapter;
+	private boolean mShouldAnimate;
 
 	public AnimationAdapter(BaseAdapter baseAdapter) {
 		super(baseAdapter);
@@ -59,16 +58,21 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	/**
 	 * Call this method to reset animation status on all views. The next time
 	 * notifyDataSetChanged() is called on the base adapter, all views will
-	 * animate again.
+	 * animate again. Will also call setShouldAnimate(true).
 	 */
 	public void reset() {
 		mAnimators.clear();
 		mLastAnimatedPosition = -1;
 		mAnimationStartMillis = -1;
+		mShouldAnimate = true;
 
 		if (getDecoratedBaseAdapter() instanceof AnimationAdapter) {
 			((AnimationAdapter) getDecoratedBaseAdapter()).reset();
 		}
+	}
+
+	public void setShouldAnimate(boolean shouldAnimate) {
+		mShouldAnimate = shouldAnimate;
 	}
 
 	@Override
@@ -77,7 +81,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 		if (!mHasParentAnimationAdapter) {
 			if (getAbsListView() == null) {
-				throw new IllegalStateException("Call setAbsListView() on this AnimationAdapter before setAdapter()!");
+				throw new IllegalStateException("Call setListView() on this AnimationAdapter before setAdapter()!");
 			}
 
 			if (convertView != null) {
@@ -103,7 +107,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	}
 
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
-		if (position > mLastAnimatedPosition && !mHasParentAnimationAdapter) {
+		if (position > mLastAnimatedPosition && !mHasParentAnimationAdapter && mShouldAnimate) {
 			animateView(position, parent, view);
 			mLastAnimatedPosition = position;
 		}
@@ -114,7 +118,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 			mAnimationStartMillis = System.currentTimeMillis();
 		}
 
-		ViewHelper.setAlpha(view, 0);
+		hideView(view);
 
 		Animator[] childAnimators;
 		if (mDecoratedBaseAdapter instanceof AnimationAdapter) {
@@ -134,9 +138,14 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		mAnimators.put(view.hashCode(), new AnimationInfo(position, set));
 	}
 
-	/**
-	 * Concatenate given {@link Animator}s into one Animator[].
-	 */
+	private void hideView(View view) {
+		ObjectAnimator animator = ObjectAnimator.ofFloat(view, "alpha", 0);
+		AnimatorSet set = new AnimatorSet();
+		set.play(animator);
+		set.setDuration(0);
+		set.start();
+	}
+
 	private Animator[] concatAnimators(Animator[] childAnimators, Animator[] animators, Animator alphaAnimator) {
 		Animator[] allAnimators = new Animator[childAnimators.length + animators.length + 1];
 		int i;
@@ -154,27 +163,21 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		return allAnimators;
 	}
 
+	@SuppressLint("NewApi")
 	private long calculateAnimationDelay() {
 		long delay;
 		int numberOfItems = getAbsListView().getLastVisiblePosition() - getAbsListView().getFirstVisiblePosition();
 		if (numberOfItems + 1 < mLastAnimatedPosition) {
-			delay = getAnimationDelayMillis() + calculateExtraGridViewDelay();
+			delay = getAnimationDelayMillis();
+
+			if (getAbsListView() instanceof GridView && Build.VERSION.SDK_INT >= 11) {
+				delay += getAnimationDelayMillis() * ((mLastAnimatedPosition + 1) % ((GridView) getAbsListView()).getNumColumns());
+			}
 		} else {
 			long delaySinceStart = (mLastAnimatedPosition + 1) * getAnimationDelayMillis();
 			delay = mAnimationStartMillis + INITIALDELAYMILLIS + delaySinceStart - System.currentTimeMillis();
 		}
 		return Math.max(0, delay);
-	}
-
-	@SuppressLint("NewApi")
-	private long calculateExtraGridViewDelay() {
-		long result = 0;
-
-		if (getAbsListView() instanceof GridView && Build.VERSION.SDK_INT >= 11) {
-			result = getAnimationDelayMillis() * ((mLastAnimatedPosition + 1) % ((GridView) getAbsListView()).getNumColumns());
-		}
-
-		return result;
 	}
 
 	/**
