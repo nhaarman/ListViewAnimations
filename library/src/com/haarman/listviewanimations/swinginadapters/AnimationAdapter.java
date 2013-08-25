@@ -41,7 +41,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	private long mAnimationStartMillis;
 	private int mLastAnimatedPosition;
 	private boolean mHasParentAnimationAdapter;
-	private boolean mShouldAnimate;
+	private boolean mShouldAnimate = true;
 
 	public AnimationAdapter(BaseAdapter baseAdapter) {
 		super(baseAdapter);
