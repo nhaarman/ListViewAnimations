@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.SectionIndexer;
 
 /**
  * A decorator class that enables decoration of an instance of the BaseAdapter
@@ -28,7 +29,7 @@ import android.widget.BaseAdapter;
  * Classes extending this class can override methods and provide extra
  * functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter {
+public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer {
 
 	protected final BaseAdapter mDecoratedBaseAdapter;
 
@@ -123,6 +124,30 @@ public abstract class BaseAdapterDecorator extends BaseAdapter {
 	@Override
 	public void unregisterDataSetObserver(DataSetObserver observer) {
 		mDecoratedBaseAdapter.unregisterDataSetObserver(observer);
+	}
+
+	@Override
+	public int getPositionForSection(int section) {
+		if (mDecoratedBaseAdapter instanceof SectionIndexer) {
+			return ((SectionIndexer) mDecoratedBaseAdapter).getPositionForSection(section);
+		}
+		return 0;
+	}
+
+	@Override
+	public int getSectionForPosition(int position) {
+		if (mDecoratedBaseAdapter instanceof SectionIndexer) {
+			return ((SectionIndexer) mDecoratedBaseAdapter).getSectionForPosition(position);
+		}
+		return 0;
+	}
+
+	@Override
+	public Object[] getSections() {
+		if (mDecoratedBaseAdapter instanceof SectionIndexer) {
+			return ((SectionIndexer) mDecoratedBaseAdapter).getSections();
+		}
+		return null;
 	}
 
 	public BaseAdapter getDecoratedBaseAdapter() {
