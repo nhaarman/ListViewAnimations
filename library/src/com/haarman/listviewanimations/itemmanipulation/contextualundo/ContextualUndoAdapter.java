@@ -184,7 +184,9 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	private void startAutoDeleteTimer() {
 		mHandler.removeCallbacks(mCountDownRunnable);
 
-		mCurrentRemovedView.updateCountDownTimer(mCountDownFormatter.getCountDownString(mAutoDeleteDelayMillis));
+		if (mCountDownFormatter != null) {
+			mCurrentRemovedView.updateCountDownTimer(mCountDownFormatter.getCountDownString(mAutoDeleteDelayMillis));
+		}
 
 		mDismissStartMillis = System.currentTimeMillis();
 		mHandler.postDelayed(mCountDownRunnable, Math.min(1000, mAutoDeleteDelayMillis));
