@@ -23,13 +23,14 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.haarman.listviewanimations.BaseAdapterDecorator;
@@ -44,16 +45,14 @@ import com.nineoldandroids.view.ViewHelper;
  * undoLayout should have the same height as the content row.
  * <p>
  * Usage: <br>
- * * Create a new instance of this class providing the BaseAdapter to wrap, the
- * undo layout, and the undo button id.<br>
- * * Call {@link #setDeleteItemCallback(DeleteItemCallback)} to be notified of when items should be removed
- * from your collection.<br>
- * * Set your {@link ListView} to this ContextualUndoAdapter, and set this
- * ContextualUndoAdapter to your ListView.<br>
+ * * Create a new instance of this class providing the {@link BaseAdapter} to wrap, the undo layout, and the undo button id, optionally a delay time millis, a count down TextView res id, and a delay in milliseconds before deleting the item .<br>
+ * * Call {@link #setDeleteItemCallback(DeleteItemCallback)} to be notified of when items should be removed from your collection.<br>
+ * * Set your {@link ListView} to this ContextualUndoAdapter, and set this ContextualUndoAdapter to your ListView.<br>
  */
 public class ContextualUndoAdapter extends BaseAdapterDecorator implements ContextualUndoListViewTouchListener.Callback {
 
 	private static final int ANIMATION_DURATION = 150;
+	private static final String EXTRA_ACTIVE_REMOVED_ID = "removedId";
 
 	private final int mUndoLayoutId;
 	private final int mUndoActionId;
@@ -107,9 +106,9 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	 *
 	 * @param baseAdapter  The {@link BaseAdapter} to wrap
 	 * @param undoLayoutResId The layout resource id to show as undo
-	 * @param undoActionResId The id of the component which undoes the dismissal
+	 * @param undoActionResId The resource id of the component which undoes the dismissal
 	 * @param autoDeleteTime The time in milliseconds that adapter will wait for user to hit undo before automatically deleting item
-	 * @param countDownTextViewResId The id of the {@link TextView} in the undoLayoutResId that will show the time left
+	 * @param countDownTextViewResId The resource id of the {@link TextView} in the undoLayoutResId that will show the time left
 	 * @param countDownFormatter the {@link CountDownFormatter} which provides text to be shown in the {@link TextView} as specified by countDownTextViewResId
 	 */
 	public ContextualUndoAdapter(BaseAdapter baseAdapter, int undoLayoutResId, int undoActionResId, int autoDeleteTime, int countDownTextViewResId, CountDownFormatter countDownFormatter) {
@@ -236,15 +235,20 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		mDeleteItemCallback = deleteItemCallback;
 	}
 
-	public Parcelable onSaveInstanceState() {
-		Bundle bundle = new Bundle();
-		bundle.putLong("mCurrentRemovedId", mCurrentRemovedId);
-		return bundle;
+	/**
+	 * This method should be called in your {@link Activity}'s {@link Activity#onSaveInstanceState(Bundle)} to remember dismissed statuses.
+	 * @param outState the {@link Bundle} provided by Activity.onSaveInstanceState(Bundle).
+	 */
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putLong(EXTRA_ACTIVE_REMOVED_ID, mCurrentRemovedId);
 	}
 
-	public void onRestoreInstanceState(Parcelable state) {
-		Bundle bundle = (Bundle) state;
-		mCurrentRemovedId = bundle.getLong("mCurrentRemovedId", -1);
+	/**
+	 * This method should be called in your {@link Activity#onRestoreInstanceState(Bundle)} to remember dismissed statuses.
+	 * @param savedInstanceState
+	 */
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		mCurrentRemovedId = savedInstanceState.getLong(EXTRA_ACTIVE_REMOVED_ID, -1);
 	}
 
 	/**	
