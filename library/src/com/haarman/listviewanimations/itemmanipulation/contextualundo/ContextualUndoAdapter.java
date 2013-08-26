@@ -143,7 +143,9 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 			contextualUndoView.displayUndo();
 			mCurrentRemovedView = contextualUndoView;
 			long millisLeft = mAutoDeleteDelayMillis - (System.currentTimeMillis() - mDismissStartMillis);
-			mCurrentRemovedView.updateCountDownTimer(mCountDownFormatter.getCountDownString(millisLeft));
+			if (mCountDownFormatter != null) {
+				mCurrentRemovedView.updateCountDownTimer(mCountDownFormatter.getCountDownString(millisLeft));
+			}
 		} else {
 			contextualUndoView.displayContentView();
 		}
