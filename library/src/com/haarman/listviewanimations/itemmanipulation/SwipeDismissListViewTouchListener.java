@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -119,6 +120,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 			return handleMoveEvent(motionEvent);
 		case MotionEvent.ACTION_UP:
 			return handleUpEvent(motionEvent);
+		case MotionEvent.ACTION_CANCEL:
+			throw new RuntimeException();
 		}
 		return false;
 	}
@@ -127,6 +130,11 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 		if (mPaused) {
 			return false;
 		}
+
+		if (mCurrentDismissData != null) {
+			throw new RuntimeException();
+		}
+
 		// TODO: ensure this is a finger, and set a flag
 
 		// Find the child view that was touched (perform a hit test)
@@ -146,6 +154,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 		}
 
 		if (child != null) {
+			System.out.println(child.hashCode());
+			child.setBackgroundColor(Color.RED);
 			mDownX = motionEvent.getRawX();
 			mDownY = motionEvent.getRawY();
 			int downPosition = mListView.getPositionForView(child);
@@ -153,9 +163,13 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 			mCurrentDismissData = new PendingDismissData(downPosition, child);
 
 			if (mPendingDismisses.contains(mCurrentDismissData)) {
+				System.out.println("(c) " + downPosition + " - " + mListView.getAdapter().getItem(downPosition) + ", " + mListView.getAdapter().getCount() + ", " + child.hashCode());
+
 				// Cancel, we're already processing this position
 				mCurrentDismissData = null;
 			} else {
+				System.out.println(downPosition + " - " + mListView.getAdapter().getItem(downPosition) + ", " + child.hashCode());
+
 				mVelocityTracker = VelocityTracker.obtain();
 				mVelocityTracker.addMovement(motionEvent);
 			}
@@ -193,6 +207,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 		if (mVelocityTracker == null) {
 			return false;
 		}
+
+		mCurrentDismissData.view.setBackgroundColor(0);
 
 		float deltaX = motionEvent.getRawX() - mDownX;
 		mVelocityTracker.addMovement(motionEvent);
