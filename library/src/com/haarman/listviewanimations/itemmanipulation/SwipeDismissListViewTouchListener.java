@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -87,6 +86,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 	private boolean mPaused;
 	private PendingDismissData mCurrentDismissData;
 
+	private int mVirtualListCount = -1;
+
 	/**
 	 * Constructs a new swipe-to-dismiss touch listener for the given list view.
 	 * 
@@ -108,6 +109,10 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent motionEvent) {
+		if (mVirtualListCount == -1) {
+			mVirtualListCount = mListView.getAdapter().getCount();
+		}
+
 		if (mViewWidth < 2) {
 			mViewWidth = mListView.getWidth();
 		}
@@ -131,12 +136,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 			return false;
 		}
 
-		if (mCurrentDismissData != null) {
-			throw new RuntimeException();
-		}
-
-		// TODO: ensure this is a finger, and set a flag
-
 		// Find the child view that was touched (perform a hit test)
 		Rect rect = new Rect();
 		int childCount = mListView.getChildCount();
@@ -144,31 +143,27 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 		mListView.getLocationOnScreen(listViewCoords);
 		int x = (int) motionEvent.getRawX() - listViewCoords[0];
 		int y = (int) motionEvent.getRawY() - listViewCoords[1];
-		View child = null;
-		for (int i = 0; i < childCount; i++) {
-			child = mListView.getChildAt(i);
+		View downView = null;
+		for (int i = 0; i < childCount && downView == null; i++) {
+			View child = mListView.getChildAt(i);
 			child.getHitRect(rect);
 			if (rect.contains(x, y)) {
-				break;
+				downView = child;
 			}
 		}
 
-		if (child != null) {
-			System.out.println(child.hashCode());
-			child.setBackgroundColor(Color.RED);
+		if (downView != null) {
 			mDownX = motionEvent.getRawX();
 			mDownY = motionEvent.getRawY();
-			int downPosition = mListView.getPositionForView(child);
+			int downPosition = mListView.getPositionForView(downView);
 
-			mCurrentDismissData = new PendingDismissData(downPosition, child);
+			mCurrentDismissData = new PendingDismissData(downPosition, downView);
 
-			if (mPendingDismisses.contains(mCurrentDismissData)) {
-				System.out.println("(c) " + downPosition + " - " + mListView.getAdapter().getItem(downPosition) + ", " + mListView.getAdapter().getCount() + ", " + child.hashCode());
-
+			if (mPendingDismisses.contains(mCurrentDismissData) || downPosition >= mVirtualListCount) {
 				// Cancel, we're already processing this position
 				mCurrentDismissData = null;
+				return false;
 			} else {
-				System.out.println(downPosition + " - " + mListView.getAdapter().getItem(downPosition) + ", " + child.hashCode());
 
 				mVelocityTracker = VelocityTracker.obtain();
 				mVelocityTracker.addMovement(motionEvent);
@@ -208,8 +203,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 			return false;
 		}
 
-		mCurrentDismissData.view.setBackgroundColor(0);
-
 		float deltaX = motionEvent.getRawX() - mDownX;
 		mVelocityTracker.addMovement(motionEvent);
 		mVelocityTracker.computeCurrentVelocity(1000);
@@ -235,6 +228,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 					performDismiss(pendingDismissData);
 				}
 			});
+			mVirtualListCount--;
 			mPendingDismisses.add(mCurrentDismissData);
 		} else {
 			// cancel
