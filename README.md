@@ -12,10 +12,11 @@ It also contains an ExpandableListItemAdapter for smoothly expanding your Views!
 
 Known applications using ListViewAnimations
 -----
+* Ultimate Tic-Tac-Toe ([Play Store][12])
 * TreinVerkeer ([Play Store][6])
 * Running Coach ([Play Store][9])
 * Car Hire ([Play Store][10])
-* Voorlees Verhaaltjes ([Play Store][11])
+* Super BART ([Play Store][11])
 
 If you want your app to be listed as well please contact me via [Google Plus][8]!
 
@@ -124,4 +125,5 @@ License
  [8]: https://plus.google.com/106017817931984343451
  [9]: https://play.google.com/store/apps/details?id=com.niek.runningapp
  [10]: https://play.google.com/store/apps/details?id=com.rentalcars.handset
- [11]: https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes
+ [11]: https://play.google.com/store/apps/details?id=com.getgoodcode.bart
+ [12]: https://play.google.com/store/apps/details?id=com.haarman.ultimatettt
