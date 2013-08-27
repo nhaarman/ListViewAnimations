@@ -41,6 +41,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	private long mAnimationStartMillis;
 	private int mLastAnimatedPosition;
 	private boolean mHasParentAnimationAdapter;
+	private boolean mShouldAnimate = true;
 
 	public AnimationAdapter(BaseAdapter baseAdapter) {
 		super(baseAdapter);
@@ -57,16 +58,21 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	/**
 	 * Call this method to reset animation status on all views. The next time
 	 * notifyDataSetChanged() is called on the base adapter, all views will
-	 * animate again.
+	 * animate again. Will also call setShouldAnimate(true).
 	 */
 	public void reset() {
 		mAnimators.clear();
 		mLastAnimatedPosition = -1;
 		mAnimationStartMillis = -1;
+		mShouldAnimate = true;
 
 		if (getDecoratedBaseAdapter() instanceof AnimationAdapter) {
 			((AnimationAdapter) getDecoratedBaseAdapter()).reset();
 		}
+	}
+
+	public void setShouldAnimate(boolean shouldAnimate) {
+		mShouldAnimate = shouldAnimate;
 	}
 
 	@Override
@@ -101,7 +107,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	}
 
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
-		if (position > mLastAnimatedPosition && !mHasParentAnimationAdapter) {
+		if (position > mLastAnimatedPosition && !mHasParentAnimationAdapter && mShouldAnimate) {
 			animateView(position, parent, view);
 			mLastAnimatedPosition = position;
 		}
