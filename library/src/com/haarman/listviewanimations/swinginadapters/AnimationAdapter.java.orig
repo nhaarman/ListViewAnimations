@@ -41,7 +41,10 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	private long mAnimationStartMillis;
 	private int mLastAnimatedPosition;
 	private boolean mHasParentAnimationAdapter;
+<<<<<<< HEAD
+=======
 	private boolean mShouldAnimate = true;
+>>>>>>> master
 
 	public AnimationAdapter(BaseAdapter baseAdapter) {
 		super(baseAdapter);
@@ -58,23 +61,33 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	/**
 	 * Call this method to reset animation status on all views. The next time
 	 * notifyDataSetChanged() is called on the base adapter, all views will
+<<<<<<< HEAD
+	 * animate again.
+=======
 	 * animate again. Will also call setShouldAnimate(true).
+>>>>>>> master
 	 */
 	public void reset() {
 		mAnimators.clear();
 		mLastAnimatedPosition = -1;
 		mAnimationStartMillis = -1;
+<<<<<<< HEAD
+=======
 		mShouldAnimate = true;
+>>>>>>> master
 
 		if (getDecoratedBaseAdapter() instanceof AnimationAdapter) {
 			((AnimationAdapter) getDecoratedBaseAdapter()).reset();
 		}
 	}
 
+<<<<<<< HEAD
+=======
 	public void setShouldAnimate(boolean shouldAnimate) {
 		mShouldAnimate = shouldAnimate;
 	}
 
+>>>>>>> master
 	@Override
 	public final View getView(int position, View convertView, ViewGroup parent) {
 		boolean alreadyStarted = false;
@@ -107,7 +120,11 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	}
 
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
+<<<<<<< HEAD
+		if (position > mLastAnimatedPosition && !mHasParentAnimationAdapter) {
+=======
 		if (position > mLastAnimatedPosition && !mHasParentAnimationAdapter && mShouldAnimate) {
+>>>>>>> master
 			animateView(position, parent, view);
 			mLastAnimatedPosition = position;
 		}
@@ -175,7 +192,11 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 			}
 		} else {
 			long delaySinceStart = (mLastAnimatedPosition + 1) * getAnimationDelayMillis();
+<<<<<<< HEAD
 			delay = mAnimationStartMillis + getInitialDelayMillis() + delaySinceStart - System.currentTimeMillis();
+=======
+			delay = mAnimationStartMillis + INITIALDELAYMILLIS + delaySinceStart - System.currentTimeMillis();
+>>>>>>> master
 		}
 		return Math.max(0, delay);
 	}
@@ -190,10 +211,13 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		mHasParentAnimationAdapter = hasParentAnimationAdapter;
 	}
 
+<<<<<<< HEAD
 	protected long getInitialDelayMillis() {
 		return INITIALDELAYMILLIS;
 	}
 
+=======
+>>>>>>> master
 	/**
 	 * Get the delay in milliseconds before an animation of a view should start.
 	 */
