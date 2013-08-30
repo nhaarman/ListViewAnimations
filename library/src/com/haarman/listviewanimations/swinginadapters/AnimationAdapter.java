@@ -37,6 +37,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	protected static final long DEFAULTANIMATIONDELAYMILLIS = 100;
 	protected static final long DEFAULTANIMATIONDURATIONMILLIS = 300;
 	private static final long INITIALDELAYMILLIS = 150;
+	
 	private SparseArray<AnimationInfo> mAnimators;
 	private long mAnimationStartMillis;
 	private int mLastAnimatedPosition;
