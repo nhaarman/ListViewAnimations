@@ -4,6 +4,7 @@
     <item
         android:id="@+id/menu_main_github"
         android:showAsAction="always"
+        android:icon="@drawable/ic_github"
         android:title="@string/menu_github"/>
 
 </menu>

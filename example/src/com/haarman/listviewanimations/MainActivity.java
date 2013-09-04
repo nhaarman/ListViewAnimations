@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.menu_main_github:
 			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setData(Uri.parse("http://nhaarman.github.io/listviewanimations"));
+			intent.setData(Uri.parse("http://nhaarman.github.io/ListViewAnimations?ref=app"));
 			startActivity(intent);
 			return true;
 		}
