@@ -175,9 +175,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 				startAutoDeleteTimer();
 			}
 		} else {
-			if (mCurrentRemovedView != null) {
-				performRemoval();
-			}
+			performRemovalIfNecessary();
 		}
 	}
 
@@ -199,7 +197,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 	private void removePreviousContextualUndoIfPresent() {
 		if (mCurrentRemovedView != null) {
-			performRemoval();
+			performRemovalIfNecessary();
 		}
 	}
 
@@ -216,18 +214,18 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 	@Override
 	public void onListScrolled() {
-		if (mCurrentRemovedView != null) {
-			performRemoval();
-		}
+		performRemovalIfNecessary();
 	}
 
-	private void performRemoval() {
-		ValueAnimator animator = ValueAnimator.ofInt(mCurrentRemovedView.getHeight(), 1).setDuration(ANIMATION_DURATION);
-		animator.addListener(new RemoveViewAnimatorListenerAdapter(mCurrentRemovedView));
-		animator.addUpdateListener(new RemoveViewAnimatorUpdateListener(mCurrentRemovedView));
-		animator.start();
-		mActiveAnimators.put(mCurrentRemovedView, animator);
-		clearCurrentRemovedView();
+	private void performRemovalIfNecessary() {
+		if (mCurrentRemovedView != null && mCurrentRemovedView.getParent() != null) {
+			ValueAnimator animator = ValueAnimator.ofInt(mCurrentRemovedView.getHeight(), 1).setDuration(ANIMATION_DURATION);
+			animator.addListener(new RemoveViewAnimatorListenerAdapter(mCurrentRemovedView));
+			animator.addUpdateListener(new RemoveViewAnimatorUpdateListener(mCurrentRemovedView));
+			animator.start();
+			mActiveAnimators.put(mCurrentRemovedView, animator);
+			clearCurrentRemovedView();
+		}
 	}
 
 	/**
@@ -287,7 +285,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 			}
 
 			if (millisRemaining <= 0) {
-				performRemoval();
+				performRemovalIfNecessary();
 			} else {
 				mHandler.postDelayed(this, Math.min(millisRemaining, 1000));
 			}
@@ -320,8 +318,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		}
 
 		private void deleteCurrentItem() {
-			ContextualUndoView contextualUndoView = (ContextualUndoView) mDismissView;
-			int position = getAbsListView().getPositionForView(contextualUndoView);
+			int position = getAbsListView().getPositionForView(mDismissView);
 			mDeleteItemCallback.deleteItem(position);
 		}
 	}
