@@ -37,10 +37,11 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	protected static final long DEFAULTANIMATIONDELAYMILLIS = 100;
 	protected static final long DEFAULTANIMATIONDURATIONMILLIS = 300;
 	private static final long INITIALDELAYMILLIS = 150;
-	
+
 	private SparseArray<AnimationInfo> mAnimators;
 	private long mAnimationStartMillis;
 	private int mLastAnimatedPosition;
+	private int mLastAnimatedHeaderPosition;
 	private boolean mHasParentAnimationAdapter;
 	private boolean mShouldAnimate = true;
 
@@ -50,6 +51,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 		mAnimationStartMillis = -1;
 		mLastAnimatedPosition = -1;
+		mLastAnimatedHeaderPosition = -1;
 
 		if (baseAdapter instanceof AnimationAdapter) {
 			((AnimationAdapter) baseAdapter).setHasParentAnimationAdapter(true);
@@ -64,6 +66,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	public void reset() {
 		mAnimators.clear();
 		mLastAnimatedPosition = -1;
+		mLastAnimatedHeaderPosition = -1;
 		mAnimationStartMillis = -1;
 		mShouldAnimate = true;
 
@@ -79,23 +82,13 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	@Override
 	public final View getView(int position, View convertView, ViewGroup parent) {
 		boolean alreadyStarted = false;
-
 		if (!mHasParentAnimationAdapter) {
 			if (getAbsListView() == null) {
 				throw new IllegalStateException("Call setListView() on this AnimationAdapter before setAdapter()!");
 			}
 
 			if (convertView != null) {
-				int hashCode = convertView.hashCode();
-				AnimationInfo animationInfo = mAnimators.get(hashCode);
-				if (animationInfo != null) {
-					if (animationInfo.position != position) {
-						animationInfo.animator.end();
-						mAnimators.remove(hashCode);
-					} else {
-						alreadyStarted = true;
-					}
-				}
+				alreadyStarted = cancelExistingAnimation(position, convertView);
 			}
 		}
 
@@ -107,14 +100,55 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		return itemView;
 	}
 
+	@Override
+	public View getHeaderView(int position, View convertView, ViewGroup parent) {
+		boolean alreadyStarted = false;
+
+		if (!mHasParentAnimationAdapter && convertView != null) {
+			alreadyStarted = cancelExistingAnimation(position, convertView);
+		}
+
+		View itemView = super.getHeaderView(position, convertView, parent);
+
+		if (!mHasParentAnimationAdapter && !alreadyStarted) {
+			animateHeaderViewIfNecessary(position, itemView, parent);
+		}
+
+		return itemView;
+	}
+
+	private boolean cancelExistingAnimation(int position, View convertView) {
+		boolean alreadyStarted = false;
+
+		int hashCode = convertView.hashCode();
+		AnimationInfo animationInfo = mAnimators.get(hashCode);
+		if (animationInfo != null) {
+			if (animationInfo.position != position) {
+				animationInfo.animator.end();
+				mAnimators.remove(hashCode);
+			} else {
+				alreadyStarted = true;
+			}
+		}
+
+		return alreadyStarted;
+	}
+
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
-		if (position > mLastAnimatedPosition && !mHasParentAnimationAdapter && mShouldAnimate) {
-			animateView(position, parent, view);
+		if (position > mLastAnimatedPosition && mShouldAnimate) {
+			animateView(position, parent, view, false);
 			mLastAnimatedPosition = position;
 		}
 	}
 
-	private void animateView(int position, ViewGroup parent, View view) {
+	private void animateHeaderViewIfNecessary(int position, View view, ViewGroup parent) {
+		if (position > mLastAnimatedHeaderPosition && mShouldAnimate) {
+			animateView(position, parent, view, true);
+			mLastAnimatedHeaderPosition = position;
+		}
+	}
+
+	private void animateView(int position, ViewGroup parent, View view, boolean isHeader) {
 		if (mAnimationStartMillis == -1) {
 			mAnimationStartMillis = System.currentTimeMillis();
 		}
@@ -132,7 +166,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 		AnimatorSet set = new AnimatorSet();
 		set.playTogether(concatAnimators(childAnimators, animators, alphaAnimator));
-		set.setStartDelay(calculateAnimationDelay());
+		set.setStartDelay(calculateAnimationDelay(isHeader));
 		set.setDuration(getAnimationDurationMillis());
 		set.start();
 
@@ -165,7 +199,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	}
 
 	@SuppressLint("NewApi")
-	private long calculateAnimationDelay() {
+	private long calculateAnimationDelay(boolean isHeader) {
 		long delay;
 		int numberOfItems = getAbsListView().getLastVisiblePosition() - getAbsListView().getFirstVisiblePosition();
 		if (numberOfItems + 1 < mLastAnimatedPosition) {
@@ -177,7 +211,10 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		} else {
 			long delaySinceStart = (mLastAnimatedPosition + 1) * getAnimationDelayMillis();
 			delay = mAnimationStartMillis + getInitialDelayMillis() + delaySinceStart - System.currentTimeMillis();
+			delay -= isHeader && mLastAnimatedPosition > 0 ? getAnimationDelayMillis() : 0;
 		}
+		// System.out.println(isHeader + ": " + delay);
+
 		return Math.max(0, delay);
 	}
 
@@ -191,6 +228,9 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		mHasParentAnimationAdapter = hasParentAnimationAdapter;
 	}
 
+	/**
+	 * Get the delay in milliseconds before the first animation should start. Defaults to {@value #INITIALDELAYMILLIS}.
+	 */
 	protected long getInitialDelayMillis() {
 		return INITIALDELAYMILLIS;
 	}
