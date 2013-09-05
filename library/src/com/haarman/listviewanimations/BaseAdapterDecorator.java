@@ -15,6 +15,8 @@
  */
 package com.haarman.listviewanimations;
 
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
+
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +31,7 @@ import android.widget.SectionIndexer;
  * Classes extending this class can override methods and provide extra
  * functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer {
+public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, StickyListHeadersAdapter {
 
 	protected final BaseAdapter mDecoratedBaseAdapter;
 
@@ -146,6 +148,22 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	public Object[] getSections() {
 		if (mDecoratedBaseAdapter instanceof SectionIndexer) {
 			return ((SectionIndexer) mDecoratedBaseAdapter).getSections();
+		}
+		return null;
+	}
+
+	@Override
+	public long getHeaderId(int position) {
+		if (mDecoratedBaseAdapter instanceof StickyListHeadersAdapter) {
+			return ((StickyListHeadersAdapter) mDecoratedBaseAdapter).getHeaderId(position);
+		}
+		return 0;
+	}
+
+	@Override
+	public View getHeaderView(int position, View convertView, ViewGroup parent) {
+		if (mDecoratedBaseAdapter instanceof StickyListHeadersAdapter) {
+			return ((StickyListHeadersAdapter) mDecoratedBaseAdapter).getHeaderView(position, convertView, parent);
 		}
 		return null;
 	}
