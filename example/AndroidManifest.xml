@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.haarman.listviewanimations"
-    android:versionCode="21"
-    android:versionName="2.3.0" >
+    android:versionCode="22"
+    android:versionName="2.3.1" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -20,41 +20,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.haarman.listviewanimations.animationinexamples.AnimationInExamplesActivity"
-            android:label="@string/swingin" />
-        <activity
-            android:name="com.haarman.listviewanimations.animationinexamples.StickyListHeadersExample"
-            android:label="@string/stickylistheaders" />
-        <activity
-            android:name="com.haarman.listviewanimations.animationinexamples.SwingBottomInActivity"
-            android:label="@string/bottomin" />
-        <activity
-            android:name="com.haarman.listviewanimations.animationinexamples.SwingBottomRightInActivity"
-            android:label="@string/bottomrightin" />
-        <activity
-            android:name="com.haarman.listviewanimations.animationinexamples.SwingLeftInActivity"
-            android:label="@string/leftin" />
-        <activity
-            android:name="com.haarman.listviewanimations.animationinexamples.SwingRightInActivity"
-            android:label="@string/rightin" />
-        <activity
-            android:name="com.haarman.listviewanimations.animationinexamples.ScaleInActivity"
-            android:label="@string/scalein" />
-        <activity
-            android:name="com.haarman.listviewanimations.animationinexamples.AlphaInActivity"
-            android:label="@string/alphain" />
+            android:name="com.haarman.listviewanimations.appearanceexamples.AppearanceExamplesActivity"
+            android:label="@string/appearance" />
         <activity
             android:name="com.haarman.listviewanimations.GoogleCardsActivity"
             android:label="@string/googlecards" />
-        <activity
-            android:name="com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoActivity"
-            android:label="@string/contextualundo" />
-        <activity
-            android:name="com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoWithTimedDeleteAndCountDownActivity"
-            android:label="@string/contextualundotimedcountdown" />
-        <activity
-            android:name="com.haarman.listviewanimations.itemmanipulationexamples.contextualundo.ContextualUndoWithTimedDeleteActivity"
-            android:label="@string/contextualundotimed" />
         <activity
             android:name="com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity"
             android:label="@string/itemmanipulation" />
@@ -68,7 +38,7 @@
             android:name="com.haarman.listviewanimations.GridViewActivity"
             android:label="@string/gridviewexample" />
         <activity
-            android:name="com.haarman.listviewanimations.ExpandableListItemActivity"
+            android:name="com.haarman.listviewanimations.itemmanipulationexamples.ExpandableListItemActivity"
             android:label="@string/expandablelistitemadapter" />
     </application>
 

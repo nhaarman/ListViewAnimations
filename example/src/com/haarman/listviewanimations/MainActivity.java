@@ -23,7 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.haarman.listviewanimations.animationinexamples.AnimationInExamplesActivity;
+import com.haarman.listviewanimations.appearanceexamples.AppearanceExamplesActivity;
 import com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity;
 
 public class MainActivity extends Activity {
@@ -63,8 +63,8 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
-	public void onSwingInClicked(View view) {
-		Intent intent = new Intent(this, AnimationInExamplesActivity.class);
+	public void onAppearanceClicked(View view) {
+		Intent intent = new Intent(this, AppearanceExamplesActivity.class);
 		startActivity(intent);
 	}
 
