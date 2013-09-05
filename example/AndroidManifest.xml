@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.haarman.listviewanimations"
     android:versionCode="20"
-    android:versionName="2.2.3">
+    android:versionName="2.2.3" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -11,8 +11,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-        <activity android:name="com.haarman.listviewanimations.MainActivity">
+        android:theme="@style/AppTheme" >
+        <activity android:name="com.haarman.listviewanimations.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,6 +22,9 @@
         <activity
             android:name="com.haarman.listviewanimations.animationinexamples.AnimationInExamplesActivity"
             android:label="@string/swingin" />
+        <activity
+            android:name="com.haarman.listviewanimations.animationinexamples.StickyListHeadersExample"
+            android:label="@string/stickylistheaders" />
         <activity
             android:name="com.haarman.listviewanimations.animationinexamples.SwingBottomInActivity"
             android:label="@string/bottomin" />

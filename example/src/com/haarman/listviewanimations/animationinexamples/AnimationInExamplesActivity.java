@@ -30,6 +30,11 @@ public class AnimationInExamplesActivity extends Activity {
 		setContentView(R.layout.activity_examples_animationin);
 	}
 
+	public void onStickyListHeadersClicked(View view) {
+		Intent intent = new Intent(this, StickyListHeadersExample.class);
+		startActivity(intent);
+	}
+
 	public void onBottomInClicked(View view) {
 		Intent intent = new Intent(this, SwingBottomInActivity.class);
 		startActivity(intent);
@@ -55,8 +60,8 @@ public class AnimationInExamplesActivity extends Activity {
 		startActivity(intent);
 	}
 
-    public void onAlphaInClicked(View view){
-        Intent intent = new Intent(this, AlphaInActivity.class);
-        startActivity(intent);
-    }
+	public void onAlphaInClicked(View view) {
+		Intent intent = new Intent(this, AlphaInActivity.class);
+		startActivity(intent);
+	}
 }

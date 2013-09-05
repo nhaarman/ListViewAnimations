@@ -4,6 +4,7 @@
     <string name="menu_github">Github</string>
     <string name="swingin">Animation in adapters</string>
     <string name="itemmanipulation">Item manipulation</string>
+    <string name="stickylistheaders">Sticky List Headers</string>
     <string name="bottomin">Bottom in</string>
     <string name="rightin">Right in</string>
     <string name="leftin">Left in</string>
