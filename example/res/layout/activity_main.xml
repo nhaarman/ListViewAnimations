@@ -13,20 +13,22 @@
         android:layout_margin="8dp"
         android:onClick="onGoogleCardsExampleClicked"
         android:text="@string/googlecards" />
-
+    
     <Button
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:onClick="onGridViewExampleClicked"
-        android:text="@string/gridviewexample" />
+        android:text="@string/gridview" />
+    
+    
 
     <Button
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:onClick="onSwingInClicked"
-        android:text="@string/swingin" />
+        android:onClick="onAppearanceClicked"
+        android:text="@string/appearance" />
 
     <Button
         android:layout_width="150dp"

@@ -2,23 +2,15 @@
 
     <string name="app_name">ListViewAnimationsExample</string>
     <string name="menu_github">Github</string>
-    <string name="swingin">Animation in adapters</string>
-    <string name="itemmanipulation">Item manipulation</string>
-    <string name="stickylistheaders">Sticky List Headers</string>
-    <string name="bottomin">Bottom in</string>
-    <string name="rightin">Right in</string>
-    <string name="leftin">Left in</string>
-    <string name="bottomrightin">Bottom right in</string>
-    <string name="scalein">Scale in</string>
-    <string name="alphain">Alpha in</string>
     <string name="googlecards">Google cards example</string>
+    <string name="gridview">GridView example</string>
+    <string name="appearance">Appearance Animation</string>
+    <string name="sticky">Sticky</string>
+    <string name="itemmanipulation">Item Manipulation</string>
     <string name="gridviewexample">GridView example</string>
     <string name="swipedismiss">Swipe to dismiss</string>
     <string name="animateremoval">Animate dismiss</string>
     <string name="removeselected">Remove selected</string>
-    <string name="contextualundo">Contextual undo</string>
-    <string name="contextualundotimedcountdown">Contextual undo with timed delete and count down</string>
-    <string name="contextualundotimed">Contextual undo with timed delete</string>
     <string name="expandablelistitemadapter">Expand list items</string>
     <string name="itemdeleted">Item deleted</string>
     <string name="taptoundo">Tap to undo</string>
@@ -26,8 +18,8 @@
     <string name="expandorcollapsecard">This is card number %d</string>
 
     <plurals name="countdown_seconds">
-        <item quantity="one">Dismissing in 1 second</item>
-        <item quantity="other">Dismissing in %d seconds</item>
+        <item quantity="one">Dismissing in 1...</item>
+        <item quantity="other">Dismissing in %d...</item>
     </plurals>
     
     <string name="countdown_dismissing">Dismissing</string>

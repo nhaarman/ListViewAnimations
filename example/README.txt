@@ -1,0 +1,1 @@
+Note: To be able to build the sample application you will need to add the android-support-v7-appcompat library to the project.

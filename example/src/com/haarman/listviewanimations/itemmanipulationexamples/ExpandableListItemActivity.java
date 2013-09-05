@@ -1,4 +1,4 @@
-package com.haarman.listviewanimations;
+package com.haarman.listviewanimations.itemmanipulationexamples;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,42 +12,55 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.haarman.listviewanimations.R;
+import com.haarman.listviewanimations.itemmanipulation.ExpandableListItemAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 
-public class GridViewActivity extends ActionBarActivity {
+public class ExpandableListItemActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_gridview);
+		ListView listView = new ListView(this);
+		setContentView(listView);
+		listView.setDivider(null);
 
-		GridView gridView = (GridView) findViewById(R.id.activity_gridview_gv);
-		AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(new MyAdapter(this, getItems()));
-		alphaInAnimationAdapter.setAbsListView(gridView);
-		gridView.setAdapter(alphaInAnimationAdapter);
+		MyExpandableListItemAdapter myExpandableListItemAdapter = new MyExpandableListItemAdapter(this, getItems());
+		AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(myExpandableListItemAdapter);
+		alphaInAnimationAdapter.setAbsListView(listView);
+		listView.setAdapter(alphaInAnimationAdapter);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		Toast.makeText(this, R.string.explainexpand, Toast.LENGTH_LONG).show();
 	}
 
-	private ArrayList<Integer> getItems() {
-		ArrayList<Integer> items = new ArrayList<Integer>();
-		for (int i = 0; i < 100; i++) {
+	private List<Integer> getItems() {
+		List<Integer> items = new ArrayList<Integer>();
+		for (int i = 0; i < 1000; i++) {
 			items.add(i);
 		}
 		return items;
 	}
 
-	private static class MyAdapter extends ArrayAdapter<Integer> {
+	private static class MyExpandableListItemAdapter extends ExpandableListItemAdapter<Integer> {
 
 		private Context mContext;
 		private LruCache<Integer, Bitmap> mMemoryCache;
 
-		public MyAdapter(Context context, List<Integer> list) {
-			super(list);
+		/**
+		 * Creates a new ExpandableListItemAdapter with the specified list, or an empty list if
+		 * items == null.
+		 */
+		private MyExpandableListItemAdapter(Context context, List<Integer> items) {
+			super(context, R.layout.activity_expandablelistitem_card, R.id.activity_expandablelistitem_card_parent, R.id.activity_expandablelistitem_card_content, items);
 			mContext = context;
+
 			final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
 			// Use 1/8th of the available memory for this memory cache.
@@ -63,9 +76,18 @@ public class GridViewActivity extends ActionBarActivity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup viewGroup) {
-			ImageView imageView = (ImageView) convertView;
+		public View getTitleView(int position, View convertView, ViewGroup parent) {
+			TextView tv = (TextView) convertView;
+			if (tv == null) {
+				tv = new TextView(mContext);
+			}
+			tv.setText(mContext.getString(R.string.expandorcollapsecard, getItem(position)));
+			return tv;
+		}
 
+		@Override
+		public View getContentView(int position, View convertView, ViewGroup parent) {
+			ImageView imageView = (ImageView) convertView;
 			if (imageView == null) {
 				imageView = new ImageView(mContext);
 				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

@@ -38,7 +38,7 @@ Developed By
 -----
 * Niek Haarman
 
-Special thanks
+Special Thanks
 -----
 * Roman Nurik - The ListViewAnimations library uses a modified version of his [SwipeDismissListViewTouchListener][5] to support swipe-to-dismiss.
 * Jake Warthon - To support devices pre-HC (<3.0), a jar file of [NineOldAndroids][2] is included.

@@ -18,14 +18,19 @@ package com.haarman.listviewanimations.itemmanipulationexamples;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.ListView;
 
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.MyListActivity;
@@ -33,7 +38,7 @@ import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.itemmanipulation.AnimateDismissAdapter;
 import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
-public class AnimateDismissActivity extends Activity {
+public class AnimateDismissActivity extends ActionBarActivity {
 
 	private List<Integer> mSelectedPositions;
 	private MyListAdapter mAdapter;
@@ -74,6 +79,8 @@ public class AnimateDismissActivity extends Activity {
 				}
 			}
 		});
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	private class MyOnDismissCallback implements OnDismissCallback {
@@ -104,4 +111,13 @@ public class AnimateDismissActivity extends Activity {
 		}
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }
