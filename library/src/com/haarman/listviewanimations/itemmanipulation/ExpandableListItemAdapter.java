@@ -76,7 +76,8 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
 	/**
 	 * Set the resource id of the child {@link View} contained in the View returned by
-	 * {@link #getTitleView(int, View, ViewGroup)} that will be the actuator of the expand / collapse animations.
+	 * {@link #getTitleView(int, View, ViewGroup)} that will be the actuator of the expand / collapse animations.<br>
+	 * If there is no View in the title View with given resId, a {@link NullPointerException} is thrown.</p>
 	 * Default behavior: the whole title View acts as the actuator.
 	 * @param resId the resource id.
 	 */
