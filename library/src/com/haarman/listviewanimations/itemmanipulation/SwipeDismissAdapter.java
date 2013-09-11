@@ -38,7 +38,7 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
 	public void setAbsListView(AbsListView listView) {
 		super.setAbsListView(listView);
 		mSwipeDismissListViewTouchListener = new SwipeDismissListViewTouchListener(listView, mCallback);
-
+		listView.setOnTouchListener(mSwipeDismissListViewTouchListener);
 	}
 
 	@Override
