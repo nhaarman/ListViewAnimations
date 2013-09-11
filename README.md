@@ -44,6 +44,7 @@ Please refer to the [Wiki][13] pages to learn more about how to use this library
 Contribute
 -----
 Please do! I'm happy to review and accept pull requests.
+Also if you've created an awesome appearance animation that you'd like to share, let 'em come!
 
 Developed By
 -----
