@@ -12,6 +12,7 @@ Known applications using ListViewAnimations
 * Running Coach ([Play Store][9])
 * Car Hire ([Play Store][10])
 * Super BART ([Play Store][11])
+* DK FlashCards ([Play Store][15])
 
 If you want your app to be listed as well please contact me via [Google Plus][8], or send me an email at haarman.niek [at] gmail.com, starting the title with `[LVA]`.
 
@@ -75,3 +76,4 @@ License
  [12]: https://play.google.com/store/apps/details?id=com.haarman.ultimatettt
  [13]: https://github.com/nhaarman/ListViewAnimations/wiki
  [14]: http://emilsjolander.github.io/StickyListHeaders/
+ [15]: https://play.google.com/store/apps/details?id=com.ducky.flashcards
