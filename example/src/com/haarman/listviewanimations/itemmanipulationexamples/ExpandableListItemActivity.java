@@ -58,7 +58,7 @@ public class ExpandableListItemActivity extends ActionBarActivity {
 		 * items == null.
 		 */
 		private MyExpandableListItemAdapter(Context context, List<Integer> items) {
-			super(context, R.layout.activity_expandablelistitem_card, R.id.activity_expandablelistitem_card_parent, R.id.activity_expandablelistitem_card_content, items);
+			super(context, R.layout.activity_expandablelistitem_card, R.id.activity_expandablelistitem_card_title, R.id.activity_expandablelistitem_card_content, items);
 			mContext = context;
 
 			final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
