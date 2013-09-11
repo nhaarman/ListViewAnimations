@@ -16,6 +16,16 @@ Known applications using ListViewAnimations
 
 If you want your app to be listed as well please contact me via [Google Plus][8], or send me an email at haarman.niek [at] gmail.com, starting the title with `[LVA]`.
 
+Features
+-----
+ListViewAnimations provides the following features:
+* Appearance animations for items in ListViews, GridViews, and other AbsListViews;
+	* Built in animations include Alpha, SwingRightIn, SwingLeftIn, SwingBottomIn, SwingRightIn and ScaleIn.
+	* Other animations can easily be added
+* Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo (and optionally count down);
+* Animate dismissal of items;
+* Smoothly expand your items to reveal more content;
+
 Setup
 -----
 * In Eclipse, just import the library as an Android library project.
