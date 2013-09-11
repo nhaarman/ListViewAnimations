@@ -47,21 +47,7 @@ import com.nineoldandroids.view.ViewHelper;
  * charge of drawing the pressed state (the list selector), handling list item
  * clicks, etc.
  * 
- * <p>
- * Example usage:
- * </p>
- * 
- * <pre>
- * SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView, new SwipeDismissListViewTouchListener.OnDismissCallback() {
- * 	public void onDismiss(ListView listView, int[] reverseSortedPositions) {
- * 		for (int position : reverseSortedPositions) {
- * 			adapter.remove(adapter.getItem(position));
- * 		}
- * 		adapter.notifyDataSetChanged();
- * 	}
- * });
- * listView.setOnTouchListener(touchListener);
- * </pre>
+ * For performance reasons, do not use this class directly, but use the {@link SwipeDismissAdapter}.
  */
 @SuppressLint("Recycle")
 public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
@@ -326,5 +312,9 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 			}
 		});
 		animator.start();
+	}
+
+	public void notifyDataSetChanged() {
+		mVirtualListCount = mListView.getAdapter().getCount();
 	}
 }
