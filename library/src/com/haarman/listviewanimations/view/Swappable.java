@@ -10,7 +10,7 @@ package com.haarman.listviewanimations.view;
  *
  * @author Anton Spaans on 9/11/13.
  */
-public interface Swapable {
+public interface Swappable {
 	
 	/**
 	 * Swaps the item on the first adapter position with the item on the second adapter position.

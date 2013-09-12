@@ -43,6 +43,8 @@ import com.nineoldandroids.view.ViewHelper;
  * The DynamicListView is an extension of {@link ListView} that supports cell dragging
  * and swapping.
  * </p>
+ * Make sure your adapter has stable ids, and override {@link ListAdapter#hasStableIds()} to return true.</br>
+ * </p>
  * This layout is in charge of positioning the hover cell in the correct location
  * on the screen in response to user touch events. It uses the position of the
  * hover cell to determine when two cells should be swapped. If two cells should
@@ -187,7 +189,7 @@ public class DynamicListView extends ListView {
 		int position = getPositionForID(itemID);
 		BaseAdapter adapter = (BaseAdapter) getAdapter();
 		if (!adapter.hasStableIds()) {
-			throw new IllegalStateException("BaseAdapter must have stable IDs.");
+			throw new IllegalStateException("Adapter doesn't have stable ids! Make sure your adapter has stable ids, and override hasStableIds() to return true.");
 		}
 
 		mAboveItemId = position - 1 >= 0 ? adapter.getItemId(position - 1) : INVALID_ROW_ID;
@@ -199,7 +201,7 @@ public class DynamicListView extends ListView {
 		int firstVisiblePosition = getFirstVisiblePosition();
 		BaseAdapter adapter = (BaseAdapter) getAdapter();
 		if (!adapter.hasStableIds()) {
-			throw new IllegalStateException("BaseAdapter must have stable IDs.");
+			throw new IllegalStateException("Adapter doesn't have stable ids! Make sure your adapter has stable ids, and override hasStableIds() to return true.");
 		}
 
 		for (int i = 0; i < getChildCount(); i++) {
@@ -386,8 +388,8 @@ public class DynamicListView extends ListView {
 
 	private void swapElements(int indexOne, int indexTwo) {
 		ListAdapter adapter = getAdapter();
-		if (adapter instanceof Swapable) {
-			((Swapable) adapter).swapItems(indexOne, indexTwo);
+		if (adapter instanceof Swappable) {
+			((Swappable) adapter).swapItems(indexOne, indexTwo);
 		}
 	}
 

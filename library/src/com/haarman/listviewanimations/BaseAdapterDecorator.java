@@ -23,7 +23,7 @@ import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
-import com.haarman.listviewanimations.view.Swapable;
+import com.haarman.listviewanimations.view.Swappable;
 
 /**
  * A decorator class that enables decoration of an instance of the BaseAdapter
@@ -32,7 +32,7 @@ import com.haarman.listviewanimations.view.Swapable;
  * Classes extending this class can override methods and provide extra
  * functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, StickyListHeadersAdapter, Swapable {
+public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, StickyListHeadersAdapter, Swappable {
 
 	protected final BaseAdapter mDecoratedBaseAdapter;
 
@@ -177,8 +177,8 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 
 	@Override
 	public void swapItems(int positionOne, int positionTwo) {
-		if (mDecoratedBaseAdapter instanceof Swapable) {
-			((Swapable) mDecoratedBaseAdapter).swapItems(positionOne, positionTwo);
+		if (mDecoratedBaseAdapter instanceof Swappable) {
+			((Swappable) mDecoratedBaseAdapter).swapItems(positionOne, positionTwo);
 		}
 	}
 
