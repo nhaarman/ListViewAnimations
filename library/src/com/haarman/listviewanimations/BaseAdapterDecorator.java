@@ -15,14 +15,15 @@
  */
 package com.haarman.listviewanimations;
 
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
-
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
+
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
+import com.haarman.listviewanimations.view.Swapable;
 
 /**
  * A decorator class that enables decoration of an instance of the BaseAdapter
@@ -31,11 +32,13 @@ import android.widget.SectionIndexer;
  * Classes extending this class can override methods and provide extra
  * functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, StickyListHeadersAdapter {
+public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, StickyListHeadersAdapter, Swapable {
 
 	protected final BaseAdapter mDecoratedBaseAdapter;
 
 	private AbsListView mListView;
+
+	private boolean mIsParentHorizontalScrollContainer;
 
 	public BaseAdapterDecorator(BaseAdapter baseAdapter) {
 		mDecoratedBaseAdapter = baseAdapter;
@@ -170,5 +173,20 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 
 	public BaseAdapter getDecoratedBaseAdapter() {
 		return mDecoratedBaseAdapter;
+	}
+
+	@Override
+	public void swapItems(int positionOne, int positionTwo) {
+		if (mDecoratedBaseAdapter instanceof Swapable) {
+			((Swapable) mDecoratedBaseAdapter).swapItems(positionOne, positionTwo);
+		}
+	}
+
+	public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
+		mIsParentHorizontalScrollContainer = isParentHorizontalScrollContainer;
+	}
+
+	public boolean isParentHorizontalScrollContainer() {
+		return mIsParentHorizontalScrollContainer;
 	}
 }
