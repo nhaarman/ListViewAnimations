@@ -19,8 +19,6 @@ package com.haarman.listviewanimations.view;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
@@ -42,34 +40,32 @@ import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
 /**
- * The dynamic listview is an extension of listview that supports cell dragging
+ * The DynamicListView is an extension of {@link ListView} that supports cell dragging
  * and swapping.
- *
+ * </p>
  * This layout is in charge of positioning the hover cell in the correct location
  * on the screen in response to user touch events. It uses the position of the
  * hover cell to determine when two cells should be swapped. If two cells should
  * be swapped, all the corresponding data set and layout changes are handled here.
- *
- * If no cell is selected, all the touch events are passed down to the listview
- * and behave normally. If one of the items in the listview experiences a
+ * </p>
+ * If no cell is selected, all the touch events are passed down to the ListView
+ * and behave normally. If one of the items in the ListView experiences a
  * long press event, the contents of its current visible state are captured as
  * a bitmap and its visibility is set to INVISIBLE. A hover cell is then created and
- * added to this layout as an overlaying BitmapDrawable above the listview. Once the
+ * added to this layout as an overlaying BitmapDrawable above the ListView. Once the
  * hover cell is translated some distance to signify an item swap, a data set change
  * accompanied by animation takes place. When the user releases the hover cell,
- * it animates into its corresponding position in the listview.
- *
- * When the hover cell is either above or below the bounds of the listview, this
- * listview also scrolls on its own so as to reveal additional content.
- *
+ * it animates into its corresponding position in the ListView.
+ * </p>
+ * When the hover cell is either above or below the bounds of the ListView, this
+ * ListView also scrolls on its own so as to reveal additional content.
+ * </p>
  * See http://youtu.be/_BZIvjMgH-Q
- *
  */
 public class DynamicListView extends ListView {
 
 	private final int SMOOTH_SCROLL_AMOUNT_AT_EDGE = 15;
 	private final int MOVE_DURATION = 150;
-	private final int LINE_THICKNESS = 15;
 
 	private int mLastEventY = -1;
 
@@ -161,7 +157,7 @@ public class DynamicListView extends ListView {
 		int top = v.getTop();
 		int left = v.getLeft();
 
-		Bitmap b = getBitmapWithBorder(v);
+		Bitmap b = getBitmapFromView(v);
 
 		BitmapDrawable drawable = new BitmapDrawable(getResources(), b);
 
@@ -171,24 +167,6 @@ public class DynamicListView extends ListView {
 		drawable.setBounds(mHoverCellCurrentBounds);
 
 		return drawable;
-	}
-
-	/** Draws a black border over the screenshot of the view passed in. */
-	private Bitmap getBitmapWithBorder(View v) {
-		Bitmap bitmap = getBitmapFromView(v);
-		Canvas can = new Canvas(bitmap);
-
-		Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-		Paint paint = new Paint();
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(LINE_THICKNESS);
-		paint.setColor(Color.BLACK);
-
-		can.drawBitmap(bitmap, 0, 0, null);
-		can.drawRect(rect, paint);
-
-		return bitmap;
 	}
 
 	/** Returns a bitmap showing a screenshot of the view passed in. */
@@ -211,8 +189,9 @@ public class DynamicListView extends ListView {
 		if (!adapter.hasStableIds()) {
 			throw new IllegalStateException("BaseAdapter must have stable IDs.");
 		}
-		mAboveItemId = adapter.getItemId(position - 1);
-		mBelowItemId = adapter.getItemId(position + 1);
+
+		mAboveItemId = position - 1 >= 0 ? adapter.getItemId(position - 1) : INVALID_ROW_ID;
+		mBelowItemId = position + 1 < adapter.getCount() ? adapter.getItemId(position + 1) : INVALID_ROW_ID;
 	}
 
 	/** Retrieves the view in the list corresponding to itemID */
@@ -222,6 +201,7 @@ public class DynamicListView extends ListView {
 		if (!adapter.hasStableIds()) {
 			throw new IllegalStateException("BaseAdapter must have stable IDs.");
 		}
+
 		for (int i = 0; i < getChildCount(); i++) {
 			View v = getChildAt(i);
 			int position = firstVisiblePosition + i;
