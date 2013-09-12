@@ -8,6 +8,7 @@
     <string name="sticky">Sticky</string>
     <string name="itemmanipulation">Item Manipulation</string>
     <string name="gridviewexample">GridView example</string>
+    <string name="draganddrop">Drag and Drop</string>
     <string name="swipedismiss">Swipe to dismiss</string>
     <string name="animateremoval">Animate dismiss</string>
     <string name="removeselected">Remove selected</string>
