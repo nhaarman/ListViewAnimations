@@ -16,11 +16,6 @@
 
 package com.haarman.listviewanimations.view;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.animation.TypeEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -38,6 +33,13 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.TypeEvaluator;
+import com.nineoldandroids.animation.ValueAnimator;
+import com.nineoldandroids.view.ViewHelper;
 
 /**
  * The dynamic listview is an extension of listview that supports cell dragging
@@ -68,8 +70,6 @@ public class DynamicListView extends ListView {
 	private final int SMOOTH_SCROLL_AMOUNT_AT_EDGE = 15;
 	private final int MOVE_DURATION = 150;
 	private final int LINE_THICKNESS = 15;
-
-	// public ArrayList<String> mCheeseList;
 
 	private int mLastEventY = -1;
 
@@ -392,9 +392,9 @@ public class DynamicListView extends ListView {
 					int switchViewNewTop = switchView.getTop();
 					int delta = switchViewStartTop - switchViewNewTop;
 
-					switchView.setTranslationY(delta);
+					ViewHelper.setTranslationY(switchView, delta);
 
-					ObjectAnimator animator = ObjectAnimator.ofFloat(switchView, View.TRANSLATION_Y, 0);
+					ObjectAnimator animator = ObjectAnimator.ofFloat(switchView, "translationY", 0);
 					animator.setDuration(MOVE_DURATION);
 					animator.start();
 
@@ -534,12 +534,12 @@ public class DynamicListView extends ListView {
 	}
 
 	public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
-        mIsParentHorizontalScrollContainer = isParentHorizontalScrollContainer;
-    }
+		mIsParentHorizontalScrollContainer = isParentHorizontalScrollContainer;
+	}
 
-    public boolean isParentHorizontalScrollContainer() {
-        return mIsParentHorizontalScrollContainer;
-    }
+	public boolean isParentHorizontalScrollContainer() {
+		return mIsParentHorizontalScrollContainer;
+	}
 
 	/**
 	 * This scroll listener is added to the listview in order to handle cell swapping
