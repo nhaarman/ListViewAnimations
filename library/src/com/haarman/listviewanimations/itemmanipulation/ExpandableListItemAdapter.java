@@ -1,17 +1,18 @@
 package com.haarman.listviewanimations.itemmanipulation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ValueAnimator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An {@link ArrayAdapter} which allows items to be expanded using an animation.
@@ -25,6 +26,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	private int mViewLayoutResId;
 	private int mTitleParentResId;
 	private int mContentParentResId;
+	private int mActionViewResId;
 	private List<Long> mVisibleIds;
 
 	/**
@@ -72,6 +74,17 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		mVisibleIds = new ArrayList<Long>();
 	}
 
+	/**
+	 * Set the resource id of the child {@link View} contained in the View returned by
+	 * {@link #getTitleView(int, View, ViewGroup)} that will be the actuator of the expand / collapse animations.<br>
+	 * If there is no View in the title View with given resId, a {@link NullPointerException} is thrown.</p>
+	 * Default behavior: the whole title View acts as the actuator.
+	 * @param resId the resource id.
+	 */
+	public void setActionViewResId(int resId) {
+		mActionViewResId = resId;
+	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewGroup view = (ViewGroup) convertView;
@@ -84,8 +97,6 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 			viewHolder.titleParent = (ViewGroup) view.findViewById(mTitleParentResId);
 			viewHolder.contentParent = (ViewGroup) view.findViewById(mContentParentResId);
 
-			view.setOnClickListener(new TitleViewOnClickListener(viewHolder.contentParent));
-
 			view.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) view.getTag();
@@ -95,6 +106,12 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		if (!titleView.equals(viewHolder.titleView)) {
 			viewHolder.titleParent.removeAllViews();
 			viewHolder.titleParent.addView(titleView);
+
+			if (mActionViewResId == 0) {
+				view.setOnClickListener(new TitleViewOnClickListener(viewHolder.contentParent));
+			} else {
+				view.findViewById(mActionViewResId).setOnClickListener(new TitleViewOnClickListener(viewHolder.contentParent));
+			}
 		}
 		viewHolder.titleView = titleView;
 

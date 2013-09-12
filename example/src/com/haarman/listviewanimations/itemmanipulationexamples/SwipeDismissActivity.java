@@ -15,25 +15,21 @@
  */
 package com.haarman.listviewanimations.itemmanipulationexamples;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.haarman.listviewanimations.ArrayAdapter;
+import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.haarman.listviewanimations.itemmanipulation.SwipeDismissAdapter;
@@ -41,32 +37,27 @@ import com.haarman.listviewanimations.itemmanipulation.contextualundo.Contextual
 import com.haarman.listviewanimations.itemmanipulation.contextualundo.ContextualUndoAdapter.CountDownFormatter;
 import com.haarman.listviewanimations.itemmanipulation.contextualundo.ContextualUndoAdapter.DeleteItemCallback;
 
-public class SwipeDismissActivity extends ActionBarActivity implements OnNavigationListener, OnDismissCallback, DeleteItemCallback {
+public class SwipeDismissActivity extends MyListActivity implements OnNavigationListener, OnDismissCallback, DeleteItemCallback {
 
-	private MyListAdapter mAdapter;
-
-	private ListView mListView;
+	private ArrayAdapter<Integer> mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mListView = new ListView(this);
-		setContentView(mListView);
 
-		mAdapter = new MyListAdapter(this, getItems());
+		mAdapter = createListAdapter();
 
 		setSwipeDismissAdapter();
 
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		getSupportActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	private void setSwipeDismissAdapter() {
 		SwipeDismissAdapter adapter = new SwipeDismissAdapter(mAdapter, this);
-		adapter.setAbsListView(mListView);
-		mListView.setAdapter(adapter);
+		adapter.setAbsListView(getListView());
+		getListView().setAdapter(adapter);
 	}
 
 	@Override
@@ -79,8 +70,8 @@ public class SwipeDismissActivity extends ActionBarActivity implements OnNavigat
 
 	private void setContextualUndoAdapter() {
 		ContextualUndoAdapter adapter = new ContextualUndoAdapter(mAdapter, R.layout.undo_row, R.id.undo_row_undobutton);
-		adapter.setAbsListView(mListView);
-		mListView.setAdapter(adapter);
+		adapter.setAbsListView(getListView());
+		getListView().setAdapter(adapter);
 		adapter.setDeleteItemCallback(this);
 	}
 
@@ -92,15 +83,15 @@ public class SwipeDismissActivity extends ActionBarActivity implements OnNavigat
 
 	private void setContextualUndoWithTimedDeleteAdapter() {
 		ContextualUndoAdapter adapter = new ContextualUndoAdapter(mAdapter, R.layout.undo_row, R.id.undo_row_undobutton, 3000);
-		adapter.setAbsListView(mListView);
-		mListView.setAdapter(adapter);
+		adapter.setAbsListView(getListView());
+		getListView().setAdapter(adapter);
 		adapter.setDeleteItemCallback(this);
 	}
 
 	private void setContextualUndoWithTimedDeleteAndCountDownAdapter() {
 		ContextualUndoAdapter adapter = new ContextualUndoAdapter(mAdapter, R.layout.undo_row, R.id.undo_row_undobutton, 3000, R.id.undo_row_texttv, new MyFormatCountDownCallback());
-		adapter.setAbsListView(mListView);
-		mListView.setAdapter(adapter);
+		adapter.setAbsListView(getListView());
+		getListView().setAdapter(adapter);
 		adapter.setDeleteItemCallback(this);
 	}
 
@@ -117,50 +108,7 @@ public class SwipeDismissActivity extends ActionBarActivity implements OnNavigat
 		}
 	}
 
-	private static ArrayList<Integer> getItems() {
-		ArrayList<Integer> items = new ArrayList<Integer>();
-		for (int i = 0; i < 1000; i++) {
-			items.add(i);
-		}
-		return items;
-	}
-
-	private static class MyListAdapter extends ArrayAdapter<Integer> {
-
-		private Context mContext;
-
-		public MyListAdapter(Context context, ArrayList<Integer> items) {
-			super(items);
-			mContext = context;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return getItem(position).hashCode();
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			TextView tv = (TextView) convertView;
-			if (tv == null) {
-				tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
-			}
-			tv.setText("This is row number " + getItem(position));
-			return tv;
-		}
-	}
-
 	/* Non-ListViewAnimations related stuff below */
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {

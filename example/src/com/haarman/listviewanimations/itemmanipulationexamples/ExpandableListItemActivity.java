@@ -1,6 +1,5 @@
 package com.haarman.listviewanimations.itemmanipulationexamples;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -8,44 +7,29 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.util.LruCache;
-import android.support.v7.app.ActionBarActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.itemmanipulation.ExpandableListItemAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 
-public class ExpandableListItemActivity extends ActionBarActivity {
+public class ExpandableListItemActivity extends MyListActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ListView listView = new ListView(this);
-		setContentView(listView);
-		listView.setDivider(null);
 
 		MyExpandableListItemAdapter myExpandableListItemAdapter = new MyExpandableListItemAdapter(this, getItems());
 		AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(myExpandableListItemAdapter);
-		alphaInAnimationAdapter.setAbsListView(listView);
-		listView.setAdapter(alphaInAnimationAdapter);
-
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		alphaInAnimationAdapter.setAbsListView(getListView());
+		getListView().setAdapter(alphaInAnimationAdapter);
 
 		Toast.makeText(this, R.string.explainexpand, Toast.LENGTH_LONG).show();
-	}
-
-	private List<Integer> getItems() {
-		List<Integer> items = new ArrayList<Integer>();
-		for (int i = 0; i < 1000; i++) {
-			items.add(i);
-		}
-		return items;
 	}
 
 	private static class MyExpandableListItemAdapter extends ExpandableListItemAdapter<Integer> {
@@ -58,7 +42,7 @@ public class ExpandableListItemActivity extends ActionBarActivity {
 		 * items == null.
 		 */
 		private MyExpandableListItemAdapter(Context context, List<Integer> items) {
-			super(context, R.layout.activity_expandablelistitem_card, R.id.activity_expandablelistitem_card_parent, R.id.activity_expandablelistitem_card_content, items);
+			super(context, R.layout.activity_expandablelistitem_card, R.id.activity_expandablelistitem_card_title, R.id.activity_expandablelistitem_card_content, items);
 			mContext = context;
 
 			final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
@@ -129,17 +113,6 @@ public class ExpandableListItemActivity extends ActionBarActivity {
 
 		private Bitmap getBitmapFromMemCache(int key) {
 			return mMemoryCache.get(key);
-		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
 		}
 	}
 }

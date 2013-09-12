@@ -33,6 +33,11 @@ public class ItemManipulationsExamplesActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
+	public void onDragAndDropClicked(View view) {
+		Intent intent = new Intent(this, DragAndDropActivity.class);
+		startActivity(intent);
+	}
+
 	public void onSwipeDismissClicked(View view) {
 		Intent intent = new Intent(this, SwipeDismissActivity.class);
 		startActivity(intent);

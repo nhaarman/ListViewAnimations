@@ -40,6 +40,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private SparseArray<AnimationInfo> mAnimators;
 	private long mAnimationStartMillis;
+	private int mFirstAnimatedPosition;
 	private int mLastAnimatedPosition;
 	private int mLastAnimatedHeaderPosition;
 	private boolean mHasParentAnimationAdapter;
@@ -65,6 +66,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	 */
 	public void reset() {
 		mAnimators.clear();
+		mFirstAnimatedPosition = 0;
 		mLastAnimatedPosition = -1;
 		mLastAnimatedHeaderPosition = -1;
 		mAnimationStartMillis = -1;
@@ -75,8 +77,38 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		}
 	}
 
+	/**
+	 * Set whether to animate the {@link View}s or not.
+	 * @param shouldAnimate true if the Views should be animated.
+	 */
 	public void setShouldAnimate(boolean shouldAnimate) {
 		mShouldAnimate = shouldAnimate;
+	}
+
+	/**
+	 * Set the starting position for which items should animate. Given position will animate as well.
+	 * Will also call setShouldAnimate(true).
+	 * @param position the position.
+	 */
+	public void setShouldAnimateFromPosition(int position) {
+		mShouldAnimate = true;
+		mFirstAnimatedPosition = position - 1;
+		mLastAnimatedPosition = position - 1;
+	}
+
+	/**
+	 * Set the starting position for which items should animate as the first position which isn't currently visible on screen.
+	 * This call is also valid when the {@link View}s haven't been drawn yet.
+	 * Will also call setShouldAnimate(true).
+	 */
+	public void setShouldAnimateNotVisible() {
+		if (getAbsListView() == null) {
+			throw new IllegalStateException("Call setListView() on this AnimationAdapter before setShouldAnimateNotVisible()!");
+		}
+
+		mShouldAnimate = true;
+		mFirstAnimatedPosition = getAbsListView().getLastVisiblePosition();
+		mLastAnimatedPosition = getAbsListView().getLastVisiblePosition();
 	}
 
 	@Override
@@ -209,7 +241,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 				delay += getAnimationDelayMillis() * ((mLastAnimatedPosition + 1) % ((GridView) getAbsListView()).getNumColumns());
 			}
 		} else {
-			long delaySinceStart = (mLastAnimatedPosition + 1) * getAnimationDelayMillis();
+			long delaySinceStart = (mLastAnimatedPosition - mFirstAnimatedPosition + 1) * getAnimationDelayMillis();
 			delay = mAnimationStartMillis + getInitialDelayMillis() + delaySinceStart - System.currentTimeMillis();
 			delay -= isHeader && mLastAnimatedPosition > 0 ? getAnimationDelayMillis() : 0;
 		}

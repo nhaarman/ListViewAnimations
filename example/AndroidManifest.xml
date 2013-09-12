@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.haarman.listviewanimations"
-    android:versionCode="22"
-    android:versionName="2.3.1" >
+    android:versionCode="201309122"
+    android:versionName="2.4.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -28,6 +28,9 @@
         <activity
             android:name="com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity"
             android:label="@string/itemmanipulation" />
+        <activity
+            android:name="com.haarman.listviewanimations.itemmanipulationexamples.DragAndDropActivity"
+            android:label="@string/draganddrop" />
         <activity
             android:name="com.haarman.listviewanimations.itemmanipulationexamples.SwipeDismissActivity"
             android:label="@string/swipedismiss" />

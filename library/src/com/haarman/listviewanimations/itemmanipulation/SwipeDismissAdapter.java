@@ -22,13 +22,12 @@ import com.haarman.listviewanimations.BaseAdapterDecorator;
 
 /**
  * Adds an option to swipe items in a ListView away. This does nothing more than
- * setting a new SwipeDismissListViewTouchListener to the ListView. You can
- * achieve the same effect by calling listView.setOnTouchListener(new
- * SwipeDismissListViewTouchListener(...)).
+ * setting a new SwipeDismissListViewTouchListener to the ListView.
  */
 public class SwipeDismissAdapter extends BaseAdapterDecorator {
 
 	private OnDismissCallback mCallback;
+	private SwipeDismissListViewTouchListener mSwipeDismissListViewTouchListener;
 
 	public SwipeDismissAdapter(BaseAdapter baseAdapter, OnDismissCallback callback) {
 		super(baseAdapter);
@@ -38,6 +37,22 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
 	@Override
 	public void setAbsListView(AbsListView listView) {
 		super.setAbsListView(listView);
-		listView.setOnTouchListener(new SwipeDismissListViewTouchListener(listView, mCallback));
+		mSwipeDismissListViewTouchListener = new SwipeDismissListViewTouchListener(listView, mCallback);
+		mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
+		listView.setOnTouchListener(mSwipeDismissListViewTouchListener);
+	}
+	
+	@Override
+    public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
+        super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+        if (mSwipeDismissListViewTouchListener != null) {
+        	mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+        }
+    }
+
+	@Override
+	public void notifyDataSetChanged() {
+		super.notifyDataSetChanged();
+		mSwipeDismissListViewTouchListener.notifyDataSetChanged();
 	}
 }

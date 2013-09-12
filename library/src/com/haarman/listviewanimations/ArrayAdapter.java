@@ -15,17 +15,21 @@
  */
 package com.haarman.listviewanimations;
 
-import android.widget.BaseAdapter;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.haarman.listviewanimations.view.DynamicListView;
+import com.haarman.listviewanimations.view.DynamicListView.Swappable;
+
+import android.widget.BaseAdapter;
+
 /**
  * A true {@link ArrayList} adapter providing access to all ArrayList methods.
+ * Also implements {@link Swappable} for easy item swapping.
  */
-public abstract class ArrayAdapter<T> extends BaseAdapter {
+public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicListView.Swappable {
 
 	private List<T> mItems;
 
@@ -192,4 +196,10 @@ public abstract class ArrayAdapter<T> extends BaseAdapter {
 		return mItems.indexOf(item);
 	}
 
+	@Override
+	public void swapItems(int positionOne, int positionTwo) {
+		T temp = getItem(positionOne);
+		set(positionOne, getItem(positionTwo));
+		set(positionTwo, temp);
+	}
 }
