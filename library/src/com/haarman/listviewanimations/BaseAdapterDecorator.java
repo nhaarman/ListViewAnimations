@@ -15,6 +15,7 @@
  */
 package com.haarman.listviewanimations;
 
+import com.haarman.listviewanimations.view.DynamicListView;
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
-import com.haarman.listviewanimations.view.Swappable;
+import com.haarman.listviewanimations.view.DynamicListView.Swappable;
 
 /**
  * A decorator class that enables decoration of an instance of the BaseAdapter
@@ -32,7 +33,7 @@ import com.haarman.listviewanimations.view.Swappable;
  * Classes extending this class can override methods and provide extra
  * functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, StickyListHeadersAdapter, Swappable {
+public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, StickyListHeadersAdapter, DynamicListView.Swappable {
 
 	protected final BaseAdapter mDecoratedBaseAdapter;
 
