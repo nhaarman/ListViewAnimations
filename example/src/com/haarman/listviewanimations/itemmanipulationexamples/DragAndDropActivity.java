@@ -1,6 +1,7 @@
 package com.haarman.listviewanimations.itemmanipulationexamples;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.MyListActivity;
@@ -22,5 +23,7 @@ public class DragAndDropActivity extends MyListActivity {
 		AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(adapter);
 		animAdapter.setAbsListView(mListView);
 		mListView.setAdapter(animAdapter);
+
+		Toast.makeText(this, "Long press an item to start dragging", Toast.LENGTH_LONG).show();
 	}
 }
