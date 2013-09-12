@@ -22,7 +22,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +34,7 @@ import android.widget.Toast;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.haarman.listviewanimations.ArrayAdapter;
+import com.haarman.listviewanimations.BaseActivity;
 import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
@@ -43,7 +43,7 @@ import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnim
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingLeftInAnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
 
-public class AppearanceExamplesActivity extends ActionBarActivity implements OnNavigationListener {
+public class AppearanceExamplesActivity extends BaseActivity implements OnNavigationListener {
 
 	private BaseAdapter mAdapter;
 
@@ -70,7 +70,6 @@ public class AppearanceExamplesActivity extends ActionBarActivity implements OnN
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		getSupportActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		Toast.makeText(this, "You can turn StickyListHeaders on or off in the menu", Toast.LENGTH_LONG).show();
 	}
@@ -174,9 +173,6 @@ public class AppearanceExamplesActivity extends ActionBarActivity implements OnN
 		case R.id.menu_appearance_sticky:
 			switchListViews();
 			item.setChecked(mCurrentListView == mStickyListView);
-			return true;
-		case android.R.id.home:
-			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

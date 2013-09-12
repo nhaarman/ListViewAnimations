@@ -17,39 +17,47 @@ package com.haarman.listviewanimations;
 
 import java.util.ArrayList;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class MyListActivity extends ListActivity {
+public class MyListActivity extends BaseActivity {
+
+	private ListView mListView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getListView().setDivider(null);
+		mListView = new ListView(this);
+		setContentView(mListView);
+		mListView.setDivider(null);
 	}
 
-	protected ArrayAdapter<String> createListAdapter() {
+	public ListView getListView() {
+		return mListView;
+	}
+
+	protected ArrayAdapter<Integer> createListAdapter() {
 		return new MyListAdapter(this, getItems());
 	}
 
-	public static ArrayList<String> getItems() {
-		ArrayList<String> items = new ArrayList<String>();
+	public static ArrayList<Integer> getItems() {
+		ArrayList<Integer> items = new ArrayList<Integer>();
 		for (int i = 0; i < 1000; i++) {
-			items.add(String.valueOf(i));
+			items.add(i);
 		}
 		return items;
 	}
 
-	private static class MyListAdapter extends ArrayAdapter<String> {
+	private static class MyListAdapter extends ArrayAdapter<Integer> {
 
 		private Context mContext;
 
-		public MyListAdapter(Context context, ArrayList<String> items) {
+		public MyListAdapter(Context context, ArrayList<Integer> items) {
 			super(items);
 			mContext = context;
 		}
@@ -57,6 +65,11 @@ public class MyListActivity extends ListActivity {
 		@Override
 		public long getItemId(int position) {
 			return getItem(position).hashCode();
+		}
+
+		@Override
+		public boolean hasStableIds() {
+			return true;
 		}
 
 		@Override

@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -33,12 +31,13 @@ import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import com.haarman.listviewanimations.ArrayAdapter;
+import com.haarman.listviewanimations.BaseActivity;
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.itemmanipulation.AnimateDismissAdapter;
 import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
-public class AnimateDismissActivity extends ActionBarActivity {
+public class AnimateDismissActivity extends BaseActivity {
 
 	private List<Integer> mSelectedPositions;
 	private MyListAdapter mAdapter;
@@ -79,8 +78,6 @@ public class AnimateDismissActivity extends ActionBarActivity {
 				}
 			}
 		});
-
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	private class MyOnDismissCallback implements OnDismissCallback {
@@ -93,9 +90,9 @@ public class AnimateDismissActivity extends ActionBarActivity {
 		}
 	}
 
-	private class MyListAdapter extends ArrayAdapter<String> {
+	private class MyListAdapter extends ArrayAdapter<Integer> {
 
-		public MyListAdapter(ArrayList<String> items) {
+		public MyListAdapter(ArrayList<Integer> items) {
 			super(items);
 		}
 
@@ -105,19 +102,9 @@ public class AnimateDismissActivity extends ActionBarActivity {
 			if (tv == null) {
 				tv = (CheckedTextView) LayoutInflater.from(AnimateDismissActivity.this).inflate(R.layout.activity_animateremoval_row, parent, false);
 			}
-			tv.setText(getItem(position));
+			tv.setText(String.valueOf(getItem(position)));
 			tv.setChecked(mSelectedPositions.contains(position));
 			return tv;
 		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 }

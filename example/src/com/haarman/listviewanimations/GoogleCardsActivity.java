@@ -17,7 +17,6 @@ package com.haarman.listviewanimations;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,11 +30,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.haarman.listviewanimations.itemmanipulation.SwipeDismissAdapter;
 import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.haarman.listviewanimations.itemmanipulation.SwipeDismissAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
-public class GoogleCardsActivity extends Activity implements OnDismissCallback {
+public class GoogleCardsActivity extends BaseActivity implements OnDismissCallback {
 
 	private GoogleCardsAdapter mGoogleCardsAdapter;
 
@@ -117,20 +116,20 @@ public class GoogleCardsActivity extends Activity implements OnDismissCallback {
 		private void setImageView(ViewHolder viewHolder, int position) {
 			int imageResId;
 			switch (getItem(position) % 5) {
-				case 0:
-					imageResId = R.drawable.img_nature1;
-					break;
-				case 1:
-					imageResId = R.drawable.img_nature2;
-					break;
-				case 2:
-					imageResId = R.drawable.img_nature3;
-					break;
-				case 3:
-					imageResId = R.drawable.img_nature4;
-					break;
-				default:
-					imageResId = R.drawable.img_nature5;
+			case 0:
+				imageResId = R.drawable.img_nature1;
+				break;
+			case 1:
+				imageResId = R.drawable.img_nature2;
+				break;
+			case 2:
+				imageResId = R.drawable.img_nature3;
+				break;
+			case 3:
+				imageResId = R.drawable.img_nature4;
+				break;
+			default:
+				imageResId = R.drawable.img_nature5;
 			}
 
 			Bitmap bitmap = getBitmapFromMemCache(imageResId);
