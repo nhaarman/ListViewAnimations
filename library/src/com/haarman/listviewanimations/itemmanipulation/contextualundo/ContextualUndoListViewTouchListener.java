@@ -29,6 +29,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.haarman.listviewanimations.itemmanipulation.SwipeOnTouchListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewHelper;
@@ -42,7 +43,7 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  * this class directly, use ContextualUndoAdapter to wrap your
  * {@link BaseAdapter}s.
  */
-public class ContextualUndoListViewTouchListener implements View.OnTouchListener {
+public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener {
     // Cached ViewConfiguration and system-wide constant values
     private int mSlop;
     private int mMinFlingVelocity;
@@ -238,6 +239,11 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
         }
         }
         return false;
+    }
+
+    @Override
+    public boolean isSwiping() {
+        return mSwiping;
     }
 
     private Rect getChildViewRect(View parentView, View childView) {

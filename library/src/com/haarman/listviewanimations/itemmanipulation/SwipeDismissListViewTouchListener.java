@@ -50,7 +50,7 @@ import com.nineoldandroids.view.ViewHelper;
  * For performance reasons, do not use this class directly, but use the {@link SwipeDismissAdapter}.
  */
 @SuppressLint("Recycle")
-public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
+public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 	// Cached ViewConfiguration and system-wide constant values
 	private int mSlop;
 	private int mMinFlingVelocity;
@@ -138,7 +138,12 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 		return false;
 	}
 
-	private boolean handleDownEvent(MotionEvent motionEvent) {
+    @Override
+    public boolean isSwiping() {
+        return mSwiping;
+    }
+
+    private boolean handleDownEvent(MotionEvent motionEvent) {
 		if (mPaused) {
 			return false;
 		}

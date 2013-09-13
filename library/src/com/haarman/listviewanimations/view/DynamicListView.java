@@ -34,6 +34,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.haarman.listviewanimations.itemmanipulation.SwipeOnTouchListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -136,6 +137,7 @@ public class DynamicListView extends ListView {
 	private OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
 		public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
             if (mResIdOfDynamicTouchChild == 0) {
+                mDynamicTouchChildTouched = true;
                 makeCellMobile();
                 return true;
             }
@@ -281,6 +283,15 @@ public class DynamicListView extends ListView {
 			return super.onTouchEvent(event);
 		}
 
+        if (mOnTouchListener instanceof SwipeOnTouchListener) {
+            if (((SwipeOnTouchListener)mOnTouchListener).isSwiping()) {
+                mSkipCallingOnTouchListener = true;
+                boolean retVal = mOnTouchListener.onTouch(this, event);
+                mSkipCallingOnTouchListener = false;
+                return retVal? true : super.onTouchEvent(event);
+            }
+        }
+
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
             mDownX = (int)event.getX();
@@ -307,7 +318,6 @@ public class DynamicListView extends ListView {
 			if (mIsParentHorizontalScrollContainer) {
 				// Do it now and don't wait until the user moves more than the
 				// slop factor.
-                mDynamicTouchChildTouched = true;
 				getParent().requestDisallowInterceptTouchEvent(true);
 			}
 			break;
