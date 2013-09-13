@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -69,6 +70,10 @@ import com.nineoldandroids.view.ViewHelper;
  */
 public class DynamicListView extends ListView {
 
+    public interface OnHoverCellListener {
+        public Drawable onHoverCellCreated(Drawable hoverCellDrawable);
+    }
+
 	private final int SMOOTH_SCROLL_AMOUNT_AT_EDGE = 15;
 	private final int MOVE_DURATION = 150;
 
@@ -88,7 +93,7 @@ public class DynamicListView extends ListView {
 	private long mMobileItemId = INVALID_ID;
 	private long mBelowItemId = INVALID_ID;
 
-	private BitmapDrawable mHoverCell;
+	private Drawable mHoverCell;
 	private Rect mHoverCellCurrentBounds;
 	private Rect mHoverCellOriginalBounds;
 
@@ -105,6 +110,8 @@ public class DynamicListView extends ListView {
     private int mSlop;
 
     private boolean mSkipCallingOnTouchListener;
+
+    private OnHoverCellListener mOnHoverCellListener;
 
 	public DynamicListView(Context context) {
 		super(context);
@@ -157,6 +164,9 @@ public class DynamicListView extends ListView {
 
         mMobileItemId = getAdapter().getItemId(position);
         mHoverCell = getAndAddHoverView(selectedView);
+        if (mOnHoverCellListener != null) {
+            mHoverCell = mOnHoverCellListener.onHoverCellCreated(mHoverCell);
+        }
         selectedView.setVisibility(INVISIBLE);
 
         mCellIsMobile = true;
@@ -261,6 +271,10 @@ public class DynamicListView extends ListView {
 	public void setOnTouchListener(OnTouchListener l) {
 		mOnTouchListener = l;
 	}
+
+    public void setOnHoverCellListener(OnHoverCellListener onHoverCellListener) {
+        mOnHoverCellListener = onHoverCellListener;
+    }
 
     private Rect getChildViewRect(View parentView, View childView) {
         final Rect childRect = new Rect(childView.getLeft(), childView.getTop(), childView.getRight(), childView.getBottom());
