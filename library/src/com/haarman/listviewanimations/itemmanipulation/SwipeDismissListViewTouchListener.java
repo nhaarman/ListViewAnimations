@@ -27,6 +27,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -86,7 +87,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 	 *            The callback to trigger when the user has indicated that she
 	 *            would like to dismiss one or more list items.
 	 */
-	public SwipeDismissListViewTouchListener(AbsListView listView, OnDismissCallback callback) {
+	public SwipeDismissListViewTouchListener(AbsListView listView, OnDismissCallback callback, SwipeOnScrollListener onScroll) {
 		ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
 		mSlop = vc.getScaledTouchSlop();
 		mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
@@ -94,22 +95,19 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 		mAnimationTime = listView.getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
 		mListView = listView;
 		mCallback = callback;
-
-		mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				if (scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-					mDisallowSwipe = true;
-				}
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-			}
-		});
+		
+		onScroll.setTouchListener(this);
+		mListView.setOnScrollListener(onScroll);
 	}
 
+	public void disallowSwipe() {
+		mDisallowSwipe = true;
+	}
+	
+	public void allowSwipe() {
+		mDisallowSwipe = false;
+	}
+	
 	@Override
 	public boolean onTouch(View view, MotionEvent motionEvent) {
 		if (mVirtualListCount == -1) {
@@ -120,17 +118,30 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 			mViewWidth = mListView.getWidth();
 		}
 
+		Boolean res;
+		
 		switch (motionEvent.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
-			mDisallowSwipe = false;
+
+			allowSwipe();
 			view.onTouchEvent(motionEvent);
-			return handleDownEvent(motionEvent);
+			res = handleDownEvent(motionEvent);
+			
+			return res;
+			
 		case MotionEvent.ACTION_MOVE:
-			return handleMoveEvent(motionEvent);
+
+			res = handleMoveEvent(motionEvent);
+			
+			return res;
+			
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
-			mDisallowSwipe = false;
-			return handleUpEvent(motionEvent);
+
+			allowSwipe();
+			res = handleUpEvent(motionEvent);
+
+			return res;
 		}
 		return false;
 	}
@@ -182,7 +193,11 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 	}
 
 	private boolean handleMoveEvent(MotionEvent motionEvent) {
-		if (mVelocityTracker == null || mPaused) {
+		if (mPaused) {
+			return false;
+		}
+		if (mVelocityTracker == null) {
+			Log.d("LVA", "mVelocityTracker is null");
 			return false;
 		}
 
@@ -348,6 +363,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     }
 
 	public void notifyDataSetChanged() {
+		Log.d("SwipeDismissListViewTouchListener", "notifyDataSetChanged");
 		mVirtualListCount = mListView.getAdapter().getCount();
 	}
 }

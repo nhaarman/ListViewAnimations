@@ -15,9 +15,11 @@
  */
 package com.haarman.listviewanimations.itemmanipulation;
 
+import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
+import com.haarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.BaseAdapterDecorator;
 
 /**
@@ -29,15 +31,28 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
 	private OnDismissCallback mCallback;
 	private SwipeDismissListViewTouchListener mSwipeDismissListViewTouchListener;
 
+	private SwipeOnScrollListener mOnScroll;
+	
 	public SwipeDismissAdapter(BaseAdapter baseAdapter, OnDismissCallback callback) {
-		super(baseAdapter);
-		mCallback = callback;
+		// add a default OnScrollListener
+		this(baseAdapter, callback, new SwipeOnScrollListener());
 	}
 
+	public SwipeDismissAdapter(BaseAdapter baseAdapter, OnDismissCallback callback, SwipeOnScrollListener onScroll) {
+		super(baseAdapter);
+		mCallback = callback;
+		mOnScroll = onScroll;
+	}
+	
 	@Override
 	public void setAbsListView(AbsListView listView) {
 		super.setAbsListView(listView);
-		mSwipeDismissListViewTouchListener = new SwipeDismissListViewTouchListener(listView, mCallback);
+		if (mDecoratedBaseAdapter instanceof ArrayAdapter<?>) {
+			// fix #35 dirty trick !
+			// if ArrayAdapter we assume that items manipulation will come from it
+			((ArrayAdapter<?>)mDecoratedBaseAdapter).propagateNotifyDataSetChanged(this);
+		}
+		mSwipeDismissListViewTouchListener = new SwipeDismissListViewTouchListener(listView, mCallback, mOnScroll);
 		mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
 		listView.setOnTouchListener(mSwipeDismissListViewTouchListener);
 	}
@@ -52,7 +67,10 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
 
 	@Override
 	public void notifyDataSetChanged() {
+		Log.d("SwipeDismissAdapter", "notifyDataSetChanged");
 		super.notifyDataSetChanged();
-		mSwipeDismissListViewTouchListener.notifyDataSetChanged();
+		if (mSwipeDismissListViewTouchListener != null) {
+			mSwipeDismissListViewTouchListener.notifyDataSetChanged();
+		}
 	}
 }
