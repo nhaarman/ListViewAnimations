@@ -145,7 +145,7 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
                     final View childView = mDownView.findViewById(mResIdOfTouchChild);
                     if  (childView != null) {
                         final Rect childRect = getChildViewRect(mListView, childView);
-                        if (childRect.contains((int)mDownX, (int)mDownY)) {
+                        if (childRect.contains((int)motionEvent.getX(), (int)motionEvent.getY())) {
                             mTouchChildTouched = true;
                             mListView.requestDisallowInterceptTouchEvent(true);
                         }
