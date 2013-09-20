@@ -1,18 +1,20 @@
 package com.haarman.listviewanimations.itemmanipulation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ValueAnimator;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An {@link ArrayAdapter} which allows items to be expanded using an animation.
@@ -23,13 +25,16 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	private static final int DEFAULTCONTENTPARENTRESID = 10001;
 
 	private Context mContext;
+    private AdapterView mParent;
 	private int mViewLayoutResId;
 	private int mTitleParentResId;
 	private int mContentParentResId;
 	private int mActionViewResId;
 	private List<Long> mVisibleIds;
+    private Map<Object, TitleViewOnClickListener> mListeners;
+    private boolean mSwitch;
 
-	/**
+    /**
 	 * Creates a new ExpandableListItemAdapter with an empty list.
 	 */
 	protected ExpandableListItemAdapter(Context context) {
@@ -47,6 +52,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		mContentParentResId = DEFAULTCONTENTPARENTRESID;
 
 		mVisibleIds = new ArrayList<Long>();
+        mListeners = new HashMap<Object, TitleViewOnClickListener>();
 	}
 
 	/**
@@ -72,6 +78,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		mContentParentResId = contentParentResId;
 
 		mVisibleIds = new ArrayList<Long>();
+        mListeners = new HashMap<Object, TitleViewOnClickListener>();
 	}
 
 	/**
@@ -89,7 +96,9 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewGroup view = (ViewGroup) convertView;
 		ViewHolder viewHolder;
-
+        if(mParent==null||!mParent.equals(parent)){
+            mParent = (AdapterView) parent;
+        }
 		if (view == null) {
 			view = createView(parent);
 
@@ -106,12 +115,13 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		if (!titleView.equals(viewHolder.titleView)) {
 			viewHolder.titleParent.removeAllViews();
 			viewHolder.titleParent.addView(titleView);
-
+            TitleViewOnClickListener listener = new TitleViewOnClickListener(viewHolder.contentParent);
 			if (mActionViewResId == 0) {
-				view.setOnClickListener(new TitleViewOnClickListener(viewHolder.contentParent));
+				view.setOnClickListener(listener);
 			} else {
-				view.findViewById(mActionViewResId).setOnClickListener(new TitleViewOnClickListener(viewHolder.contentParent));
+				view.findViewById(mActionViewResId).setOnClickListener(listener);
 			}
+            mListeners.put(view.getTag(), listener);
 		}
 		viewHolder.titleView = titleView;
 
@@ -187,7 +197,15 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	 */
 	public abstract View getContentView(int position, View convertView, ViewGroup parent);
 
-	private static class ViewHolder {
+    public boolean isSwitch() {
+        return mSwitch;
+    }
+
+    public void setSwitch(boolean mSwitch) {
+        this.mSwitch = mSwitch;
+    }
+
+    private static class ViewHolder {
 		ViewGroup titleParent;
 		ViewGroup contentParent;
 		View titleView;
@@ -228,7 +246,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		@Override
 		public void onClick(View view) {
 			boolean isVisible = mContentParent.getVisibility() == View.VISIBLE;
-
+            new Switcher().invoke(mSwitch);
 			if (isVisible) {
 				animateCollapsing();
 				mVisibleIds.remove(mContentParent.getTag());
@@ -289,4 +307,27 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 			return animator;
 		}
 	}
+
+    private class Switcher {
+        public void invoke(boolean isSwitch) {
+            if(!mSwitch){
+                return;
+            }
+            int childCount = mParent.getChildCount();
+            for(int i=0;i<childCount;i++){
+                View v = mParent.getChildAt(i);
+                if(v==null){
+                    continue;
+                }
+                View contentParent = v.findViewById(mContentParentResId);
+                if(contentParent==null){
+                    continue;
+                }
+                boolean visible = contentParent.getVisibility()==View.VISIBLE;
+                if(!contentParent.equals(mParent)&&visible){
+                    mListeners.get(v.getTag()).onClick(v);
+                }
+            }
+        }
+    }
 }
