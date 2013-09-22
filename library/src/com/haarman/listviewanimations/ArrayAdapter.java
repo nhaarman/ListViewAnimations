@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import android.util.Log;
 import android.widget.BaseAdapter;
 
 import com.haarman.listviewanimations.view.DynamicListView;
@@ -32,7 +31,7 @@ import com.haarman.listviewanimations.view.DynamicListView.Swappable;
  */
 public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicListView.Swappable {
 
-	private List<T> mItems;
+	protected List<T> mItems;
 
 	/**
 	 * Creates a new ArrayAdapter with an empty list.
@@ -214,10 +213,8 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicList
 
 	@Override
 	public void notifyDataSetChanged() {
-		Log.d("ArrayAdapter", "notifyDataSetChanged");
 		super.notifyDataSetChanged();
 		if (mDataSetChangedSlavedAdapter != null) {
-			Log.d("ArrayAdapter", "propagate");
 			mDataSetChangedSlavedAdapter.notifyDataSetChanged();
 		}
 	}

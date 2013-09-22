@@ -16,7 +16,6 @@
 package com.haarman.listviewanimations;
 
 import android.database.DataSetObserver;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -115,9 +114,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 
 	@Override
 	public void notifyDataSetChanged() {
-		Log.d("BaseAdapterDecorator", "notifyDataSetChanged");
 		if (!(mDecoratedBaseAdapter instanceof ArrayAdapter<?>)) {
-			Log.d("BaseAdapterDecorator", "notifyDataSetChanged (pass)");
 			// fix #35 dirty trick !
 			// leads to an infinite loop when trying because ArrayAdapter triggers notifyDataSetChanged itself
 			mDecoratedBaseAdapter.notifyDataSetChanged();
