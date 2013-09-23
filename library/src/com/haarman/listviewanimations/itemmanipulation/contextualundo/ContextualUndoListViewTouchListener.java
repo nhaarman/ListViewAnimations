@@ -54,11 +54,13 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 
 	// Transient properties
 	private float mDownX;
+	private float mDownY;
 	private boolean mSwiping;
 	private VelocityTracker mVelocityTracker;
 	private int mDownPosition;
 	private View mDownView;
 	private boolean mPaused;
+	private boolean mDisallowSwipe;
 
 	private boolean mIsParentHorizontalScrollContainer;
 
@@ -72,7 +74,7 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 	public ContextualUndoListViewTouchListener(AbsListView listView, Callback callback) {
 		ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
 		mSlop = vc.getScaledTouchSlop();
-		mMinFlingVelocity = vc.getScaledMinimumFlingVelocity();
+		mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() ;
 		mMaxFlingVelocity = vc.getScaledMaximumFlingVelocity();
 		mAnimationTime = listView.getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
 		mListView = listView;
@@ -91,6 +93,10 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 				if (mPaused) {
 					mCallback.onListScrolled();
 				}
+				if (scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+					mDisallowSwipe = true;
+				}
+
 			}
 
 			@Override
@@ -107,6 +113,7 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 
 		switch (motionEvent.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN: {
+			mDisallowSwipe = false;
 			if (mPaused) {
 				return false;
 			}
@@ -136,6 +143,7 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 				}
 
 				mDownX = motionEvent.getRawX();
+				mDownY = motionEvent.getRawY();
 				mDownPosition = mListView.getPositionForView(mDownView);
 
 				mVelocityTracker = VelocityTracker.obtain();
@@ -144,8 +152,11 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 			view.onTouchEvent(motionEvent);
 			return true;
 		}
+		
+		case MotionEvent.ACTION_UP : 
 
-		case MotionEvent.ACTION_UP: {
+		case MotionEvent.ACTION_CANCEL: {
+			mDisallowSwipe = false;	
 			if (mVelocityTracker == null) {
 				break;
 			}
@@ -196,7 +207,9 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 
 			mVelocityTracker.addMovement(motionEvent);
 			float deltaX = motionEvent.getRawX() - mDownX;
-			if (Math.abs(deltaX) > mSlop) {
+			float deltaY = motionEvent.getRawY() - mDownY;
+			if (!mDisallowSwipe && Math.abs(deltaX) > mSlop && Math.abs(deltaX) > Math.abs(deltaY)) {
+//			if (Math.abs(deltaX) > mSlop) {
 				mSwiping = true;
 				mListView.requestDisallowInterceptTouchEvent(true);
 
@@ -213,6 +226,8 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 			}
 			break;
 		}
+
+		
 		}
 		return false;
 	}
