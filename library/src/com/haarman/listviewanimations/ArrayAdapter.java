@@ -69,6 +69,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicList
 	/**
 	 * Appends the specified element to the end of the list.
 	 */
+	// @ requires item != null;
 	public void add(T item) {
 		mItems.add(item);
 		notifyDataSetChanged();
