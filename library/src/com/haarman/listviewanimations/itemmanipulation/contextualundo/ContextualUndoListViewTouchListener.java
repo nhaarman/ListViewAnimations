@@ -204,6 +204,7 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 				MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
 				cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
 				mListView.onTouchEvent(cancelEvent);
+				cancelEvent.recycle();
 			}
 
 			if (mSwiping) {
