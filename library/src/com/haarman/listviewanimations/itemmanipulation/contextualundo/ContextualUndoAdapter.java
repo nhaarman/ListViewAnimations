@@ -137,7 +137,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 			contextualUndoView.findViewById(mUndoActionId).setOnClickListener(new UndoListener(contextualUndoView));
 		}
 
-		View contentView = super.getView(position, contextualUndoView.getContentView(), parent);
+		View contentView = super.getView(position, contextualUndoView.getContentView(), contextualUndoView);
 		contextualUndoView.updateContentView(contentView);
 
 		long itemId = getItemId(position);
