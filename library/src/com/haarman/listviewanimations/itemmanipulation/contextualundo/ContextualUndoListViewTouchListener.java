@@ -157,10 +157,11 @@ public class ContextualUndoListViewTouchListener implements View.OnTouchListener
 			float velocityY = Math.abs(mVelocityTracker.getYVelocity());
 			boolean dismiss = false;
 			boolean dismissRight = false;
-			if (Math.abs(deltaX) > mViewWidth / 2) {
+			final float absDeltaX = Math.abs(deltaX);
+			if (absDeltaX > mViewWidth / 2) {
 				dismiss = true;
 				dismissRight = deltaX > 0;
-			} else if (mMinFlingVelocity <= velocityX && velocityX <= mMaxFlingVelocity && velocityY < velocityX) {
+			} else if (mMinFlingVelocity <= velocityX && velocityX <= mMaxFlingVelocity && velocityY < velocityX && absDeltaX > mSlop) {
 				dismiss = true;
 				dismissRight = mVelocityTracker.getXVelocity() > 0;
 			}
