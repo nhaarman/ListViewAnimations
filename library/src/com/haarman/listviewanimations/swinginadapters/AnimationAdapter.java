@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+
 import com.haarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -42,7 +43,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	private long mAnimationStartMillis;
 	private int mFirstAnimatedPosition;
 	private int mLastAnimatedPosition;
-	private int mLastAnimatedHeaderPosition;
 	private boolean mHasParentAnimationAdapter;
 	private boolean mShouldAnimate = true;
 
@@ -52,7 +52,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 		mAnimationStartMillis = -1;
 		mLastAnimatedPosition = -1;
-		mLastAnimatedHeaderPosition = -1;
 
 		if (baseAdapter instanceof AnimationAdapter) {
 			((AnimationAdapter) baseAdapter).setHasParentAnimationAdapter(true);
@@ -68,7 +67,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		mAnimators.clear();
 		mFirstAnimatedPosition = 0;
 		mLastAnimatedPosition = -1;
-		mLastAnimatedHeaderPosition = -1;
 		mAnimationStartMillis = -1;
 		mShouldAnimate = true;
 
@@ -132,23 +130,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		return itemView;
 	}
 
-	@Override
-	public View getHeaderView(int position, View convertView, ViewGroup parent) {
-		boolean alreadyStarted = false;
-
-		if (!mHasParentAnimationAdapter && convertView != null) {
-			alreadyStarted = cancelExistingAnimation(position, convertView);
-		}
-
-		View itemView = super.getHeaderView(position, convertView, parent);
-
-		if (!mHasParentAnimationAdapter && !alreadyStarted) {
-			animateHeaderViewIfNecessary(position, itemView, parent);
-		}
-
-		return itemView;
-	}
-
 	private boolean cancelExistingAnimation(int position, View convertView) {
 		boolean alreadyStarted = false;
 
@@ -170,13 +151,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		if (position > mLastAnimatedPosition && mShouldAnimate) {
 			animateView(position, parent, view, false);
 			mLastAnimatedPosition = position;
-		}
-	}
-
-	private void animateHeaderViewIfNecessary(int position, View view, ViewGroup parent) {
-		if (position > mLastAnimatedHeaderPosition && mShouldAnimate) {
-			animateView(position, parent, view, true);
-			mLastAnimatedHeaderPosition = position;
 		}
 	}
 
