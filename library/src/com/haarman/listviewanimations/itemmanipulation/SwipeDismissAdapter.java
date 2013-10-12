@@ -39,20 +39,29 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
 		super.setAbsListView(listView);
 		mSwipeDismissListViewTouchListener = new SwipeDismissListViewTouchListener(listView, mCallback);
 		mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
+		mSwipeDismissListViewTouchListener.setTouchChild(getTouchChild());
 		listView.setOnTouchListener(mSwipeDismissListViewTouchListener);
 	}
-	
+
 	@Override
-    public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
-        super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
-        if (mSwipeDismissListViewTouchListener != null) {
-        	mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
-        }
-    }
+	public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
+		super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+		if (mSwipeDismissListViewTouchListener != null) {
+			mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+		}
+	}
 
 	@Override
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();
 		mSwipeDismissListViewTouchListener.notifyDataSetChanged();
+	}
+
+	@Override
+	public void setTouchChild(int childResId) {
+		super.setTouchChild(childResId);
+		if (mSwipeDismissListViewTouchListener != null) {
+			mSwipeDismissListViewTouchListener.setTouchChild(childResId);
+		}
 	}
 }
