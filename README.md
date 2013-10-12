@@ -36,7 +36,8 @@ Setup
 Or:
 
 * [Download the .jar file][4]
-* Add the .jar to your project's `libs` folder, or add it as an external jar to your project's build path.
+* [Download the latest NineOldAndroids .jar file][17]
+* Add the .jar files to your project's `libs` folder, or add them as external jars to your project's build path.
 
 Usage
 -----
