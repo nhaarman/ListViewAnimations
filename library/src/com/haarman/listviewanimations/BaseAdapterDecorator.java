@@ -15,7 +15,6 @@
  */
 package com.haarman.listviewanimations;
 
-import com.haarman.listviewanimations.view.DynamicListView;
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
+import com.haarman.listviewanimations.view.DynamicListView;
 import com.haarman.listviewanimations.view.DynamicListView.Swappable;
 
 /**
@@ -114,7 +114,22 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 
 	@Override
 	public void notifyDataSetChanged() {
-		mDecoratedBaseAdapter.notifyDataSetChanged();
+		if (!(mDecoratedBaseAdapter instanceof ArrayAdapter<?>)) {
+			// fix #35 dirty trick !
+			// leads to an infinite loop when trying because ArrayAdapter triggers notifyDataSetChanged itself
+			mDecoratedBaseAdapter.notifyDataSetChanged();
+		}
+	}
+	
+	/**
+	 * Helper function if you want to force notifyDataSetChanged()
+	 * @param force
+	 */
+	public void notifyDataSetChanged(Boolean force) {
+		if ((force) || (!(mDecoratedBaseAdapter instanceof ArrayAdapter<?>))) {
+			// leads to an infinite loop when trying because ArrayAdapter triggers notifyDataSetChanged itself
+			mDecoratedBaseAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override

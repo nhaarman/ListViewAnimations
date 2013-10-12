@@ -20,10 +20,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import android.widget.BaseAdapter;
+
 import com.haarman.listviewanimations.view.DynamicListView;
 import com.haarman.listviewanimations.view.DynamicListView.Swappable;
-
-import android.widget.BaseAdapter;
 
 /**
  * A true {@link ArrayList} adapter providing access to all ArrayList methods.
@@ -31,7 +31,7 @@ import android.widget.BaseAdapter;
  */
 public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicListView.Swappable {
 
-	private List<T> mItems;
+	protected List<T> mItems;
 
 	/**
 	 * Creates a new ArrayAdapter with an empty list.
@@ -44,12 +44,14 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicList
 	 * Creates a new {@link ArrayAdapter} with a <b>copy</b> of the specified
 	 * list, or an empty list if items == null.
 	 */
+	
 	public ArrayAdapter(List<T> items) {
 		mItems = new ArrayList<T>();
 		if (items != null) {
 			mItems.addAll(items);
 		}
 	}
+	
 
 	@Override
 	public int getCount() {
@@ -202,5 +204,19 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicList
 		T temp = getItem(positionOne);
 		set(positionOne, getItem(positionTwo));
 		set(positionTwo, temp);
+	}
+	
+	private BaseAdapter mDataSetChangedSlavedAdapter;
+	
+	public void propagateNotifyDataSetChanged(BaseAdapter slavedAdapter) {
+		mDataSetChangedSlavedAdapter = slavedAdapter;
+	}
+
+	@Override
+	public void notifyDataSetChanged() {
+		super.notifyDataSetChanged();
+		if (mDataSetChangedSlavedAdapter != null) {
+			mDataSetChangedSlavedAdapter.notifyDataSetChanged();
+		}
 	}
 }
