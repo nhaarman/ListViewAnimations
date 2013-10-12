@@ -75,7 +75,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	private DeleteItemCallback mDeleteItemCallback;
 	private CountDownFormatter mCountDownFormatter;
 
-    private ContextualUndoListViewTouchListener mContextualUndoListViewTouchListener;
+	private ContextualUndoListViewTouchListener mContextualUndoListViewTouchListener;
 
 	/**
 	 * Create a new ContextualUndoAdapter based on given parameters.
@@ -161,8 +161,8 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	public void setAbsListView(AbsListView listView) {
 		super.setAbsListView(listView);
 		mContextualUndoListViewTouchListener = new ContextualUndoListViewTouchListener(listView, this);
-        mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
-        mContextualUndoListViewTouchListener.setTouchChild(getTouchChild());
+		mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
+		mContextualUndoListViewTouchListener.setTouchChild(getTouchChild());
 		listView.setOnTouchListener(mContextualUndoListViewTouchListener);
 		listView.setOnScrollListener(mContextualUndoListViewTouchListener.makeScrollListener());
 		listView.setRecyclerListener(new RecycleViewListener());
@@ -197,8 +197,8 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	}
 
 	private void restoreViewPosition(View view) {
-        setAlpha(view, 1f);
-        setTranslationX(view, 0);
+		setAlpha(view, 1f);
+		setTranslationX(view, 0);
 	}
 
 	private void removePreviousContextualUndoIfPresent() {
@@ -257,59 +257,59 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		mCurrentRemovedId = savedInstanceState.getLong(EXTRA_ACTIVE_REMOVED_ID, -1);
 	}
 
-    /**
-     * Animate the item at given position away and show the undo {@link View}.
-     * @param position the position.
-     */
-    public void swipeViewAtPosition(int position) {
-        mCurrentRemovedId = getItemId(position);
-        for (int i = 0; i < getAbsListView().getChildCount(); i++) {
-            int positionForView = getAbsListView().getPositionForView(getAbsListView().getChildAt(i));
-            if (positionForView == position) {
-                swipeView(getAbsListView().getChildAt(i), positionForView);
-            }
-        }
-    }
+	/**
+	 * Animate the item at given position away and show the undo {@link View}.
+	 * @param position the position.
+	 */
+	public void swipeViewAtPosition(int position) {
+		mCurrentRemovedId = getItemId(position);
+		for (int i = 0; i < getAbsListView().getChildCount(); i++) {
+			int positionForView = getAbsListView().getPositionForView(getAbsListView().getChildAt(i));
+			if (positionForView == position) {
+				swipeView(getAbsListView().getChildAt(i), positionForView);
+			}
+		}
+	}
 
-    private void swipeView(final View view, final int dismissPosition) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "x", view.getMeasuredWidth());
-        animator.addListener(new AnimatorListener() {
+	private void swipeView(final View view, final int dismissPosition) {
+		ObjectAnimator animator = ObjectAnimator.ofFloat(view, "x", view.getMeasuredWidth());
+		animator.addListener(new AnimatorListener() {
 
-            @Override
-            public void onAnimationStart(Animator animator) {
-            }
+			@Override
+			public void onAnimationStart(Animator animator) {
+			}
 
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-            }
+			@Override
+			public void onAnimationRepeat(Animator animator) {
+			}
 
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                onViewSwiped(view, dismissPosition);
-            }
+			@Override
+			public void onAnimationEnd(Animator animator) {
+				onViewSwiped(view, dismissPosition);
+			}
 
-            @Override
-            public void onAnimationCancel(Animator animator) {
-            }
-        });
-        animator.start();
-    }
+			@Override
+			public void onAnimationCancel(Animator animator) {
+			}
+		});
+		animator.start();
+	}
 
-    @Override
-    public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
-        super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
-        if (mContextualUndoListViewTouchListener != null) {
-            mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
-        }
-    }
+	@Override
+	public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
+		super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+		if (mContextualUndoListViewTouchListener != null) {
+			mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+		}
+	}
 
-    @Override
-    public void setTouchChild(int childResId) {
-        super.setTouchChild(childResId);
-        if (mContextualUndoListViewTouchListener != null) {
-            mContextualUndoListViewTouchListener.setTouchChild(childResId);
-        }
-    }
+	@Override
+	public void setTouchChild(int childResId) {
+		super.setTouchChild(childResId);
+		if (mContextualUndoListViewTouchListener != null) {
+			mContextualUndoListViewTouchListener.setTouchChild(childResId);
+		}
+	}
 
 	/**
 	 * A callback interface which is used to notify when items should be removed from the collection.
@@ -417,7 +417,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		}
 
 		private void moveViewOffScreen() {
-            ViewHelper.setTranslationX(mContextualUndoView, mContextualUndoView.getWidth());
+			ViewHelper.setTranslationX(mContextualUndoView, mContextualUndoView.getWidth());
 		}
 
 		private void animateViewComingBack() {

@@ -37,19 +37,19 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
 	@Override
 	public void setAbsListView(AbsListView listView) {
 		super.setAbsListView(listView);
-        mSwipeDismissListViewTouchListener = new SwipeDismissListViewTouchListener(listView, mCallback);
-        mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
-        mSwipeDismissListViewTouchListener.setTouchChild(getTouchChild());
-        listView.setOnTouchListener(mSwipeDismissListViewTouchListener);
+		mSwipeDismissListViewTouchListener = new SwipeDismissListViewTouchListener(listView, mCallback);
+		mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
+		mSwipeDismissListViewTouchListener.setTouchChild(getTouchChild());
+		listView.setOnTouchListener(mSwipeDismissListViewTouchListener);
 	}
 
 	@Override
-    public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
-        super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
-        if (mSwipeDismissListViewTouchListener != null) {
-        	mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
-        }
-    }
+	public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
+		super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+		if (mSwipeDismissListViewTouchListener != null) {
+			mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+		}
+	}
 
 	@Override
 	public void notifyDataSetChanged() {
@@ -57,11 +57,11 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
 		mSwipeDismissListViewTouchListener.notifyDataSetChanged();
 	}
 
-    @Override
-    public void setTouchChild(int childResId) {
-        super.setTouchChild(childResId);
-        if (mSwipeDismissListViewTouchListener != null) {
-            mSwipeDismissListViewTouchListener.setTouchChild(childResId);
-        }
-    }
+	@Override
+	public void setTouchChild(int childResId) {
+		super.setTouchChild(childResId);
+		if (mSwipeDismissListViewTouchListener != null) {
+			mSwipeDismissListViewTouchListener.setTouchChild(childResId);
+		}
+	}
 }

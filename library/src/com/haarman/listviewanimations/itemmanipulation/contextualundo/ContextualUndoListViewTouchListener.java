@@ -32,8 +32,6 @@ import android.widget.ListView;
 import com.haarman.listviewanimations.itemmanipulation.SwipeOnTouchListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.view.ViewHelper;
-
 import static com.nineoldandroids.view.ViewHelper.setAlpha;
 import static com.nineoldandroids.view.ViewHelper.setTranslationX;
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
