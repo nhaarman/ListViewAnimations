@@ -16,13 +16,6 @@
  */
 package com.haarman.listviewanimations.itemmanipulation.contextualundo;
 
-import static com.nineoldandroids.view.ViewHelper.setAlpha;
-import static com.nineoldandroids.view.ViewHelper.setTranslationX;
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +33,13 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.nineoldandroids.view.ViewHelper.setAlpha;
+import static com.nineoldandroids.view.ViewHelper.setTranslationX;
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 /**
  * Warning: a stable id for each item in the adapter is required. The decorated
@@ -74,7 +74,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 	private DeleteItemCallback mDeleteItemCallback;
 	private CountDownFormatter mCountDownFormatter;
-	
+
 	private ContextualUndoListViewTouchListener mContextualUndoListViewTouchListener;
 
 	/**
@@ -161,8 +161,8 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	public void setAbsListView(AbsListView listView) {
 		super.setAbsListView(listView);
 		mContextualUndoListViewTouchListener = new ContextualUndoListViewTouchListener(listView, this);
-        mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
-        
+		mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
+		mContextualUndoListViewTouchListener.setTouchChild(getTouchChild());
 		listView.setOnTouchListener(mContextualUndoListViewTouchListener);
 		listView.setOnScrollListener(mContextualUndoListViewTouchListener.makeScrollListener());
 		listView.setRecyclerListener(new RecycleViewListener());
@@ -294,22 +294,30 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		});
 		animator.start();
 	}
-	
-	@Override
-    public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
-        super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
-        if (mContextualUndoListViewTouchListener != null) {
-            mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
-        }
-    }
 
-	/**	
+	@Override
+	public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
+		super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+		if (mContextualUndoListViewTouchListener != null) {
+			mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+		}
+	}
+
+	@Override
+	public void setTouchChild(int childResId) {
+		super.setTouchChild(childResId);
+		if (mContextualUndoListViewTouchListener != null) {
+			mContextualUndoListViewTouchListener.setTouchChild(childResId);
+		}
+	}
+
+	/**
 	 * A callback interface which is used to notify when items should be removed from the collection.
 	 */
 	public interface DeleteItemCallback {
 		/**
 		 * Called when an item should be removed from the collection.
-		 * 
+		 *
 		 * @param position
 		 *            the position of the item that should be removed.
 		 */
