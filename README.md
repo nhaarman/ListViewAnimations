@@ -8,8 +8,11 @@ A mention to haarman.niek [at] gmail.com about your app using this library is ve
 Known applications using ListViewAnimations
 -----
 * Ultimate Tic-Tac-Toe ([Play Store][12])
+* Light Flow Lite - LED Control ([Play Store][18])
 * TreinVerkeer ([Play Store][6])
 * Running Coach ([Play Store][9])
+* Pearl Jam Lyrics ([Play Store][19])
+* Calorie Chart ([Play Store][20])
 * Car Hire ([Play Store][10])
 * Super BART ([Play Store][11])
 * DK FlashCards ([Play Store][15])
@@ -79,7 +82,7 @@ License
  [1]: https://play.google.com/store/apps/details?id=com.haarman.listviewanimations
  [2]: http://nineoldandroids.com/
  [3]: http://en.wikipedia.org/wiki/Decorator_pattern
- [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.4.0.jar?raw=true
+ [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.5.0.jar?raw=true
  [5]: https://gist.github.com/romannurik/2980593
  [6]: https://play.google.com/store/apps/details?id=com.haarman.treinverkeer
  [7]: https://www.twitter.com/niekfct
@@ -92,3 +95,7 @@ License
  [14]: http://emilsjolander.github.io/StickyListHeaders/
  [15]: https://play.google.com/store/apps/details?id=com.ducky.flashcards
  [16]: http://youtu.be/_BZIvjMgH-Q
+ [17]: https://github.com/JakeWharton/NineOldAndroids/downloads
+ [18]: https://play.google.com/store/apps/details?id=com.rageconsulting.android.lightflowlite
+ [19]: https://play.google.com/store/apps/details?id=com.juannale.pearljamlyricsapp
+ [20]: https://play.google.com/store/apps/details?id=com.cafetaso.foodinfo

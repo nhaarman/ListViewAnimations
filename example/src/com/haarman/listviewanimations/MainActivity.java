@@ -110,6 +110,7 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			mService = null;
+			supportInvalidateOptionsMenu();
 		}
 
 		@Override
