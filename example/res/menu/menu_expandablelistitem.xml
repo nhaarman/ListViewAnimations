@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_appearance_sticky"
+        android:id="@+id/menu_expandable_limit"
         android:checkable="true"
-        android:title="@string/sticky"/>
+        android:title="@string/limit"/>
 
 </menu>

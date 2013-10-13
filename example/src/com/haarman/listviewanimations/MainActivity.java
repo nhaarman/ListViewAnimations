@@ -15,28 +15,47 @@
  */
 package com.haarman.listviewanimations;
 
-import android.app.Activity;
+import java.util.ArrayList;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.haarman.listviewanimations.appearanceexamples.AppearanceExamplesActivity;
 import com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"), mServiceConn, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_main, menu);
+
+		menu.findItem(R.id.menu_main_donate).setVisible(mService != null);
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -47,6 +66,18 @@ public class MainActivity extends Activity {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse("http://nhaarman.github.io/ListViewAnimations?ref=app"));
 			startActivity(intent);
+			return true;
+		case R.id.menu_main_beer:
+			buy("beer");
+			return true;
+		case R.id.menu_main_beer2:
+			buy("beer2");
+			return true;
+		case R.id.menu_main_beer3:
+			buy("beer3");
+			return true;
+		case R.id.menu_main_beer4:
+			buy("beer4");
 			return true;
 		}
 
@@ -73,4 +104,92 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
+	private IInAppBillingService mService;
+
+	private ServiceConnection mServiceConn = new ServiceConnection() {
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mService = null;
+		}
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			mService = IInAppBillingService.Stub.asInterface(service);
+			supportInvalidateOptionsMenu();
+
+			new Thread() {
+
+				@Override
+				public void run() {
+					try {
+						Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
+
+						int response = ownedItems.getInt("RESPONSE_CODE");
+						if (response == 0) {
+							ArrayList<String> purchaseDataList = ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+
+							if (purchaseDataList != null) {
+								for (int i = 0; i < purchaseDataList.size(); ++i) {
+									String purchaseData = purchaseDataList.get(i);
+									JSONObject json = new JSONObject(purchaseData);
+									mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
+								}
+							}
+						}
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}.start();
+		}
+	};
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mServiceConn != null) {
+			unbindService(mServiceConn);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == RESULT_OK) {
+			Toast.makeText(this, "Thank you!", Toast.LENGTH_LONG).show();
+
+			new Thread() {
+
+				@Override
+				public void run() {
+					try {
+						JSONObject json = new JSONObject(data.getStringExtra("INAPP_PURCHASE_DATA"));
+						mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
+				}
+
+			}.start();
+		}
+	}
+
+	private void buy(String sku) {
+		try {
+			Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), sku, "inapp", "bGoa+V7g/ysDXvKwqq+JTFn4uQZbPiQJo4pf9RzJ");
+			PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+			if (pendingIntent != null) {
+				startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (SendIntentException e) {
+			e.printStackTrace();
+		}
+	}
 }
