@@ -31,6 +31,12 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	private List<Long> mVisibleIds;
 
 	/**
+	 * Whether to limit the number of expanded items to 1.
+	 */
+	private boolean mLimited;
+	private View mExpandedView;
+
+	/**
 	 * Creates a new ExpandableListItemAdapter with an empty list.
 	 */
 	protected ExpandableListItemAdapter(Context context) {
@@ -86,6 +92,17 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		mActionViewResId = resId;
 	}
 
+	/**
+	 * Set whether to limit the number of expanded items to 1.
+	 */
+	public void setLimited(boolean limited) {
+		mLimited = limited;
+		
+		if (!mLimited) {
+			mExpandedView = null;
+		}
+	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewGroup view = (ViewGroup) convertView;
@@ -101,6 +118,14 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 			view.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) view.getTag();
+		}
+
+		if (mLimited) {
+			if (mExpandedView == null && mVisibleIds.contains(getItemId(position))) {
+				mExpandedView = view;
+			} else if (mExpandedView == view && !mVisibleIds.contains(getItemId(position))) {
+				mExpandedView = null;
+			}
 		}
 
 		View titleView = getTitleView(position, viewHolder.titleView, viewHolder.titleParent);
@@ -228,43 +253,58 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
 		@Override
 		public void onClick(View view) {
+			if (mLimited && mExpandedView != null) {
+				ViewGroup contentParent = ((ViewHolder) mExpandedView.getTag()).contentParent;
+				ExpandCollapseHelper.animateCollapsing(contentParent);
+				mVisibleIds.remove(contentParent.getTag());
+				mExpandedView = null;
+			}
+
 			boolean isVisible = mContentParent.getVisibility() == View.VISIBLE;
 
 			if (isVisible) {
-				animateCollapsing();
+				ExpandCollapseHelper.animateCollapsing(mContentParent);
 				mVisibleIds.remove(mContentParent.getTag());
 			} else {
-				animateExpanding();
+				ExpandCollapseHelper.animateExpanding(mContentParent);
 				mVisibleIds.add((Long) mContentParent.getTag());
+
+				if (mLimited) {
+					mExpandedView = (View) mContentParent.getParent();
+				}
 			}
 		}
 
-		private void animateCollapsing() {
-			int origHeight = mContentParent.getHeight();
+	}
 
-			ValueAnimator animator = createHeightAnimator(origHeight, 0);
+	private static class ExpandCollapseHelper {
+
+		public static void animateCollapsing(final View view) {
+			int origHeight = view.getHeight();
+
+			ValueAnimator animator = createHeightAnimator(view, origHeight, 0);
 			animator.addListener(new AnimatorListenerAdapter() {
 
 				@Override
 				public void onAnimationEnd(Animator animator) {
-					mContentParent.setVisibility(View.GONE);
+					view.setVisibility(View.GONE);
 				}
 			});
 			animator.start();
 		}
 
-		private void animateExpanding() {
-			mContentParent.setVisibility(View.VISIBLE);
+		public static void animateExpanding(final View view) {
+			view.setVisibility(View.VISIBLE);
 
 			final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 			final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-			mContentParent.measure(widthSpec, heightSpec);
+			view.measure(widthSpec, heightSpec);
 
-			ValueAnimator animator = createHeightAnimator(0, mContentParent.getMeasuredHeight());
+			ValueAnimator animator = createHeightAnimator(view, 0, view.getMeasuredHeight());
 			animator.start();
 		}
 
-		private ValueAnimator createHeightAnimator(int start, int end) {
+		public static ValueAnimator createHeightAnimator(final View view, int start, int end) {
 			ValueAnimator animator = ValueAnimator.ofInt(start, end);
 			animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
@@ -272,9 +312,9 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 				public void onAnimationUpdate(ValueAnimator valueAnimator) {
 					int value = (Integer) valueAnimator.getAnimatedValue();
 
-					ViewGroup.LayoutParams layoutParams = mContentParent.getLayoutParams();
+					ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
 					layoutParams.height = value;
-					mContentParent.setLayoutParams(layoutParams);
+					view.setLayoutParams(layoutParams);
 				}
 			});
 			return animator;
