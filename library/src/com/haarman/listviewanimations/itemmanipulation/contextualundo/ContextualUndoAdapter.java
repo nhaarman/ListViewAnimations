@@ -16,6 +16,13 @@
  */
 package com.haarman.listviewanimations.itemmanipulation.contextualundo;
 
+import static com.nineoldandroids.view.ViewHelper.setAlpha;
+import static com.nineoldandroids.view.ViewHelper.setTranslationX;
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,18 +35,10 @@ import android.widget.TextView;
 
 import com.haarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static com.nineoldandroids.view.ViewHelper.setAlpha;
-import static com.nineoldandroids.view.ViewHelper.setTranslationX;
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 /**
  * Warning: a stable id for each item in the adapter is required. The decorated
@@ -273,23 +272,11 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 	private void swipeView(final View view, final int dismissPosition) {
 		ObjectAnimator animator = ObjectAnimator.ofFloat(view, "x", view.getMeasuredWidth());
-		animator.addListener(new AnimatorListener() {
-
-			@Override
-			public void onAnimationStart(Animator animator) {
-			}
-
-			@Override
-			public void onAnimationRepeat(Animator animator) {
-			}
+		animator.addListener(new AnimatorListenerAdapter() {
 
 			@Override
 			public void onAnimationEnd(Animator animator) {
 				onViewSwiped(view, dismissPosition);
-			}
-
-			@Override
-			public void onAnimationCancel(Animator animator) {
 			}
 		});
 		animator.start();

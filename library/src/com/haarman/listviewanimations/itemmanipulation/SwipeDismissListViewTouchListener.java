@@ -274,6 +274,7 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 				final PendingDismissData pendingDismissData = mCurrentDismissData;
 				++mDismissAnimationRefCount;
 				animate(mCurrentDismissData.view).translationX(dismissRight ? mViewWidth : -mViewWidth).alpha(0).setDuration(mAnimationTime).setListener(new AnimatorListenerAdapter() {
+					
 					@Override
 					public void onAnimationEnd(Animator animation) {
 						performDismiss(pendingDismissData);

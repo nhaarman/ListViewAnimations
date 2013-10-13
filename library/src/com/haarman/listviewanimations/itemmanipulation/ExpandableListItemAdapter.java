@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
 
 /**
@@ -242,22 +243,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 			int origHeight = mContentParent.getHeight();
 
 			ValueAnimator animator = createHeightAnimator(origHeight, 0);
-			animator.addListener(new Animator.AnimatorListener() {
-				@Override
-				public void onAnimationStart(Animator animator) {
-				}
+			animator.addListener(new AnimatorListenerAdapter() {
 
 				@Override
 				public void onAnimationEnd(Animator animator) {
 					mContentParent.setVisibility(View.GONE);
-				}
-
-				@Override
-				public void onAnimationCancel(Animator animator) {
-				}
-
-				@Override
-				public void onAnimationRepeat(Animator animator) {
 				}
 			});
 			animator.start();
@@ -277,6 +267,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		private ValueAnimator createHeightAnimator(int start, int end) {
 			ValueAnimator animator = ValueAnimator.ofInt(start, end);
 			animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
 				@Override
 				public void onAnimationUpdate(ValueAnimator valueAnimator) {
 					int value = (Integer) valueAnimator.getAnimatedValue();
