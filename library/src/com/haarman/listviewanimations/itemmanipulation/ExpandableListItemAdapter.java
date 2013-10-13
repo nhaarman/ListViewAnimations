@@ -120,7 +120,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 			viewHolder.contentParent.removeAllViews();
 			viewHolder.contentParent.addView(contentView);
 		}
-		viewHolder.contentParent = contentParent;
+		viewHolder.contentView = contentView;
 
 		viewHolder.contentParent.setVisibility(mVisibleIds.contains(getItemId(position)) ? View.VISIBLE : View.GONE);
 		viewHolder.contentParent.setTag(getItemId(position));
