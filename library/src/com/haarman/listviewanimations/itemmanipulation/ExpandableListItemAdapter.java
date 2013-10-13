@@ -1,7 +1,9 @@
 package com.haarman.listviewanimations.itemmanipulation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -30,11 +32,8 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	private int mActionViewResId;
 	private List<Long> mVisibleIds;
 
-	/**
-	 * Whether to limit the number of expanded items to 1.
-	 */
-	private boolean mLimited;
-	private View mExpandedView;
+	private int mLimit;
+	private Map<Long, View> mExpandedViews;
 
 	/**
 	 * Creates a new ExpandableListItemAdapter with an empty list.
@@ -79,6 +78,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		mContentParentResId = contentParentResId;
 
 		mVisibleIds = new ArrayList<Long>();
+		mExpandedViews = new HashMap<Long, View>();
 	}
 
 	/**
@@ -93,14 +93,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	/**
-	 * Set whether to limit the number of expanded items to 1.
+	 * Set the maximum number of items allowed to be expanded. When the (limit+1)th item is expanded, the first expanded item will collapse.
+	 * @param limit the maximum number of items allowed to be expanded. Use <= 0 for no limit.
 	 */
-	public void setLimited(boolean limited) {
-		mLimited = limited;
-		
-		if (!mLimited) {
-			mExpandedView = null;
-		}
+	public void setLimit(int limit) {
+		mLimit = limit;
 	}
 
 	@Override
@@ -120,11 +117,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 			viewHolder = (ViewHolder) view.getTag();
 		}
 
-		if (mLimited) {
-			if (mExpandedView == null && mVisibleIds.contains(getItemId(position))) {
-				mExpandedView = view;
-			} else if (mExpandedView == view && !mVisibleIds.contains(getItemId(position))) {
-				mExpandedView = null;
+		if (mLimit > 0) {
+			if (mVisibleIds.contains(getItemId(position))) {
+				mExpandedViews.put(getItemId(position), view);
+			} else if (mExpandedViews.containsValue(view) && !mVisibleIds.contains(getItemId(position))) {
+				mExpandedViews.remove(getItemId(position));
 			}
 		}
 
@@ -253,14 +250,14 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
 		@Override
 		public void onClick(View view) {
-			if (mLimited && mExpandedView != null) {
-				ViewGroup contentParent = ((ViewHolder) mExpandedView.getTag()).contentParent;
+			boolean isVisible = mContentParent.getVisibility() == View.VISIBLE;
+			if (!isVisible && mLimit > 0 && mVisibleIds.size() >= mLimit) {
+
+				ViewGroup contentParent = ((ViewHolder) mExpandedViews.get(mVisibleIds.get(0)).getTag()).contentParent;
 				ExpandCollapseHelper.animateCollapsing(contentParent);
 				mVisibleIds.remove(contentParent.getTag());
-				mExpandedView = null;
+				mExpandedViews.remove(contentParent.getTag());
 			}
-
-			boolean isVisible = mContentParent.getVisibility() == View.VISIBLE;
 
 			if (isVisible) {
 				ExpandCollapseHelper.animateCollapsing(mContentParent);
@@ -269,8 +266,9 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 				ExpandCollapseHelper.animateExpanding(mContentParent);
 				mVisibleIds.add((Long) mContentParent.getTag());
 
-				if (mLimited) {
-					mExpandedView = (View) mContentParent.getParent();
+				if (mLimit > 0) {
+					View parent = (View) mContentParent.getParent();
+					mExpandedViews.put((Long) mContentParent.getTag(), parent);
 				}
 			}
 		}
