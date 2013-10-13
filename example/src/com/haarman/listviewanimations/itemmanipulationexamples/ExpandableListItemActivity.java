@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.util.LruCache;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,12 +22,15 @@ import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationA
 
 public class ExpandableListItemActivity extends MyListActivity {
 
+	private MyExpandableListItemAdapter mExpandableListItemAdapter;
+	private boolean mLimited;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		MyExpandableListItemAdapter myExpandableListItemAdapter = new MyExpandableListItemAdapter(this, getItems());
-		AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(myExpandableListItemAdapter);
+		mExpandableListItemAdapter = new MyExpandableListItemAdapter(this, getItems());
+		AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(mExpandableListItemAdapter);
 		alphaInAnimationAdapter.setAbsListView(getListView());
 		getListView().setAdapter(alphaInAnimationAdapter);
 
@@ -114,5 +119,23 @@ public class ExpandableListItemActivity extends MyListActivity {
 		private Bitmap getBitmapFromMemCache(int key) {
 			return mMemoryCache.get(key);
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_expandablelistitem, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_expandable_limit:
+			mLimited = !mLimited;
+			item.setChecked(mLimited);
+			mExpandableListItemAdapter.setLimit(mLimited ? 2 : 0);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }
