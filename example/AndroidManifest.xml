@@ -1,11 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.haarman.listviewanimations"
-    android:versionCode="201309122"
+    android:versionCode="201310131"
     android:versionName="2.4.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
+
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
