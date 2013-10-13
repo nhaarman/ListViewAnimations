@@ -1,11 +1,16 @@
 <resources>
 
     <string name="app_name">ListViewAnimationsExample</string>
+    <string name="menu_donate">Buy me a beer!</string>
+    <string name="menu_beer">Buy me a beer!</string>
+    <string name="menu_beer2">Buy me 2 beers!</string>
+    <string name="menu_beer3">Buy me 5 beers!</string>
+    <string name="menu_beer4">Buy me 10 beers!</string>
     <string name="menu_github">Github</string>
     <string name="googlecards">Google cards example</string>
     <string name="gridview">GridView example</string>
     <string name="appearance">Appearance Animation</string>
-    <string name="sticky">Sticky</string>
+    <string name="limit">Limit to 2</string>
     <string name="itemmanipulation">Item Manipulation</string>
     <string name="gridviewexample">GridView example</string>
     <string name="draganddrop">Drag and Drop</string>

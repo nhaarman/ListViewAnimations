@@ -28,6 +28,7 @@ import android.widget.BaseAdapter;
 import com.haarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
@@ -86,23 +87,11 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
 			}
 
 			animatorSet.playTogether(animatorsArray);
-			animatorSet.addListener(new AnimatorListener() {
-
-				@Override
-				public void onAnimationStart(Animator animator) {
-				}
-
-				@Override
-				public void onAnimationRepeat(Animator animator) {
-				}
+			animatorSet.addListener(new AnimatorListenerAdapter() {
 
 				@Override
 				public void onAnimationEnd(Animator animator) {
 					invokeCallback(positionsCopy);
-				}
-
-				@Override
-				public void onAnimationCancel(Animator animator) {
 				}
 			});
 			animatorSet.start();
