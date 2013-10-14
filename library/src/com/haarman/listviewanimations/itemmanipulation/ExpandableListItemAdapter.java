@@ -98,6 +98,9 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	 */
 	public void setLimit(int limit) {
 		mLimit = limit;
+		mVisibleIds.clear();
+		mExpandedViews.clear();
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -252,16 +255,21 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		public void onClick(View view) {
 			boolean isVisible = mContentParent.getVisibility() == View.VISIBLE;
 			if (!isVisible && mLimit > 0 && mVisibleIds.size() >= mLimit) {
-
-				ViewGroup contentParent = ((ViewHolder) mExpandedViews.get(mVisibleIds.get(0)).getTag()).contentParent;
-				ExpandCollapseHelper.animateCollapsing(contentParent);
-				mVisibleIds.remove(contentParent.getTag());
-				mExpandedViews.remove(contentParent.getTag());
+				Long firstId = mVisibleIds.get(0);
+				View firstEV = mExpandedViews.get(firstId);
+				if (firstEV != null) {
+					ViewHolder firstVH = ((ViewHolder) firstEV.getTag());
+					ViewGroup contentParent = firstVH.contentParent;
+					ExpandCollapseHelper.animateCollapsing(contentParent);
+					mExpandedViews.remove(mVisibleIds.get(0));
+				}
+				mVisibleIds.remove(mVisibleIds.get(0));
 			}
 
 			if (isVisible) {
 				ExpandCollapseHelper.animateCollapsing(mContentParent);
 				mVisibleIds.remove(mContentParent.getTag());
+				mExpandedViews.remove(mContentParent.getTag());
 			} else {
 				ExpandCollapseHelper.animateExpanding(mContentParent);
 				mVisibleIds.add((Long) mContentParent.getTag());
@@ -272,7 +280,6 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 				}
 			}
 		}
-
 	}
 
 	private static class ExpandCollapseHelper {
