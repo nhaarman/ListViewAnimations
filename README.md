@@ -92,7 +92,7 @@ License
  [11]: https://play.google.com/store/apps/details?id=com.getgoodcode.bart
  [12]: https://play.google.com/store/apps/details?id=com.haarman.ultimatettt
  [13]: https://github.com/nhaarman/ListViewAnimations/wiki
- [14]: http://emilsjolander.github.io/StickyListHeaders/
+ [14]: https://github.com/emilsjolander/StickyListHeaders
  [15]: https://play.google.com/store/apps/details?id=com.ducky.flashcards
  [16]: http://youtu.be/_BZIvjMgH-Q
  [17]: https://github.com/JakeWharton/NineOldAndroids/downloads
