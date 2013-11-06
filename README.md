@@ -60,7 +60,6 @@ Special Thanks
 * Roman Nurik - The ListViewAnimations library uses a modified version of his [SwipeDismissListViewTouchListener][5] to support swipe-to-dismiss.
 * DevBytes - Drag-and-Drop reordering is done by a modified version of their [DynamicListView][16].
 * Jake Warthon - To support devices pre-HC (<3.0), a jar file of [NineOldAndroids][2] is included.
-* Emil Sjölander - If you're already using the [StickyListHeaders][14] library, the ListViewAnimations library makes sure your header views are animated as well. Therefore, a copy of the StickyListHeaders jar file is included.
 
 License
 -----
@@ -92,7 +91,6 @@ License
  [11]: https://play.google.com/store/apps/details?id=com.getgoodcode.bart
  [12]: https://play.google.com/store/apps/details?id=com.haarman.ultimatettt
  [13]: https://github.com/nhaarman/ListViewAnimations/wiki
- [14]: https://github.com/emilsjolander/StickyListHeaders
  [15]: https://play.google.com/store/apps/details?id=com.ducky.flashcards
  [16]: http://youtu.be/_BZIvjMgH-Q
  [17]: https://github.com/JakeWharton/NineOldAndroids/downloads
