@@ -27,6 +27,7 @@ import com.haarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.view.ViewHelper;
 
 /**
  * A BaseAdapterDecorator class which applies multiple Animators at once to
@@ -39,16 +40,21 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	protected static final long DEFAULTANIMATIONDURATIONMILLIS = 300;
 	private static final long INITIALDELAYMILLIS = 150;
 
-	private SparseArray<AnimationInfo> mAnimators;
+	private SparseArray<Animator> mAnimators;
 	private long mAnimationStartMillis;
 	private int mFirstAnimatedPosition;
 	private int mLastAnimatedPosition;
 	private boolean mHasParentAnimationAdapter;
 	private boolean mShouldAnimate = true;
 
+	/** 
+	 * Whether the first item View has been measured, only used in case of a GridView.
+	 */
+	private boolean mFirstGridViewItemMeasured;
+
 	public AnimationAdapter(BaseAdapter baseAdapter) {
 		super(baseAdapter);
-		mAnimators = new SparseArray<AnimationInfo>();
+		mAnimators = new SparseArray<Animator>();
 
 		mAnimationStartMillis = -1;
 		mLastAnimatedPosition = -1;
@@ -111,46 +117,41 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	@Override
 	public final View getView(int position, View convertView, ViewGroup parent) {
-		boolean alreadyStarted = false;
 		if (!mHasParentAnimationAdapter) {
 			if (getAbsListView() == null) {
 				throw new IllegalStateException("Call setListView() on this AnimationAdapter before setAdapter()!");
 			}
 
 			if (convertView != null) {
-				alreadyStarted = cancelExistingAnimation(position, convertView);
+				cancelExistingAnimation(position, convertView);
 			}
 		}
 
 		View itemView = super.getView(position, convertView, parent);
 
-		if (!mHasParentAnimationAdapter && !alreadyStarted) {
+		if (!mHasParentAnimationAdapter) {
 			animateViewIfNecessary(position, itemView, parent);
 		}
 		return itemView;
 	}
 
-	private boolean cancelExistingAnimation(int position, View convertView) {
-		boolean alreadyStarted = false;
-
+	private void cancelExistingAnimation(int position, View convertView) {
 		int hashCode = convertView.hashCode();
-		AnimationInfo animationInfo = mAnimators.get(hashCode);
-		if (animationInfo != null) {
-			if (animationInfo.position != position) {
-				animationInfo.animator.end();
-				mAnimators.remove(hashCode);
-			} else {
-				alreadyStarted = true;
-			}
+		Animator animator = mAnimators.get(hashCode);
+		if (animator != null) {
+			animator.end();
+			mAnimators.remove(hashCode);
 		}
-
-		return alreadyStarted;
 	}
 
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
-		if (position > mLastAnimatedPosition && mShouldAnimate) {
+		boolean isMeasuringGridViewItem = getAbsListView() instanceof GridView && !mFirstGridViewItemMeasured;
+
+		if (position > mLastAnimatedPosition && mShouldAnimate && !isMeasuringGridViewItem) {
 			animateView(position, parent, view);
 			mLastAnimatedPosition = position;
+		} else if (isMeasuringGridViewItem) {
+			mFirstGridViewItemMeasured = true;
 		}
 	}
 
@@ -159,7 +160,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 			mAnimationStartMillis = System.currentTimeMillis();
 		}
 
-		hideView(view);
+		ViewHelper.setAlpha(view, 0);
 
 		Animator[] childAnimators;
 		if (mDecoratedBaseAdapter instanceof AnimationAdapter) {
@@ -176,16 +177,9 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		set.setDuration(getAnimationDurationMillis());
 		set.start();
 
-		mAnimators.put(view.hashCode(), new AnimationInfo(position, set));
+		mAnimators.put(view.hashCode(), set);
 	}
 
-	private void hideView(View view) {
-		ObjectAnimator animator = ObjectAnimator.ofFloat(view, "alpha", 0);
-		AnimatorSet set = new AnimatorSet();
-		set.play(animator);
-		set.setDuration(0);
-		set.start();
-	}
 
 	private Animator[] concatAnimators(Animator[] childAnimators, Animator[] animators, Animator alphaAnimator) {
 		Animator[] allAnimators = new Animator[childAnimators.length + animators.length + 1];
@@ -260,14 +254,4 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	 *            The view that will be animated, as retrieved by getView()
 	 */
 	public abstract Animator[] getAnimators(ViewGroup parent, View view);
-
-	private class AnimationInfo {
-		public int position;
-		public Animator animator;
-
-		public AnimationInfo(int position, Animator animator) {
-			this.position = position;
-			this.animator = animator;
-		}
-	}
 }
