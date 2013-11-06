@@ -32,6 +32,7 @@ import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -137,6 +138,19 @@ public class DynamicListView extends ListView {
 		mSlop = vc.getScaledTouchSlop();
 	}
 
+	public void setAdapter(BaseAdapter adapter) {
+		super.setAdapter(adapter);
+	}
+
+	@Override
+	@Deprecated
+	/**
+	 * @deprecated use #setAdapter(BaseAdapter) instead.
+	 */
+	public void setAdapter(ListAdapter adapter) {
+		throw new IllegalArgumentException("DynamicListView needs a BaseAdapter!");
+	}
+
 	/**
 	 * Listens for long clicks on any items in the listview. When a cell has
 	 * been selected, the hover cell is created and set up.
@@ -216,7 +230,7 @@ public class DynamicListView extends ListView {
 	 */
 	private void updateNeighborViewsForID(long itemID) {
 		int position = getPositionForID(itemID);
-		BaseAdapter adapter = (BaseAdapter) getAdapter();
+		ListAdapter adapter = getAdapter();
 		if (!adapter.hasStableIds()) {
 			throw new IllegalStateException("Adapter doesn't have stable ids! Make sure your adapter has stable ids, and override hasStableIds() to return true.");
 		}
@@ -228,7 +242,7 @@ public class DynamicListView extends ListView {
 	/** Retrieves the view in the list corresponding to itemID */
 	public View getViewForID(long itemID) {
 		int firstVisiblePosition = getFirstVisiblePosition();
-		BaseAdapter adapter = (BaseAdapter) getAdapter();
+		ListAdapter adapter = getAdapter();
 		if (!adapter.hasStableIds()) {
 			throw new IllegalStateException("Adapter doesn't have stable ids! Make sure your adapter has stable ids, and override hasStableIds() to return true.");
 		}
@@ -442,7 +456,13 @@ public class DynamicListView extends ListView {
 
 			swapElements(originalItem, getPositionForView(switchView));
 
-			((BaseAdapter) getAdapter()).notifyDataSetChanged();
+			BaseAdapter adapter;
+			if (getAdapter() instanceof HeaderViewListAdapter) {
+				adapter = (BaseAdapter) ((HeaderViewListAdapter) getAdapter()).getWrappedAdapter();
+			} else {
+				adapter = (BaseAdapter) getAdapter();
+			}
+			adapter.notifyDataSetChanged();
 
 			mDownY = mLastEventY;
 			mDownX = mLastEventX;
@@ -480,8 +500,13 @@ public class DynamicListView extends ListView {
 
 	private void swapElements(int indexOne, int indexTwo) {
 		ListAdapter adapter = getAdapter();
+
+		if (adapter instanceof HeaderViewListAdapter) {
+			adapter = ((HeaderViewListAdapter) adapter).getWrappedAdapter();
+		}
+
 		if (adapter instanceof Swappable) {
-			((Swappable) adapter).swapItems(indexOne, indexTwo);
+			((Swappable) adapter).swapItems(indexOne - getHeaderViewsCount(), indexTwo - getHeaderViewsCount());
 		}
 	}
 
@@ -609,7 +634,6 @@ public class DynamicListView extends ListView {
 
 	public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
 		mIsParentHorizontalScrollContainer = (mResIdOfDynamicTouchChild == 0) ? isParentHorizontalScrollContainer : false;
-		;
 	}
 
 	public boolean isParentHorizontalScrollContainer() {
