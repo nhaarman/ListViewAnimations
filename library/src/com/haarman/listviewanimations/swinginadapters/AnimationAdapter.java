@@ -149,12 +149,12 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
 		if (position > mLastAnimatedPosition && mShouldAnimate) {
-			animateView(position, parent, view, false);
+			animateView(position, parent, view);
 			mLastAnimatedPosition = position;
 		}
 	}
 
-	private void animateView(int position, ViewGroup parent, View view, boolean isHeader) {
+	private void animateView(int position, ViewGroup parent, View view) {
 		if (mAnimationStartMillis == -1) {
 			mAnimationStartMillis = System.currentTimeMillis();
 		}
@@ -172,7 +172,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 		AnimatorSet set = new AnimatorSet();
 		set.playTogether(concatAnimators(childAnimators, animators, alphaAnimator));
-		set.setStartDelay(calculateAnimationDelay(isHeader));
+		set.setStartDelay(calculateAnimationDelay());
 		set.setDuration(getAnimationDurationMillis());
 		set.start();
 
@@ -205,7 +205,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	}
 
 	@SuppressLint("NewApi")
-	private long calculateAnimationDelay(boolean isHeader) {
+	private long calculateAnimationDelay() {
 		long delay;
 		int numberOfItems = getAbsListView().getLastVisiblePosition() - getAbsListView().getFirstVisiblePosition();
 		if (numberOfItems + 1 < mLastAnimatedPosition) {
@@ -217,9 +217,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		} else {
 			long delaySinceStart = (mLastAnimatedPosition - mFirstAnimatedPosition + 1) * getAnimationDelayMillis();
 			delay = mAnimationStartMillis + getInitialDelayMillis() + delaySinceStart - System.currentTimeMillis();
-			delay -= isHeader && mLastAnimatedPosition > 0 ? getAnimationDelayMillis() : 0;
+			delay -= mLastAnimatedPosition > 0 ? getAnimationDelayMillis() : 0;
 		}
-		// System.out.println(isHeader + ": " + delay);
 
 		return Math.max(0, delay);
 	}
