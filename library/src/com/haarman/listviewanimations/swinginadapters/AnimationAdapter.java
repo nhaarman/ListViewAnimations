@@ -47,6 +47,10 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	private boolean mHasParentAnimationAdapter;
 	private boolean mShouldAnimate = true;
 
+	private long mInitialDelayMillis = INITIALDELAYMILLIS;
+	private long mAnimationDelayMillis = DEFAULTANIMATIONDELAYMILLIS;
+	private long mAnimationDurationMillis = DEFAULTANIMATIONDURATIONMILLIS;
+
 	/** 
 	 * Whether the first item View has been measured, only used in case of a GridView.
 	 */
@@ -180,7 +184,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		mAnimators.put(view.hashCode(), set);
 	}
 
-
 	private Animator[] concatAnimators(Animator[] childAnimators, Animator[] animators, Animator alphaAnimator) {
 		Animator[] allAnimators = new Animator[childAnimators.length + animators.length + 1];
 		int i;
@@ -231,18 +234,46 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	 * Get the delay in milliseconds before the first animation should start. Defaults to {@value #INITIALDELAYMILLIS}.
 	 */
 	protected long getInitialDelayMillis() {
-		return INITIALDELAYMILLIS;
+		return mInitialDelayMillis;
 	}
 
 	/**
-	 * Get the delay in milliseconds before an animation of a view should start.
+	 * Set the delay in milliseconds before the first animation should start. Defaults to {@value #INITIALDELAYMILLIS}.
+	 * @param delayMillis the time in milliseconds.
 	 */
-	protected abstract long getAnimationDelayMillis();
+	public void setInitialDelayMillis(long delayMillis) {
+		mInitialDelayMillis = delayMillis;
+	}
 
 	/**
-	 * Get the duration of the animation in milliseconds.
+	 * Get the delay in milliseconds before an animation of a view should start. Defaults to {@value #DEFAULTANIMATIONDELAYMILLIS}.
 	 */
-	protected abstract long getAnimationDurationMillis();
+	protected long getAnimationDelayMillis() {
+		return mAnimationDelayMillis;
+	}
+
+	/**
+	 * Set the delay in milliseconds before an animation of a view should start. Defaults to {@value #DEFAULTANIMATIONDELAYMILLIS}.
+	 * @param delayMillis the time in milliseconds.
+	 */
+	public void setAnimationDelayMillis(long delayMillis) {
+		mAnimationDelayMillis = delayMillis;
+	}
+
+	/**
+	 * Get the duration of the animation in milliseconds. Defaults to {@value #DEFAULTANIMATIONDURATIONMILLIS}.
+	 */
+	protected long getAnimationDurationMillis() {
+		return mAnimationDurationMillis;
+	}
+
+	/**
+	 * Set the duration of the animation in milliseconds. Defaults to {@value #DEFAULTANIMATIONDURATIONMILLIS}.
+	 * @param durationMillis the time in milliseconds.
+	 */
+	public void setAnimationDurationMillis(long durationMillis) {
+		mAnimationDurationMillis = durationMillis;
+	}
 
 	/**
 	 * Get the Animators to apply to the views. In addition to the returned

@@ -27,6 +27,7 @@ public class GridViewActivity extends ActionBarActivity {
 		GridView gridView = (GridView) findViewById(R.id.activity_gridview_gv);
 		AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(new MyAdapter(this, getItems()));
 		alphaInAnimationAdapter.setAbsListView(gridView);
+		alphaInAnimationAdapter.setInitialDelayMillis(300);
 		gridView.setAdapter(alphaInAnimationAdapter);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
