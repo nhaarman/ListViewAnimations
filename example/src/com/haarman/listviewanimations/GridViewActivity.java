@@ -16,6 +16,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 public class GridViewActivity extends ActionBarActivity {
 
@@ -25,7 +26,7 @@ public class GridViewActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_gridview);
 
 		GridView gridView = (GridView) findViewById(R.id.activity_gridview_gv);
-		AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(new MyAdapter(this, getItems()));
+		SwingBottomInAnimationAdapter alphaInAnimationAdapter = new SwingBottomInAnimationAdapter(new MyAdapter(this, getItems()));
 		alphaInAnimationAdapter.setAbsListView(gridView);
 		alphaInAnimationAdapter.setInitialDelayMillis(300);
 		gridView.setAdapter(alphaInAnimationAdapter);

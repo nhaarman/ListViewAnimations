@@ -18,7 +18,6 @@ package com.haarman.listviewanimations.appearanceexamples;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
@@ -171,7 +170,6 @@ public class AppearanceExamplesActivity extends BaseActivity implements OnNaviga
 			TextView tv = (TextView) convertView;
 			if (tv == null) {
 				tv = (TextView) LayoutInflater.from(AppearanceExamplesActivity.this).inflate(android.R.layout.simple_list_item_1, parent, false);
-				tv.setTextColor(Color.WHITE);
 			}
 
 			tv.setText(getItem(position));
