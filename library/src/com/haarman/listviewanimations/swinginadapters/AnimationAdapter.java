@@ -30,9 +30,9 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
 /**
- * A BaseAdapterDecorator class which applies multiple Animators at once to
+ * A {@link BaseAdapterDecorator} class which applies multiple {@link Animator}s at once to
  * views when they are first shown. The Animators applied include the animations
- * specified in getAnimators(ViewGroup, View), plus an alpha transition.
+ * specified in {@link #getAnimators(ViewGroup, View)}, plus an alpha transition.
  */
 public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
@@ -51,11 +51,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	private long mAnimationDelayMillis = DEFAULTANIMATIONDELAYMILLIS;
 	private long mAnimationDurationMillis = DEFAULTANIMATIONDURATIONMILLIS;
 
-	/** 
-	 * Whether the first item View has been measured, only used in case of a GridView.
-	 */
-	private boolean mFirstGridViewItemMeasured;
-
 	public AnimationAdapter(BaseAdapter baseAdapter) {
 		super(baseAdapter);
 		mAnimators = new SparseArray<Animator>();
@@ -70,8 +65,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	/**
 	 * Call this method to reset animation status on all views. The next time
-	 * notifyDataSetChanged() is called on the base adapter, all views will
-	 * animate again. Will also call setShouldAnimate(true).
+	 * {@link #notifyDataSetChanged()} is called on the base adapter, all views will
+	 * animate again. Will also call {@link #setShouldAnimate(boolean)} with a value of true.
 	 */
 	public void reset() {
 		mAnimators.clear();
@@ -149,13 +144,11 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 	}
 
 	private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
-		boolean isMeasuringGridViewItem = getAbsListView() instanceof GridView && !mFirstGridViewItemMeasured;
+		boolean isMeasuringGridViewItem = parent.getHeight() == 0;
 
 		if (position > mLastAnimatedPosition && mShouldAnimate && !isMeasuringGridViewItem) {
 			animateView(position, parent, view);
 			mLastAnimatedPosition = position;
-		} else if (isMeasuringGridViewItem) {
-			mFirstGridViewItemMeasured = true;
 		}
 	}
 
@@ -203,10 +196,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	@SuppressLint("NewApi")
 	private long calculateAnimationDelay() {
-		System.out.println("A");
 		long delay;
 		int numberOfItems = getAbsListView().getLastVisiblePosition() - getAbsListView().getFirstVisiblePosition();
-		System.out.println("NOI: " + numberOfItems + ", " + mLastAnimatedPosition);
 		if (numberOfItems + 1 < mLastAnimatedPosition) {
 			delay = getAnimationDelayMillis();
 
@@ -217,7 +208,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 			long delaySinceStart = (mLastAnimatedPosition - mFirstAnimatedPosition + 1) * getAnimationDelayMillis();
 			delay = mAnimationStartMillis + getInitialDelayMillis() + delaySinceStart - System.currentTimeMillis();
 		}
-		System.out.println("Delay " + delay);
 		return Math.max(0, delay);
 	}
 
