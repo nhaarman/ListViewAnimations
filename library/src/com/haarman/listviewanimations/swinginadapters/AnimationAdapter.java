@@ -216,7 +216,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 		} else {
 			long delaySinceStart = (mLastAnimatedPosition - mFirstAnimatedPosition + 1) * getAnimationDelayMillis();
 			delay = mAnimationStartMillis + getInitialDelayMillis() + delaySinceStart - System.currentTimeMillis();
-			delay -= mLastAnimatedPosition > 0 ? getAnimationDelayMillis() : 0;
 		}
 		System.out.println("Delay " + delay);
 		return Math.max(0, delay);
