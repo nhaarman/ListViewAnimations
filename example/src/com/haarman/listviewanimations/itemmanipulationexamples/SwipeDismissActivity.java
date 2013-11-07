@@ -17,7 +17,6 @@ package com.haarman.listviewanimations.itemmanipulationexamples;
 
 import java.util.Arrays;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
@@ -141,7 +140,6 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
 			TextView tv = (TextView) convertView;
 			if (tv == null) {
 				tv = (TextView) LayoutInflater.from(SwipeDismissActivity.this).inflate(android.R.layout.simple_list_item_1, parent, false);
-				tv.setTextColor(Color.WHITE);
 			}
 
 			tv.setText(getItem(position));

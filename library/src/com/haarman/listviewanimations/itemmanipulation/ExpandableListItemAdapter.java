@@ -9,6 +9,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -151,6 +152,10 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		viewHolder.contentParent.setVisibility(mVisibleIds.contains(getItemId(position)) ? View.VISIBLE : View.GONE);
 		viewHolder.contentParent.setTag(getItemId(position));
 
+		ViewGroup.LayoutParams layoutParams = viewHolder.contentParent.getLayoutParams();
+		layoutParams.height = LayoutParams.WRAP_CONTENT;
+		viewHolder.contentParent.setLayoutParams(layoutParams);
+
 		return view;
 	}
 
@@ -167,7 +172,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	/**
-	 * Get a View that displays the title of the data at the specified position
+	 * Get a View that displays the <b>title of the data</b> at the specified position
 	 * in the data set. You can either create a View manually or inflate it from
 	 * an XML layout file. When the View is inflated, the parent View (GridView,
 	 * ListView...) will apply default layout parameters unless you use
@@ -190,7 +195,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	public abstract View getTitleView(int position, View convertView, ViewGroup parent);
 
 	/**
-	 * Get a View that displays the content of the data at the specified
+	 * Get a View that displays the <b>content of the data</b> at the specified
 	 * position in the data set. You can either create a View manually or
 	 * inflate it from an XML layout file. When the View is inflated, the parent
 	 * View (GridView, ListView...) will apply default layout parameters unless

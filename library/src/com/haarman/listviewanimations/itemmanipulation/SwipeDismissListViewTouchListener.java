@@ -412,16 +412,20 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 	}
 
 	protected void finalizeDismiss() {
-
 		--mDismissAnimationRefCount;
 		if (mDismissAnimationRefCount == 0) {
 			// No active animations, process all pending dismisses.
 			// Sort by descending position
 			Collections.sort(mPendingDismisses);
 
+			int nrHeaders = 0;
+			if (mListView instanceof ListView) {
+				nrHeaders = ((ListView) mListView).getHeaderViewsCount();
+			}
+
 			int[] dismissPositions = new int[mPendingDismisses.size()];
 			for (int i = mPendingDismisses.size() - 1; i >= 0; i--) {
-				dismissPositions[i] = mPendingDismisses.get(i).position;
+				dismissPositions[i] = mPendingDismisses.get(i).position - nrHeaders;
 			}
 			mCallback.onDismiss(mListView, dismissPositions);
 

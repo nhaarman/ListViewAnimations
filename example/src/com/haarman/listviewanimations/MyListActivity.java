@@ -32,8 +32,8 @@ public class MyListActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mListView = new ListView(this);
-		setContentView(mListView);
+		setContentView(R.layout.activity_mylist);
+		mListView = (ListView) findViewById(R.id.activity_mylist_listview);
 		mListView.setDivider(null);
 	}
 

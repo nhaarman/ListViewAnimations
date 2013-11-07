@@ -2,10 +2,11 @@ package com.haarman.listviewanimations;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.util.LruCache;
 import android.support.v7.app.ActionBarActivity;
@@ -14,20 +15,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
-
-import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 public class GridViewActivity extends ActionBarActivity {
 
+	@SuppressLint("InlinedApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		if (Build.VERSION.SDK_INT >= 19) {
+			getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gridview);
 
 		GridView gridView = (GridView) findViewById(R.id.activity_gridview_gv);
-		AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(new MyAdapter(this, getItems()));
-		alphaInAnimationAdapter.setAbsListView(gridView);
-		gridView.setAdapter(alphaInAnimationAdapter);
+		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new MyAdapter(this, getItems()));
+		swingBottomInAnimationAdapter.setAbsListView(gridView);
+		swingBottomInAnimationAdapter.setInitialDelayMillis(300);
+		gridView.setAdapter(swingBottomInAnimationAdapter);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
