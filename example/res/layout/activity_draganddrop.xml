@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <ListView
-        android:id="@+id/activity_appearanceexample_listview"
+    <com.haarman.listviewanimations.view.DynamicListView
+        android:id="@+id/activity_draganddrop_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/paddingTop"

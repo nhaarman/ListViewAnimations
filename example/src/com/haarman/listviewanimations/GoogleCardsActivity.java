@@ -47,6 +47,7 @@ public class GoogleCardsActivity extends BaseActivity implements OnDismissCallba
 
 		mGoogleCardsAdapter = new GoogleCardsAdapter(this);
 		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new SwipeDismissAdapter(mGoogleCardsAdapter, this));
+		swingBottomInAnimationAdapter.setInitialDelayMillis(300);
 		swingBottomInAnimationAdapter.setAbsListView(listView);
 
 		listView.setAdapter(swingBottomInAnimationAdapter);

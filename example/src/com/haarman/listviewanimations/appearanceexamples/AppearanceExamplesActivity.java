@@ -25,11 +25,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.haarman.listviewanimations.ArrayAdapter;
-import com.haarman.listviewanimations.BaseActivity;
+import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
@@ -38,22 +37,14 @@ import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnim
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingLeftInAnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
 
-public class AppearanceExamplesActivity extends BaseActivity implements OnNavigationListener {
+public class AppearanceExamplesActivity extends MyListActivity implements OnNavigationListener {
 
 	private BaseAdapter mAdapter;
-
-	private ListView mListView;
-
-	private ListView mCurrentListView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_appearanceexample);
 
-		mListView = (ListView) findViewById(R.id.activity_appearanceexample_listview);
-
-		mCurrentListView = mListView;
 		mAdapter = new MyAdapter(this, getItems());
 		setAlphaAdapter();
 
@@ -64,46 +55,38 @@ public class AppearanceExamplesActivity extends BaseActivity implements OnNaviga
 
 	private void setAlphaAdapter() {
 		AnimationAdapter animAdapter = new AlphaInAnimationAdapter(mAdapter);
-		animAdapter.setAbsListView(mCurrentListView);
-		mCurrentListView.setAdapter(animAdapter);
+		animAdapter.setAbsListView(getListView());
+		getListView().setAdapter(animAdapter);
 	}
 
 	private void setLeftAdapter() {
 		AnimationAdapter animAdapter = new SwingLeftInAnimationAdapter(mAdapter);
-		animAdapter.setAbsListView(mCurrentListView);
-		mCurrentListView.setAdapter(animAdapter);
+		animAdapter.setAbsListView(getListView());
+		getListView().setAdapter(animAdapter);
 	}
 
 	private void setRightAdapter() {
 		AnimationAdapter animAdapter = new SwingRightInAnimationAdapter(mAdapter);
-		animAdapter.setAbsListView(mCurrentListView);
-		mCurrentListView.setAdapter(animAdapter);
+		animAdapter.setAbsListView(getListView());
+		getListView().setAdapter(animAdapter);
 	}
 
 	private void setBottomAdapter() {
 		AnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(mAdapter);
-		animAdapter.setAbsListView(mCurrentListView);
-		mCurrentListView.setAdapter(animAdapter);
+		animAdapter.setAbsListView(getListView());
+		getListView().setAdapter(animAdapter);
 	}
 
 	private void setBottomRightAdapter() {
 		AnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(new SwingRightInAnimationAdapter(mAdapter));
-		animAdapter.setAbsListView(mCurrentListView);
-		mCurrentListView.setAdapter(animAdapter);
+		animAdapter.setAbsListView(getListView());
+		getListView().setAdapter(animAdapter);
 	}
 
 	private void setScaleAdapter() {
 		AnimationAdapter animAdapter = new ScaleInAnimationAdapter(mAdapter);
-		animAdapter.setAbsListView(mCurrentListView);
-		mCurrentListView.setAdapter(animAdapter);
-	}
-
-	private static ArrayList<Integer> getItems() {
-		ArrayList<Integer> items = new ArrayList<Integer>();
-		for (int i = 0; i < 1000; i++) {
-			items.add(i);
-		}
-		return items;
+		animAdapter.setAbsListView(getListView());
+		getListView().setAdapter(animAdapter);
 	}
 
 	private static class MyAdapter extends ArrayAdapter<Integer> {

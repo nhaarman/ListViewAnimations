@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -27,10 +29,10 @@ import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.ServiceConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,10 +42,15 @@ import com.android.vending.billing.IInAppBillingService;
 import com.haarman.listviewanimations.appearanceexamples.AppearanceExamplesActivity;
 import com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
+	@SuppressLint("InlinedApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		if (Build.VERSION.SDK_INT >= 19) {
+			getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		}
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -110,13 +117,13 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			mService = null;
-			supportInvalidateOptionsMenu();
+			//			supportInvalidateOptionsMenu();
 		}
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			mService = IInAppBillingService.Stub.asInterface(service);
-			supportInvalidateOptionsMenu();
+			//			supportInvalidateOptionsMenu();
 
 			new Thread() {
 
