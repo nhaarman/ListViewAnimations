@@ -3,6 +3,7 @@
     android:id="@+id/activity_gridview_gv"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:numColumns="3" >
+    android:numColumns="3"
+    android:paddingTop="@dimen/paddingTop" >
 
 </GridView>

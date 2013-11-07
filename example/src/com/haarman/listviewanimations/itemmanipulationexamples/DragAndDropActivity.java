@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.MyListActivity;
+import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.haarman.listviewanimations.view.DynamicListView;
 
@@ -15,12 +16,14 @@ public class DragAndDropActivity extends MyListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mListView = new DynamicListView(this);
+		setContentView(R.layout.activity_draganddrop);
+
+		mListView = (DynamicListView) findViewById(R.id.activity_draganddrop_listview);
 		mListView.setDivider(null);
-		setContentView(mListView);
 
 		ArrayAdapter<Integer> adapter = createListAdapter();
 		AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(adapter);
+		animAdapter.setInitialDelayMillis(300);
 		animAdapter.setAbsListView(mListView);
 		mListView.setAdapter(animAdapter);
 

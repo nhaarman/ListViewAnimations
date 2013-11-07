@@ -203,8 +203,10 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
 	@SuppressLint("NewApi")
 	private long calculateAnimationDelay() {
+		System.out.println("A");
 		long delay;
 		int numberOfItems = getAbsListView().getLastVisiblePosition() - getAbsListView().getFirstVisiblePosition();
+		System.out.println("NOI: " + numberOfItems + ", " + mLastAnimatedPosition);
 		if (numberOfItems + 1 < mLastAnimatedPosition) {
 			delay = getAnimationDelayMillis();
 
@@ -215,7 +217,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 			long delaySinceStart = (mLastAnimatedPosition - mFirstAnimatedPosition + 1) * getAnimationDelayMillis();
 			delay = mAnimationStartMillis + getInitialDelayMillis() + delaySinceStart - System.currentTimeMillis();
 		}
-
+		System.out.println("Delay " + delay);
 		return Math.max(0, delay);
 	}
 
