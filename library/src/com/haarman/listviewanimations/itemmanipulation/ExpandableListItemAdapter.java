@@ -35,6 +35,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
 	private int mLimit;
 	private Map<Long, View> mExpandedViews;
+	private static SparseArray<ViewHolder> mViews;
 
 	/**
 	 * Creates a new ExpandableListItemAdapter with an empty list.
@@ -54,6 +55,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		mContentParentResId = DEFAULTCONTENTPARENTRESID;
 
 		mVisibleIds = new ArrayList<Long>();
+		mViews = new SparseArray<ExpandableListItemAdapter.ViewHolder>();
 	}
 
 	/**
@@ -155,6 +157,8 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		ViewGroup.LayoutParams layoutParams = viewHolder.contentParent.getLayoutParams();
 		layoutParams.height = LayoutParams.WRAP_CONTENT;
 		viewHolder.contentParent.setLayoutParams(layoutParams);
+		
+		mViews.put(position, viewHolder);
 
 		return view;
 	}
@@ -224,6 +228,28 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		View titleView;
 		View contentView;
 	}
+	
+	/**
+     	* Return the content view at the specified position.
+     	* 
+     	* @param position
+     	*            Index of the view we want.
+     	* @return the view if it exist, null otherwise.
+     	*/
+    	public static View getContentView(int position) {
+    		return mViews.get(position).contentView;
+    	}
+    	
+    	/**
+     	* Return the title view at the specified position.
+     	* 
+     	* @param position
+     	*            Index of the view we want.
+     	* @return the view if it exist, null otherwise.
+     	*/
+    	public static View getTitleView(int position) {
+    		return mViews.get(position).titleView;
+    	}
 
 	private static class RootView extends LinearLayout {
 
