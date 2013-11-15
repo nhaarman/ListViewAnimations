@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.haarman.listviewanimations.ArrayAdapter;
+import com.haarman.listviewanimations.ListViewSetter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -21,7 +23,7 @@ import com.nineoldandroids.animation.ValueAnimator;
 /**
  * An {@link ArrayAdapter} which allows items to be expanded using an animation.
  */
-public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
+public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> implements ListViewSetter {
 
 	private static final int DEFAULTTITLEPARENTRESID = 10000;
 	private static final int DEFAULTCONTENTPARENTRESID = 10001;
@@ -35,6 +37,8 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
 	private int mLimit;
 	private Map<Long, View> mExpandedViews;
+
+	private AbsListView mListView;
 
 	/**
 	 * Creates a new ExpandableListItemAdapter with an empty list.
@@ -80,6 +84,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
 		mVisibleIds = new ArrayList<Long>();
 		mExpandedViews = new HashMap<Long, View>();
+	}
+
+	@Override
+	public void setAbsListView(AbsListView listView) {
+		mListView = listView;
 	}
 
 	/**
