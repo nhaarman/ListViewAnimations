@@ -285,7 +285,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 				mVisibleIds.remove(mContentParent.getTag());
 				mExpandedViews.remove(mContentParent.getTag());
 			} else {
-				ExpandCollapseHelper.animateExpanding(mContentParent);
+				ExpandCollapseHelper.animateExpanding(mContentParent, mListView);
 				mVisibleIds.add((Long) mContentParent.getTag());
 
 				if (mLimit > 0) {
@@ -312,7 +312,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 			animator.start();
 		}
 
-		public static void animateExpanding(final View view) {
+		public static void animateExpanding(final View view, final AbsListView listView) {
 			view.setVisibility(View.VISIBLE);
 
 			final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -320,7 +320,31 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 			view.measure(widthSpec, heightSpec);
 
 			ValueAnimator animator = createHeightAnimator(view, 0, view.getMeasuredHeight());
+			animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				final int listViewHeight = listView.getHeight();
+				final View v = findDirectChild(view, listView);
+
+				@Override
+				public void onAnimationUpdate(ValueAnimator valueAnimator) {
+					final int bottom = v.getBottom();
+					if (bottom > listViewHeight) {
+						final int top = v.getTop();
+						if (top > 0) {
+							listView.smoothScrollBy(Math.min(bottom - listViewHeight, top), 0);
+						}
+					}
+				}
+			});
 			animator.start();
+		}
+
+		private static View findDirectChild(View view, AbsListView listView) {
+			View parent = (View) view.getParent();
+			while (parent != listView) {
+				view = parent;
+				parent = (View) view.getParent();
+			}
+			return view;
 		}
 
 		public static ValueAnimator createHeightAnimator(final View view, int start, int end) {
