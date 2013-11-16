@@ -228,6 +228,17 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	 */
 	public abstract View getContentView(int position, View convertView, ViewGroup parent);
 
+    /**
+     * Indicates if the item at the specified position is expanded.
+     * 
+     * @param position
+     *            Index of the view whose state we want.
+     * @return true if the view is expanded, false otherwise.
+     */
+    public boolean isExpanded(int position) {
+        return mVisibleIds.contains(getItemId(position));
+    }
+
 	private static class ViewHolder {
 		ViewGroup titleParent;
 		ViewGroup contentParent;
