@@ -54,6 +54,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		mContentParentResId = DEFAULTCONTENTPARENTRESID;
 
 		mVisibleIds = new ArrayList<Long>();
+		mExpandedViews = new HashMap<Long, View>();
 	}
 
 	/**
@@ -83,19 +84,27 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	/**
-	 * Set the resource id of the child {@link View} contained in the View returned by
-	 * {@link #getTitleView(int, View, ViewGroup)} that will be the actuator of the expand / collapse animations.<br>
-	 * If there is no View in the title View with given resId, a {@link NullPointerException} is thrown.</p>
-	 * Default behavior: the whole title View acts as the actuator.
-	 * @param resId the resource id.
+	 * Set the resource id of the child {@link View} contained in the View
+	 * returned by {@link #getTitleView(int, View, ViewGroup)} that will be the
+	 * actuator of the expand / collapse animations.<br>
+	 * If there is no View in the title View with given resId, a
+	 * {@link NullPointerException} is thrown.</p> Default behavior: the whole
+	 * title View acts as the actuator.
+	 * 
+	 * @param resId
+	 *            the resource id.
 	 */
 	public void setActionViewResId(int resId) {
 		mActionViewResId = resId;
 	}
 
 	/**
-	 * Set the maximum number of items allowed to be expanded. When the (limit+1)th item is expanded, the first expanded item will collapse.
-	 * @param limit the maximum number of items allowed to be expanded. Use <= 0 for no limit.
+	 * Set the maximum number of items allowed to be expanded. When the
+	 * (limit+1)th item is expanded, the first expanded item will collapse.
+	 * 
+	 * @param limit
+	 *            the maximum number of items allowed to be expanded. Use <= 0
+	 *            for no limit.
 	 */
 	public void setLimit(int limit) {
 		mLimit = limit;
@@ -172,10 +181,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	/**
-	 * Get a View that displays the <b>title of the data</b> at the specified position
-	 * in the data set. You can either create a View manually or inflate it from
-	 * an XML layout file. When the View is inflated, the parent View (GridView,
-	 * ListView...) will apply default layout parameters unless you use
+	 * Get a View that displays the <b>title of the data</b> at the specified
+	 * position in the data set. You can either create a View manually or
+	 * inflate it from an XML layout file. When the View is inflated, the parent
+	 * View (GridView, ListView...) will apply default layout parameters unless
+	 * you use
 	 * {@link android.view.LayoutInflater#inflate(int, android.view.ViewGroup, boolean)}
 	 * to specify a root view and to prevent attachment to the root.
 	 * 
@@ -217,6 +227,17 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	 *         position.
 	 */
 	public abstract View getContentView(int position, View convertView, ViewGroup parent);
+
+    /**
+     * Indicates if the item at the specified position is expanded.
+     * 
+     * @param position
+     *            Index of the view whose state we want.
+     * @return true if the view is expanded, false otherwise.
+     */
+    public boolean isExpanded(int position) {
+        return mVisibleIds.contains(getItemId(position));
+    }
 
 	private static class ViewHolder {
 		ViewGroup titleParent;
