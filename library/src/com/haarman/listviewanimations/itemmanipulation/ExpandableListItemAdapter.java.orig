@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
 	private int mLimit;
 	private Map<Long, View> mExpandedViews;
-	private SparseArray<ViewHolder> mViews;
+	private static SparseArray<ViewHolder> mViews;
 
 	/**
 	 * Creates a new ExpandableListItemAdapter with an empty list.
@@ -56,8 +55,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		mContentParentResId = DEFAULTCONTENTPARENTRESID;
 
 		mVisibleIds = new ArrayList<Long>();
-		mExpandedViews = new HashMap<Long, View>();
+<<<<<<< HEAD
 		mViews = new SparseArray<ExpandableListItemAdapter.ViewHolder>();
+=======
+		mExpandedViews = new HashMap<Long, View>();
+>>>>>>> dev
 	}
 
 	/**
@@ -84,7 +86,6 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 
 		mVisibleIds = new ArrayList<Long>();
 		mExpandedViews = new HashMap<Long, View>();
-		mViews = new SparseArray<ExpandableListItemAdapter.ViewHolder>();
 	}
 
 	/**
@@ -168,7 +169,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		ViewGroup.LayoutParams layoutParams = viewHolder.contentParent.getLayoutParams();
 		layoutParams.height = LayoutParams.WRAP_CONTENT;
 		viewHolder.contentParent.setLayoutParams(layoutParams);
-
+		
 		mViews.put(position, viewHolder);
 
 		return view;
@@ -234,16 +235,16 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	 */
 	public abstract View getContentView(int position, View convertView, ViewGroup parent);
 
-	/**
-	 * Indicates if the item at the specified position is expanded.
-	 * 
-	 * @param position
-	 *            Index of the view whose state we want.
-	 * @return true if the view is expanded, false otherwise.
-	 */
-	public boolean isExpanded(int position) {
-		return mVisibleIds.contains(getItemId(position));
-	}
+    /**
+     * Indicates if the item at the specified position is expanded.
+     * 
+     * @param position
+     *            Index of the view whose state we want.
+     * @return true if the view is expanded, false otherwise.
+     */
+    public boolean isExpanded(int position) {
+        return mVisibleIds.contains(getItemId(position));
+    }
 
 	private static class ViewHolder {
 		ViewGroup titleParent;
@@ -251,28 +252,28 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		View titleView;
 		View contentView;
 	}
-
+	
 	/**
-	 	* Return the content view at the specified position.
-	 	* 
-	 	* @param position
-	 	*            Index of the view we want.
-	 	* @return the view if it exist, null otherwise.
-	 	*/
-	public View getContentView(int position) {
-		return mViews.get(position).contentView;
-	}
-
-	/**
-	* Return the title view at the specified position.
-	* 
-	* @param position
-	*            Index of the view we want.
-	* @return the view if it exist, null otherwise.
-	*/
-	public View getTitleView(int position) {
-		return mViews.get(position).titleView;
-	}
+     	* Return the content view at the specified position.
+     	* 
+     	* @param position
+     	*            Index of the view we want.
+     	* @return the view if it exist, null otherwise.
+     	*/
+    	public static View getContentView(int position) {
+    		return mViews.get(position).contentView;
+    	}
+    	
+    	/**
+     	* Return the title view at the specified position.
+     	* 
+     	* @param position
+     	*            Index of the view we want.
+     	* @return the view if it exist, null otherwise.
+     	*/
+    	public static View getTitleView(int position) {
+    		return mViews.get(position).titleView;
+    	}
 
 	private static class RootView extends LinearLayout {
 
