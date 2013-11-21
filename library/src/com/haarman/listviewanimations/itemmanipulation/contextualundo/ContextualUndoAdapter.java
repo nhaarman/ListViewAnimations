@@ -130,23 +130,28 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
 	@Override
 	public final View getView(int position, View convertView, ViewGroup parent) {
+        final ViewHolder vh;
 		ContextualUndoView contextualUndoView = (ContextualUndoView) convertView;
 		if (contextualUndoView == null) {
 			contextualUndoView = new ContextualUndoView(parent.getContext(), mUndoLayoutId, mCountDownTextViewResId);
 			contextualUndoView.findViewById(mUndoActionId).setOnClickListener(new UndoListener(contextualUndoView));
+            vh = new ViewHolder(contextualUndoView);
 		}
+        else {
+            vh = ViewHolder.getViewHolder(contextualUndoView);
+        }
 
 		View contentView = super.getView(position, contextualUndoView.getContentView(), contextualUndoView);
 		contextualUndoView.updateContentView(contentView);
 
 		long itemId = getItemId(position);
+        vh.mItemId = itemId;
 
 		if (itemId == mCurrentRemovedId) {
 			contextualUndoView.displayUndo();
-			mCurrentRemovedView = contextualUndoView;
 			long millisLeft = mAutoDeleteDelayMillis - (System.currentTimeMillis() - mDismissStartMillis);
 			if (mCountDownFormatter != null) {
-				mCurrentRemovedView.updateCountDownTimer(mCountDownFormatter.getCountDownString(millisLeft));
+                contextualUndoView.updateCountDownTimer(mCountDownFormatter.getCountDownString(millisLeft));
 			}
 		} else {
 			contextualUndoView.displayContentView();
@@ -165,6 +170,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		listView.setOnTouchListener(mContextualUndoListViewTouchListener);
 		listView.setOnScrollListener(mContextualUndoListViewTouchListener.makeScrollListener());
 		listView.setRecyclerListener(new RecycleViewListener());
+        listView.setOnHierarchyChangeListener(new HierarchyChangeListener());
 	}
 
 	@Override
@@ -426,4 +432,37 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 			}
 		}
 	}
+
+    private class HierarchyChangeListener implements ViewGroup.OnHierarchyChangeListener {
+        @Override
+        public void onChildViewAdded(View parent, View child) {
+            final ViewHolder vh = ViewHolder.getViewHolder(child);
+            if ((vh != null) && (mCurrentRemovedId > 0) && (vh.mItemId == mCurrentRemovedId)) {
+                mCurrentRemovedView = (ContextualUndoView)child;
+            }
+        }
+
+        @Override
+        public void onChildViewRemoved(View parent, View child) {
+            final ViewHolder vh = ViewHolder.getViewHolder(child);
+            if ((vh != null) && (mCurrentRemovedId > 0) && (vh.mItemId == mCurrentRemovedId)) {
+                mCurrentRemovedView = null;
+            }
+        }
+    }
+
+    private static class ViewHolder {
+        final ContextualUndoView mContextualUndoView;
+
+        long mItemId;
+
+        static ViewHolder getViewHolder(View view) {
+            return (ViewHolder)view.getTag();
+        }
+
+        ViewHolder(ContextualUndoView contextualUndoView) {
+            mContextualUndoView = contextualUndoView;
+            mContextualUndoView.setTag(this);
+        }
+    }
 }
