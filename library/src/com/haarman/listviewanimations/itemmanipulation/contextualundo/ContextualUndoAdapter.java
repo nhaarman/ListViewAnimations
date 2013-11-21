@@ -304,6 +304,21 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		}
 	}
 
+    /**
+     * Removes any item that was swiped away.
+     * @param animate If true, animates the removal (collapsing the item).
+     *                If false, removes item immediately without animation.
+     */
+    public void removePendingItem(boolean animate) {
+        if (animate) {
+            removePreviousContextualUndoIfPresent();
+        }
+        else if (mCurrentRemovedView != null) {
+            new RemoveViewAnimatorListenerAdapter(mCurrentRemovedView).onAnimationEnd(null);
+            clearCurrentRemovedView();
+        }
+    }
+
 	/**
 	 * A callback interface which is used to notify when items should be removed from the collection.
 	 */
