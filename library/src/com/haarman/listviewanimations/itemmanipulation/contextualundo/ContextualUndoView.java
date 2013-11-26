@@ -18,7 +18,9 @@ package com.haarman.listviewanimations.itemmanipulation.contextualundo;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -31,13 +33,14 @@ public class ContextualUndoView extends FrameLayout {
 
 	private long mItemId;
 
-	public ContextualUndoView(Context context, int undoLayoutResId, int countDownTextViewResId) {
+	public ContextualUndoView(Context context, ViewGroup parent, int undoLayoutResId, int countDownTextViewResId) {
 		super(context);
-		initUndo(undoLayoutResId, countDownTextViewResId);
+		initUndo(context, parent, undoLayoutResId, countDownTextViewResId);
 	}
 
-	private void initUndo(int undoLayoutResId, final int countDownTextViewResId) {
-		mUndoView = View.inflate(getContext(), undoLayoutResId, null);
+	private void initUndo(Context context, ViewGroup parent, int undoLayoutResId, final int countDownTextViewResId) {
+		mUndoView = LayoutInflater.from(context).inflate(undoLayoutResId, parent, false);
+		//mUndoView = View.inflate(getContext(), undoLayoutResId, parent, false);
 		addView(mUndoView);
 
 		if (countDownTextViewResId != -1) {

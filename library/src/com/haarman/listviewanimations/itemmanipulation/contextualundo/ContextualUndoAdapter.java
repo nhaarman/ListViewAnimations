@@ -132,7 +132,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	public final View getView(int position, View convertView, ViewGroup parent) {
 		ContextualUndoView contextualUndoView = (ContextualUndoView) convertView;
 		if (contextualUndoView == null) {
-			contextualUndoView = new ContextualUndoView(parent.getContext(), mUndoLayoutId, mCountDownTextViewResId);
+			contextualUndoView = new ContextualUndoView(parent.getContext(), parent, mUndoLayoutId, mCountDownTextViewResId);
 			contextualUndoView.findViewById(mUndoActionId).setOnClickListener(new UndoListener(contextualUndoView));
 		}
 
