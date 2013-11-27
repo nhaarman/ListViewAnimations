@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.haarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
+import com.haarman.listviewanimations.itemmanipulation.ItemMovedListener;
 import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.haarman.listviewanimations.view.DynamicListView;
 
@@ -28,5 +29,11 @@ public class DragAndDropActivity extends MyListActivity {
 		mListView.setAdapter(animAdapter);
 
 		Toast.makeText(this, "Long press an item to start dragging", Toast.LENGTH_LONG).show();
+        mListView.setItemMovedListener(new ItemMovedListener() {
+            @Override
+            public void onItemMoved(Object item, int newPosition) {
+                Toast.makeText(getApplicationContext(), item.toString() + " moved to position" + newPosition, Toast.LENGTH_LONG).show();
+            }
+        });
 	}
 }
