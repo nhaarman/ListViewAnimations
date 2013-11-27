@@ -36,6 +36,7 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.haarman.listviewanimations.itemmanipulation.ItemMovedListener;
 import com.haarman.listviewanimations.itemmanipulation.SwipeOnTouchListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
@@ -70,6 +71,9 @@ import com.nineoldandroids.view.ViewHelper;
  * See http://youtu.be/_BZIvjMgH-Q
  */
 public class DynamicListView extends ListView {
+
+    private ItemMovedListener mItemMovedListener;
+    private int mLastMovedToIndex;
 
 	public interface OnHoverCellListener {
 		public Drawable onHoverCellCreated(Drawable hoverCellDrawable);
@@ -499,6 +503,7 @@ public class DynamicListView extends ListView {
 	}
 
 	private void swapElements(int indexOne, int indexTwo) {
+        this.mLastMovedToIndex = indexTwo;
 		ListAdapter adapter = getAdapter();
 
 		if (adapter instanceof HeaderViewListAdapter) {
@@ -556,6 +561,9 @@ public class DynamicListView extends ListView {
 					mHoverCell = null;
 					setEnabled(true);
 					invalidate();
+                    if (mItemMovedListener != null) {
+                        mItemMovedListener.onItemMoved(getAdapter().getItem(mLastMovedToIndex), mLastMovedToIndex);
+                    }
 				}
 			});
 			hoverViewAnimator.start();
@@ -729,6 +737,13 @@ public class DynamicListView extends ListView {
 			}
 		}
 	};
+
+    /**
+     * Set item moved listener
+     */
+    public void setItemMovedListener(ItemMovedListener itemMovedListener) {
+        this.mItemMovedListener = itemMovedListener;
+    }
 
 	/**
 	 * Interface, usually implemented by a {@link com.haarman.listviewanimations.BaseAdapterDecorator},
