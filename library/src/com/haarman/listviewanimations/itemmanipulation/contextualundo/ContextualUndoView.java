@@ -32,6 +32,7 @@ public class ContextualUndoView extends FrameLayout {
 	private TextView mCountDownTV;
 
 	private long mItemId;
+	private boolean mKeepLayoutHeight = false;
 
 	public ContextualUndoView(Context context, ViewGroup parent, int undoLayoutResId, int countDownTextViewResId) {
 		super(context);
@@ -76,9 +77,18 @@ public class ContextualUndoView extends FrameLayout {
 	public boolean isContentDisplayed() {
 		return mContentView.getVisibility() == View.VISIBLE;
 	}
+	
+	public void setKeepLayoutHeight(boolean copy) {
+	    this.mKeepLayoutHeight   = copy;
+	}
 
 	public void displayUndo() {
 		updateCountDownTimer("");
+		if (mKeepLayoutHeight) {
+		    ViewGroup.LayoutParams mLayoutParams = mUndoView.getLayoutParams();
+		    mLayoutParams.height = mContentView.getHeight();
+		    mUndoView.setLayoutParams(mLayoutParams);
+		}
 		mContentView.setVisibility(View.GONE);
 		mUndoView.setVisibility(View.VISIBLE);
 	}
