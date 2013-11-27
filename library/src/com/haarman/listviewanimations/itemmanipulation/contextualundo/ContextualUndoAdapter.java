@@ -75,6 +75,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	private CountDownFormatter mCountDownFormatter;
 
 	private ContextualUndoListViewTouchListener mContextualUndoListViewTouchListener;
+	private boolean mKeepHeight = false;
 
 	/**
 	 * Create a new ContextualUndoAdapter based on given parameters.
@@ -132,7 +133,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	public final View getView(int position, View convertView, ViewGroup parent) {
 		ContextualUndoView contextualUndoView = (ContextualUndoView) convertView;
 		if (contextualUndoView == null) {
-			contextualUndoView = new ContextualUndoView(parent.getContext(), mUndoLayoutId, mCountDownTextViewResId);
+			contextualUndoView = new ContextualUndoView(parent.getContext(), parent, mUndoLayoutId, mCountDownTextViewResId);
 			contextualUndoView.findViewById(mUndoActionId).setOnClickListener(new UndoListener(contextualUndoView));
 		}
 
@@ -153,6 +154,10 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		}
 
 		contextualUndoView.setItemId(itemId);
+		
+		if (mKeepHeight)
+		    contextualUndoView.setKeepLayoutHeight(true);
+		
 		return contextualUndoView;
 	}
 
@@ -238,6 +243,16 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	 */
 	public void setDeleteItemCallback(DeleteItemCallback deleteItemCallback) {
 		mDeleteItemCallback = deleteItemCallback;
+	}
+	
+	/**
+	 * Set if the undo view keeps the height of the removed item
+	 * 
+	 * @param keep
+	 *            true if the view keeps the height, false for wrap content
+	 */
+	public void setKeepHeight(boolean keep) {
+	    this.mKeepHeight = keep;
 	}
 
 	/**
