@@ -74,9 +74,13 @@ afterEvaluate { project ->
         from android.sourceSets.main.allSource
     }
 
+    task coreLibJar(type: Jar) {
+        from fileTree(dir: 'build/classes/release').matching { include 'com/nhaarman/listviewanimations/**' }
+    }
+
     artifacts {
-        //archives packageReleaseJar
         archives androidSourcesJar
         archives androidJavadocsJar
+        archives coreLibJar
     }
 }

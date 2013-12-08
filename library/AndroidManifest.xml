@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.haarman.listviewanimations"
+    package="com.nhaarman.listviewanimations"
     android:versionCode="201312081"
     android:versionName="2.6.0-SNAPSHOT" >
 
