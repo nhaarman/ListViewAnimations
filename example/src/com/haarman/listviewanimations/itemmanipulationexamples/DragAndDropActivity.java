@@ -19,8 +19,8 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.MyListActivity;
-import com.nhaarman.listviewanimations.R;
+import com.haarman.listviewanimations.MyListActivity;
+import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.view.DynamicListView;
 

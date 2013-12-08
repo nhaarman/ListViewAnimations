@@ -39,8 +39,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
-import com.nhaarman.listviewanimations.appearanceexamples.AppearanceExamplesActivity;
-import com.nhaarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity;
+import com.haarman.listviewanimations.appearanceexamples.AppearanceExamplesActivity;
+import com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity;
 
 public class MainActivity extends Activity {
 

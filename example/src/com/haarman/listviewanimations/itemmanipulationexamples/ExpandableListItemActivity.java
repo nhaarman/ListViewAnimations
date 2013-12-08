@@ -28,8 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nhaarman.listviewanimations.MyListActivity;
-import com.nhaarman.listviewanimations.R;
+import com.haarman.listviewanimations.MyListActivity;
+import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.itemmanipulation.ExpandableListItemAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 
