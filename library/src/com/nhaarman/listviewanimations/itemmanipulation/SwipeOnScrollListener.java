@@ -21,22 +21,26 @@ package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.widget.AbsListView;
 
+/**
+ * An {@link android.widget.AbsListView.OnScrollListener} that is used in conjunction with {@link com.nhaarman.listviewanimations.itemmanipulation.SwipeDismissAdapter}. Override this class to
+ * provide a custom implementation of the OnScrollListener. Do not forget to call super on the overridden methods!
+ */
 public class SwipeOnScrollListener implements AbsListView.OnScrollListener {
-	
-	SwipeDismissListViewTouchListener mTouchListener;
-	
-	public void setTouchListener(SwipeDismissListViewTouchListener touchListener) {
-		mTouchListener = touchListener;
-	}
-	
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		if (scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-			mTouchListener.disallowSwipe();
-		}
-	}
 
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-	}
+    private SwipeDismissListViewTouchListener mTouchListener;
+
+    public void setTouchListener(SwipeDismissListViewTouchListener touchListener) {
+        mTouchListener = touchListener;
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+            mTouchListener.disallowSwipe();
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    }
 }
