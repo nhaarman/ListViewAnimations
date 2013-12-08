@@ -16,6 +16,7 @@ Known applications using ListViewAnimations
 * Car Hire ([Play Store][10])
 * Super BART ([Play Store][11])
 * DK FlashCards ([Play Store][15])
+* Counter Plus (Tally Counter) ([Play Store][22])
 * Voorlees Verhaaltjes 2.0 ([Play Store][21])
 
 If you want your app to be listed as well please contact me via [Google Plus][8], or send me an email at haarman.niek [at] gmail.com, starting the title with `[LVA]`.
@@ -42,6 +43,19 @@ Or:
 * [Download the .jar file][4]
 * [Download the latest NineOldAndroids .jar file][17]
 * Add the .jar files to your project's `libs` folder, or add them as external jars to your project's build path.
+
+Or:
+
+* Add the following to your `build.gradle`:
+
+    repositories {
+        mavenCentral()
+    }
+	
+	dependencies{
+	    compile 'com.nhaarman.listviewanimations:library:2.5.2'
+	}
+
 
 Usage
 -----
@@ -99,3 +113,4 @@ License
  [19]: https://play.google.com/store/apps/details?id=com.juannale.pearljamlyricsapp
  [20]: https://play.google.com/store/apps/details?id=com.cafetaso.foodinfo
  [21]: https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes
+ [22]: https://play.google.com/store/apps/details?id=com.seedform.counter
