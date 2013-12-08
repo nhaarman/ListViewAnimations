@@ -17,7 +17,7 @@
  * Author: David Berlioz
  */
 
-package com.haarman.listviewanimations.itemmanipulation;
+package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.widget.AbsListView;
 

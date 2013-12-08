@@ -13,35 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.swinginadapters.prepared;
+package com.nhaarman.listviewanimations.swinginadapters.prepared;
 
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.haarman.listviewanimations.swinginadapters.SingleAnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 
-/**
- * An implementation of the AnimationAdapter class which applies a
- * swing-in-from-the-left-animation to views.
- */
-public class SwingLeftInAnimationAdapter extends SingleAnimationAdapter {
+public class ScaleInAnimationAdapter extends AnimationAdapter {
 
-	private final long mAnimationDelayMillis;
-	private final long mAnimationDurationMillis;
+	private static final float DEFAULTSCALEFROM = 0.8f;
 
-	public SwingLeftInAnimationAdapter(BaseAdapter baseAdapter) {
-		this(baseAdapter, DEFAULTANIMATIONDELAYMILLIS, DEFAULTANIMATIONDURATIONMILLIS);
+	private float mScaleFrom;
+	private long mAnimationDelayMillis;
+	private long mAnimationDurationMillis;
+
+	public ScaleInAnimationAdapter(BaseAdapter baseAdapter) {
+		this(baseAdapter, DEFAULTSCALEFROM);
 	}
 
-	public SwingLeftInAnimationAdapter(BaseAdapter baseAdapter, long animationDelayMillis) {
-		this(baseAdapter, animationDelayMillis, DEFAULTANIMATIONDURATIONMILLIS);
+	public ScaleInAnimationAdapter(BaseAdapter baseAdapter, float scaleFrom) {
+		this(baseAdapter, scaleFrom, DEFAULTANIMATIONDELAYMILLIS, DEFAULTANIMATIONDURATIONMILLIS);
 	}
 
-	public SwingLeftInAnimationAdapter(BaseAdapter baseAdapter, long animationDelayMillis, long animationDurationMillis) {
+	public ScaleInAnimationAdapter(BaseAdapter baseAdapter, float scaleFrom, long animationDelayMillis, long animationDurationMillis) {
 		super(baseAdapter);
+		mScaleFrom = scaleFrom;
 		mAnimationDelayMillis = animationDelayMillis;
 		mAnimationDurationMillis = animationDurationMillis;
 	}
@@ -57,7 +57,10 @@ public class SwingLeftInAnimationAdapter extends SingleAnimationAdapter {
 	}
 
 	@Override
-	protected Animator getAnimator(ViewGroup parent, View view) {
-		return ObjectAnimator.ofFloat(view, "translationX", 0 - parent.getWidth(), 0);
+	public Animator[] getAnimators(ViewGroup parent, View view) {
+		ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", mScaleFrom, 1f);
+		ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", mScaleFrom, 1f);
+		return new ObjectAnimator[] { scaleX, scaleY };
 	}
+
 }

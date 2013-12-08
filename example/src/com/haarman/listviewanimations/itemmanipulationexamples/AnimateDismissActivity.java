@@ -30,12 +30,12 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 
-import com.haarman.listviewanimations.ArrayAdapter;
-import com.haarman.listviewanimations.BaseActivity;
-import com.haarman.listviewanimations.MyListActivity;
-import com.haarman.listviewanimations.R;
-import com.haarman.listviewanimations.itemmanipulation.AnimateDismissAdapter;
-import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.ArrayAdapter;
+import com.nhaarman.listviewanimations.BaseActivity;
+import com.nhaarman.listviewanimations.MyListActivity;
+import com.nhaarman.listviewanimations.R;
+import com.nhaarman.listviewanimations.itemmanipulation.AnimateDismissAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
 public class AnimateDismissActivity extends BaseActivity {
 

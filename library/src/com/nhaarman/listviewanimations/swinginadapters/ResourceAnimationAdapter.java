@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.swinginadapters;
+package com.nhaarman.listviewanimations.swinginadapters;
 
 import android.content.Context;
 import android.view.View;

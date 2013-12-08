@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.swinginadapters.prepared;
+package com.nhaarman.listviewanimations.swinginadapters.prepared;
 
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.haarman.listviewanimations.swinginadapters.SingleAnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.SingleAnimationAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
  * An implementation of the AnimationAdapter class which applies a
- * swing-in-from-the-right-animation to views.
+ * swing-in-from-the-left-animation to views.
  */
-public class SwingRightInAnimationAdapter extends SingleAnimationAdapter {
+public class SwingLeftInAnimationAdapter extends SingleAnimationAdapter {
 
 	private final long mAnimationDelayMillis;
 	private final long mAnimationDurationMillis;
 
-	public SwingRightInAnimationAdapter(BaseAdapter baseAdapter) {
+	public SwingLeftInAnimationAdapter(BaseAdapter baseAdapter) {
 		this(baseAdapter, DEFAULTANIMATIONDELAYMILLIS, DEFAULTANIMATIONDURATIONMILLIS);
 	}
 
-	public SwingRightInAnimationAdapter(BaseAdapter baseAdapter, long animationDelayMillis) {
+	public SwingLeftInAnimationAdapter(BaseAdapter baseAdapter, long animationDelayMillis) {
 		this(baseAdapter, animationDelayMillis, DEFAULTANIMATIONDURATIONMILLIS);
 	}
 
-	public SwingRightInAnimationAdapter(BaseAdapter baseAdapter, long animationDelayMillis, long animationDurationMillis) {
+	public SwingLeftInAnimationAdapter(BaseAdapter baseAdapter, long animationDelayMillis, long animationDurationMillis) {
 		super(baseAdapter);
 		mAnimationDelayMillis = animationDelayMillis;
 		mAnimationDurationMillis = animationDurationMillis;
@@ -58,6 +58,6 @@ public class SwingRightInAnimationAdapter extends SingleAnimationAdapter {
 
 	@Override
 	protected Animator getAnimator(ViewGroup parent, View view) {
-		return ObjectAnimator.ofFloat(view, "translationX", parent.getWidth(), 0);
+		return ObjectAnimator.ofFloat(view, "translationX", 0 - parent.getWidth(), 0);
 	}
 }
