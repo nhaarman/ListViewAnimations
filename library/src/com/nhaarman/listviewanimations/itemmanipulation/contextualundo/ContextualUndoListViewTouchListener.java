@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.haarman.listviewanimations.itemmanipulation.contextualundo;
+package com.nhaarman.listviewanimations.itemmanipulation.contextualundo;
 
 import static com.nineoldandroids.view.ViewHelper.setAlpha;
 import static com.nineoldandroids.view.ViewHelper.setTranslationX;
@@ -32,7 +32,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.haarman.listviewanimations.itemmanipulation.SwipeOnTouchListener;
+import com.nhaarman.listviewanimations.itemmanipulation.SwipeOnTouchListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 

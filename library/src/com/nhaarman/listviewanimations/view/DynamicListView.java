@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.haarman.listviewanimations.view;
+package com.nhaarman.listviewanimations.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -37,7 +37,7 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.haarman.listviewanimations.itemmanipulation.SwipeOnTouchListener;
+import com.nhaarman.listviewanimations.itemmanipulation.SwipeOnTouchListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -77,7 +77,7 @@ public class DynamicListView extends ListView {
     }
 
     /**
-     * Implement this interface to be notified of ordering changes. Call {@link #setOnItemMovedListener(com.haarman.listviewanimations.view.DynamicListView.OnItemMovedListener)}.
+     * Implement this interface to be notified of ordering changes. Call {@link #setOnItemMovedListener(com.nhaarman.listviewanimations.view.DynamicListView.OnItemMovedListener)}.
      */
     public interface OnItemMovedListener {
         /**
@@ -760,14 +760,14 @@ public class DynamicListView extends ListView {
     };
 
     /**
-     * Set the {@link com.haarman.listviewanimations.view.DynamicListView.OnItemMovedListener} to be notified when an item is dropped.
+     * Set the {@link com.nhaarman.listviewanimations.view.DynamicListView.OnItemMovedListener} to be notified when an item is dropped.
      */
     public void setOnItemMovedListener(OnItemMovedListener onItemMovedListener) {
         this.mOnItemMovedListener = onItemMovedListener;
     }
 
     /**
-     * Interface, usually implemented by a {@link com.haarman.listviewanimations.BaseAdapterDecorator},
+     * Interface, usually implemented by a {@link com.nhaarman.listviewanimations.BaseAdapterDecorator},
      * that indicates that it can swap the visual position of two list items.
      *
      * @author Anton Spaans on 9/11/13.

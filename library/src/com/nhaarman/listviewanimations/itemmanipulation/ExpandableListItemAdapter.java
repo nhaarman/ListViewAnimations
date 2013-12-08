@@ -1,4 +1,4 @@
-package com.haarman.listviewanimations.itemmanipulation;
+package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.content.Context;
 import android.util.SparseArray;
@@ -10,8 +10,8 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.haarman.listviewanimations.ArrayAdapter;
-import com.haarman.listviewanimations.ListViewSetter;
+import com.nhaarman.listviewanimations.ArrayAdapter;
+import com.nhaarman.listviewanimations.ListViewSetter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;

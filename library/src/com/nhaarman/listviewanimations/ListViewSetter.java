@@ -1,4 +1,4 @@
-package com.haarman.listviewanimations;
+package com.nhaarman.listviewanimations;
 
 import android.widget.AbsListView;
 

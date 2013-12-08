@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations;
+package com.nhaarman.listviewanimations;
 
 import android.database.DataSetObserver;
 import android.view.View;
@@ -22,8 +22,8 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
-import com.haarman.listviewanimations.view.DynamicListView;
-import com.haarman.listviewanimations.view.DynamicListView.Swappable;
+import com.nhaarman.listviewanimations.view.DynamicListView;
+import com.nhaarman.listviewanimations.view.DynamicListView.Swappable;
 
 /**
  * A decorator class that enables decoration of an instance of the BaseAdapter

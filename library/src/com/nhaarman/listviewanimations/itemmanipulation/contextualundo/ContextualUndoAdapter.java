@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.itemmanipulation.contextualundo;
+package com.nhaarman.listviewanimations.itemmanipulation.contextualundo;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -26,7 +26,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.haarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
