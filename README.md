@@ -25,7 +25,7 @@ Features
 -----
 ListViewAnimations provides the following features:
 * Appearance animations for items in ListViews, GridViews, and other AbsListViews;
-	* Built in animations include Alpha, SwingRightIn, SwingLeftIn, SwingBottomIn, SwingRightIn and ScaleIn.
+    * Built in animations include Alpha, SwingRightIn, SwingLeftIn, SwingBottomIn, SwingRightIn and ScaleIn.
 	* Other animations can easily be added
 * Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo (and optionally count down);
 * Drag-and-Drop reordering;
@@ -38,24 +38,23 @@ Setup
 * Project > Clean to generate the binaries you need, like R.java, etc.
 * Then, just add ListViewAnimations as a dependency to your existing project and you're good to go!
 
-Or:
+**Or**:
 
 * [Download the .jar file][4]
 * [Download the latest NineOldAndroids .jar file][17]
 * Add the .jar files to your project's `libs` folder, or add them as external jars to your project's build path.
 
-Or:
+**Or**:
 
-* Add the following to your `build.gradle`:
+Add the following to your `build.gradle`:
 
-    repositories {
-        mavenCentral()
-    }
+	repositories {
+		mavenCentral()
+	}
 	
 	dependencies{
-	    compile 'com.nhaarman.listviewanimations:library:2.5.2'
+		compile 'com.nhaarman.listviewanimations:library:2.5.2'
 	}
-
 
 Usage
 -----
