@@ -4,12 +4,18 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.1+'
+        classpath 'com.android.tools.build:gradle:0.6.+'
     }
 }
 
+def isReleaseBuild() {
+    println version
+    return version.contains("SNAPSHOT") == false
+}
+
 allprojects {
-    group = 'com.haarman.listviewanimations'
+    group = 'com.nhaarman.listviewanimations'
+    version = VERSION_NAME
 
     repositories {
         mavenCentral()
@@ -19,3 +25,5 @@ allprojects {
         options.encoding = 'UTF-8'
     }
 }
+
+apply plugin: 'android-reporting'
