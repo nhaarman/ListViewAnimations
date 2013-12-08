@@ -164,7 +164,10 @@ public class DynamicListView extends ListView {
      * @deprecated use #setAdapter(BaseAdapter) instead.
      */
     public void setAdapter(ListAdapter adapter) {
-        throw new IllegalArgumentException("DynamicListView needs a BaseAdapter!");
+		if (!(adapter instanceof BaseAdapter)) {
+			throw new IllegalArgumentException("DynamicListView needs a BaseAdapter!");
+		}
+		super.setAdapter(adapter);
     }
 
     /**
