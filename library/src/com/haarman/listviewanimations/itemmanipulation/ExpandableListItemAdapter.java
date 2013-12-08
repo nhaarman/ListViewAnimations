@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.haarman.listviewanimations.ArrayAdapter;
+import com.haarman.listviewanimations.ListViewSetter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -22,7 +24,7 @@ import com.nineoldandroids.animation.ValueAnimator;
 /**
  * An {@link ArrayAdapter} which allows items to be expanded using an animation.
  */
-public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
+public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> implements ListViewSetter {
 
 	private static final int DEFAULTTITLEPARENTRESID = 10000;
 	private static final int DEFAULTCONTENTPARENTRESID = 10001;
@@ -37,6 +39,8 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 	private int mLimit;
 	private Map<Long, View> mExpandedViews;
 	private SparseArray<ViewHolder> mViews;
+
+	private AbsListView mListView;
 
 	/**
 	 * Creates a new ExpandableListItemAdapter with an empty list.
@@ -85,6 +89,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		mVisibleIds = new ArrayList<Long>();
 		mExpandedViews = new HashMap<Long, View>();
 		mViews = new SparseArray<ExpandableListItemAdapter.ViewHolder>();
+	}
+
+	@Override
+	public void setAbsListView(AbsListView listView) {
+		mListView = listView;
 	}
 
 	/**
@@ -325,7 +334,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 				mVisibleIds.remove(mContentParent.getTag());
 				mExpandedViews.remove(mContentParent.getTag());
 			} else {
-				ExpandCollapseHelper.animateExpanding(mContentParent);
+				ExpandCollapseHelper.animateExpanding(mContentParent, mListView);
 				mVisibleIds.add((Long) mContentParent.getTag());
 
 				if (mLimit > 0) {
@@ -352,7 +361,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 			animator.start();
 		}
 
-		public static void animateExpanding(final View view) {
+		public static void animateExpanding(final View view, final AbsListView listView) {
 			view.setVisibility(View.VISIBLE);
 
 			final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -360,7 +369,31 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 			view.measure(widthSpec, heightSpec);
 
 			ValueAnimator animator = createHeightAnimator(view, 0, view.getMeasuredHeight());
+			animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				final int listViewHeight = listView.getHeight();
+				final View v = findDirectChild(view, listView);
+
+				@Override
+				public void onAnimationUpdate(ValueAnimator valueAnimator) {
+					final int bottom = v.getBottom();
+					if (bottom > listViewHeight) {
+						final int top = v.getTop();
+						if (top > 0) {
+							listView.smoothScrollBy(Math.min(bottom - listViewHeight, top), 0);
+						}
+					}
+				}
+			});
 			animator.start();
+		}
+
+		private static View findDirectChild(View view, AbsListView listView) {
+			View parent = (View) view.getParent();
+			while (parent != listView) {
+				view = parent;
+				parent = (View) view.getParent();
+			}
+			return view;
 		}
 
 		public static ValueAnimator createHeightAnimator(final View view, int start, int end) {

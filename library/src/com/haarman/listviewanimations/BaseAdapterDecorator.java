@@ -32,7 +32,7 @@ import com.haarman.listviewanimations.view.DynamicListView.Swappable;
  * Classes extending this class can override methods and provide extra
  * functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, DynamicListView.Swappable {
+public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, DynamicListView.Swappable, ListViewSetter {
 
 	protected final BaseAdapter mDecoratedBaseAdapter;
 
@@ -45,11 +45,12 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 		mDecoratedBaseAdapter = baseAdapter;
 	}
 
+	@Override
 	public void setAbsListView(AbsListView listView) {
 		mListView = listView;
 
-		if (mDecoratedBaseAdapter instanceof BaseAdapterDecorator) {
-			((BaseAdapterDecorator) mDecoratedBaseAdapter).setAbsListView(listView);
+		if (mDecoratedBaseAdapter instanceof ListViewSetter) {
+			((ListViewSetter) mDecoratedBaseAdapter).setAbsListView(listView);
 		}
 
 		if (mListView instanceof DynamicListView) {
