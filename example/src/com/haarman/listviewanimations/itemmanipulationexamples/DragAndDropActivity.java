@@ -31,7 +31,7 @@ public class DragAndDropActivity extends MyListActivity {
         mListView.setOnItemMovedListener(new DynamicListView.OnItemMovedListener() {
             @Override
             public void onItemMoved(int newPosition) {
-                Toast.makeText(getApplicationContext(), adapter.getItem(newPosition) + " moved to position" + newPosition, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), adapter.getItem(newPosition) + " moved to position " + newPosition, Toast.LENGTH_SHORT).show();
             }
         });
 	}
