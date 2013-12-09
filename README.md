@@ -56,6 +56,16 @@ Add the following to your `build.gradle`:
 		compile 'com.nhaarman.listviewanimations:library:2.5.2'
 	}
 
+**Or**:
+
+Add the following to your `pom.xml`:
+
+	<dependency>
+		<groupId>com.nhaarman.listviewanimations</groupId>
+		<artifactId>library</artifactId>
+		<version>2.5.2</version>
+	</dependency>
+	
 Usage
 -----
 Please refer to the [Wiki][13] pages to learn more about how to use this library.
