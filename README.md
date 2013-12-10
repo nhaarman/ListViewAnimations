@@ -49,11 +49,16 @@ Setup
 Add the following to your `build.gradle`:
 
 	repositories {
+		<!-- repostart -->
+		maven {
+			url "https://oss.sonatype.org/content/repositories/snapshots"
+		}
+		<!-- repoend -->
 		mavenCentral()
 	}
 	
 	dependencies{
-		compile 'com.nhaarman.listviewanimations:library:2.5.2'
+		compile 'com.nhaarman.listviewanimations:library:2.6.0-SNAPSHOT'
 	}
 
 **Or**:
@@ -63,7 +68,7 @@ Add the following to your `pom.xml`:
 	<dependency>
 		<groupId>com.nhaarman.listviewanimations</groupId>
 		<artifactId>library</artifactId>
-		<version>2.5.2</version>
+		<version>2.6.0-SNAPSHOT</version>
 	</dependency>
 	
 Usage
@@ -105,7 +110,7 @@ License
  [1]: https://play.google.com/store/apps/details?id=com.haarman.listviewanimations
  [2]: http://nineoldandroids.com/
  [3]: http://en.wikipedia.org/wiki/Decorator_pattern
- [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.5.2.jar?raw=true
+ [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.6.0-SNAPSHOT.jar?raw=true
  [5]: https://gist.github.com/romannurik/2980593
  [6]: https://play.google.com/store/apps/details?id=com.haarman.treinverkeer
  [7]: https://www.twitter.com/niekfct
@@ -123,3 +128,5 @@ License
  [20]: https://play.google.com/store/apps/details?id=com.cafetaso.foodinfo
  [21]: https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes
  [22]: https://play.google.com/store/apps/details?id=com.seedform.counter
+
+ <!-- versionName="2.6.0-SNAPSHOT" -->
