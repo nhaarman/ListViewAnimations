@@ -72,8 +72,7 @@ task('syncVersionName') << {
     pattern = Pattern.compile("repostart -->(.+)<!-- repoend", Pattern.DOTALL)
     matcher = pattern.matcher(readmeContent)
     matcher.find()
-    def repo = isReleaseBuild() ? "" : "\n\t\tmaven {\n\t\t\turl \"https://oss.sonatype.org/content/repositories/snapshots\"\n\t\t}\n\t\t";
-    println(repo)
+    def repo = isReleaseBuild() ? "\n\t\t" : "\n\t\tmaven {\n\t\t\turl \"https://oss.sonatype.org/content/repositories/snapshots\"\n\t\t}\n\t\t";
     readmeContent = matcher.replaceAll("repostart -->" + repo + "<!-- repoend")
 
     readmeFile.write(readmeContent)
