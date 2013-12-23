@@ -183,7 +183,7 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 			}
 		}
 
-		if (downView != null) {
+		if (downView != null && downView.isEnabled()) {
 			Log.d("SwipeDismissListViewTouchListener", "hit child !");
 			mDownX = motionEvent.getRawX();
 			mDownY = motionEvent.getRawY();
