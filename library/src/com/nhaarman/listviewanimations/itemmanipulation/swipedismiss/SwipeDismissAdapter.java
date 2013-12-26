@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.itemmanipulation;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
 /**
  * Adds an option to swipe items in an AbsListView away.
  * Do not call {@link android.widget.AbsListView#setOnTouchListener(android.view.View.OnTouchListener)} or
  * {@link android.widget.AbsListView#setOnScrollListener(android.widget.AbsListView.OnScrollListener)} on your AbsListView! To use an {@link android.widget.AbsListView.OnScrollListener},
- * extends {@link com.nhaarman.listviewanimations.itemmanipulation.SwipeOnScrollListener} and
- * pass it in the constructor {@link #SwipeDismissAdapter(android.widget.BaseAdapter, OnDismissCallback, SwipeOnScrollListener)}.
+ * extends {@link SwipeOnScrollListener} and
+ * pass it in the constructor {@link #SwipeDismissAdapter(android.widget.BaseAdapter, com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback, SwipeOnScrollListener)}.
  */
 public class SwipeDismissAdapter extends BaseAdapterDecorator {
 
@@ -38,7 +39,7 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
      * Create a new SwipeDismissAdapter.
      *
      * @param baseAdapter       the {@link android.widget.BaseAdapter to use}
-     * @param onDismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} to be notified of dismissed items.
+     * @param onDismissCallback the {@link OnDismissCallback} to be notified of dismissed items.
      */
     public SwipeDismissAdapter(BaseAdapter baseAdapter, OnDismissCallback onDismissCallback) {
         this(baseAdapter, onDismissCallback, new SwipeOnScrollListener());
@@ -48,8 +49,8 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
      * Create a new SwipeDismissAdapter.
      *
      * @param baseAdapter           the {@link android.widget.BaseAdapter to use}
-     * @param onDismissCallback     the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} to be notified of dismissed items.
-     * @param swipeOnScrollListener the {@link com.nhaarman.listviewanimations.itemmanipulation.SwipeOnScrollListener} to use.
+     * @param onDismissCallback     the {@link OnDismissCallback} to be notified of dismissed items.
+     * @param swipeOnScrollListener the {@link SwipeOnScrollListener} to use.
      */
     public SwipeDismissAdapter(BaseAdapter baseAdapter, OnDismissCallback onDismissCallback, SwipeOnScrollListener swipeOnScrollListener) {
         super(baseAdapter);

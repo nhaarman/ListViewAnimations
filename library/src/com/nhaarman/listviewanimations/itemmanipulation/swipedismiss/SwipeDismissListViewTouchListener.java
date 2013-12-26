@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.itemmanipulation;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
 //import static com.nineoldandroids.view.ViewHelper.setAlpha;
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -48,7 +49,7 @@ import com.nineoldandroids.view.ViewHelper;
  * charge of drawing the pressed state (the list selector), handling list item
  * clicks, etc.
  *
- * For performance reasons, do not use this class directly, but use the {@link SwipeDismissAdapter}.
+ * For performance reasons, do not use this class directly, but use the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter}.
  */
 @SuppressLint("Recycle")
 public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {

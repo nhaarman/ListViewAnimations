@@ -19,7 +19,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 /**
- * The callback interface used by {@link SwipeDismissListViewTouchListener} to
+ * The callback interface used by {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissListViewTouchListener} to
  * inform its client about a successful dismissal of one or more list item
  * positions.
  */

@@ -37,7 +37,7 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.nhaarman.listviewanimations.itemmanipulation.SwipeOnTouchListener;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeOnTouchListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;

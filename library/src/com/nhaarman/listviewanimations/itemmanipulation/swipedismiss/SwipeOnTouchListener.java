@@ -2,7 +2,7 @@
  * Copyright (c) 2013 K–NFB Reading Technology, Inc.
  */
 
-package com.nhaarman.listviewanimations.itemmanipulation;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
 import android.view.View;
 
