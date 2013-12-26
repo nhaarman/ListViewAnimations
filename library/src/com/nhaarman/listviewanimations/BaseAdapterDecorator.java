@@ -22,8 +22,8 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
-import com.nhaarman.listviewanimations.view.DynamicListView;
-import com.nhaarman.listviewanimations.view.DynamicListView.Swappable;
+import com.nhaarman.listviewanimations.widget.DynamicListView;
+import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
 
 /**
  * A decorator class that enables decoration of an instance of the BaseAdapter

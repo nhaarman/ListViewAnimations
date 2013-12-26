@@ -22,8 +22,8 @@ import java.util.List;
 
 import android.widget.BaseAdapter;
 
-import com.nhaarman.listviewanimations.view.DynamicListView;
-import com.nhaarman.listviewanimations.view.DynamicListView.Swappable;
+import com.nhaarman.listviewanimations.widget.DynamicListView;
+import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
 
 /**
  * A true {@link ArrayList} adapter providing access to all ArrayList methods.

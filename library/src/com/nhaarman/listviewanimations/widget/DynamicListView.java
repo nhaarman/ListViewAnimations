@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.nhaarman.listviewanimations.view;
+package com.nhaarman.listviewanimations.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -77,7 +77,7 @@ public class DynamicListView extends ListView {
     }
 
     /**
-     * Implement this interface to be notified of ordering changes. Call {@link #setOnItemMovedListener(com.nhaarman.listviewanimations.view.DynamicListView.OnItemMovedListener)}.
+     * Implement this interface to be notified of ordering changes. Call {@link #setOnItemMovedListener(com.nhaarman.listviewanimations.widget.DynamicListView.OnItemMovedListener)}.
      */
     public interface OnItemMovedListener {
         /**
@@ -760,7 +760,7 @@ public class DynamicListView extends ListView {
     };
 
     /**
-     * Set the {@link com.nhaarman.listviewanimations.view.DynamicListView.OnItemMovedListener} to be notified when an item is dropped.
+     * Set the {@link com.nhaarman.listviewanimations.widget.DynamicListView.OnItemMovedListener} to be notified when an item is dropped.
      */
     public void setOnItemMovedListener(OnItemMovedListener onItemMovedListener) {
         this.mOnItemMovedListener = onItemMovedListener;

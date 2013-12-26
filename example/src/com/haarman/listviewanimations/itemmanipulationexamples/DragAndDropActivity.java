@@ -22,7 +22,7 @@ import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
-import com.nhaarman.listviewanimations.view.DynamicListView;
+import com.nhaarman.listviewanimations.widget.DynamicListView;
 
 public class DragAndDropActivity extends MyListActivity {
 
