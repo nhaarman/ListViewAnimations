@@ -1,7 +1,6 @@
 package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.content.Context;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,7 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * An {@link ArrayAdapter} which allows items to be expanded using an animation.
@@ -34,11 +31,9 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     private int mTitleParentResId;
     private int mContentParentResId;
     private int mActionViewResId;
-    private List<Long> mVisibleIds;
+    private List<Long> mExpandedIds;
 
     private int mLimit;
-    private Map<Long, View> mExpandedViews;
-    private SparseArray<ViewHolder> mViews;
 
     private AbsListView mAbsListView;
 
@@ -59,9 +54,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         mTitleParentResId = DEFAULTTITLEPARENTRESID;
         mContentParentResId = DEFAULTCONTENTPARENTRESID;
 
-        mVisibleIds = new ArrayList<Long>();
-        mExpandedViews = new HashMap<Long, View>();
-        mViews = new SparseArray<ExpandableListItemAdapter.ViewHolder>();
+        mExpandedIds = new ArrayList<Long>();
     }
 
     /**
@@ -86,9 +79,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         mTitleParentResId = titleParentResId;
         mContentParentResId = contentParentResId;
 
-        mVisibleIds = new ArrayList<Long>();
-        mExpandedViews = new HashMap<Long, View>();
-        mViews = new SparseArray<ExpandableListItemAdapter.ViewHolder>();
+        mExpandedIds = new ArrayList<Long>();
     }
 
     @Override
@@ -119,8 +110,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      */
     public void setLimit(int limit) {
         mLimit = limit;
-        mVisibleIds.clear();
-        mExpandedViews.clear();
+        mExpandedIds.clear();
         notifyDataSetChanged();
     }
 
@@ -139,14 +129,6 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
-        }
-
-        if (mLimit > 0) {
-            if (mVisibleIds.contains(getItemId(position))) {
-                mExpandedViews.put(getItemId(position), view);
-            } else if (mExpandedViews.containsValue(view) && !mVisibleIds.contains(getItemId(position))) {
-                mExpandedViews.remove(getItemId(position));
-            }
         }
 
         View titleView = getTitleView(position, viewHolder.titleView, viewHolder.titleParent);
@@ -169,14 +151,12 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         }
         viewHolder.contentView = contentView;
 
-        viewHolder.contentParent.setVisibility(mVisibleIds.contains(getItemId(position)) ? View.VISIBLE : View.GONE);
+        viewHolder.contentParent.setVisibility(mExpandedIds.contains(getItemId(position)) ? View.VISIBLE : View.GONE);
         viewHolder.contentParent.setTag(getItemId(position));
 
         ViewGroup.LayoutParams layoutParams = viewHolder.contentParent.getLayoutParams();
         layoutParams.height = LayoutParams.WRAP_CONTENT;
         viewHolder.contentParent.setLayoutParams(layoutParams);
-
-        mViews.put(position, viewHolder);
 
         return view;
     }
@@ -243,18 +223,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      */
     public boolean isExpanded(int position) {
         long itemId = getItemId(position);
-        return mVisibleIds.contains(itemId);
-    }
-
-
-    /**
-     * Return the content view at the specified position.
-     *
-     * @param position Index of the view we want.
-     * @return the view if it exist, null otherwise.
-     */
-    public View getContentView(int position) {
-        return mViews.get(position).contentView;
+        return mExpandedIds.contains(itemId);
     }
 
     /**
@@ -264,7 +233,55 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * @return the view if it exist, null otherwise.
      */
     public View getTitleView(int position) {
-        return mViews.get(position).titleView;
+        View titleView = null;
+
+        View parentView = findViewForPosition(position);
+        Object tag = parentView.getTag();
+        if (tag instanceof ViewHolder) {
+            titleView = ((ViewHolder) tag).titleView;
+        }
+
+        return titleView;
+    }
+
+    /**
+     * Return the content view at the specified position.
+     *
+     * @param position Index of the view we want.
+     * @return the view if it exist, null otherwise.
+     */
+    public View getContentView(int position) {
+        View contentView = null;
+
+        View parentView = findViewForPosition(position);
+        if (parentView != null) {
+            Object tag = parentView.getTag();
+            if (tag instanceof ViewHolder) {
+                contentView = ((ViewHolder) tag).contentView;
+            }
+        }
+
+        return contentView;
+    }
+
+    /**
+     * Return the content parent at the specified position.
+     *
+     * @param position Index of the view we want.
+     * @return the view if it exist, null otherwise.
+     */
+    private View getContentParent(int position) {
+        View contentParent = null;
+
+        View parentView = findViewForPosition(position);
+        if (parentView != null) {
+            Object tag = parentView.getTag();
+            if (tag instanceof ViewHolder) {
+                contentParent = ((ViewHolder) tag).contentParent;
+            }
+        }
+
+        return contentParent;
     }
 
     /**
@@ -274,7 +291,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      */
     public void expand(int position) {
         long itemId = getItemId(position);
-        if (mVisibleIds.contains(itemId)) {
+        if (mExpandedIds.contains(itemId)) {
             return;
         }
 
@@ -288,11 +305,22 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      */
     public void collapse(int position) {
         long itemId = getItemId(position);
-        if (!mVisibleIds.contains(itemId)) {
+        if (!mExpandedIds.contains(itemId)) {
             return;
         }
 
         toggle(position);
+    }
+
+    private View findViewForPosition(int position) {
+        View result = null;
+        for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
+            View childView = mAbsListView.getChildAt(i);
+            if (mAbsListView.getPositionForView(childView) == position) {
+                result = childView;
+            }
+        }
+        return result;
     }
 
     /**
@@ -302,50 +330,49 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      */
     public void toggle(int position) {
         long itemId = getItemId(position);
-        boolean isExpanded = mVisibleIds.contains(itemId);
+        boolean isExpanded = mExpandedIds.contains(itemId);
 
-        boolean found = false;
-        for (int i = 0; i < mAbsListView.getChildCount() && !found; i++) {
-            View childView = mAbsListView.getChildAt(i);
-            if (mAbsListView.getPositionForView(childView) == position && childView.getTag() instanceof ViewHolder) {
-                found = true;
-                toggle(((ViewHolder) childView.getTag()).contentParent);
-            }
+        View contentParent = getContentParent(position);
+        if (contentParent != null) {
+            toggle(contentParent);
         }
 
-        if (!found && isExpanded) {
-            mVisibleIds.remove(itemId);
-        } else if (!found && !isExpanded) {
-            mVisibleIds.add(itemId);
+        if (contentParent == null && isExpanded) {
+            mExpandedIds.remove(itemId);
+        } else if (contentParent == null && !isExpanded) {
+            mExpandedIds.add(itemId);
         }
     }
 
     private void toggle(View contentParent) {
         boolean isVisible = contentParent.getVisibility() == View.VISIBLE;
-        if (!isVisible && mLimit > 0 && mVisibleIds.size() >= mLimit) {
-            Long firstId = mVisibleIds.get(0);
-            View firstEV = mExpandedViews.get(firstId);
-            if (firstEV != null) {
-                ViewHolder firstVH = ((ViewHolder) firstEV.getTag());
-                ViewGroup victimContentParent = firstVH.contentParent;
-                ExpandCollapseHelper.animateCollapsing(victimContentParent);
-                mExpandedViews.remove(mVisibleIds.get(0));
+        boolean shouldCollapseOther = !isVisible && mLimit > 0 && mExpandedIds.size() >= mLimit;
+        if (shouldCollapseOther) {
+            Long firstId = mExpandedIds.get(0);
+
+            int firstPosition = -1;
+            for (int i = 0; i < getCount(); ++i) {
+                if (getItemId(i) == firstId) {
+                    firstPosition = i;
+                }
             }
-            mVisibleIds.remove(mVisibleIds.get(0));
+
+            if (firstPosition != -1) {
+                View firstEV = getContentParent(firstPosition);
+                if (firstEV != null) {
+                    ExpandCollapseHelper.animateCollapsing(firstEV);
+                }
+            }
+            mExpandedIds.remove(firstId);
         }
 
+        Long id = (Long) contentParent.getTag();
         if (isVisible) {
             ExpandCollapseHelper.animateCollapsing(contentParent);
-            mVisibleIds.remove(contentParent.getTag());
-            mExpandedViews.remove(contentParent.getTag());
+            mExpandedIds.remove(id);
         } else {
             ExpandCollapseHelper.animateExpanding(contentParent, mAbsListView);
-            mVisibleIds.add((Long) contentParent.getTag());
-
-            if (mLimit > 0) {
-                View parent = (View) contentParent.getParent();
-                mExpandedViews.put((Long) contentParent.getTag(), parent);
-            }
+            mExpandedIds.add(id);
         }
     }
 
