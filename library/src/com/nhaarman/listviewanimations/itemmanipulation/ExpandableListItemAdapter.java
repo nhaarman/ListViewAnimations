@@ -37,10 +37,12 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 
     private AbsListView mAbsListView;
 
+    private ExpandCollapseListener mExpandCollapseListener;
+
     /**
      * Creates a new ExpandableListItemAdapter with an empty list.
      */
-    protected ExpandableListItemAdapter(Context context) {
+    public ExpandableListItemAdapter(Context context) {
         this(context, null);
     }
 
@@ -48,7 +50,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * Creates a new {@link ExpandableListItemAdapter} with the specified list,
      * or an empty list if items == null.
      */
-    protected ExpandableListItemAdapter(Context context, List<T> items) {
+    public ExpandableListItemAdapter(Context context, List<T> items) {
         super(items);
         mContext = context;
         mTitleParentResId = DEFAULTTITLEPARENTRESID;
@@ -62,7 +64,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * layout resource for the view; titleParentResId and contentParentResId
      * should be identifiers for ViewGroups within that layout.
      */
-    protected ExpandableListItemAdapter(Context context, int layoutResId, int titleParentResId, int contentParentResId) {
+    public ExpandableListItemAdapter(Context context, int layoutResId, int titleParentResId, int contentParentResId) {
         this(context, layoutResId, titleParentResId, contentParentResId, null);
     }
 
@@ -72,7 +74,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * titleParentResId and contentParentResId should be identifiers for
      * ViewGroups within that layout.
      */
-    protected ExpandableListItemAdapter(Context context, int layoutResId, int titleParentResId, int contentParentResId, List<T> items) {
+    public ExpandableListItemAdapter(Context context, int layoutResId, int titleParentResId, int contentParentResId, List<T> items) {
         super(items);
         mContext = context;
         mViewLayoutResId = layoutResId;
@@ -112,6 +114,13 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         mLimit = limit;
         mExpandedIds.clear();
         notifyDataSetChanged();
+    }
+
+    /**
+     * Set the {@link com.nhaarman.listviewanimations.itemmanipulation.ExpandCollapseListener} that should be notified of expand / collapse events.
+     */
+    public void setExpandCollapseListener(ExpandCollapseListener expandCollapseListener) {
+        mExpandCollapseListener = expandCollapseListener;
     }
 
     @Override
@@ -323,6 +332,15 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         return result;
     }
 
+    private int findPositionForId(long id) {
+        for (int i = 0; i < getCount(); i++) {
+            if (getItemId(i) == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     /**
      * Toggle the {@link View} at given position, ignores header or footer Views.
      *
@@ -350,29 +368,35 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         if (shouldCollapseOther) {
             Long firstId = mExpandedIds.get(0);
 
-            int firstPosition = -1;
-            for (int i = 0; i < getCount(); ++i) {
-                if (getItemId(i) == firstId) {
-                    firstPosition = i;
-                }
-            }
-
-            if (firstPosition != -1) {
-                View firstEV = getContentParent(firstPosition);
-                if (firstEV != null) {
-                    ExpandCollapseHelper.animateCollapsing(firstEV);
-                }
+            int firstPosition = findPositionForId(firstId);
+            View firstEV = getContentParent(firstPosition);
+            if (firstEV != null) {
+                ExpandCollapseHelper.animateCollapsing(firstEV);
             }
             mExpandedIds.remove(firstId);
+
+            if (mExpandCollapseListener != null) {
+                mExpandCollapseListener.onItemCollapsed(firstPosition);
+            }
         }
 
         Long id = (Long) contentParent.getTag();
+        int position = findPositionForId(id);
         if (isVisible) {
             ExpandCollapseHelper.animateCollapsing(contentParent);
             mExpandedIds.remove(id);
+
+            if (mExpandCollapseListener != null) {
+                mExpandCollapseListener.onItemCollapsed(position);
+            }
+
         } else {
             ExpandCollapseHelper.animateExpanding(contentParent, mAbsListView);
             mExpandedIds.add(id);
+
+            if (mExpandCollapseListener != null) {
+                mExpandCollapseListener.onItemExpanded(position);
+            }
         }
     }
 
