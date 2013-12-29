@@ -2,7 +2,7 @@ apply plugin:'android-library'
 
 dependencies {
     compile 'com.android.support:support-v4:18.0.0'
-    compile 'com.nineoldandroids:library:2.4.+'
+    compile 'com.nineoldandroids:library:2.4.0'
 }
 
 android {
