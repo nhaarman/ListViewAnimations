@@ -16,7 +16,9 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An {@link ArrayAdapter} which allows items to be expanded using an animation.
@@ -272,6 +274,20 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 
         return contentView;
     }
+    
+    @Override
+    public void notifyDataSetChanged() {
+    	super.notifyDataSetChanged();
+    	
+    	Set<Long> removedIds = new HashSet<Long>(mExpandedIds);
+    	
+    	for (int i = 0; i < getCount(); ++i) {
+    		long id = getItemId(i);
+    		removedIds.remove(id);
+    	}
+    	
+    	mExpandedIds.removeAll(removedIds);
+    }
 
     /**
      * Return the content parent at the specified position.
@@ -321,16 +337,21 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         toggle(position);
     }
 
-    private View findViewForPosition(int position) {
-        View result = null;
-        for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
-            View childView = mAbsListView.getChildAt(i);
-            if (mAbsListView.getPositionForView(childView) == position) {
-                result = childView;
-            }
-        }
-        return result;
-    }
+	private View findViewForPosition(int position) {
+		View result = null;
+		for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
+			View childView = mAbsListView.getChildAt(i);
+			if (childView.getTag() instanceof ViewHolder) {
+				ViewHolder holder = (ViewHolder) childView.getTag();
+				long id = (Long) holder.contentParent.getTag();
+				int childPosition = findPositionForId(id);
+				if (childPosition == position) {
+					result = childView;
+				}
+			}
+		}
+		return result;
+	}
 
     private int findPositionForId(long id) {
         for (int i = 0; i < getCount(); i++) {
