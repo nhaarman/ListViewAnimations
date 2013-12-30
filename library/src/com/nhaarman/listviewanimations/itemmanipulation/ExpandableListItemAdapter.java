@@ -277,16 +277,16 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     
     @Override
     public void notifyDataSetChanged() {
-    	super.notifyDataSetChanged();
-    	
-    	Set<Long> removedIds = new HashSet<Long>(mExpandedIds);
-    	
-    	for (int i = 0; i < getCount(); ++i) {
-    		long id = getItemId(i);
-    		removedIds.remove(id);
-    	}
-    	
-    	mExpandedIds.removeAll(removedIds);
+        super.notifyDataSetChanged();
+
+        Set<Long> removedIds = new HashSet<Long>(mExpandedIds);
+
+        for (int i = 0; i < getCount(); ++i) {
+            long id = getItemId(i);
+            removedIds.remove(id);
+        }
+
+        mExpandedIds.removeAll(removedIds);
     }
 
     /**
@@ -337,21 +337,21 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         toggle(position);
     }
 
-	private View findViewForPosition(int position) {
-		View result = null;
-		for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
-			View childView = mAbsListView.getChildAt(i);
-			if (childView.getTag() instanceof ViewHolder) {
-				ViewHolder holder = (ViewHolder) childView.getTag();
-				long id = (Long) holder.contentParent.getTag();
-				int childPosition = findPositionForId(id);
-				if (childPosition == position) {
-					result = childView;
-				}
-			}
-		}
-		return result;
-	}
+    private View findViewForPosition(int position) {
+        View result = null;
+        for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
+            View childView = mAbsListView.getChildAt(i);
+            if (childView.getTag() instanceof ViewHolder) {
+                ViewHolder holder = (ViewHolder) childView.getTag();
+                long id = (Long) holder.contentParent.getTag();
+                int childPosition = findPositionForId(id);
+                if (childPosition == position) {
+                    result = childView;
+                }
+            }
+        }
+        return result;
+    }
 
     private int findPositionForId(long id) {
         for (int i = 0; i < getCount(); i++) {
