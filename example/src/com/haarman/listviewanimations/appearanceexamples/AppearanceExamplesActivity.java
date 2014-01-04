@@ -46,7 +46,6 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
         super.onCreate(savedInstanceState);
 
         mAdapter = new MyAdapter(this, getItems());
-        setAlphaAdapter();
 
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         getSupportActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
