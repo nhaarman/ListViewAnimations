@@ -40,6 +40,9 @@
             android:name="com.haarman.listviewanimations.itemmanipulationexamples.AnimateDismissActivity"
             android:label="@string/animateremoval" />
         <activity
+            android:name="com.haarman.listviewanimations.itemmanipulationexamples.AnimateAdditionActivity"
+            android:label="@string/animateaddition" />
+        <activity
             android:name="com.haarman.listviewanimations.GridViewActivity"
             android:label="@string/gridviewexample" />
         <activity
