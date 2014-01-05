@@ -144,7 +144,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     private void animateViewIfNecessary(int position, View view, ViewGroup parent) {
-        boolean isMeasuringGridViewItem = parent.getHeight() == 0;
+        boolean isMeasuringGridViewItem = getAbsListView() instanceof GridView && parent.getHeight() == 0;
 
         if (position > mLastAnimatedPosition && mShouldAnimate && !isMeasuringGridViewItem) {
             animateView(position, parent, view);
