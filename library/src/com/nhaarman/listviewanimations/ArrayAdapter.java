@@ -22,6 +22,7 @@ import java.util.List;
 
 import android.widget.BaseAdapter;
 
+import com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter;
 import com.nhaarman.listviewanimations.widget.DynamicListView;
 import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
 
@@ -29,7 +30,7 @@ import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
  * A true {@link ArrayList} adapter providing access to all ArrayList methods.
  * Also implements {@link Swappable} for easy item swapping.
  */
-public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicListView.Swappable {
+public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicListView.Swappable, AnimateAdditionAdapter.Insertable<T> {
 
 	protected List<T> mItems;
 
