@@ -410,14 +410,9 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
             // Sort by descending position
             Collections.sort(mPendingDismisses);
 
-            int nrHeaders = 0;
-            if (mListView instanceof ListView) {
-                nrHeaders = ((ListView) mListView).getHeaderViewsCount();
-            }
-
             int[] dismissPositions = new int[mPendingDismisses.size()];
             for (int i = mPendingDismisses.size() - 1; i >= 0; i--) {
-                dismissPositions[i] = mPendingDismisses.get(i).position - nrHeaders;
+                dismissPositions[i] = mPendingDismisses.get(i).position;
             }
             mCallback.onDismiss(mListView, dismissPositions);
 

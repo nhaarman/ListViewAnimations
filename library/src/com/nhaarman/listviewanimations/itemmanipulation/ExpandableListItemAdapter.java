@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.ListViewSetter;
+import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -341,13 +342,8 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         View result = null;
         for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
             View childView = mAbsListView.getChildAt(i);
-            if (childView.getTag() instanceof ViewHolder) {
-                ViewHolder holder = (ViewHolder) childView.getTag();
-                long id = (Long) holder.contentParent.getTag();
-                int childPosition = findPositionForId(id);
-                if (childPosition == position) {
-                    result = childView;
-                }
+            if (AdapterViewUtil.getPositionForView(mAbsListView, childView) == position) {
+                result = childView;
             }
         }
         return result;
