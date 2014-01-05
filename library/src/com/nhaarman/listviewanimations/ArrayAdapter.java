@@ -15,16 +15,16 @@
  */
 package com.nhaarman.listviewanimations;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter;
 import com.nhaarman.listviewanimations.widget.DynamicListView;
 import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A true {@link ArrayList} adapter providing access to all ArrayList methods.
@@ -32,192 +32,192 @@ import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
  */
 public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicListView.Swappable, AnimateAdditionAdapter.Insertable<T> {
 
-	protected List<T> mItems;
+    protected List<T> mItems;
 
-	/**
-	 * Creates a new ArrayAdapter with an empty list.
-	 */
-	public ArrayAdapter() {
-		this(null);
-	}
+    /**
+     * Creates a new ArrayAdapter with an empty list.
+     */
+    public ArrayAdapter() {
+        this(null);
+    }
 
-	/**
-	 * Creates a new {@link ArrayAdapter} with a <b>copy</b> of the specified
-	 * list, or an empty list if items == null.
-	 */
-	
-	public ArrayAdapter(List<T> items) {
-		mItems = new ArrayList<T>();
-		if (items != null) {
-			mItems.addAll(items);
-		}
-	}
-	
+    /**
+     * Creates a new {@link ArrayAdapter} with a <b>copy</b> of the specified
+     * list, or an empty list if items == null.
+     */
 
-	@Override
-	public int getCount() {
-		return mItems.size();
-	}
+    public ArrayAdapter(List<T> items) {
+        mItems = new ArrayList<T>();
+        if (items != null) {
+            mItems.addAll(items);
+        }
+    }
 
-	@Override
-	public T getItem(int position) {
-		return mItems.get(position);
-	}
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    @Override
+    public int getCount() {
+        return mItems.size();
+    }
 
-	/**
-	 * Appends the specified element to the end of the list.
-	 */
-	// @ requires item != null;
-	public void add(T item) {
-		mItems.add(item);
-		notifyDataSetChanged();
-	}
+    @Override
+    public T getItem(int position) {
+        return mItems.get(position);
+    }
 
-	/**
-	 * Inserts the specified element at the specified position in the list.
-	 */
-	public void add(int position, T item) {
-		mItems.add(position, item);
-		notifyDataSetChanged();
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-	/**
-	 * Appends all of the elements in the specified collection to the end of the
-	 * list, in the order that they are returned by the specified collection's
-	 * Iterator.
-	 */
-	public void addAll(Collection<? extends T> items) {
-		mItems.addAll(items);
-		notifyDataSetChanged();
-	}
+    /**
+     * Appends the specified element to the end of the list.
+     */
+    // @ requires item != null;
+    public void add(T item) {
+        mItems.add(item);
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Appends all of the elements to the end of the list, in the order that
-	 * they are specified.
-	 */
-	public void addAll(T... items) {
-		Collections.addAll(mItems, items);
-		notifyDataSetChanged();
-	}
+    /**
+     * Inserts the specified element at the specified position in the list.
+     */
+    public void add(int position, T item) {
+        mItems.add(position, item);
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Inserts all of the elements in the specified collection into the list,
-	 * starting at the specified position.
-	 */
-	public void addAll(int position, Collection<? extends T> items) {
-		mItems.addAll(position, items);
-		notifyDataSetChanged();
-	}
+    /**
+     * Appends all of the elements in the specified collection to the end of the
+     * list, in the order that they are returned by the specified collection's
+     * Iterator.
+     */
+    public void addAll(Collection<? extends T> items) {
+        mItems.addAll(items);
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Inserts all of the elements into the list, starting at the specified
-	 * position.
-	 */
-	public void addAll(int position, T... items) {
-		for (int i = position; i < (items.length + position); i++) {
-			mItems.add(i, items[i]);
-		}
-		notifyDataSetChanged();
-	}
+    /**
+     * Appends all of the elements to the end of the list, in the order that
+     * they are specified.
+     */
+    public void addAll(T... items) {
+        Collections.addAll(mItems, items);
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Removes all of the elements from the list.
-	 */
-	public void clear() {
-		mItems.clear();
-		notifyDataSetChanged();
-	}
+    /**
+     * Inserts all of the elements in the specified collection into the list,
+     * starting at the specified position.
+     */
+    public void addAll(int position, Collection<? extends T> items) {
+        mItems.addAll(position, items);
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Replaces the element at the specified position in this list with the
-	 * specified element.
-	 */
-	public void set(int position, T item) {
-		mItems.set(position, item);
-		notifyDataSetChanged();
-	}
+    /**
+     * Inserts all of the elements into the list, starting at the specified
+     * position.
+     */
+    public void addAll(int position, T... items) {
+        for (int i = position; i < (items.length + position); i++) {
+            mItems.add(i, items[i]);
+        }
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Removes the specified element from the list
-	 */
-	public void remove(T item) {
-		mItems.remove(item);
-		notifyDataSetChanged();
-	}
+    /**
+     * Removes all of the elements from the list.
+     */
+    public void clear() {
+        mItems.clear();
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Removes the element at the specified position in the list
-	 */
-	public void remove(int position) {
-		mItems.remove(position);
-		notifyDataSetChanged();
-	}
+    /**
+     * Replaces the element at the specified position in this list with the
+     * specified element.
+     */
+    public void set(int position, T item) {
+        mItems.set(position, item);
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Removes all elements at the specified positions in the list
-	 */
-	public void removePositions(Collection<Integer> positions) {
-		ArrayList<Integer> positionsList = new ArrayList<Integer>(positions);
-		Collections.sort(positionsList);
-		Collections.reverse(positionsList);
-		for (int position : positionsList) {
-			mItems.remove(position);
-		}
-		notifyDataSetChanged();
-	}
+    /**
+     * Removes the specified element from the list
+     */
+    public void remove(T item) {
+        mItems.remove(item);
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Removes all of the list's elements that are also contained in the
-	 * specified collection
-	 */
-	public void removeAll(Collection<T> items) {
-		mItems.removeAll(items);
-		notifyDataSetChanged();
-	}
+    /**
+     * Removes the element at the specified position in the list
+     */
+    public void remove(int position) {
+        mItems.remove(position);
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Retains only the elements in the list that are contained in the specified
-	 * collection
-	 */
-	public void retainAll(Collection<T> items) {
-		mItems.retainAll(items);
-		notifyDataSetChanged();
-	}
+    /**
+     * Removes all elements at the specified positions in the list
+     */
+    public void removePositions(Collection<Integer> positions) {
+        ArrayList<Integer> positionsList = new ArrayList<Integer>(positions);
+        Collections.sort(positionsList);
+        Collections.reverse(positionsList);
+        for (int position : positionsList) {
+            mItems.remove(position);
+        }
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Returns the position of the first occurrence of the specified element in
-	 * this list, or -1 if this list does not contain the element. More
-	 * formally, returns the lowest position <tt>i</tt> such that
-	 * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
-	 * or -1 if there is no such position.
-	 */
-	public int indexOf(T item) {
-		return mItems.indexOf(item);
-	}
+    /**
+     * Removes all of the list's elements that are also contained in the
+     * specified collection
+     */
+    public void removeAll(Collection<T> items) {
+        mItems.removeAll(items);
+        notifyDataSetChanged();
+    }
 
-	@Override
-	public void swapItems(int positionOne, int positionTwo) {
-		T temp = getItem(positionOne);
-		set(positionOne, getItem(positionTwo));
-		set(positionTwo, temp);
-	}
-	
-	private BaseAdapter mDataSetChangedSlavedAdapter;
-	
-	public void propagateNotifyDataSetChanged(BaseAdapter slavedAdapter) {
-		mDataSetChangedSlavedAdapter = slavedAdapter;
-	}
+    /**
+     * Retains only the elements in the list that are contained in the specified
+     * collection
+     */
+    public void retainAll(Collection<T> items) {
+        mItems.retainAll(items);
+        notifyDataSetChanged();
+    }
 
-	@Override
-	public void notifyDataSetChanged() {
-		super.notifyDataSetChanged();
-		if (mDataSetChangedSlavedAdapter != null) {
-			mDataSetChangedSlavedAdapter.notifyDataSetChanged();
-		}
-	}
+    /**
+     * Returns the position of the first occurrence of the specified element in
+     * this list, or -1 if this list does not contain the element. More
+     * formally, returns the lowest position <tt>i</tt> such that
+     * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
+     * or -1 if there is no such position.
+     */
+    public int indexOf(T item) {
+        return mItems.indexOf(item);
+    }
+
+    @Override
+    public void swapItems(int positionOne, int positionTwo) {
+        T temp = getItem(positionOne);
+        set(positionOne, getItem(positionTwo));
+        set(positionTwo, temp);
+    }
+
+    private BaseAdapter mDataSetChangedSlavedAdapter;
+
+    public void propagateNotifyDataSetChanged(BaseAdapter slavedAdapter) {
+        mDataSetChangedSlavedAdapter = slavedAdapter;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        if (mDataSetChangedSlavedAdapter != null) {
+            mDataSetChangedSlavedAdapter.notifyDataSetChanged();
+        }
+    }
 }

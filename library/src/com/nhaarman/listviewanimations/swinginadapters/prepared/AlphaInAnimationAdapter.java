@@ -9,22 +9,22 @@ import com.nineoldandroids.animation.Animator;
 
 public class AlphaInAnimationAdapter extends AnimationAdapter {
 
-	public AlphaInAnimationAdapter(BaseAdapter baseAdapter) {
-		super(baseAdapter);
-	}
+    public AlphaInAnimationAdapter(BaseAdapter baseAdapter) {
+        super(baseAdapter);
+    }
 
-	@Override
-	protected long getAnimationDelayMillis() {
-		return DEFAULTANIMATIONDELAYMILLIS;
-	}
+    @Override
+    protected long getAnimationDelayMillis() {
+        return DEFAULTANIMATIONDELAYMILLIS;
+    }
 
-	@Override
-	protected long getAnimationDurationMillis() {
-		return DEFAULTANIMATIONDURATIONMILLIS;
-	}
+    @Override
+    protected long getAnimationDurationMillis() {
+        return DEFAULTANIMATIONDURATIONMILLIS;
+    }
 
-	@Override
-	public Animator[] getAnimators(ViewGroup parent, View view) {
-		return new Animator[0];
-	}
+    @Override
+    public Animator[] getAnimators(ViewGroup parent, View view) {
+        return new Animator[0];
+    }
 }

@@ -29,21 +29,21 @@ import com.nineoldandroids.animation.AnimatorInflater;
  */
 public abstract class ResourceAnimationAdapter<T> extends AnimationAdapter {
 
-	private Context mContext;
+    private Context mContext;
 
-	public ResourceAnimationAdapter(BaseAdapter baseAdapter, Context context) {
-		super(baseAdapter);
-		mContext = context;
-	}
+    public ResourceAnimationAdapter(BaseAdapter baseAdapter, Context context) {
+        super(baseAdapter);
+        mContext = context;
+    }
 
-	@Override
-	public Animator[] getAnimators(ViewGroup parent, View view) {
-		return new Animator[] { AnimatorInflater.loadAnimator(mContext, getAnimationResourceId()) };
-	}
+    @Override
+    public Animator[] getAnimators(ViewGroup parent, View view) {
+        return new Animator[]{AnimatorInflater.loadAnimator(mContext, getAnimationResourceId())};
+    }
 
-	/**
-	 * Get the resource id of the animation to apply to the views.
-	 */
-	protected abstract int getAnimationResourceId();
+    /**
+     * Get the resource id of the animation to apply to the views.
+     */
+    protected abstract int getAnimationResourceId();
 
 }

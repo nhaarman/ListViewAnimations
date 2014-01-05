@@ -31,7 +31,8 @@ import com.nineoldandroids.animation.ValueAnimator;
  * otherwise an {@link java.lang.IllegalArgumentException} is thrown.
  * </p>
  * Usage:
- * Wrap a new instance of this class around a {@link android.widget.BaseAdapter}. Call {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#insert(int, Object)} to animate the addition of an item.
+ * Wrap a new instance of this class around a {@link android.widget.BaseAdapter}.
+ * Call {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#insert(int, Object)} to animate the addition of an item.
  * </p>
  * Extend this class and override {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#getAdditionalAnimators(android.view.View,
  * android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
