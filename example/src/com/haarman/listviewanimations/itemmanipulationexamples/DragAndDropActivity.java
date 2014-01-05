@@ -16,11 +16,12 @@
  package com.haarman.listviewanimations.itemmanipulationexamples;
 
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
+import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.widget.DynamicListView;
 
@@ -35,6 +36,10 @@ public class DragAndDropActivity extends MyListActivity {
 
 		mListView = (DynamicListView) findViewById(R.id.activity_draganddrop_listview);
 		mListView.setDivider(null);
+
+        TextView headerView =new TextView(this);
+        headerView.setText("HEADER");
+        mListView.addHeaderView(headerView);
 
 		final ArrayAdapter<Integer> adapter = createListAdapter();
 		AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(adapter);

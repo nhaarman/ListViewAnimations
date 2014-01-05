@@ -12,7 +12,7 @@ import android.view.View;
  */
 public interface SwipeOnTouchListener extends View.OnTouchListener {
     /**
-     * @return True if the user is currently swiping a list-item horizontally.
+     * @return true if the user is currently swiping a list-item horizontally.
      */
     public boolean isSwiping();
 }

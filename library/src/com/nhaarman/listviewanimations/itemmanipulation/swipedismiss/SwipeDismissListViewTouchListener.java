@@ -29,6 +29,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -185,7 +186,7 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
         if (downView != null) {
             mDownX = motionEvent.getRawX();
             mDownY = motionEvent.getRawY();
-            int downPosition = mListView.getPositionForView(downView);
+            int downPosition = AdapterViewUtil.getPositionForView(mListView, downView);
 
             mCurrentDismissData = createPendingDismissData(downPosition, downView);
 

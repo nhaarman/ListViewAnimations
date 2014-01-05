@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -288,7 +289,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         if ((currentRemovedView == null) ||
                 (currentRemovedView.getParent() == null) ||
                 (currentRemovedView.getItemId() != itemId) ||
-                (getAbsListView().getPositionForView(currentRemovedView) < 0)) {
+                (AdapterViewUtil.getPositionForView(getAbsListView(), currentRemovedView) < 0)) {
             currentRemovedView = getContextualUndoView(itemId);
         }
         return currentRemovedView;
@@ -317,9 +318,11 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     public void swipeViewAtPosition(int position) {
         mCurrentRemovedId = getItemId(position);
         for (int i = 0; i < getAbsListView().getChildCount(); i++) {
-            int positionForView = getAbsListView().getPositionForView(getAbsListView().getChildAt(i));
+            AbsListView absListView = getAbsListView();
+            View childView = absListView.getChildAt(i);
+            int positionForView = AdapterViewUtil.getPositionForView(absListView, childView);
             if (positionForView == position) {
-                swipeView(getAbsListView().getChildAt(i), positionForView);
+                swipeView(childView, positionForView);
             }
         }
     }
@@ -440,12 +443,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         }
 
         private void deleteCurrentItem(View view) {
-            int position = getAbsListView().getPositionForView(view);
-
-            if (getAbsListView() instanceof ListView) {
-                position -= ((ListView) getAbsListView()).getHeaderViewsCount();
-            }
-
+            int position = AdapterViewUtil.getPositionForView(getAbsListView(), view);
             mDeleteItemCallback.deleteItem(position);
         }
 

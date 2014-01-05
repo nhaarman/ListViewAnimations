@@ -30,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeOnTouchListener;
+import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
@@ -166,7 +167,7 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
                     }
 
                     mDownY = motionEvent.getRawY();
-                    mDownPosition = mListView.getPositionForView(mDownView);
+                    mDownPosition = AdapterViewUtil.getPositionForView(mListView, mDownView);
 
                     if (mTouchChildTouched) {
                         mVelocityTracker = VelocityTracker.obtain();

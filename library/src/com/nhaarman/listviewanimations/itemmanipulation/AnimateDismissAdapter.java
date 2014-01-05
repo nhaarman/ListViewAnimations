@@ -21,6 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -119,7 +120,7 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
         List<View> views = new ArrayList<View>();
         for (int i = 0; i < getAbsListView().getChildCount(); i++) {
             View child = getAbsListView().getChildAt(i);
-            if (positions.contains(getAbsListView().getPositionForView(child))) {
+            if (positions.contains(AdapterViewUtil.getPositionForView(getAbsListView(), child))) {
                 views.add(child);
             }
         }
