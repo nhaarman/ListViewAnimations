@@ -259,8 +259,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
             animator.addListener(listener);
 			animator.addUpdateListener(updateListener);
 			animator.start();
-		}
-        else if (mDeleteItemCallback != null) {
+		} else {
             // The hard way.
             deleteItemGivenId(mCurrentRemovedId);
         }
@@ -268,6 +267,10 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	}
 
     private void deleteItemGivenId(long deleteItemId) {
+        if(mDeleteItemCallback == null){
+            return;
+        }
+
         int position = -1;
         int numItems = getCount();
         for (int i = 0; i < numItems; i++) {
@@ -447,6 +450,10 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 		}
 
 		private void deleteCurrentItem(View view) {
+            if(mDeleteItemCallback == null){
+                return;
+            }
+
             int position = getAbsListView().getPositionForView(view);
 
 			if (getAbsListView() instanceof ListView) {
