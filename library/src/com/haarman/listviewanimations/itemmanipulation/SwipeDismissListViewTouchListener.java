@@ -137,8 +137,11 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 
 			return handleMoveEvent(motionEvent);
 
-		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
+
+            return handleCancelEvent(motionEvent);
+
+		case MotionEvent.ACTION_UP:
 
 			mDisallowSwipe = false;
 			mTouchChildTouched = false;
@@ -159,6 +162,28 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 	protected PendingDismissData createPendingDismissData(int position, View view) {
 		return new PendingDismissData(position, view);
 	}
+
+    private boolean handleCancelEvent(MotionEvent motionEvent) {
+            if (mVelocityTracker == null) {
+                return false;
+            }
+
+            if (mCurrentDismissData != null && mSwiping) {
+                // cancel
+                mCurrentDismissData.view.animate()
+                        .translationX(0)
+                        .alpha(1)
+                        .setDuration(mAnimationTime)
+                        .setListener(null);
+            }
+            mVelocityTracker.recycle();
+            mVelocityTracker = null;
+            mDownX = 0;
+            mDownY = 0;
+            mCurrentDismissData = null;
+            mSwiping = false;
+            return false;
+    }
 
 	private boolean handleDownEvent(MotionEvent motionEvent) {
 		if (mPaused) {
@@ -318,6 +343,7 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 		mVelocityTracker.recycle();
 		mVelocityTracker = null;
 		mDownX = 0;
+        mDownY = 0;
 		mCurrentDismissData = null;
 		mSwiping = false;
 		return false;
