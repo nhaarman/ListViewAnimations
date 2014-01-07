@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.itemmanipulation;
+package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.widget.AbsListView;
 import android.widget.ListView;
 
 /**
- * The callback interface used by {@link SwipeDismissListViewTouchListener} to
+ * The callback interface used by {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissListViewTouchListener} to
  * inform its client about a successful dismissal of one or more list item
  * positions.
  */

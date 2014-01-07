@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.haarman.listviewanimations.itemmanipulation.contextualundo;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualundo;
 
 import static com.nineoldandroids.view.ViewHelper.setAlpha;
 import static com.nineoldandroids.view.ViewHelper.setTranslationX;
@@ -32,7 +32,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.haarman.listviewanimations.itemmanipulation.SwipeOnTouchListener;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeOnTouchListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
@@ -69,7 +69,7 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
 
 	public interface Callback {
 
-		void onViewSwiped(View dismissView, int dismissPosition);
+		void onViewSwiped(long dismissViewItemId, int dismissPosition);
 
 		void onListScrolled();
 	}
@@ -150,7 +150,7 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
 					final View childView = mDownView.findViewById(mResIdOfTouchChild);
 					if (childView != null) {
 						final Rect childRect = getChildViewRect(mListView, childView);
-						if (childRect.contains((int) mDownX, (int) mDownY)) {
+						if (childRect.contains((int)motionEvent.getX(), (int)motionEvent.getY())) {
 							mTouchChildTouched = true;
 							mListView.requestDisallowInterceptTouchEvent(true);
 						}
@@ -167,8 +167,13 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
 				mDownY = motionEvent.getRawY();
 				mDownPosition = mListView.getPositionForView(mDownView);
 
-				mVelocityTracker = VelocityTracker.obtain();
-				mVelocityTracker.addMovement(motionEvent);
+                if (mTouchChildTouched) {
+                    mVelocityTracker = VelocityTracker.obtain();
+                    mVelocityTracker.addMovement(motionEvent);
+                }
+                else {
+                    mVelocityTracker = null;
+                }
 			}
 			view.onTouchEvent(motionEvent);
 			return true;
@@ -220,13 +225,13 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
 			}
 			if (dismiss) {
 				// dismiss
-				final View downView = mDownView; // mDownView gets none'd
+                final long itemId = ((ContextualUndoView)mDownView).getItemId();
 				// before animation ends
 				final int downPosition = mDownPosition;
 				animate(mDownView).translationX(dismissRight ? mViewWidth : -mViewWidth).alpha(0).setDuration(mAnimationTime).setListener(new AnimatorListenerAdapter() {
 					@Override
 					public void onAnimationEnd(Animator animation) {
-						mCallback.onViewSwiped(downView, downPosition);
+						mCallback.onViewSwiped(itemId, downPosition);
 					}
 				});
 			} else {

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.itemmanipulation.contextualundo;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualundo;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -76,12 +76,12 @@ public class ContextualUndoView extends FrameLayout {
 
 	public void displayUndo() {
 		updateCountDownTimer("");
-		mContentView.setVisibility(View.GONE);
+		mContentView.setVisibility(View.INVISIBLE);
 		mUndoView.setVisibility(View.VISIBLE);
 	}
 
 	public void displayContentView() {
 		mContentView.setVisibility(View.VISIBLE);
-		mUndoView.setVisibility(View.GONE);
+		mUndoView.setVisibility(View.INVISIBLE);
 	}
 }

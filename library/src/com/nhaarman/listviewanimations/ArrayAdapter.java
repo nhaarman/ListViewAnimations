@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations;
+package com.nhaarman.listviewanimations;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,8 +22,8 @@ import java.util.List;
 
 import android.widget.BaseAdapter;
 
-import com.haarman.listviewanimations.view.DynamicListView;
-import com.haarman.listviewanimations.view.DynamicListView.Swappable;
+import com.nhaarman.listviewanimations.widget.DynamicListView;
+import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
 
 /**
  * A true {@link ArrayList} adapter providing access to all ArrayList methods.
