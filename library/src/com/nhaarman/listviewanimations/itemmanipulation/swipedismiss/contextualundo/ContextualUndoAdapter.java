@@ -313,6 +313,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 	 * @param savedInstanceState
 	 */
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
+        if(savedInstanceState == null) return;
 		mCurrentRemovedId = savedInstanceState.getLong(EXTRA_ACTIVE_REMOVED_ID, -1);
 	}
 
