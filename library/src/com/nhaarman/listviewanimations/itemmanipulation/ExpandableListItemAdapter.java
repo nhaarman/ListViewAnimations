@@ -487,6 +487,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
             ValueAnimator animator = createHeightAnimator(view, 0, view.getMeasuredHeight());
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 final int listViewHeight = listView.getHeight();
+                final int listViewBottomPadding = listView.getPaddingBottom();
                 final View v = findDirectChild(view, listView);
 
                 @Override
@@ -495,7 +496,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
                     if (bottom > listViewHeight) {
                         final int top = v.getTop();
                         if (top > 0) {
-                            listView.smoothScrollBy(Math.min(bottom - listViewHeight, top), 0);
+                            listView.smoothScrollBy(Math.min(bottom - listViewHeight + listViewBottomPadding, top), 0);
                         }
                     }
                 }
