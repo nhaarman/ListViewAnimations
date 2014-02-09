@@ -18,7 +18,6 @@ package com.nhaarman.listviewanimations.itemmanipulation;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
@@ -104,14 +103,9 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
         ArrayList<Integer> positionsList = new ArrayList<Integer>(positions);
         Collections.sort(positionsList);
 
-        int nrHeaders = 0;
-        if (getAbsListView() instanceof ListView) {
-            nrHeaders = ((ListView) getAbsListView()).getHeaderViewsCount();
-        }
-
         int[] dismissPositions = new int[positionsList.size()];
         for (int i = 0; i < positionsList.size(); i++) {
-            dismissPositions[i] = positionsList.get(positionsList.size() - 1 - i - nrHeaders);
+            dismissPositions[i] = positionsList.get(positionsList.size() - 1 - i);
         }
         mCallback.onDismiss(getAbsListView(), dismissPositions);
     }
