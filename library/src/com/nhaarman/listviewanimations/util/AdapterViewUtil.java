@@ -31,7 +31,7 @@ public class AdapterViewUtil {
      * @return the position of the item in the AdapterView represented by given view, or {@link AdapterView#INVALID_POSITION} if the view does not
      * correspond to a list item (or it is not visible).
      */
-    public static int getPositionForView(AdapterView adapterView, View view) {
+    public static int getPositionForView(AdapterView<?> adapterView, View view) {
         int position = adapterView.getPositionForView(view);
 
         if (adapterView instanceof ListView) {
