@@ -72,6 +72,8 @@ import com.nineoldandroids.view.ViewHelper;
  */
 public class DynamicListView extends ListView {
 
+    private int mOriginalTranscriptMode;
+
     public interface OnHoverCellListener {
         public Drawable onHoverCellCreated(Drawable hoverCellDrawable);
     }
@@ -186,6 +188,8 @@ public class DynamicListView extends ListView {
     };
 
     private void makeCellMobile() {
+        mOriginalTranscriptMode = getTranscriptMode();
+        setTranscriptMode(TRANSCRIPT_MODE_NORMAL);
         int position = pointToPosition(mDownX, mDownY);
         int itemNum = position - getFirstVisiblePosition();
         View selectedView = getChildAt(itemNum);
@@ -205,8 +209,7 @@ public class DynamicListView extends ListView {
         mCellIsMobile = true;
         getParent().requestDisallowInterceptTouchEvent(true);
 
-        updateNeighborViewsForID(mMobileItemId);
-
+        updateNeighborViewsForId(mMobileItemId);
     }
 
     /**
@@ -215,7 +218,6 @@ public class DynamicListView extends ListView {
      * single time an invalidate call is made.
      */
     private BitmapDrawable getAndAddHoverView(View v) {
-
         int w = v.getWidth();
         int h = v.getHeight();
         int top = v.getTop();
@@ -249,8 +251,8 @@ public class DynamicListView extends ListView {
      * item is either at the top or bottom of the list, mAboveItemId or mBelowItemId
      * may be invalid.
      */
-    private void updateNeighborViewsForID(long itemID) {
-        int position = getPositionForID(itemID);
+    private void updateNeighborViewsForId(long itemId) {
+        int position = getPositionForId(itemId);
         ListAdapter adapter = getAdapter();
         if (!adapter.hasStableIds()) {
             throw new IllegalStateException("Adapter doesn't have stable ids! Make sure your adapter has stable ids, and override hasStableIds() to return true.");
@@ -261,9 +263,9 @@ public class DynamicListView extends ListView {
     }
 
     /**
-     * Retrieves the view in the list corresponding to itemID
+     * Retrieves the view in the list corresponding to itemId
      */
-    public View getViewForID(long itemID) {
+    private View getViewForId(long itemId) {
         int firstVisiblePosition = getFirstVisiblePosition();
         ListAdapter adapter = getAdapter();
         if (!adapter.hasStableIds()) {
@@ -274,7 +276,7 @@ public class DynamicListView extends ListView {
             View v = getChildAt(i);
             int position = firstVisiblePosition + i;
             long id = adapter.getItemId(position);
-            if (id == itemID) {
+            if (id == itemId) {
                 return v;
             }
         }
@@ -282,10 +284,10 @@ public class DynamicListView extends ListView {
     }
 
     /**
-     * Retrieves the position in the list corresponding to itemID
+     * Retrieves the position in the list corresponding to itemId
      */
-    public int getPositionForID(long itemID) {
-        View v = getViewForID(itemID);
+    private int getPositionForId(long itemId) {
+        View v = getViewForId(itemId);
         if (v == null) {
             return -1;
         } else {
@@ -341,7 +343,7 @@ public class DynamicListView extends ListView {
                 mSkipCallingOnTouchListener = true;
                 boolean retVal = mOnTouchListener.onTouch(this, event);
                 mSkipCallingOnTouchListener = false;
-                return retVal ? true : super.onTouchEvent(event);
+                return retVal || super.onTouchEvent(event);
             }
         }
 
@@ -461,21 +463,21 @@ public class DynamicListView extends ListView {
         final int deltaY = mLastEventY - mDownY;
         int deltaYTotal = mHoverCellOriginalBounds.top + mTotalOffset + deltaY;
 
-        View belowView = getViewForID(mBelowItemId);
-        View mobileView = getViewForID(mMobileItemId);
-        View aboveView = getViewForID(mAboveItemId);
+        View belowView = getViewForId(mBelowItemId);
+        View mobileView = getViewForId(mMobileItemId);
+        View aboveView = getViewForId(mAboveItemId);
 
         boolean isBelow = (belowView != null) && (deltaYTotal > belowView.getTop());
         boolean isAbove = (aboveView != null) && (deltaYTotal < aboveView.getTop());
 
         if (isBelow || isAbove) {
 
-            final long switchItemID = isBelow ? mBelowItemId : mAboveItemId;
+            final long switchItemId = isBelow ? mBelowItemId : mAboveItemId;
             View switchView = isBelow ? belowView : aboveView;
             final int originalItem = getPositionForView(mobileView);
 
             if (switchView == null) {
-                updateNeighborViewsForID(mMobileItemId);
+                updateNeighborViewsForId(mMobileItemId);
                 return;
             }
 
@@ -497,14 +499,14 @@ public class DynamicListView extends ListView {
             mobileView.setVisibility(View.VISIBLE);
             switchView.setVisibility(View.INVISIBLE);
 
-            updateNeighborViewsForID(mMobileItemId);
+            updateNeighborViewsForId(mMobileItemId);
 
             final ViewTreeObserver observer = getViewTreeObserver();
             observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 public boolean onPreDraw() {
                     observer.removeOnPreDrawListener(this);
 
-                    View switchView = getViewForID(switchItemID);
+                    View switchView = getViewForId(switchItemId);
 
                     mTotalOffset += deltaY;
 
@@ -524,7 +526,7 @@ public class DynamicListView extends ListView {
     }
 
     private void swapElements(int indexOne, int indexTwo) {
-        this.mLastMovedToIndex = indexTwo;
+        mLastMovedToIndex = indexTwo;
         ListAdapter adapter = getAdapter();
 
         if (adapter instanceof HeaderViewListAdapter) {
@@ -541,12 +543,15 @@ public class DynamicListView extends ListView {
      * the hover cell back to its correct location.
      */
     private void touchEventsEnded() {
-        final View mobileView = getViewForID(mMobileItemId);
+        final View mobileView = getViewForId(mMobileItemId);
         if (mCellIsMobile || mIsWaitingForScrollFinish) {
             mCellIsMobile = false;
             mIsWaitingForScrollFinish = false;
             mIsMobileScrolling = false;
             mActivePointerId = INVALID_POINTER_ID;
+
+            /* Restore the transcript mode */
+            setTranscriptMode(mOriginalTranscriptMode);
 
             // If the autoscroller has not completed scrolling, we need to wait
             // for it to
@@ -597,7 +602,7 @@ public class DynamicListView extends ListView {
      * Resets all the appropriate fields to a default state.
      */
     private void touchEventsCancelled() {
-        View mobileView = getViewForID(mMobileItemId);
+        View mobileView = getViewForId(mMobileItemId);
         if (mCellIsMobile) {
             mAboveItemId = INVALID_ID;
             mMobileItemId = INVALID_ID;
@@ -640,7 +645,7 @@ public class DynamicListView extends ListView {
      * or below the bounds of the listview. If so, the listview does an appropriate
      * upward or downward smooth scroll so as to reveal new items.
      */
-    public boolean handleMobileCellScroll(Rect r) {
+    private boolean handleMobileCellScroll(Rect r) {
         int offset = computeVerticalScrollOffset();
         int height = getHeight();
         int extent = computeVerticalScrollExtent();
@@ -662,7 +667,7 @@ public class DynamicListView extends ListView {
     }
 
     public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
-        mIsParentHorizontalScrollContainer = (mResIdOfDynamicTouchChild == 0) ? isParentHorizontalScrollContainer : false;
+        mIsParentHorizontalScrollContainer = (mResIdOfDynamicTouchChild == 0) && isParentHorizontalScrollContainer;
     }
 
     public boolean isParentHorizontalScrollContainer() {
@@ -737,7 +742,7 @@ public class DynamicListView extends ListView {
         public void checkAndHandleFirstVisibleCellChange() {
             if (mCurrentFirstVisibleItem != mPreviousFirstVisibleItem) {
                 if (mCellIsMobile && mMobileItemId != INVALID_ID) {
-                    updateNeighborViewsForID(mMobileItemId);
+                    updateNeighborViewsForId(mMobileItemId);
                     handleCellSwitch();
                 }
             }
@@ -752,7 +757,7 @@ public class DynamicListView extends ListView {
             int previousLastVisibleItem = mPreviousFirstVisibleItem + mPreviousVisibleItemCount;
             if (currentLastVisibleItem != previousLastVisibleItem) {
                 if (mCellIsMobile && mMobileItemId != INVALID_ID) {
-                    updateNeighborViewsForID(mMobileItemId);
+                    updateNeighborViewsForId(mMobileItemId);
                     handleCellSwitch();
                 }
             }
