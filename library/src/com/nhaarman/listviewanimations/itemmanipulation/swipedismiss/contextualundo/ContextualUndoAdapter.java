@@ -64,12 +64,11 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     private ContextualUndoView mCurrentRemovedView;
     private long mCurrentRemovedId;
 
-    private Handler mHandler;
+    private final Handler mHandler;
+    private final CountDownRunnable mCountDownRunnable;
 
-    private CountDownRunnable mCountDownRunnable;
-
-    private DeleteItemCallback mDeleteItemCallback;
-    private CountDownFormatter mCountDownFormatter;
+    private final DeleteItemCallback mDeleteItemCallback;
+    private final CountDownFormatter mCountDownFormatter;
 
     private ContextualUndoListViewTouchListener mContextualUndoListViewTouchListener;
 
@@ -360,14 +359,39 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
      * Removes any item that was swiped away.
      * @param animate If true, animates the removal (collapsing the item).
      *                If false, removes item immediately without animation.
+     * @deprecated use {@link #removePendingItem()} or {@link #animateRemovePendingItem()} instead.
      */
+    @Deprecated
     public void removePendingItem(boolean animate) {
         if (animate) {
-            removePreviousContextualUndoIfPresent();
-        } else if ((mCurrentRemovedView != null) || (mCurrentRemovedId >= 0)) {
+            animateRemovePendingItem();
+        } else {
+            removePendingItem();
+        }
+    }
+
+    /**
+     * Cancels the count down, and removes any item that was swiped away, without animating. Will cause {@link DeleteItemCallback#deleteItem(int)} to be called.
+     */
+    public void removePendingItem() {
+        if ((mCurrentRemovedView != null) || (mCurrentRemovedId >= 0)) {
             new RemoveViewAnimatorListenerAdapter(mCurrentRemovedView, mCurrentRemovedId).onAnimationEnd(null);
             clearCurrentRemovedView();
         }
+    }
+
+    /**
+     * Removes any item that was swiped away, animating the removal (collapsing the item). {@link DeleteItemCallback#deleteItem(int)} to be called.
+     */
+    public void animateRemovePendingItem() {
+        removePreviousContextualUndoIfPresent();
+    }
+
+    /**
+     * Cancel the count down. This will not cause the {@link DeleteItemCallback#deleteItem(int)} to be called. Use {@link #removePendingItem()} for that instead.
+     */
+    private void cancelCountDown() {
+        mHandler.removeCallbacks(mCountDownRunnable);
     }
 
     /**
