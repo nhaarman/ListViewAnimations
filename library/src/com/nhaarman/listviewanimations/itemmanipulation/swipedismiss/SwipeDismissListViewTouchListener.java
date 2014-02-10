@@ -34,6 +34,7 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -128,17 +129,14 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 
         switch (motionEvent.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-
                 mDisallowSwipe = false;
                 view.onTouchEvent(motionEvent);
                 return handleDownEvent(motionEvent);
-
             case MotionEvent.ACTION_MOVE:
-
                 return handleMoveEvent(motionEvent);
-
-            case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                return handleCancelEvent(motionEvent);
+            case MotionEvent.ACTION_UP:
 
                 mDisallowSwipe = false;
                 mTouchChildTouched = false;
@@ -267,6 +265,28 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
         return false;
     }
 
+    private boolean handleCancelEvent(MotionEvent motionEvent) {
+        if (mVelocityTracker == null) {
+            return false;
+        }
+
+        if (mCurrentDismissData != null && mSwiping) {
+            ViewPropertyAnimator.animate(mCurrentDismissData.view)
+                    .translationX(0)
+                    .alpha(1)
+                    .setDuration(mAnimationTime)
+                    .setListener(null);
+        }
+        mVelocityTracker.recycle();
+        mVelocityTracker = null;
+        mDownX = 0;
+        mDownY = 0;
+        mCurrentDismissData = null;
+        mSwiping = false;
+        return false;
+    }
+
+
     private boolean handleUpEvent(MotionEvent motionEvent) {
         if (mVelocityTracker == null) {
             return false;
@@ -312,6 +332,7 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
         mVelocityTracker.recycle();
         mVelocityTracker = null;
         mDownX = 0;
+        mDownY = 0;
         mCurrentDismissData = null;
         mSwiping = false;
         return false;
