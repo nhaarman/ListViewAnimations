@@ -305,10 +305,11 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
     /**
      * This method should be called in your {@link Activity#onRestoreInstanceState(Bundle)} to remember dismissed statuses.
-     * @param savedInstanceState
      */
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        mCurrentRemovedId = savedInstanceState.getLong(EXTRA_ACTIVE_REMOVED_ID, -1);
+        if (savedInstanceState != null) {
+            mCurrentRemovedId = savedInstanceState.getLong(EXTRA_ACTIVE_REMOVED_ID, -1);
+        }
     }
 
     /**
