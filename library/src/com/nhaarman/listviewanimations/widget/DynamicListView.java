@@ -781,7 +781,7 @@ public class DynamicListView extends ListView {
 
         /**
          * Swaps the item on the first adapter position with the item on the second adapter position.
-         * Be sure to call {@link android.widget.BaseAdapter#notifyDataSetChanged()} if appropriate.
+         * Be sure to call {@link android.widget.BaseAdapter#notifyDataSetChanged()} if appropriate when implementing this method.
          *
          * @param positionOne First adapter position.
          * @param positionTwo Second adapter position.

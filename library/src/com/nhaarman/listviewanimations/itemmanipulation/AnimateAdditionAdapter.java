@@ -27,7 +27,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
 
 /**
- * An adapter for inserting rows into the {@link android.widget.AbsListView} with an animation. The root {@link BaseAdapter} should implement {@link Insertable},
+ * An EXPERIMENTAL adapter for inserting rows into the {@link android.widget.AbsListView} with an animation. The root {@link BaseAdapter} should implement {@link Insertable},
  * otherwise an {@link java.lang.IllegalArgumentException} is thrown.
  * </p>
  * Usage:
@@ -41,8 +41,6 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
     /**
      * An interface for inserting items at a certain index.
-     *
-     * @param <T>
      */
     public interface Insertable<T> {
 

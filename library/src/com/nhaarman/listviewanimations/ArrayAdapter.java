@@ -19,37 +19,50 @@ import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter;
 import com.nhaarman.listviewanimations.widget.DynamicListView;
-import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
- * A true {@link ArrayList} adapter providing access to all ArrayList methods.
- * Also implements {@link Swappable} for easy item swapping.
+ * A {@code true} {@link ArrayList} adapter providing access to all ArrayList methods.
+ * Also implements {@link DynamicListView.Swappable} for easy object swapping, and {@link AnimateAdditionAdapter.Insertable} for inserting objects.
  */
-public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicListView.Swappable, AnimateAdditionAdapter.Insertable<T> {
+@SuppressWarnings("unused")
+public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, DynamicListView.Swappable, AnimateAdditionAdapter.Insertable<T> {
 
     protected List<T> mItems;
 
     /**
-     * Creates a new ArrayAdapter with an empty list.
+     * Creates a new ArrayAdapter with an empty {@code List} .
      */
     public ArrayAdapter() {
         this(null);
     }
 
     /**
-     * Creates a new {@link ArrayAdapter} with a <b>copy</b> of the specified
-     * list, or an empty list if items == null.
+     * Creates a new {@link ArrayAdapter} using given {@code List} , or an empty {@code List}  if objects == null.
      */
+    public ArrayAdapter(List<T> objects) {
+        this(objects, false);
+    }
 
-    public ArrayAdapter(List<T> items) {
-        mItems = new ArrayList<T>();
-        if (items != null) {
-            mItems.addAll(items);
+    /**
+     * Creates a new {@link ArrayAdapter}, using (a copy of) given {@code List} , or an empty {@code List}  if objects = null.
+     * @param copyList {@code true} to create a copy of the {@code List} , {@code false} to reuse the reference.
+     */
+    public ArrayAdapter(List<T> objects, boolean copyList) {
+        if (objects != null) {
+            if (copyList) {
+                mItems = new ArrayList<T>(objects);
+            } else {
+                mItems = objects;
+            }
+        } else {
+            mItems = new ArrayList<T>();
         }
     }
 
@@ -60,151 +73,201 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements DynamicList
     }
 
     @Override
-    public T getItem(int position) {
-        return mItems.get(position);
+    public T getItem(int location) {
+        return mItems.get(location);
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public long getItemId(int location) {
+        return location;
     }
 
     /**
-     * Appends the specified element to the end of the list.
+     * Appends the specified element to the end of the {@code List} .
+     * @param object the object to add.
+     * @return always true.
      */
-    // @ requires item != null;
-    public void add(T item) {
-        mItems.add(item);
+    @Override
+    public boolean add(T object) {
+        boolean result = mItems.add(object);
+        notifyDataSetChanged();
+        return result;
+    }
+
+    @Override
+    public void add(int location, T object) {
+        mItems.add(location, object);
         notifyDataSetChanged();
     }
 
     /**
-     * Inserts the specified element at the specified position in the list.
+     * Adds the objects in the specified collection to the end of this List. The objects are added in the order in which they are returned from the collection's iterator.
+     * @param collection the collection of objects.
+     * @return {@code true} if this {@code List} is modified, {@code false} otherwise.
      */
-    public void add(int position, T item) {
-        mItems.add(position, item);
+    @Override
+    public boolean addAll(Collection<? extends T> collection) {
+        boolean result = mItems.addAll(collection);
         notifyDataSetChanged();
+        return result;
     }
 
     /**
      * Appends all of the elements in the specified collection to the end of the
-     * list, in the order that they are returned by the specified collection's
-     * Iterator.
+     * {@code List} , in the order that they are specified.
+     * @param objects the array of objects.
+     * @return {@code true} if the collection changed during insertion.
      */
-    public void addAll(Collection<? extends T> items) {
-        mItems.addAll(items);
+    public boolean addAll(T... objects) {
+        boolean result = Collections.addAll(mItems, objects);
         notifyDataSetChanged();
+        return result;
+    }
+
+    @Override
+    public boolean addAll(int location, Collection<? extends T> objects) {
+        boolean result = mItems.addAll(location, objects);
+        notifyDataSetChanged();
+        return result;
     }
 
     /**
-     * Appends all of the elements to the end of the list, in the order that
-     * they are specified.
+     * Inserts the objects in the specified collection at the specified location in this List. The objects are added in the order that they specified.
+     * @param location the index at which to insert.
+     * @param objects the array of objects.
      */
-    public void addAll(T... items) {
-        Collections.addAll(mItems, items);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Inserts all of the elements in the specified collection into the list,
-     * starting at the specified position.
-     */
-    public void addAll(int position, Collection<? extends T> items) {
-        mItems.addAll(position, items);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Inserts all of the elements into the list, starting at the specified
-     * position.
-     */
-    public void addAll(int position, T... items) {
-        for (int i = position; i < (items.length + position); i++) {
-            mItems.add(i, items[i]);
+    public void addAll(int location, T... objects) {
+        for (int i = location; i < (objects.length + location); i++) {
+            mItems.add(i, objects[i]);
         }
         notifyDataSetChanged();
     }
 
-    /**
-     * Removes all of the elements from the list.
-     */
+    @Override
     public void clear() {
         mItems.clear();
         notifyDataSetChanged();
     }
 
-    /**
-     * Replaces the element at the specified position in this list with the
-     * specified element.
-     */
-    public void set(int position, T item) {
-        mItems.set(position, item);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Removes the specified element from the list
-     */
-    public void remove(T item) {
-        mItems.remove(item);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Removes the element at the specified position in the list
-     */
-    public void remove(int position) {
-        mItems.remove(position);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Removes all elements at the specified positions in the list
-     */
-    public void removePositions(Collection<Integer> positions) {
-        ArrayList<Integer> positionsList = new ArrayList<Integer>(positions);
-        Collections.sort(positionsList);
-        Collections.reverse(positionsList);
-        for (int position : positionsList) {
-            mItems.remove(position);
-        }
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Removes all of the list's elements that are also contained in the
-     * specified collection
-     */
-    public void removeAll(Collection<T> items) {
-        mItems.removeAll(items);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Retains only the elements in the list that are contained in the specified
-     * collection
-     */
-    public void retainAll(Collection<T> items) {
-        mItems.retainAll(items);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Returns the position of the first occurrence of the specified element in
-     * this list, or -1 if this list does not contain the element. More
-     * formally, returns the lowest position <tt>i</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
-     * or -1 if there is no such position.
-     */
-    public int indexOf(T item) {
-        return mItems.indexOf(item);
+    @Override
+    public boolean contains(Object object) {
+        return mItems.contains(object);
     }
 
     @Override
-    public void swapItems(int positionOne, int positionTwo) {
-        T temp = getItem(positionOne);
-        set(positionOne, getItem(positionTwo));
-        set(positionTwo, temp);
+    public boolean containsAll(Collection<?> collection) {
+        return mItems.containsAll(collection);
+    }
+
+    @Override
+    public T get(int location) {
+        return mItems.get(location);
+    }
+
+    @Override
+    public T set(int location, T object) {
+        T result = mItems.set(location, object);
+        notifyDataSetChanged();
+        return result;
+    }
+
+    @Override
+    public int size() {
+        return mItems.size();
+    }
+
+    @Override
+    public List<T> subList(int start, int end) {
+        return mItems.subList(start, end);
+    }
+
+    @Override
+    public Object[] toArray() {
+        return mItems.toArray();
+    }
+
+    @Override
+    public <T1> T1[] toArray(T1[] array) {
+        //noinspection SuspiciousToArrayCall
+        return mItems.toArray(array);
+    }
+
+    @Override
+    public boolean remove(Object object) {
+        boolean result = mItems.remove(object);
+        notifyDataSetChanged();
+        return result;
+    }
+
+    @Override
+    public T remove(int location) {
+        T result = mItems.remove(location);
+        notifyDataSetChanged();
+        return result;
+    }
+
+    /**
+     * Removes all elements at the specified locations in the {@code List} .
+     * @param locations the collection of indexes to remove.
+     * @return a collection containing the removed objects.
+     */
+    public Collection<T> removePositions(Collection<Integer> locations) {
+        ArrayList<T> removedItems = new ArrayList<T>();
+
+        ArrayList<Integer> locationsList = new ArrayList<Integer>(locations);
+        Collections.sort(locationsList);
+        Collections.reverse(locationsList);
+        for (int location : locationsList) {
+            removedItems.add(mItems.remove(location));
+        }
+        notifyDataSetChanged();
+        return removedItems;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> objects) {
+        boolean result = mItems.removeAll(objects);
+        notifyDataSetChanged();
+        return result;
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> objects) {
+        boolean result = mItems.retainAll(objects);
+        notifyDataSetChanged();
+        return result;
+    }
+
+    @Override
+    public int indexOf(Object object) {
+        return mItems.indexOf(object);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return mItems.iterator();
+    }
+
+    @Override
+    public int lastIndexOf(Object object) {
+        return mItems.lastIndexOf(object);
+    }
+
+    @Override
+    public ListIterator<T> listIterator() {
+        return mItems.listIterator();
+    }
+
+    @Override
+    public ListIterator<T> listIterator(int location) {
+        return mItems.listIterator(location);
+    }
+
+    @Override
+    public void swapItems(int locationOne, int locationTwo) {
+        T temp = getItem(locationOne);
+        set(locationOne, getItem(locationTwo));
+        set(locationTwo, temp);
     }
 
     private BaseAdapter mDataSetChangedSlavedAdapter;
