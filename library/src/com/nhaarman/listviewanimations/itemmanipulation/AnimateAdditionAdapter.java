@@ -18,7 +18,9 @@ package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
@@ -34,13 +36,14 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * An EXPERIMENTAL adapter for inserting rows into the {@link android.widget.AbsListView} with an animation. The root {@link BaseAdapter} should implement {@link Insertable},
- * otherwise an {@link java.lang.IllegalArgumentException} is thrown.
- * </p>
- * Usage:
- * Wrap a new instance of this class around a {@link android.widget.BaseAdapter}.
- * Call {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#insert(int, Object)} to animate the addition of an item.
- * </p>
+ * An EXPERIMENTAL adapter for inserting rows into the {@link android.widget.ListView} with an animation. The root {@link BaseAdapter} should implement {@link Insertable},
+ * otherwise an {@link java.lang.IllegalArgumentException} is thrown. This class only works with an instance of {@code ListView}!
+ * <p>
+ * Usage:<br>
+ * - Wrap a new instance of this class around a {@link android.widget.BaseAdapter}. <br>
+ * - Set a {@code ListView} to this class using {@link #setListView(android.widget.ListView)}.<br>
+ * - Call {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#insert(int, Object)} to animate the addition of an item.
+ * <p>
  * Extend this class and override {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#getAdditionalAnimators(android.view.View,
  * android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
  */
@@ -60,6 +63,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         public void add(int index, T item);
     }
 
+    private final Insertable<T> mInsertable;
     private final InsertQueue<T> mInsertQueue;
 
     /**
@@ -76,7 +80,8 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             throw new IllegalArgumentException("BaseAdapter should implement Insertable!");
         }
         //noinspection unchecked
-        mInsertQueue = new InsertQueue<T>((Insertable<T>) rootAdapter);
+        mInsertable = (Insertable<T>) rootAdapter;
+        mInsertQueue = new InsertQueue<T>(mInsertable);
     }
 
     private BaseAdapter getRootAdapter() {
@@ -88,17 +93,42 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         return adapter;
     }
 
+    @Override
+    @Deprecated
     /**
-     * Insert an item at given index. Will show an entrance animation for the new item.
+     * @deprecated AnimateAdditionAdapter requires a ListView instance. Use {@link #setListView(android.widget.ListView)} instead.
+     */
+    public void setAbsListView(AbsListView listView) {
+        if (!(listView instanceof ListView)) {
+            throw new IllegalArgumentException("AnimateAdditionAdapter requires a ListView instance!");
+        }
+        super.setAbsListView(listView);
+    }
+
+    public void setListView(ListView listView) {
+        super.setAbsListView(listView);
+    }
+
+    /**
+     * Insert an item at given index. Will show an entrance animation for the new item if the newly added item is visible.
      * Will also call {@link Insertable#add(int, Object)} of the root {@link BaseAdapter}.
      *
      * @param index the index the new item should be inserted at
      * @param item  the item to insert
      */
     public void insert(int index, T item) {
-        mInsertQueue.insert(index, item);
-    }
+        if (getAbsListView().getFirstVisiblePosition() > index) {
+            /* We are below the newly added index, scroll down */
+            mInsertable.add(index, item);
+            ((ListView) getAbsListView()).setSelectionFromTop(getAbsListView().getFirstVisiblePosition() + 1, getAbsListView().getChildAt(0).getTop());
+        } else if (getAbsListView().getLastVisiblePosition() >= index) {
+            /* The inserted item is visible in the screen */
+            mInsertQueue.insert(index, item);
+        } else {
+            /* We are above the newly added index, no animation necessary. */
 
+        }
+    }
 
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
