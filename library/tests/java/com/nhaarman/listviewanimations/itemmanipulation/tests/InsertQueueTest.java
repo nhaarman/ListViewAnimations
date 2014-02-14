@@ -41,7 +41,7 @@ public class InsertQueueTest extends TestCase {
         mInsertQueue.insert(0, 0);
         verify(mInsertable, times(1)).add(0, 0);
 
-        assertThat(mInsertQueue.getActivatedIndexes(), hasItem(0));
+        assertThat(mInsertQueue.getActiveIndexes(), hasItem(0));
     }
 
     /**
@@ -56,7 +56,7 @@ public class InsertQueueTest extends TestCase {
 
         verify(mInsertable, times(0)).add(0, 1);
 
-        assertThat(mInsertQueue.getActivatedIndexes(), not(hasItem(1)));
+        assertThat(mInsertQueue.getActiveIndexes(), not(hasItem(1)));
 
         assertThat(mInsertQueue.getPendingItemsToInsert(), hasItem(pairWithValues(0, 1)));
     }
@@ -68,7 +68,7 @@ public class InsertQueueTest extends TestCase {
         mInsertQueue.insert(0, 0);
         mInsertQueue.clearActive();
 
-        assertThat(mInsertQueue.getActivatedIndexes(), empty());
+        assertThat(mInsertQueue.getActiveIndexes(), empty());
     }
 
     /**
@@ -83,7 +83,7 @@ public class InsertQueueTest extends TestCase {
 
         verify(mInsertable).add(0, 1);
 
-        assertThat(mInsertQueue.getActivatedIndexes(), contains(0));
+        assertThat(mInsertQueue.getActiveIndexes(), contains(0));
     }
 
 
@@ -124,7 +124,7 @@ public class InsertQueueTest extends TestCase {
         assertThat(itemValues.get(2), is(2));
 
         //noinspection unchecked
-        assertThat(mInsertQueue.getActivatedIndexes(), hasItems(0, 1));
+        assertThat(mInsertQueue.getActiveIndexes(), hasItems(0, 1));
     }
 
     /**

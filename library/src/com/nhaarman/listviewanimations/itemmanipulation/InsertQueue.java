@@ -3,7 +3,9 @@ package com.nhaarman.listviewanimations.itemmanipulation;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +42,27 @@ public class InsertQueue<T> {
             mInsertable.add(index, item);
         } else {
             mPendingItemsToInsert.add(new Pair<Integer, T>(index, item));
+        }
+    }
+
+    public void insert(Pair<Integer, T>... indexItemPair) {
+        insert(Arrays.asList(indexItemPair));
+    }
+
+    public void insert(List<Pair<Integer, T>> indexItemPairs) {
+        if (mActiveIndexes.isEmpty() && mPendingItemsToInsert.isEmpty()) {
+            for (Pair<Integer, T> pair : indexItemPairs) {
+                for (AtomicInteger existing : mActiveIndexes) {
+                    if (existing.intValue() >= pair.first) {
+                        existing.incrementAndGet();
+                    }
+                }
+                mActiveIndexes.add(new AtomicInteger(pair.first));
+
+                mInsertable.add(pair.first, pair.second);
+            }
+        } else {
+            mPendingItemsToInsert.addAll(indexItemPairs);
         }
     }
 

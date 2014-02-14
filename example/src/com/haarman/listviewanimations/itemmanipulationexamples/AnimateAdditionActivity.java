@@ -19,11 +19,13 @@ package com.haarman.listviewanimations.itemmanipulationexamples;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
@@ -44,21 +46,12 @@ public class AnimateAdditionActivity extends MyListActivity implements AdapterVi
         MyAdapter myAdapter = new MyAdapter(this, getStringItems());
 
         mAnimateAdditionAdapter = new AnimateAdditionAdapter<String>(myAdapter);
-        mAnimateAdditionAdapter.setAbsListView(getListView());
+        mAnimateAdditionAdapter.setListView(getListView());
 
         getListView().setAdapter(mAnimateAdditionAdapter);
         getListView().setOnItemClickListener(this);
 
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAnimateAdditionAdapter.insert(2, "This is newly added item " + mAddedItemNumber);
-                mAddedItemNumber++;
-                if (mAddedItemNumber < 10)
-                    handler.postDelayed(this, 150);
-            }
-        }, 3000);
+        Toast.makeText(this, "Tap on an item to insert a new item", Toast.LENGTH_LONG).show();
     }
 
     private static ArrayList<String> getStringItems() {
