@@ -24,17 +24,18 @@ import java.util.Set;
 /**
  * An {@link ArrayAdapter} which allows items to be expanded using an animation.
  */
+@SuppressWarnings("UnusedDeclaration")
 public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> implements ListViewSetter {
 
     private static final int DEFAULTTITLEPARENTRESID = 10000;
     private static final int DEFAULTCONTENTPARENTRESID = 10001;
 
-    private Context mContext;
+    private final Context mContext;
     private int mViewLayoutResId;
-    private int mTitleParentResId;
-    private int mContentParentResId;
+    private final int mTitleParentResId;
+    private final int mContentParentResId;
     private int mActionViewResId;
-    private List<Long> mExpandedIds;
+    private final List<Long> mExpandedIds;
 
     private int mLimit;
 
@@ -45,7 +46,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     /**
      * Creates a new ExpandableListItemAdapter with an empty list.
      */
-    public ExpandableListItemAdapter(Context context) {
+    public ExpandableListItemAdapter(final Context context) {
         this(context, null);
     }
 
@@ -53,7 +54,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * Creates a new {@link ExpandableListItemAdapter} with the specified list,
      * or an empty list if items == null.
      */
-    public ExpandableListItemAdapter(Context context, List<T> items) {
+    public ExpandableListItemAdapter(final Context context, final List<T> items) {
         super(items);
         mContext = context;
         mTitleParentResId = DEFAULTTITLEPARENTRESID;
@@ -67,7 +68,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * layout resource for the view; titleParentResId and contentParentResId
      * should be identifiers for ViewGroups within that layout.
      */
-    public ExpandableListItemAdapter(Context context, int layoutResId, int titleParentResId, int contentParentResId) {
+    public ExpandableListItemAdapter(final Context context, final int layoutResId, final int titleParentResId, final int contentParentResId) {
         this(context, layoutResId, titleParentResId, contentParentResId, null);
     }
 
@@ -77,7 +78,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * titleParentResId and contentParentResId should be identifiers for
      * ViewGroups within that layout.
      */
-    public ExpandableListItemAdapter(Context context, int layoutResId, int titleParentResId, int contentParentResId, List<T> items) {
+    public ExpandableListItemAdapter(final Context context, final int layoutResId, final int titleParentResId, final int contentParentResId, final List<T> items) {
         super(items);
         mContext = context;
         mViewLayoutResId = layoutResId;
@@ -88,7 +89,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     }
 
     @Override
-    public void setAbsListView(AbsListView listView) {
+    public void setAbsListView(final AbsListView listView) {
         mAbsListView = listView;
     }
 
@@ -102,7 +103,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      *
      * @param resId the resource id.
      */
-    public void setActionViewResId(int resId) {
+    public void setActionViewResId(final int resId) {
         mActionViewResId = resId;
     }
 
@@ -113,7 +114,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * @param limit the maximum number of items allowed to be expanded. Use <= 0
      *              for no limit.
      */
-    public void setLimit(int limit) {
+    public void setLimit(final int limit) {
         mLimit = limit;
         mExpandedIds.clear();
         notifyDataSetChanged();
@@ -122,12 +123,12 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     /**
      * Set the {@link com.nhaarman.listviewanimations.itemmanipulation.ExpandCollapseListener} that should be notified of expand / collapse events.
      */
-    public void setExpandCollapseListener(ExpandCollapseListener expandCollapseListener) {
+    public void setExpandCollapseListener(final ExpandCollapseListener expandCollapseListener) {
         mExpandCollapseListener = expandCollapseListener;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         ViewGroup view = (ViewGroup) convertView;
         ViewHolder viewHolder;
 
@@ -173,7 +174,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         return view;
     }
 
-    private ViewGroup createView(ViewGroup parent) {
+    private ViewGroup createView(final ViewGroup parent) {
         ViewGroup view;
 
         if (mViewLayoutResId == 0) {
@@ -233,7 +234,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * @param position Index of the view whose state we want.
      * @return true if the view is expanded, false otherwise.
      */
-    public boolean isExpanded(int position) {
+    public boolean isExpanded(final int position) {
         long itemId = getItemId(position);
         return mExpandedIds.contains(itemId);
     }
@@ -244,7 +245,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * @param position Index of the view we want.
      * @return the view if it exist, null otherwise.
      */
-    public View getTitleView(int position) {
+    public View getTitleView(final int position) {
         View titleView = null;
 
         View parentView = findViewForPosition(position);
@@ -262,7 +263,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * @param position Index of the view we want.
      * @return the view if it exist, null otherwise.
      */
-    public View getContentView(int position) {
+    public View getContentView(final int position) {
         View contentView = null;
 
         View parentView = findViewForPosition(position);
@@ -275,7 +276,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 
         return contentView;
     }
-    
+
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
@@ -296,7 +297,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * @param position Index of the view we want.
      * @return the view if it exist, null otherwise.
      */
-    private View getContentParent(int position) {
+    private View getContentParent(final int position) {
         View contentParent = null;
 
         View parentView = findViewForPosition(position);
@@ -315,7 +316,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      *
      * @param position the position to expand.
      */
-    public void expand(int position) {
+    public void expand(final int position) {
         long itemId = getItemId(position);
         if (mExpandedIds.contains(itemId)) {
             return;
@@ -329,7 +330,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      *
      * @param position the position to collapse.
      */
-    public void collapse(int position) {
+    public void collapse(final int position) {
         long itemId = getItemId(position);
         if (!mExpandedIds.contains(itemId)) {
             return;
@@ -338,7 +339,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         toggle(position);
     }
 
-    private View findViewForPosition(int position) {
+    private View findViewForPosition(final int position) {
         View result = null;
         for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
             View childView = mAbsListView.getChildAt(i);
@@ -349,7 +350,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         return result;
     }
 
-    private int findPositionForId(long id) {
+    private int findPositionForId(final long id) {
         for (int i = 0; i < getCount(); i++) {
             if (getItemId(i) == id) {
                 return i;
@@ -363,7 +364,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      *
      * @param position the position of the view to toggle.
      */
-    public void toggle(int position) {
+    public void toggle(final int position) {
         long itemId = getItemId(position);
         boolean isExpanded = mExpandedIds.contains(itemId);
 
@@ -379,7 +380,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         }
     }
 
-    private void toggle(View contentParent) {
+    private void toggle(final View contentParent) {
         boolean isVisible = contentParent.getVisibility() == View.VISIBLE;
         boolean shouldCollapseOther = !isVisible && mLimit > 0 && mExpandedIds.size() >= mLimit;
         if (shouldCollapseOther) {
@@ -419,14 +420,14 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 
     private class TitleViewOnClickListener implements View.OnClickListener {
 
-        private View mContentParent;
+        private final View mContentParent;
 
-        private TitleViewOnClickListener(View contentParent) {
-            this.mContentParent = contentParent;
+        private TitleViewOnClickListener(final View contentParent) {
+            mContentParent = contentParent;
         }
 
         @Override
-        public void onClick(View view) {
+        public void onClick(final View view) {
             toggle(mContentParent);
         }
     }
@@ -436,7 +437,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         private ViewGroup mTitleViewGroup;
         private ViewGroup mContentViewGroup;
 
-        public RootView(Context context) {
+        public RootView(final Context context) {
             super(context);
             init();
         }
@@ -470,7 +471,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
             animator.addListener(new AnimatorListenerAdapter() {
 
                 @Override
-                public void onAnimationEnd(Animator animator) {
+                public void onAnimationEnd(final Animator animator) {
                     view.setVisibility(View.GONE);
                 }
             });
@@ -491,7 +492,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
                 final View v = findDirectChild(view, listView);
 
                 @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                public void onAnimationUpdate(final ValueAnimator valueAnimator) {
                     final int bottom = v.getBottom();
                     if (bottom > listViewHeight) {
                         final int top = v.getTop();
@@ -504,21 +505,22 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
             animator.start();
         }
 
-        private static View findDirectChild(View view, AbsListView listView) {
-            View parent = (View) view.getParent();
+        private static View findDirectChild(final View view, final AbsListView listView) {
+            View result = view;
+            View parent = (View) result.getParent();
             while (parent != listView) {
-                view = parent;
-                parent = (View) view.getParent();
+                result = parent;
+                parent = (View) result.getParent();
             }
-            return view;
+            return result;
         }
 
-        public static ValueAnimator createHeightAnimator(final View view, int start, int end) {
+        public static ValueAnimator createHeightAnimator(final View view, final int start, final int end) {
             ValueAnimator animator = ValueAnimator.ofInt(start, end);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
                 @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                public void onAnimationUpdate(final ValueAnimator valueAnimator) {
                     int value = (Integer) valueAnimator.getAnimatedValue();
 
                     ViewGroup.LayoutParams layoutParams = view.getLayoutParams();

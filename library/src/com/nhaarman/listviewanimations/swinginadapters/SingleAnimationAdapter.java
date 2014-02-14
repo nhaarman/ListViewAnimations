@@ -27,12 +27,12 @@ import com.nineoldandroids.animation.Animator;
  */
 public abstract class SingleAnimationAdapter extends AnimationAdapter {
 
-    public SingleAnimationAdapter(BaseAdapter baseAdapter) {
+    public SingleAnimationAdapter(final BaseAdapter baseAdapter) {
         super(baseAdapter);
     }
 
     @Override
-    public Animator[] getAnimators(ViewGroup parent, View view) {
+    public Animator[] getAnimators(final ViewGroup parent, final View view) {
         Animator animator = getAnimator(parent, view);
         return new Animator[]{animator};
     }

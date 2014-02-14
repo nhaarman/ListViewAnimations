@@ -41,7 +41,7 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
      * @param baseAdapter       the {@link android.widget.BaseAdapter to use}
      * @param onDismissCallback the {@link OnDismissCallback} to be notified of dismissed items.
      */
-    public SwipeDismissAdapter(BaseAdapter baseAdapter, OnDismissCallback onDismissCallback) {
+    public SwipeDismissAdapter(final BaseAdapter baseAdapter, final OnDismissCallback onDismissCallback) {
         this(baseAdapter, onDismissCallback, new SwipeOnScrollListener());
     }
 
@@ -52,18 +52,18 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
      * @param onDismissCallback     the {@link OnDismissCallback} to be notified of dismissed items.
      * @param swipeOnScrollListener the {@link SwipeOnScrollListener} to use.
      */
-    public SwipeDismissAdapter(BaseAdapter baseAdapter, OnDismissCallback onDismissCallback, SwipeOnScrollListener swipeOnScrollListener) {
+    public SwipeDismissAdapter(final BaseAdapter baseAdapter, final OnDismissCallback onDismissCallback, final SwipeOnScrollListener swipeOnScrollListener) {
         super(baseAdapter);
         mOnDismissCallback = onDismissCallback;
         mSwipeOnScrollListener = swipeOnScrollListener;
     }
 
-    protected SwipeDismissListViewTouchListener createListViewTouchListener(AbsListView listView) {
+    protected SwipeDismissListViewTouchListener createListViewTouchListener(final AbsListView listView) {
         return new SwipeDismissListViewTouchListener(listView, mOnDismissCallback, mSwipeOnScrollListener);
     }
 
     @Override
-    public void setAbsListView(AbsListView listView) {
+    public void setAbsListView(final AbsListView listView) {
         super.setAbsListView(listView);
         if (mDecoratedBaseAdapter instanceof ArrayAdapter<?>) {
             ((ArrayAdapter<?>) mDecoratedBaseAdapter).propagateNotifyDataSetChanged(this);
@@ -75,7 +75,7 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     }
 
     @Override
-    public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
+    public void setIsParentHorizontalScrollContainer(final boolean isParentHorizontalScrollContainer) {
         super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
         if (mSwipeDismissListViewTouchListener != null) {
             mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
@@ -91,7 +91,7 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     }
 
     @Override
-    public void setTouchChild(int childResId) {
+    public void setTouchChild(final int childResId) {
         super.setTouchChild(childResId);
         if (mSwipeDismissListViewTouchListener != null) {
             mSwipeDismissListViewTouchListener.setTouchChild(childResId);

@@ -26,8 +26,8 @@ import android.view.View.OnTouchListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeOnTouchListener;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
@@ -45,14 +45,14 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  */
 public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener {
     // Cached ViewConfiguration and system-wide constant values
-    private int mSlop;
-    private int mMinFlingVelocity;
-    private int mMaxFlingVelocity;
-    private long mAnimationTime;
+    private final int mSlop;
+    private final int mMinFlingVelocity;
+    private final int mMaxFlingVelocity;
+    private final long mAnimationTime;
 
     // Fixed properties
-    private AbsListView mListView;
-    private Callback mCallback;
+    private final AbsListView mListView;
+    private final Callback mCallback;
     private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
 
     // Transient properties
@@ -76,7 +76,7 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
         void onListScrolled();
     }
 
-    public ContextualUndoListViewTouchListener(AbsListView listView, Callback callback) {
+    public ContextualUndoListViewTouchListener(final AbsListView listView, final Callback callback) {
         ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity();
@@ -86,14 +86,14 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
         mCallback = callback;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         mPaused = !enabled;
     }
 
     public AbsListView.OnScrollListener makeScrollListener() {
         return new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+            public void onScrollStateChanged(final AbsListView absListView, final int scrollState) {
                 setEnabled(scrollState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
                 if (mPaused) {
                     mCallback.onListScrolled();
@@ -105,156 +105,172 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
             }
 
             @Override
-            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+            public void onScroll(final AbsListView absListView, final int firstVisibleItem, final int visibleItemCount,
+                                 final int totalItemCount) {
             }
         };
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    public boolean onTouch(final View view, final MotionEvent motionEvent) {
         if (mViewWidth < 2) {
             mViewWidth = mListView.getWidth();
         }
 
+        boolean result;
         switch (motionEvent.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN: {
-                mDisallowSwipe = false;
-                if (mPaused) {
-                    return false;
-                }
+            case MotionEvent.ACTION_DOWN:
+                result = handleDownEvent(view, motionEvent);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                result = handleMoveEvent(view, motionEvent);
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                result = handleUpCancelEvent(view, motionEvent);
+                break;
+            default:
+                result = false;
+        }
+        return result;
+    }
 
-                // Find the child view that was touched (perform a hit test)
-                Rect rect = new Rect();
-                int childCount = mListView.getChildCount();
-                int[] listViewCoords = new int[2];
-                mListView.getLocationOnScreen(listViewCoords);
-                int x = (int) motionEvent.getRawX() - listViewCoords[0];
-                int y = (int) motionEvent.getRawY() - listViewCoords[1];
-                View child;
-                for (int i = 0; i < childCount; i++) {
-                    child = mListView.getChildAt(i);
-                    child.getHitRect(rect);
-                    if (rect.contains(x, y)) {
-                        mDownView = child;
-                        break;
-                    }
-                }
+    private boolean handleDownEvent(final View view, final MotionEvent motionEvent) {
+        mDisallowSwipe = false;
+        if (mPaused) {
+            return false;
+        }
 
-                if (mDownView != null && mDownView instanceof ContextualUndoView) {
-                    mDownX = motionEvent.getRawX();
-                    mDownY = motionEvent.getRawY();
+        // Find the child view that was touched (perform a hit test)
+        Rect rect = new Rect();
+        int childCount = mListView.getChildCount();
+        int[] listViewCoords = new int[2];
+        mListView.getLocationOnScreen(listViewCoords);
+        int x = (int) motionEvent.getRawX() - listViewCoords[0];
+        int y = (int) motionEvent.getRawY() - listViewCoords[1];
+        View child;
+        for (int i = 0; i < childCount; i++) {
+            child = mListView.getChildAt(i);
+            child.getHitRect(rect);
+            if (rect.contains(x, y)) {
+                mDownView = child;
+                break;
+            }
+        }
 
-                    mTouchChildTouched = !mIsParentHorizontalScrollContainer && (mResIdOfTouchChild == 0);
+        if (mDownView != null && mDownView instanceof ContextualUndoView) {
+            mDownX = motionEvent.getRawX();
+            mDownY = motionEvent.getRawY();
 
-                    if (mResIdOfTouchChild != 0) {
-                        mIsParentHorizontalScrollContainer = false;
+            mTouchChildTouched = !mIsParentHorizontalScrollContainer && mResIdOfTouchChild == 0;
 
-                        final View childView = mDownView.findViewById(mResIdOfTouchChild);
-                        if (childView != null) {
-                            final Rect childRect = getChildViewRect(mListView, childView);
-                            if (childRect.contains((int) motionEvent.getX(), (int) motionEvent.getY())) {
-                                mTouchChildTouched = true;
-                                mListView.requestDisallowInterceptTouchEvent(true);
-                            }
-                        }
-                    }
+            if (mResIdOfTouchChild != 0) {
+                mIsParentHorizontalScrollContainer = false;
 
-                    if (mIsParentHorizontalScrollContainer) {
-                        // Do it now and don't wait until the user moves more than
-                        // the slop factor.
+                final View childView = mDownView.findViewById(mResIdOfTouchChild);
+                if (childView != null) {
+                    final Rect childRect = getChildViewRect(mListView, childView);
+                    if (childRect.contains((int) motionEvent.getX(), (int) motionEvent.getY())) {
                         mTouchChildTouched = true;
                         mListView.requestDisallowInterceptTouchEvent(true);
                     }
-
-                    mDownY = motionEvent.getRawY();
-                    mDownPosition = AdapterViewUtil.getPositionForView(mListView, mDownView);
-
-                    if (mTouchChildTouched) {
-                        mVelocityTracker = VelocityTracker.obtain();
-                        mVelocityTracker.addMovement(motionEvent);
-                    } else {
-                        mVelocityTracker = null;
-                    }
                 }
-                view.onTouchEvent(motionEvent);
-                return true;
             }
 
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL: {
-                mDisallowSwipe = false;
-                if (mVelocityTracker == null) {
-                    break;
-                }
+            if (mIsParentHorizontalScrollContainer) {
+                // Do it now and don't wait until the user moves more than
+                // the slop factor.
+                mTouchChildTouched = true;
+                mListView.requestDisallowInterceptTouchEvent(true);
+            }
 
-                float deltaX = motionEvent.getRawX() - mDownX;
+            mDownY = motionEvent.getRawY();
+            mDownPosition = AdapterViewUtil.getPositionForView(mListView, mDownView);
+
+            if (mTouchChildTouched) {
+                mVelocityTracker = VelocityTracker.obtain();
                 mVelocityTracker.addMovement(motionEvent);
-                mVelocityTracker.computeCurrentVelocity(1000);
-                float velocityX = Math.abs(mVelocityTracker.getXVelocity());
-                float velocityY = Math.abs(mVelocityTracker.getYVelocity());
-                boolean dismiss = false;
-                boolean dismissRight = false;
-                final float absDeltaX = Math.abs(deltaX);
-                if (absDeltaX > mViewWidth / 2) {
-                    dismiss = true;
-                    dismissRight = deltaX > 0;
-                } else if (mMinFlingVelocity <= velocityX && velocityX <= mMaxFlingVelocity && velocityY < velocityX && absDeltaX > mSlop) {
-                    dismiss = true;
-                    dismissRight = mVelocityTracker.getXVelocity() > 0;
-                }
-                if (dismiss) {
-                    // dismiss
-                    final long itemId = ((ContextualUndoView) mDownView).getItemId();
-                    // before animation ends
-                    final int downPosition = mDownPosition;
-                    animate(mDownView).translationX(dismissRight ? mViewWidth : -mViewWidth).alpha(0).setDuration(mAnimationTime).setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            mCallback.onViewSwiped(itemId, downPosition);
-                        }
-                    });
-                } else {
-                    // cancel
-                    animate(mDownView).translationX(0).alpha(1).setDuration(mAnimationTime).setListener(null);
-                }
-
-                mVelocityTracker.recycle();
+            } else {
                 mVelocityTracker = null;
-                mDownX = 0;
-                mDownView = null;
-                mDownPosition = ListView.INVALID_POSITION;
-                mSwiping = false;
-                break;
             }
-
-            case MotionEvent.ACTION_MOVE: {
-                if (mVelocityTracker == null || mPaused) {
-                    break;
-                }
-
-                mVelocityTracker.addMovement(motionEvent);
-                float deltaX = motionEvent.getRawX() - mDownX;
-                float deltaY = motionEvent.getRawY() - mDownY;
-                if (mTouchChildTouched && !mDisallowSwipe && Math.abs(deltaX) > mSlop && Math.abs(deltaX) > Math.abs(deltaY)) {
-                    mSwiping = true;
-                    mListView.requestDisallowInterceptTouchEvent(true);
-
-                    // Cancel ListView's touch (un-highlighting the item)
-                    MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
-                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
-                    mListView.onTouchEvent(cancelEvent);
-                    cancelEvent.recycle();
-                }
-
-                if (mSwiping) {
-                    setTranslationX(mDownView, deltaX);
-                    setAlpha(mDownView, Math.max(0f, Math.min(1f, 1f - 2f * Math.abs(deltaX) / mViewWidth)));
-                    return true;
-                }
-                break;
-            }
-
         }
+        view.onTouchEvent(motionEvent);
+        return true;
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    private boolean handleMoveEvent(final View view, final MotionEvent motionEvent) {
+        if (mVelocityTracker == null || mPaused) {
+            return false;
+        }
+
+        mVelocityTracker.addMovement(motionEvent);
+        float deltaX = motionEvent.getRawX() - mDownX;
+        float deltaY = motionEvent.getRawY() - mDownY;
+        if (mTouchChildTouched && !mDisallowSwipe && Math.abs(deltaX) > mSlop && Math.abs(deltaX) > Math.abs(deltaY)) {
+            mSwiping = true;
+            mListView.requestDisallowInterceptTouchEvent(true);
+
+            // Cancel ListView's touch (un-highlighting the item)
+            MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
+            cancelEvent.setAction(MotionEvent.ACTION_CANCEL | motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT);
+            mListView.onTouchEvent(cancelEvent);
+            cancelEvent.recycle();
+        }
+
+        if (mSwiping) {
+            setTranslationX(mDownView, deltaX);
+            //noinspection MagicNumber
+            setAlpha(mDownView, Math.max(0f, Math.min(1f, 1f - 2f * Math.abs(deltaX) / mViewWidth)));
+            return true;
+        }
+        return false;
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    private boolean handleUpCancelEvent(final View view, final MotionEvent motionEvent) {
+        mDisallowSwipe = false;
+        if (mVelocityTracker == null) {
+            return false;
+        }
+
+        float deltaX = motionEvent.getRawX() - mDownX;
+        mVelocityTracker.addMovement(motionEvent);
+        mVelocityTracker.computeCurrentVelocity(1000);
+        float velocityX = Math.abs(mVelocityTracker.getXVelocity());
+        float velocityY = Math.abs(mVelocityTracker.getYVelocity());
+        boolean dismiss = false;
+        boolean dismissRight = false;
+        final float absDeltaX = Math.abs(deltaX);
+        if (absDeltaX > mViewWidth / 2) {
+            dismiss = true;
+            dismissRight = deltaX > 0;
+        } else if (mMinFlingVelocity <= velocityX && velocityX <= mMaxFlingVelocity && velocityY < velocityX && absDeltaX > mSlop) {
+            dismiss = true;
+            dismissRight = mVelocityTracker.getXVelocity() > 0;
+        }
+        if (dismiss) {
+            // dismiss
+            final long itemId = ((ContextualUndoView) mDownView).getItemId();
+            // before animation ends
+            final int downPosition = mDownPosition;
+            animate(mDownView).translationX(dismissRight ? mViewWidth : -mViewWidth).alpha(0).setDuration(mAnimationTime).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(final Animator animation) {
+                    mCallback.onViewSwiped(itemId, downPosition);
+                }
+            });
+        } else {
+            // cancel
+            animate(mDownView).translationX(0).alpha(1).setDuration(mAnimationTime).setListener(null);
+        }
+
+        mVelocityTracker.recycle();
+        mVelocityTracker = null;
+        mDownX = 0;
+        mDownView = null;
+        mDownPosition = AdapterView.INVALID_POSITION;
+        mSwiping = false;
         return false;
     }
 
@@ -263,7 +279,7 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
         return mSwiping;
     }
 
-    private Rect getChildViewRect(View parentView, View childView) {
+    private Rect getChildViewRect(final View parentView, View childView) {
         final Rect childRect = new Rect(childView.getLeft(), childView.getTop(), childView.getRight(), childView.getBottom());
         if (parentView == childView) {
             return childRect;
@@ -279,11 +295,11 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
         return childRect;
     }
 
-    void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
-        mIsParentHorizontalScrollContainer = (mResIdOfTouchChild == 0) ? isParentHorizontalScrollContainer : false;
+    void setIsParentHorizontalScrollContainer(final boolean isParentHorizontalScrollContainer) {
+        mIsParentHorizontalScrollContainer = mResIdOfTouchChild == 0 && isParentHorizontalScrollContainer;
     }
 
-    void setTouchChild(int childResId) {
+    void setTouchChild(final int childResId) {
         mResIdOfTouchChild = childResId;
         if (childResId != 0) {
             setIsParentHorizontalScrollContainer(false);

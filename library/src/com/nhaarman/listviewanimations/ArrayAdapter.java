@@ -31,7 +31,7 @@ import java.util.ListIterator;
  * A {@code true} {@link ArrayList} adapter providing access to all ArrayList methods.
  * Also implements {@link DynamicListView.Swappable} for easy object swapping, and {@link AnimateAdditionAdapter.Insertable} for inserting objects.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, DynamicListView.Swappable, AnimateAdditionAdapter.Insertable<T> {
 
     protected List<T> mItems;
@@ -46,7 +46,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
     /**
      * Creates a new {@link ArrayAdapter} using given {@code List} , or an empty {@code List}  if objects == null.
      */
-    public ArrayAdapter(List<T> objects) {
+    public ArrayAdapter(final List<T> objects) {
         this(objects, false);
     }
 
@@ -54,7 +54,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
      * Creates a new {@link ArrayAdapter}, using (a copy of) given {@code List} , or an empty {@code List}  if objects = null.
      * @param copyList {@code true} to create a copy of the {@code List} , {@code false} to reuse the reference.
      */
-    public ArrayAdapter(List<T> objects, boolean copyList) {
+    public ArrayAdapter(final List<T> objects, final boolean copyList) {
         if (objects != null) {
             if (copyList) {
                 mItems = new ArrayList<T>(objects);
@@ -73,12 +73,12 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
     }
 
     @Override
-    public T getItem(int location) {
+    public T getItem(final int location) {
         return mItems.get(location);
     }
 
     @Override
-    public long getItemId(int location) {
+    public long getItemId(final int location) {
         return location;
     }
 
@@ -88,14 +88,14 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
      * @return always true.
      */
     @Override
-    public boolean add(T object) {
+    public boolean add(final T object) {
         boolean result = mItems.add(object);
         notifyDataSetChanged();
         return result;
     }
 
     @Override
-    public void add(int location, T object) {
+    public void add(final int location, final T object) {
         mItems.add(location, object);
         notifyDataSetChanged();
     }
@@ -106,7 +106,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
      * @return {@code true} if this {@code List} is modified, {@code false} otherwise.
      */
     @Override
-    public boolean addAll(Collection<? extends T> collection) {
+    public boolean addAll(final Collection<? extends T> collection) {
         boolean result = mItems.addAll(collection);
         notifyDataSetChanged();
         return result;
@@ -118,14 +118,14 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
      * @param objects the array of objects.
      * @return {@code true} if the collection changed during insertion.
      */
-    public boolean addAll(T... objects) {
+    public boolean addAll(final T... objects) {
         boolean result = Collections.addAll(mItems, objects);
         notifyDataSetChanged();
         return result;
     }
 
     @Override
-    public boolean addAll(int location, Collection<? extends T> objects) {
+    public boolean addAll(final int location, final Collection<? extends T> objects) {
         boolean result = mItems.addAll(location, objects);
         notifyDataSetChanged();
         return result;
@@ -136,8 +136,8 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
      * @param location the index at which to insert.
      * @param objects the array of objects.
      */
-    public void addAll(int location, T... objects) {
-        for (int i = location; i < (objects.length + location); i++) {
+    public void addAll(final int location, final T... objects) {
+        for (int i = location; i < objects.length + location; i++) {
             mItems.add(i, objects[i]);
         }
         notifyDataSetChanged();
@@ -150,22 +150,22 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
     }
 
     @Override
-    public boolean contains(Object object) {
+    public boolean contains(final Object object) {
         return mItems.contains(object);
     }
 
     @Override
-    public boolean containsAll(Collection<?> collection) {
+    public boolean containsAll(final Collection<?> collection) {
         return mItems.containsAll(collection);
     }
 
     @Override
-    public T get(int location) {
+    public T get(final int location) {
         return mItems.get(location);
     }
 
     @Override
-    public T set(int location, T object) {
+    public T set(final int location, final T object) {
         T result = mItems.set(location, object);
         notifyDataSetChanged();
         return result;
@@ -177,7 +177,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
     }
 
     @Override
-    public List<T> subList(int start, int end) {
+    public List<T> subList(final int start, final int end) {
         return mItems.subList(start, end);
     }
 
@@ -187,20 +187,20 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
     }
 
     @Override
-    public <T1> T1[] toArray(T1[] array) {
+    public <T1> T1[] toArray(final T1[] array) {
         //noinspection SuspiciousToArrayCall
         return mItems.toArray(array);
     }
 
     @Override
-    public boolean remove(Object object) {
+    public boolean remove(final Object object) {
         boolean result = mItems.remove(object);
         notifyDataSetChanged();
         return result;
     }
 
     @Override
-    public T remove(int location) {
+    public T remove(final int location) {
         T result = mItems.remove(location);
         notifyDataSetChanged();
         return result;
@@ -211,7 +211,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
      * @param locations the collection of indexes to remove.
      * @return a collection containing the removed objects.
      */
-    public Collection<T> removePositions(Collection<Integer> locations) {
+    public Collection<T> removePositions(final Collection<Integer> locations) {
         ArrayList<T> removedItems = new ArrayList<T>();
 
         ArrayList<Integer> locationsList = new ArrayList<Integer>(locations);
@@ -225,21 +225,21 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
     }
 
     @Override
-    public boolean removeAll(Collection<?> objects) {
+    public boolean removeAll(final Collection<?> objects) {
         boolean result = mItems.removeAll(objects);
         notifyDataSetChanged();
         return result;
     }
 
     @Override
-    public boolean retainAll(Collection<?> objects) {
+    public boolean retainAll(final Collection<?> objects) {
         boolean result = mItems.retainAll(objects);
         notifyDataSetChanged();
         return result;
     }
 
     @Override
-    public int indexOf(Object object) {
+    public int indexOf(final Object object) {
         return mItems.indexOf(object);
     }
 
@@ -249,7 +249,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
     }
 
     @Override
-    public int lastIndexOf(Object object) {
+    public int lastIndexOf(final Object object) {
         return mItems.lastIndexOf(object);
     }
 
@@ -259,12 +259,12 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
     }
 
     @Override
-    public ListIterator<T> listIterator(int location) {
+    public ListIterator<T> listIterator(final int location) {
         return mItems.listIterator(location);
     }
 
     @Override
-    public void swapItems(int locationOne, int locationTwo) {
+    public void swapItems(final int locationOne, final int locationTwo) {
         T temp = getItem(locationOne);
         set(locationOne, getItem(locationTwo));
         set(locationTwo, temp);
@@ -272,7 +272,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
 
     private BaseAdapter mDataSetChangedSlavedAdapter;
 
-    public void propagateNotifyDataSetChanged(BaseAdapter slavedAdapter) {
+    public void propagateNotifyDataSetChanged(final BaseAdapter slavedAdapter) {
         mDataSetChangedSlavedAdapter = slavedAdapter;
     }
 

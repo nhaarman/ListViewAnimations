@@ -5,7 +5,6 @@ import android.util.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -18,14 +17,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  * (int, Object)} method will be called directly if there are no active index-item pairs.
  * Otherwise, pairs will be queued until the active list is empty.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class InsertQueue<T> {
 
-    private AnimateAdditionAdapter.Insertable<T> mInsertable;
+    private final AnimateAdditionAdapter.Insertable<T> mInsertable;
 
     private final Set<AtomicInteger> mActiveIndexes = new HashSet<AtomicInteger>();
     private final List<Pair<Integer, T>> mPendingItemsToInsert = new ArrayList<Pair<Integer, T>>();
 
-    public InsertQueue(AnimateAdditionAdapter.Insertable<T> insertable) {
+    public InsertQueue(final AnimateAdditionAdapter.Insertable<T> insertable) {
         mInsertable = insertable;
     }
 
@@ -35,7 +35,7 @@ public class InsertQueue<T> {
      * @param index the index at which the item should be inserted.
      * @param item the item to insert.
      */
-    public void insert(int index, T item) {
+    public void insert(final int index, final T item) {
         if (mActiveIndexes.isEmpty() && mPendingItemsToInsert.isEmpty()) {
             mActiveIndexes.add(new AtomicInteger(index));
             //noinspection unchecked
@@ -45,11 +45,11 @@ public class InsertQueue<T> {
         }
     }
 
-    public void insert(Pair<Integer, T>... indexItemPair) {
+    public void insert(final Pair<Integer, T>... indexItemPair) {
         insert(Arrays.asList(indexItemPair));
     }
 
-    public void insert(List<Pair<Integer, T>> indexItemPairs) {
+    public void insert(final List<Pair<Integer, T>> indexItemPairs) {
         if (mActiveIndexes.isEmpty() && mPendingItemsToInsert.isEmpty()) {
             for (Pair<Integer, T> pair : indexItemPairs) {
                 for (AtomicInteger existing : mActiveIndexes) {
@@ -78,9 +78,9 @@ public class InsertQueue<T> {
      * Clear the active state for given index. Will insert any pending pairs if this call leads to a state where there are no active pairs.
      * @param index the index to remove.
      */
-    public void removeActiveIndex(int index) {
+    public void removeActiveIndex(final int index) {
         boolean found = false;
-        for (Iterator<AtomicInteger> iterator = mActiveIndexes.iterator(); !found; ) {
+        for (Iterator<AtomicInteger> iterator = mActiveIndexes.iterator(); iterator.hasNext() && !found; ) {
             if (iterator.next().get() == index) {
                 iterator.remove();
                 found = true;

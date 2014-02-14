@@ -49,10 +49,12 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  * , a delay in milliseconds before deleting the item.<br>
  * * Set your {@link ListView} to this ContextualUndoAdapter, and set this ContextualUndoAdapter to your ListView.<br>
  */
+@SuppressWarnings("UnusedDeclaration")
 public class ContextualUndoAdapter extends BaseAdapterDecorator implements ContextualUndoListViewTouchListener.Callback {
 
     private static final int ANIMATION_DURATION = 150;
     private static final String EXTRA_ACTIVE_REMOVED_ID = "removedId";
+    private static final String X = "x";
 
     private final int mUndoLayoutId;
     private final int mUndoActionId;
@@ -80,7 +82,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
      * @param undoActionId The id of the component which undoes the dismissal
      * @param deleteItemCallback The {@link DeleteItemCallback} which is called when an item should be deleted from your collection.
      */
-    public ContextualUndoAdapter(BaseAdapter baseAdapter, int undoLayoutId, int undoActionId, DeleteItemCallback deleteItemCallback) {
+    public ContextualUndoAdapter(final BaseAdapter baseAdapter, final int undoLayoutId, final int undoActionId, final DeleteItemCallback deleteItemCallback) {
         this(baseAdapter, undoLayoutId, undoActionId, -1, -1, deleteItemCallback, null);
     }
 
@@ -94,7 +96,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
      * @param autoDeleteTimeMillis The time in milliseconds that the adapter will wait for he user to hit undo before automatically deleting the item
      * @param deleteItemCallback The {@link DeleteItemCallback} which is called when an item should be deleted from your collection.
      */
-    public ContextualUndoAdapter(BaseAdapter baseAdapter, int undoLayoutResId, int undoActionResId, int autoDeleteTimeMillis, DeleteItemCallback deleteItemCallback) {
+    public ContextualUndoAdapter(final BaseAdapter baseAdapter, final int undoLayoutResId, final int undoActionResId, final int autoDeleteTimeMillis, final DeleteItemCallback deleteItemCallback) {
         this(baseAdapter, undoLayoutResId, undoActionResId, autoDeleteTimeMillis, -1, deleteItemCallback, null);
     }
 
@@ -110,8 +112,8 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
      * @param deleteItemCallback The {@link DeleteItemCallback} which is called when an item should be deleted from your collection.
      * @param countDownFormatter The {@link CountDownFormatter} which provides text to be shown in the {@link TextView} as specified by countDownTextViewResId
      */
-    public ContextualUndoAdapter(BaseAdapter baseAdapter, int undoLayoutResId, int undoActionResId, int autoDeleteTime, int countDownTextViewResId,
-                                 DeleteItemCallback deleteItemCallback, CountDownFormatter countDownFormatter) {
+    public ContextualUndoAdapter(final BaseAdapter baseAdapter, final int undoLayoutResId, final int undoActionResId, final int autoDeleteTime, final int countDownTextViewResId,
+                                 final DeleteItemCallback deleteItemCallback, final CountDownFormatter countDownFormatter) {
         super(baseAdapter);
 
         mHandler = new Handler();
@@ -128,7 +130,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     }
 
     @Override
-    public final View getView(int position, View convertView, ViewGroup parent) {
+    public final View getView(final int position, final View convertView, final ViewGroup parent) {
         final ViewHolder vh;
         ContextualUndoView contextualUndoView = (ContextualUndoView) convertView;
         if (contextualUndoView == null) {
@@ -160,7 +162,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     }
 
     @Override
-    public void setAbsListView(AbsListView listView) {
+    public void setAbsListView(final AbsListView listView) {
         super.setAbsListView(listView);
         mContextualUndoListViewTouchListener = new ContextualUndoListViewTouchListener(listView, this);
         mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
@@ -171,7 +173,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     }
 
     @Override
-    public void onViewSwiped(long dismissViewItemId, int dismissPosition) {
+    public void onViewSwiped(final long dismissViewItemId, final int dismissPosition) {
         ContextualUndoView contextualUndoView = getContextualUndoView(dismissViewItemId);
         if (contextualUndoView == null) {
             removePreviousContextualUndoIfPresent();
@@ -191,7 +193,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         }
     }
 
-    private ContextualUndoView getContextualUndoView(long dismissViewItemId) {
+    private ContextualUndoView getContextualUndoView(final long dismissViewItemId) {
         ContextualUndoView contextualUndoView = null;
 
         AbsListView listView = getAbsListView();
@@ -219,7 +221,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         mHandler.postDelayed(mCountDownRunnable, Math.min(1000, mAutoDeleteDelayMillis));
     }
 
-    private void restoreViewPosition(View view) {
+    private void restoreViewPosition(final View view) {
         setAlpha(view, 1f);
         setTranslationX(view, 0);
     }
@@ -230,7 +232,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         }
     }
 
-    private void setCurrentRemovedView(ContextualUndoView currentRemovedView) {
+    private void setCurrentRemovedView(final ContextualUndoView currentRemovedView) {
         mCurrentRemovedView = currentRemovedView;
         mCurrentRemovedId = currentRemovedView.getItemId();
     }
@@ -268,7 +270,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         clearCurrentRemovedView();
     }
 
-    private void deleteItemGivenId(long deleteItemId) {
+    private void deleteItemGivenId(final long deleteItemId) {
         int position = -1;
         int numItems = getCount();
         for (int i = 0; i < numItems; i++) {
@@ -284,28 +286,29 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         }
     }
 
-    private ContextualUndoView getCurrentRemovedView(ContextualUndoView currentRemovedView, long itemId) {
-        if ((currentRemovedView == null) ||
-                (currentRemovedView.getParent() == null) ||
-                (currentRemovedView.getItemId() != itemId) ||
-                (AdapterViewUtil.getPositionForView(getAbsListView(), currentRemovedView) < 0)) {
-            currentRemovedView = getContextualUndoView(itemId);
+    private ContextualUndoView getCurrentRemovedView(final ContextualUndoView currentRemovedView, final long itemId) {
+        ContextualUndoView result = currentRemovedView;
+        if (result == null ||
+                result.getParent() == null ||
+                result.getItemId() != itemId ||
+                AdapterViewUtil.getPositionForView(getAbsListView(), result) < 0) {
+            result = getContextualUndoView(itemId);
         }
-        return currentRemovedView;
+        return result;
     }
 
     /**
      * This method should be called in your {@link Activity}'s {@link Activity#onSaveInstanceState(Bundle)} to remember dismissed statuses.
      * @param outState the {@link Bundle} provided by Activity.onSaveInstanceState(Bundle).
      */
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         outState.putLong(EXTRA_ACTIVE_REMOVED_ID, mCurrentRemovedId);
     }
 
     /**
      * This method should be called in your {@link Activity#onRestoreInstanceState(Bundle)} to remember dismissed statuses.
      */
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    public void onRestoreInstanceState(final Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mCurrentRemovedId = savedInstanceState.getLong(EXTRA_ACTIVE_REMOVED_ID, -1);
         }
@@ -315,7 +318,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
      * Animate the item at given position away and show the undo {@link View}.
      * @param position the position.
      */
-    public void swipeViewAtPosition(int position) {
+    public void swipeViewAtPosition(final int position) {
         mCurrentRemovedId = getItemId(position);
         for (int i = 0; i < getAbsListView().getChildCount(); i++) {
             AbsListView absListView = getAbsListView();
@@ -328,11 +331,11 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     }
 
     private void swipeView(final View view, final int dismissPosition) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "x", view.getMeasuredWidth());
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, X, view.getMeasuredWidth());
         animator.addListener(new AnimatorListenerAdapter() {
 
             @Override
-            public void onAnimationEnd(Animator animator) {
+            public void onAnimationEnd(final Animator animator) {
                 onViewSwiped(((ContextualUndoView) view).getItemId(), dismissPosition);
             }
         });
@@ -340,7 +343,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     }
 
     @Override
-    public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
+    public void setIsParentHorizontalScrollContainer(final boolean isParentHorizontalScrollContainer) {
         super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
         if (mContextualUndoListViewTouchListener != null) {
             mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
@@ -348,7 +351,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     }
 
     @Override
-    public void setTouchChild(int childResId) {
+    public void setTouchChild(final int childResId) {
         super.setTouchChild(childResId);
         if (mContextualUndoListViewTouchListener != null) {
             mContextualUndoListViewTouchListener.setTouchChild(childResId);
@@ -362,7 +365,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
      * @deprecated use {@link #removePendingItem()} or {@link #animateRemovePendingItem()} instead.
      */
     @Deprecated
-    public void removePendingItem(boolean animate) {
+    public void removePendingItem(final boolean animate) {
         if (animate) {
             animateRemovePendingItem();
         } else {
@@ -374,7 +377,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
      * Cancels the count down, and removes any item that was swiped away, without animating. Will cause {@link DeleteItemCallback#deleteItem(int)} to be called.
      */
     public void removePendingItem() {
-        if ((mCurrentRemovedView != null) || (mCurrentRemovedId >= 0)) {
+        if (mCurrentRemovedView != null || mCurrentRemovedId >= 0) {
             new RemoveViewAnimatorListenerAdapter(mCurrentRemovedView, mCurrentRemovedId).onAnimationEnd(null);
             clearCurrentRemovedView();
         }
@@ -390,7 +393,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     /**
      * Cancel the count down. This will not cause the {@link DeleteItemCallback#deleteItem(int)} to be called. Use {@link #removePendingItem()} for that instead.
      */
-    private void cancelCountDown() {
+    public void cancelCountDown() {
         mHandler.removeCallbacks(mCountDownRunnable);
     }
 
@@ -441,15 +444,15 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         private final long mDismissViewId;
         private final int mOriginalHeight;
 
-        public RemoveViewAnimatorListenerAdapter(ContextualUndoView dismissView, long dismissViewId) {
+        public RemoveViewAnimatorListenerAdapter(final ContextualUndoView dismissView, final long dismissViewId) {
             mDismissView = dismissView;
             mDismissViewId = dismissViewId;
             mOriginalHeight = dismissView.getHeight();
         }
 
         @Override
-        public void onAnimationEnd(Animator animation) {
-            mDismissView = getViewBeingAnimated(animation);
+        public void onAnimationEnd(final Animator animation) {
+            mDismissView = getViewBeingAnimated();
             if (mDismissView == null) {
                 deleteItemGivenId(mDismissViewId);
                 return;
@@ -460,19 +463,19 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
             deleteCurrentItem(mDismissView);
         }
 
-        private void restoreViewDimension(View view) {
+        private void restoreViewDimension(final View view) {
             ViewGroup.LayoutParams lp;
             lp = view.getLayoutParams();
             lp.height = mOriginalHeight;
             view.setLayoutParams(lp);
         }
 
-        private void deleteCurrentItem(View view) {
+        private void deleteCurrentItem(final View view) {
             int position = AdapterViewUtil.getPositionForView(getAbsListView(), view);
             mDeleteItemCallback.deleteItem(position);
         }
 
-        private ContextualUndoView getViewBeingAnimated(Animator animator) {
+        private ContextualUndoView getViewBeingAnimated() {
             ContextualUndoView newDismissView = getCurrentRemovedView(mDismissView, mDismissViewId);
             if (newDismissView != mDismissView) {
                 restoreViewPosition(mDismissView);
@@ -489,14 +492,14 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         final RemoveViewAnimatorListenerAdapter mParentAdapter;
         private final ViewGroup.LayoutParams mLayoutParams;
 
-        public RemoveViewAnimatorUpdateListener(RemoveViewAnimatorListenerAdapter parentAdapter) {
+        public RemoveViewAnimatorUpdateListener(final RemoveViewAnimatorListenerAdapter parentAdapter) {
             mParentAdapter = parentAdapter;
             mLayoutParams = parentAdapter.mDismissView.getLayoutParams();
         }
 
         @Override
-        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-            ContextualUndoView dismissView = mParentAdapter.getViewBeingAnimated(valueAnimator);
+        public void onAnimationUpdate(final ValueAnimator valueAnimator) {
+            ContextualUndoView dismissView = mParentAdapter.getViewBeingAnimated();
             if (dismissView != null) {
                 mLayoutParams.height = (Integer) valueAnimator.getAnimatedValue();
                 dismissView.setLayoutParams(mLayoutParams);
@@ -508,12 +511,12 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
         private final ContextualUndoView mContextualUndoView;
 
-        public UndoListener(ContextualUndoView contextualUndoView) {
+        public UndoListener(final ContextualUndoView contextualUndoView) {
             mContextualUndoView = contextualUndoView;
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             clearCurrentRemovedView();
             mContextualUndoView.displayContentView();
             moveViewOffScreen();
@@ -531,17 +534,17 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
     private class HierarchyChangeListener implements ViewGroup.OnHierarchyChangeListener {
         @Override
-        public void onChildViewAdded(View parent, View child) {
+        public void onChildViewAdded(final View parent, final View child) {
             final ViewHolder vh = ViewHolder.getViewHolder(child);
-            if ((vh != null) && (mCurrentRemovedId > 0) && (vh.mItemId == mCurrentRemovedId)) {
+            if (vh != null && mCurrentRemovedId > 0 && vh.mItemId == mCurrentRemovedId) {
                 mCurrentRemovedView = (ContextualUndoView) child;
             }
         }
 
         @Override
-        public void onChildViewRemoved(View parent, View child) {
+        public void onChildViewRemoved(final View parent, final View child) {
             final ViewHolder vh = ViewHolder.getViewHolder(child);
-            if ((vh != null) && (mCurrentRemovedId > 0) && (vh.mItemId == mCurrentRemovedId)) {
+            if (vh != null && mCurrentRemovedId > 0 && vh.mItemId == mCurrentRemovedId) {
                 mCurrentRemovedView = null;
             }
         }
@@ -552,11 +555,11 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
 
         long mItemId;
 
-        static ViewHolder getViewHolder(View view) {
+        static ViewHolder getViewHolder(final View view) {
             return (ViewHolder) view.getTag();
         }
 
-        ViewHolder(ContextualUndoView contextualUndoView) {
+        ViewHolder(final ContextualUndoView contextualUndoView) {
             mContextualUndoView = contextualUndoView;
             mContextualUndoView.setTag(this);
         }

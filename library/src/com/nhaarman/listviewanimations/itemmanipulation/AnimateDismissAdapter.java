@@ -37,9 +37,10 @@ import java.util.List;
  * A {@link BaseAdapterDecorator} class that provides animations to the removal
  * of items in the given {@link BaseAdapter}.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
 
-    private OnDismissCallback mCallback;
+    private final OnDismissCallback mCallback;
 
     /**
      * Create a new AnimateDismissAdapter based on the given {@link BaseAdapter}.

@@ -31,12 +31,12 @@ public class ContextualUndoView extends FrameLayout {
 
     private long mItemId;
 
-    public ContextualUndoView(Context context, int undoLayoutResId, int countDownTextViewResId) {
+    public ContextualUndoView(final Context context, final int undoLayoutResId, final int countDownTextViewResId) {
         super(context);
         initUndo(undoLayoutResId, countDownTextViewResId);
     }
 
-    private void initUndo(int undoLayoutResId, final int countDownTextViewResId) {
+    private void initUndo(final int undoLayoutResId, final int countDownTextViewResId) {
         mUndoView = View.inflate(getContext(), undoLayoutResId, null);
         addView(mUndoView);
 
@@ -45,13 +45,13 @@ public class ContextualUndoView extends FrameLayout {
         }
     }
 
-    public void updateCountDownTimer(String timerText) {
+    public void updateCountDownTimer(final String timerText) {
         if (mCountDownTV != null) {
             mCountDownTV.setText(timerText);
         }
     }
 
-    public void updateContentView(View contentView) {
+    public void updateContentView(final View contentView) {
         if (mContentView == null) {
             addView(contentView);
         }
@@ -62,7 +62,7 @@ public class ContextualUndoView extends FrameLayout {
         return mContentView;
     }
 
-    public void setItemId(long itemId) {
+    public void setItemId(final long itemId) {
         this.mItemId = itemId;
     }
 
