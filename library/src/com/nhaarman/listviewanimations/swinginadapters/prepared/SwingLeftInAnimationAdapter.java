@@ -27,20 +27,22 @@ import com.nineoldandroids.animation.ObjectAnimator;
  * An implementation of the AnimationAdapter class which applies a
  * swing-in-from-the-left-animation to views.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class SwingLeftInAnimationAdapter extends SingleAnimationAdapter {
 
+    private static final String TRANSLATION_X = "translationX";
     private final long mAnimationDelayMillis;
     private final long mAnimationDurationMillis;
 
-    public SwingLeftInAnimationAdapter(BaseAdapter baseAdapter) {
+    public SwingLeftInAnimationAdapter(final BaseAdapter baseAdapter) {
         this(baseAdapter, DEFAULTANIMATIONDELAYMILLIS, DEFAULTANIMATIONDURATIONMILLIS);
     }
 
-    public SwingLeftInAnimationAdapter(BaseAdapter baseAdapter, long animationDelayMillis) {
+    public SwingLeftInAnimationAdapter(final BaseAdapter baseAdapter, final long animationDelayMillis) {
         this(baseAdapter, animationDelayMillis, DEFAULTANIMATIONDURATIONMILLIS);
     }
 
-    public SwingLeftInAnimationAdapter(BaseAdapter baseAdapter, long animationDelayMillis, long animationDurationMillis) {
+    public SwingLeftInAnimationAdapter(final BaseAdapter baseAdapter, final long animationDelayMillis, final long animationDurationMillis) {
         super(baseAdapter);
         mAnimationDelayMillis = animationDelayMillis;
         mAnimationDurationMillis = animationDurationMillis;
@@ -57,7 +59,7 @@ public class SwingLeftInAnimationAdapter extends SingleAnimationAdapter {
     }
 
     @Override
-    protected Animator getAnimator(ViewGroup parent, View view) {
-        return ObjectAnimator.ofFloat(view, "translationX", 0 - parent.getWidth(), 0);
+    protected Animator getAnimator(final ViewGroup parent, final View view) {
+        return ObjectAnimator.ofFloat(view, TRANSLATION_X, 0 - parent.getWidth(), 0);
     }
 }

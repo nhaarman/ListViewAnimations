@@ -32,6 +32,7 @@ import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
  * Classes extending this class can override methods and provide extra
  * functionality before or after calling the super method.
  */
+@SuppressWarnings("UnusedDeclaration")
 public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, DynamicListView.Swappable, ListViewSetter {
 
 	protected final BaseAdapter mDecoratedBaseAdapter;
@@ -41,12 +42,12 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	private boolean mIsParentHorizontalScrollContainer;
 	private int mResIdTouchChild;
 
-	public BaseAdapterDecorator(BaseAdapter baseAdapter) {
+	public BaseAdapterDecorator(final BaseAdapter baseAdapter) {
 		mDecoratedBaseAdapter = baseAdapter;
 	}
 
 	@Override
-	public void setAbsListView(AbsListView listView) {
+	public void setAbsListView(final AbsListView listView) {
 		mListView = listView;
 
 		if (mDecoratedBaseAdapter instanceof ListViewSetter) {
@@ -70,17 +71,17 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public Object getItem(final int position) {
 		return mDecoratedBaseAdapter.getItem(position);
 	}
 
 	@Override
-	public long getItemId(int position) {
+	public long getItemId(final int position) {
 		return mDecoratedBaseAdapter.getItemId(position);
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, final View convertView, final ViewGroup parent) {
 		return mDecoratedBaseAdapter.getView(position, convertView, parent);
 	}
 
@@ -90,12 +91,12 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	}
 
 	@Override
-	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+	public View getDropDownView(final int position, final View convertView, final ViewGroup parent) {
 		return mDecoratedBaseAdapter.getDropDownView(position, convertView, parent);
 	}
 
 	@Override
-	public int getItemViewType(int position) {
+	public int getItemViewType(final int position) {
 		return mDecoratedBaseAdapter.getItemViewType(position);
 	}
 
@@ -115,7 +116,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	}
 
 	@Override
-	public boolean isEnabled(int position) {
+	public boolean isEnabled(final int position) {
 		return mDecoratedBaseAdapter.isEnabled(position);
 	}
 
@@ -130,10 +131,9 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	
 	/**
 	 * Helper function if you want to force notifyDataSetChanged()
-	 * @param force
 	 */
-	public void notifyDataSetChanged(Boolean force) {
-		if ((force) || (!(mDecoratedBaseAdapter instanceof ArrayAdapter<?>))) {
+	public void notifyDataSetChanged(final boolean force) {
+		if (force || !(mDecoratedBaseAdapter instanceof ArrayAdapter<?>)) {
 			// leads to an infinite loop when trying because ArrayAdapter triggers notifyDataSetChanged itself
 			mDecoratedBaseAdapter.notifyDataSetChanged();
 		}
@@ -145,17 +145,17 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	}
 
 	@Override
-	public void registerDataSetObserver(DataSetObserver observer) {
+	public void registerDataSetObserver(final DataSetObserver observer) {
 		mDecoratedBaseAdapter.registerDataSetObserver(observer);
 	}
 
 	@Override
-	public void unregisterDataSetObserver(DataSetObserver observer) {
+	public void unregisterDataSetObserver(final DataSetObserver observer) {
 		mDecoratedBaseAdapter.unregisterDataSetObserver(observer);
 	}
 
 	@Override
-	public int getPositionForSection(int section) {
+	public int getPositionForSection(final int section) {
 		if (mDecoratedBaseAdapter instanceof SectionIndexer) {
 			return ((SectionIndexer) mDecoratedBaseAdapter).getPositionForSection(section);
 		}
@@ -163,7 +163,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	}
 
 	@Override
-	public int getSectionForPosition(int position) {
+	public int getSectionForPosition(final int position) {
 		if (mDecoratedBaseAdapter instanceof SectionIndexer) {
 			return ((SectionIndexer) mDecoratedBaseAdapter).getSectionForPosition(position);
 		}
@@ -183,7 +183,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	}
 
 	@Override
-	public void swapItems(int positionOne, int positionTwo) {
+	public void swapItems(final int positionOne, final int positionTwo) {
 		if (mDecoratedBaseAdapter instanceof Swappable) {
 			((Swappable) mDecoratedBaseAdapter).swapItems(positionOne, positionTwo);
 		}
@@ -195,10 +195,8 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	 *
 	 * Call this method with the value 'true' to fix this behavior.
 	 * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list-item.
-	 *
-	 * @param isParentHorizontalScrollContainer
 	 */
-	public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
+	public void setIsParentHorizontalScrollContainer(final boolean isParentHorizontalScrollContainer) {
 		mIsParentHorizontalScrollContainer = isParentHorizontalScrollContainer;
 		if (mListView instanceof DynamicListView) {
 			DynamicListView dynListView = (DynamicListView) mListView;
@@ -220,7 +218,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
 	 *
 	 * @param childResId The resource-ID of the list-items' child that the user should touch to be able to swipe the list-items.
 	 */
-	public void setTouchChild(int childResId) {
+	public void setTouchChild(final int childResId) {
 		mResIdTouchChild = childResId;
 		if (mListView instanceof DynamicListView) {
 			DynamicListView dynListView = (DynamicListView) mListView;

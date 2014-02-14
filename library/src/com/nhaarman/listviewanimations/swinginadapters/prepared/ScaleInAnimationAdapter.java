@@ -26,20 +26,22 @@ import com.nineoldandroids.animation.ObjectAnimator;
 public class ScaleInAnimationAdapter extends AnimationAdapter {
 
     private static final float DEFAULTSCALEFROM = 0.8f;
+    private static final String SCALE_X = "scaleX";
+    private static final String SCALE_Y = "scaleY";
 
-    private float mScaleFrom;
-    private long mAnimationDelayMillis;
-    private long mAnimationDurationMillis;
+    private final float mScaleFrom;
+    private final long mAnimationDelayMillis;
+    private final long mAnimationDurationMillis;
 
-    public ScaleInAnimationAdapter(BaseAdapter baseAdapter) {
+    public ScaleInAnimationAdapter(final BaseAdapter baseAdapter) {
         this(baseAdapter, DEFAULTSCALEFROM);
     }
 
-    public ScaleInAnimationAdapter(BaseAdapter baseAdapter, float scaleFrom) {
+    public ScaleInAnimationAdapter(final BaseAdapter baseAdapter, final float scaleFrom) {
         this(baseAdapter, scaleFrom, DEFAULTANIMATIONDELAYMILLIS, DEFAULTANIMATIONDURATIONMILLIS);
     }
 
-    public ScaleInAnimationAdapter(BaseAdapter baseAdapter, float scaleFrom, long animationDelayMillis, long animationDurationMillis) {
+    public ScaleInAnimationAdapter(final BaseAdapter baseAdapter, final float scaleFrom, final long animationDelayMillis, final long animationDurationMillis) {
         super(baseAdapter);
         mScaleFrom = scaleFrom;
         mAnimationDelayMillis = animationDelayMillis;
@@ -57,9 +59,9 @@ public class ScaleInAnimationAdapter extends AnimationAdapter {
     }
 
     @Override
-    public Animator[] getAnimators(ViewGroup parent, View view) {
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", mScaleFrom, 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", mScaleFrom, 1f);
+    public Animator[] getAnimators(final ViewGroup parent, final View view) {
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, SCALE_X, mScaleFrom, 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, SCALE_Y, mScaleFrom, 1f);
         return new ObjectAnimator[]{scaleX, scaleY};
     }
 }

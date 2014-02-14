@@ -9,7 +9,7 @@ import com.nineoldandroids.animation.Animator;
 
 public class AlphaInAnimationAdapter extends AnimationAdapter {
 
-    public AlphaInAnimationAdapter(BaseAdapter baseAdapter) {
+    public AlphaInAnimationAdapter(final BaseAdapter baseAdapter) {
         super(baseAdapter);
     }
 
@@ -24,7 +24,7 @@ public class AlphaInAnimationAdapter extends AnimationAdapter {
     }
 
     @Override
-    public Animator[] getAnimators(ViewGroup parent, View view) {
+    public Animator[] getAnimators(final ViewGroup parent, final View view) {
         return new Animator[0];
     }
 }

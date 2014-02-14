@@ -51,6 +51,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
     private static final long DEFAULT_SCROLLDOWN_ANIMATION_MS = 300;
     private static final long DEFAULT_INSERTION_ANIMATION_MS = 300;
+    private static final String ALPHA = "alpha";
 
     private final Insertable<T> mInsertable;
     private final InsertQueue<T> mInsertQueue;
@@ -66,7 +67,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * @param baseAdapter should implement {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter.Insertable},
      *                    or be a {@link com.nhaarman.listviewanimations.BaseAdapterDecorator} whose BaseAdapter implements the interface.
      */
-    public AnimateAdditionAdapter(BaseAdapter baseAdapter) {
+    public AnimateAdditionAdapter(final BaseAdapter baseAdapter) {
         super(baseAdapter);
 
         BaseAdapter rootAdapter = getRootAdapter();
@@ -92,14 +93,14 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     /**
      * @deprecated AnimateAdditionAdapter requires a ListView instance. Use {@link #setListView(android.widget.ListView)} instead.
      */
-    public void setAbsListView(AbsListView listView) {
+    public void setAbsListView(final AbsListView listView) {
         if (!(listView instanceof ListView)) {
             throw new IllegalArgumentException("AnimateAdditionAdapter requires a ListView instance!");
         }
         super.setAbsListView(listView);
     }
 
-    public void setListView(ListView listView) {
+    public void setListView(final ListView listView) {
         super.setAbsListView(listView);
     }
 
@@ -108,7 +109,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * @param shouldAnimateDown defaults to {@code true}.
      */
     @SuppressWarnings("UnusedDeclaration")
-    public void setShouldAnimateDown(boolean shouldAnimateDown) {
+    public void setShouldAnimateDown(final boolean shouldAnimateDown) {
         mShouldAnimateDown = shouldAnimateDown;
     }
 
@@ -117,7 +118,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * @param scrolldownAnimationDurationMs the duration in ms.
      */
     @SuppressWarnings("UnusedDeclaration")
-    public void setScrolldownAnimationDuration(long scrolldownAnimationDurationMs) {
+    public void setScrolldownAnimationDuration(final long scrolldownAnimationDurationMs) {
         mScrolldownAnimationDurationMs = scrolldownAnimationDurationMs;
     }
 
@@ -126,7 +127,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * @param insertionAnimationDurationMs the duration in ms.
      */
     @SuppressWarnings("UnusedDeclaration")
-    public void setInsertionAnimationDuration(long insertionAnimationDurationMs) {
+    public void setInsertionAnimationDuration(final long insertionAnimationDurationMs) {
         mInsertionAnimationDurationMs = insertionAnimationDurationMs;
     }
 
@@ -137,7 +138,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * @param index the index the new item should be inserted at
      * @param item  the item to insert
      */
-    public void insert(int index, T item) {
+    public void insert(final int index, final T item) {
         insert(new Pair<Integer, T>(index, item));
     }
 
@@ -147,7 +148,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      *
      * @param indexItemPairs the index-item pairs to insert. The first argument of the {@code Pair} is the index, the second argument is the item.
      */
-    public void insert(Pair<Integer, T>... indexItemPairs) {
+    public void insert(final Pair<Integer, T>... indexItemPairs) {
         insert(Arrays.asList(indexItemPairs));
     }
 
@@ -157,7 +158,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      *
      * @param indexItemPairs the index-item pairs to insert. The first argument of the {@code Pair} is the index, the second argument is the item.
      */
-    public void insert(List<Pair<Integer, T>> indexItemPairs) {
+    public void insert(final List<Pair<Integer, T>> indexItemPairs) {
         List<Pair<Integer, T>> visibleViews = new ArrayList<Pair<Integer, T>>();
         List<Integer> insertedPositions = new ArrayList<Integer>();
         List<Integer> insertedBelowPositions = new ArrayList<Integer>();
@@ -251,7 +252,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
                 }
             });
 
-            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
+            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, ALPHA, 0, 1);
 
             AnimatorSet animatorSet = new AnimatorSet();
             Animator[] customAnimators = getAdditionalAnimators(view, parent);
