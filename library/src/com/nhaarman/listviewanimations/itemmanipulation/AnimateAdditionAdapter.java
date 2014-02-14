@@ -22,9 +22,16 @@ import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * An EXPERIMENTAL adapter for inserting rows into the {@link android.widget.AbsListView} with an animation. The root {@link BaseAdapter} should implement {@link Insertable},
@@ -53,7 +60,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         public void add(int index, T item);
     }
 
-    private int mInsertedPosition = -1;
+    private final InsertQueue<T> mInsertQueue;
 
     /**
      * Create a new {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter} with given {@link android.widget.BaseAdapter}.
@@ -64,9 +71,12 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     public AnimateAdditionAdapter(BaseAdapter baseAdapter) {
         super(baseAdapter);
 
-        if (!(getRootAdapter() instanceof Insertable)) {
+        BaseAdapter rootAdapter = getRootAdapter();
+        if (!(rootAdapter instanceof Insertable)) {
             throw new IllegalArgumentException("BaseAdapter should implement Insertable!");
         }
+        //noinspection unchecked
+        mInsertQueue = new InsertQueue<T>((Insertable<T>) rootAdapter);
     }
 
     private BaseAdapter getRootAdapter() {
@@ -85,19 +95,16 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * @param index the index the new item should be inserted at
      * @param item  the item to insert
      */
-    @SuppressWarnings("unchecked")
     public void insert(int index, T item) {
-        mInsertedPosition = index;
-        ((Insertable<T>) getRootAdapter()).add(index, item);
+        mInsertQueue.insert(index, item);
     }
 
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         final View view = super.getView(position, convertView, parent);
 
-        if (position == mInsertedPosition) {
-            mInsertedPosition = -1;
-
+        if (mInsertQueue.getActiveIndexes().contains(position)) {
             int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.AT_MOST);
             int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.AT_MOST);
             view.measure(widthMeasureSpec, heightMeasureSpec);
@@ -121,10 +128,15 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             Animator[] animators = new Animator[customAnimators.length + 2];
             animators[0] = heightAnimator;
             animators[1] = alphaAnimator;
-            for (int i = 0; i < customAnimators.length; i++) {
-                animators[i + 2] = customAnimators[i];
-            }
+            System.arraycopy(customAnimators, 0, animators, 2, customAnimators.length);
             animatorSet.playTogether(animators);
+
+            animatorSet.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mInsertQueue.removeActiveIndex(position);
+                }
+            });
             animatorSet.start();
         }
 

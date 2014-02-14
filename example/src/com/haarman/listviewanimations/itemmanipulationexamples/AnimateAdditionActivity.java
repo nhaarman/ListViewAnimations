@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.haarman.listviewanimations.MyListActivity;
@@ -31,7 +32,10 @@ import com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter;
 
 import java.util.ArrayList;
 
-public class AnimateAdditionActivity extends MyListActivity {
+public class AnimateAdditionActivity extends MyListActivity implements AdapterView.OnItemClickListener {
+
+    private int mAddedItemNumber;
+    private AnimateAdditionAdapter<String> mAnimateAdditionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,27 +43,36 @@ public class AnimateAdditionActivity extends MyListActivity {
 
         MyAdapter myAdapter = new MyAdapter(this, getStringItems());
 
-        final AnimateAdditionAdapter<String> animateAdditionAdapter = new AnimateAdditionAdapter<String>(myAdapter);
-        animateAdditionAdapter.setAbsListView(getListView());
+        mAnimateAdditionAdapter = new AnimateAdditionAdapter<String>(myAdapter);
+        mAnimateAdditionAdapter.setAbsListView(getListView());
 
-        getListView().setAdapter(animateAdditionAdapter);
+        getListView().setAdapter(mAnimateAdditionAdapter);
+        getListView().setOnItemClickListener(this);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                animateAdditionAdapter.insert(2, "This is a new row!");
-                handler.postDelayed(this, 500);
+                mAnimateAdditionAdapter.insert(2, "This is newly added item " + mAddedItemNumber);
+                mAddedItemNumber++;
+                if (mAddedItemNumber < 10)
+                    handler.postDelayed(this, 150);
             }
-        }, 1000);
+        }, 3000);
     }
 
-    public static ArrayList<String> getStringItems() {
+    private static ArrayList<String> getStringItems() {
         ArrayList<String> items = new ArrayList<String>();
         for (int i = 0; i < 1000; i++) {
             items.add("This is row number " + String.valueOf(i));
         }
         return items;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mAnimateAdditionAdapter.insert(position, "This is newly added item " + String.valueOf(mAddedItemNumber));
+        mAddedItemNumber++;
     }
 
     private static class MyAdapter extends ArrayAdapter<String> {
