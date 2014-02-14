@@ -1,8 +1,14 @@
-apply plugin:'android-library'
+apply plugin: 'android-library'
+
 
 dependencies {
     compile 'com.android.support:support-v4:18.0.0'
     compile 'com.nineoldandroids:library:2.4.0'
+
+    instrumentTestCompile ('org.mockito:mockito-core:1.9.5')  { exclude group: 'org.hamcrest' }
+    instrumentTestCompile ('com.google.dexmaker:dexmaker-mockito:1.0')  { exclude group: 'org.hamcrest' }
+    instrumentTestCompile ('junit:junit:4.11')  { exclude group: 'org.hamcrest' }
+    instrumentTestCompile 'org.hamcrest:hamcrest-all:1.3'
 }
 
 android {
@@ -17,6 +23,11 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
+
+        instrumentTest.setRoot('tests')
+        instrumentTest {
+            java.srcDirs = ['tests/java']
+        }
     }
 
     lintOptions {
@@ -28,6 +39,10 @@ android {
         targetSdkVersion 19
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
     }
 }
 

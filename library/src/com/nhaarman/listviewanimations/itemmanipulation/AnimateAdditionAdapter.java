@@ -16,44 +16,49 @@
 
 package com.nhaarman.listviewanimations.itemmanipulation;
 
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
- * An EXPERIMENTAL adapter for inserting rows into the {@link android.widget.AbsListView} with an animation. The root {@link BaseAdapter} should implement {@link Insertable},
- * otherwise an {@link java.lang.IllegalArgumentException} is thrown.
- * </p>
- * Usage:
- * Wrap a new instance of this class around a {@link android.widget.BaseAdapter}.
- * Call {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#insert(int, Object)} to animate the addition of an item.
- * </p>
+ * An EXPERIMENTAL adapter for inserting rows into the {@link android.widget.ListView} with an animation. The root {@link BaseAdapter} should implement {@link Insertable},
+ * otherwise an {@link java.lang.IllegalArgumentException} is thrown. This class only works with an instance of {@code ListView}!
+ * <p>
+ * Usage:<br>
+ * - Wrap a new instance of this class around a {@link android.widget.BaseAdapter}. <br>
+ * - Set a {@code ListView} to this class using {@link #setListView(android.widget.ListView)}.<br>
+ * - Call {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#insert(int, Object)} to animate the addition of an item.
+ * <p>
  * Extend this class and override {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#getAdditionalAnimators(android.view.View,
  * android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
  */
+@SuppressWarnings("unchecked")
 public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
-    /**
-     * An interface for inserting items at a certain index.
-     */
-    public interface Insertable<T> {
+    private static final long DEFAULT_SCROLLDOWN_ANIMATION_MS = 300;
+    private static final long DEFAULT_INSERTION_ANIMATION_MS = 300;
 
-        /**
-         * Will be called to insert given {@code item} at given {@code index} in the list.
-         *
-         * @param index the index the new item should be inserted at
-         * @param item  the item to insert
-         */
-        public void add(int index, T item);
-    }
+    private final Insertable<T> mInsertable;
+    private final InsertQueue<T> mInsertQueue;
 
-    private int mInsertedPosition = -1;
+    private boolean mShouldAnimateDown = true;
+
+    private long mInsertionAnimationDurationMs = DEFAULT_INSERTION_ANIMATION_MS;
+    private long mScrolldownAnimationDurationMs = DEFAULT_SCROLLDOWN_ANIMATION_MS;
 
     /**
      * Create a new {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter} with given {@link android.widget.BaseAdapter}.
@@ -64,9 +69,13 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     public AnimateAdditionAdapter(BaseAdapter baseAdapter) {
         super(baseAdapter);
 
-        if (!(getRootAdapter() instanceof Insertable)) {
+        BaseAdapter rootAdapter = getRootAdapter();
+        if (!(rootAdapter instanceof Insertable)) {
             throw new IllegalArgumentException("BaseAdapter should implement Insertable!");
         }
+
+        mInsertable = (Insertable<T>) rootAdapter;
+        mInsertQueue = new InsertQueue<T>(mInsertable);
     }
 
     private BaseAdapter getRootAdapter() {
@@ -78,26 +87,154 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         return adapter;
     }
 
+    @Override
+    @Deprecated
     /**
-     * Insert an item at given index. Will show an entrance animation for the new item.
+     * @deprecated AnimateAdditionAdapter requires a ListView instance. Use {@link #setListView(android.widget.ListView)} instead.
+     */
+    public void setAbsListView(AbsListView listView) {
+        if (!(listView instanceof ListView)) {
+            throw new IllegalArgumentException("AnimateAdditionAdapter requires a ListView instance!");
+        }
+        super.setAbsListView(listView);
+    }
+
+    public void setListView(ListView listView) {
+        super.setAbsListView(listView);
+    }
+
+    /**
+     * Set whether the list should animate downwards when items are added above the first visible item.
+     * @param shouldAnimateDown defaults to {@code true}.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public void setShouldAnimateDown(boolean shouldAnimateDown) {
+        mShouldAnimateDown = shouldAnimateDown;
+    }
+
+    /**
+     * Set the duration of the scrolldown animation <i>per item</i> for when items are inserted above the first visible item.
+     * @param scrolldownAnimationDurationMs the duration in ms.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public void setScrolldownAnimationDuration(long scrolldownAnimationDurationMs) {
+        mScrolldownAnimationDurationMs = scrolldownAnimationDurationMs;
+    }
+
+    /**
+     * Set the duration of the insertion animation.
+     * @param insertionAnimationDurationMs the duration in ms.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public void setInsertionAnimationDuration(long insertionAnimationDurationMs) {
+        mInsertionAnimationDurationMs = insertionAnimationDurationMs;
+    }
+
+    /**
+     * Insert an item at given index. Will show an entrance animation for the new item if the newly added item is visible.
      * Will also call {@link Insertable#add(int, Object)} of the root {@link BaseAdapter}.
      *
      * @param index the index the new item should be inserted at
      * @param item  the item to insert
      */
-    @SuppressWarnings("unchecked")
     public void insert(int index, T item) {
-        mInsertedPosition = index;
-        ((Insertable<T>) getRootAdapter()).add(index, item);
+        insert(new Pair<Integer, T>(index, item));
     }
 
+    /**
+     * Insert items at given indexes. Will show an entrance animation for the new items if the newly added item is visible.
+     * Will also call {@link Insertable#add(int, Object)} of the root {@link BaseAdapter}.
+     *
+     * @param indexItemPairs the index-item pairs to insert. The first argument of the {@code Pair} is the index, the second argument is the item.
+     */
+    public void insert(Pair<Integer, T>... indexItemPairs) {
+        insert(Arrays.asList(indexItemPairs));
+    }
+
+    /**
+     * Insert items at given indexes. Will show an entrance animation for the new items if the newly added item is visible.
+     * Will also call {@link Insertable#add(int, Object)} of the root {@link BaseAdapter}.
+     *
+     * @param indexItemPairs the index-item pairs to insert. The first argument of the {@code Pair} is the index, the second argument is the item.
+     */
+    public void insert(List<Pair<Integer, T>> indexItemPairs) {
+        List<Pair<Integer, T>> visibleViews = new ArrayList<Pair<Integer, T>>();
+        List<Integer> insertedPositions = new ArrayList<Integer>();
+        List<Integer> insertedBelowPositions = new ArrayList<Integer>();
+
+        int scrollDistance = 0;
+        int numInsertedAbove = 0;
+
+        for (Pair<Integer, T> pair : indexItemPairs) {
+            if (getAbsListView().getFirstVisiblePosition() > pair.first) {
+                /* Inserting an item above the first visible position */
+                int index = pair.first;
+
+                /* Correct the index for already inserted positions above the first visible view. */
+                for (int insertedPosition : insertedPositions) {
+                    if (index >= insertedPosition) {
+                        index++;
+                    }
+                }
+
+                mInsertable.add(index, pair.second);
+                insertedPositions.add(index);
+                numInsertedAbove++;
+
+                if (mShouldAnimateDown) {
+                    View view = getView(pair.first, null, getAbsListView());
+                    view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                    scrollDistance -= view.getMeasuredHeight();
+                }
+            } else if (getAbsListView().getLastVisiblePosition() >= pair.first) {
+                /* Inserting an item that becomes visible on screen */
+                int index = pair.first;
+
+                /* Correct the index for already inserted positions above the first visible view */
+                for (int insertedPosition : insertedPositions) {
+                    if (index >= insertedPosition) {
+                        index++;
+                    }
+                }
+                Pair<Integer, T> newPair = new Pair<Integer, T>(index, pair.second);
+                visibleViews.add(newPair);
+            } else {
+                /* Inserting an item below the last visible item */
+                int index = pair.first;
+
+                /* Correct the index for already inserted positions above the first visible view */
+                for (int insertedPosition : insertedPositions) {
+                    if (index >= insertedPosition) {
+                        index++;
+                    }
+                }
+
+                /* Correct the index for already inserted positions below the last visible view */
+                for (int queuedPosition : insertedBelowPositions) {
+                    if (index >= queuedPosition) {
+                        index++;
+                    }
+                }
+
+                insertedBelowPositions.add(index);
+                mInsertable.add(index, pair.second);
+            }
+        }
+
+        if (mShouldAnimateDown) {
+            getAbsListView().smoothScrollBy(scrollDistance, (int) (mScrolldownAnimationDurationMs * numInsertedAbove));
+        }
+
+        mInsertQueue.insert(visibleViews);
+        ((ListView) getAbsListView()).setSelectionFromTop(getAbsListView().getFirstVisiblePosition() + numInsertedAbove, getAbsListView().getChildAt(0).getTop());
+    }
+
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         final View view = super.getView(position, convertView, parent);
 
-        if (position == mInsertedPosition) {
-            mInsertedPosition = -1;
-
+        if (mInsertQueue.getActiveIndexes().contains(position)) {
             int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.AT_MOST);
             int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.AT_MOST);
             view.measure(widthMeasureSpec, heightMeasureSpec);
@@ -121,10 +258,15 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             Animator[] animators = new Animator[customAnimators.length + 2];
             animators[0] = heightAnimator;
             animators[1] = alphaAnimator;
-            for (int i = 0; i < customAnimators.length; i++) {
-                animators[i + 2] = customAnimators[i];
-            }
+            System.arraycopy(customAnimators, 0, animators, 2, customAnimators.length);
             animatorSet.playTogether(animators);
+            animatorSet.setDuration(mInsertionAnimationDurationMs);
+            animatorSet.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mInsertQueue.removeActiveIndex(position);
+                }
+            });
             animatorSet.start();
         }
 
@@ -138,7 +280,22 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * @param parent The parent that this view will eventually be attached to.
      * @return a non-null array of Animators.
      */
+    @SuppressWarnings("UnusedParameters")
     protected Animator[] getAdditionalAnimators(View view, ViewGroup parent) {
         return new Animator[]{};
+    }
+
+    /**
+     * An interface for inserting items at a certain index.
+     */
+    public interface Insertable<T> {
+
+        /**
+         * Will be called to insert given {@code item} at given {@code index} in the list.
+         *
+         * @param index the index the new item should be inserted at
+         * @param item  the item to insert
+         */
+        public void add(int index, T item);
     }
 }
