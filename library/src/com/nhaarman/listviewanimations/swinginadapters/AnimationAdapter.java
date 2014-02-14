@@ -56,6 +56,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         mAnimators = new SparseArray<Animator>();
 
         mAnimationStartMillis = -1;
+        mFirstAnimatedPosition = -1;
         mLastAnimatedPosition = -1;
 
         if (baseAdapter instanceof AnimationAdapter) {
@@ -70,7 +71,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      */
     public void reset() {
         mAnimators.clear();
-        mFirstAnimatedPosition = 0;
+        mFirstAnimatedPosition = -1;
         mLastAnimatedPosition = -1;
         mAnimationStartMillis = -1;
         mShouldAnimate = true;
@@ -147,6 +148,10 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         boolean isMeasuringGridViewItem = getAbsListView() instanceof GridView && parent.getHeight() == 0;
 
         if (position > mLastAnimatedPosition && mShouldAnimate && !isMeasuringGridViewItem) {
+            if (mFirstAnimatedPosition == -1) {
+                mFirstAnimatedPosition = position;
+            }
+
             animateView(position, parent, view);
             mLastAnimatedPosition = position;
         }
@@ -197,8 +202,14 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     @SuppressLint("NewApi")
     private long calculateAnimationDelay() {
         long delay;
-        int numberOfItems = getAbsListView().getLastVisiblePosition() - getAbsListView().getFirstVisiblePosition();
-        if (numberOfItems + 1 < mLastAnimatedPosition) {
+
+        int lastVisiblePosition = getAbsListView().getLastVisiblePosition();
+        int firstVisiblePosition = getAbsListView().getFirstVisiblePosition();
+
+        int numberOfItemsOnScreen = lastVisiblePosition - firstVisiblePosition;
+        int numberOfAnimatedItems = mLastAnimatedPosition - mFirstAnimatedPosition;
+
+        if (numberOfItemsOnScreen + 1 < numberOfAnimatedItems) {
             delay = getAnimationDelayMillis();
 
             if (getAbsListView() instanceof GridView && Build.VERSION.SDK_INT >= 11) {
