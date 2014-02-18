@@ -481,8 +481,9 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         public static void animateExpanding(final View view, final AbsListView listView) {
             view.setVisibility(View.VISIBLE);
 
-            final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-            final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            View parent = (View) view.getParent();
+            final int widthSpec = View.MeasureSpec.makeMeasureSpec(parent.getMeasuredWidth() - parent.getPaddingLeft() - parent.getPaddingRight(), View.MeasureSpec.AT_MOST);
+            final int heightSpec = View.MeasureSpec.makeMeasureSpec(LayoutParams.WRAP_CONTENT, View.MeasureSpec.AT_MOST);
             view.measure(widthSpec, heightSpec);
 
             ValueAnimator animator = createHeightAnimator(view, 0, view.getMeasuredHeight());
