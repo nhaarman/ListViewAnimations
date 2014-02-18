@@ -483,7 +483,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 
             View parent = (View) view.getParent();
             final int widthSpec = View.MeasureSpec.makeMeasureSpec(parent.getMeasuredWidth() - parent.getPaddingLeft() - parent.getPaddingRight(), View.MeasureSpec.AT_MOST);
-            final int heightSpec = View.MeasureSpec.makeMeasureSpec(LayoutParams.WRAP_CONTENT, View.MeasureSpec.AT_MOST);
+            final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
             view.measure(widthSpec, heightSpec);
 
             ValueAnimator animator = createHeightAnimator(view, 0, view.getMeasuredHeight());
