@@ -42,7 +42,7 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
     private BaseAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mAdapter = new MyAdapter(this, getItems());
@@ -89,7 +89,7 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
     }
 
     @Override
-    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+    public boolean onNavigationItemSelected(final int itemPosition, final long itemId) {
         switch (itemPosition) {
             case 0:
                 setAlphaAdapter();
@@ -118,20 +118,20 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
 
     private static class MyAdapter extends ArrayAdapter<Integer> {
 
-        private Context mContext;
+        private final Context mContext;
 
-        public MyAdapter(Context context, ArrayList<Integer> items) {
+        public MyAdapter(final Context context, final ArrayList<Integer> items) {
             super(items);
             mContext = context;
         }
 
         @Override
-        public long getItemId(int position) {
+        public long getItemId(final int position) {
             return getItem(position).hashCode();
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
             TextView tv = (TextView) convertView;
             if (tv == null) {
                 tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
@@ -148,7 +148,7 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
             TextView tv = (TextView) convertView;
             if (tv == null) {
                 tv = (TextView) LayoutInflater.from(AppearanceExamplesActivity.this).inflate(android.R.layout.simple_list_item_1, parent, false);

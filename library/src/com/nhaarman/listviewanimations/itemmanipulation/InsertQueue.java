@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * (int, Object)} method will be called directly if there are no active index-item pairs.
  * Otherwise, pairs will be queued until the active list is empty.
  */
-@SuppressWarnings("UnusedDeclaration")
 public class InsertQueue<T> {
 
     private final AnimateAdditionAdapter.Insertable<T> mInsertable;
@@ -45,6 +44,7 @@ public class InsertQueue<T> {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void insert(final Pair<Integer, T>... indexItemPair) {
         insert(Arrays.asList(indexItemPair));
     }

@@ -29,8 +29,8 @@ public class ItemManipulationsExamplesActivity extends ActionBarActivity {
 
     @SuppressLint("InlinedApi")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= 19) {
+    protected void onCreate(final Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
         super.onCreate(savedInstanceState);
@@ -39,33 +39,33 @@ public class ItemManipulationsExamplesActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void onDragAndDropClicked(View view) {
+    public void onDragAndDropClicked(final View view) {
         Intent intent = new Intent(this, DragAndDropActivity.class);
         startActivity(intent);
     }
 
-    public void onSwipeDismissClicked(View view) {
+    public void onSwipeDismissClicked(final View view) {
         Intent intent = new Intent(this, SwipeDismissActivity.class);
         startActivity(intent);
     }
 
-    public void onAnimateRemovalClicked(View view) {
+    public void onAnimateRemovalClicked(final View view) {
         Intent intent = new Intent(this, AnimateDismissActivity.class);
         startActivity(intent);
     }
 
-    public void onAnimateAdditionClicked(View view) {
+    public void onAnimateAdditionClicked(final View view) {
         Intent intent = new Intent(this, AnimateAdditionActivity.class);
         startActivity(intent);
     }
 
-    public void onExpandListItemAdapterClicked(View view) {
+    public void onExpandListItemAdapterClicked(final View view) {
         Intent intent = new Intent(this, ExpandableListItemActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();

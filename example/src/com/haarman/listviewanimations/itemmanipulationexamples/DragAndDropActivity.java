@@ -27,30 +27,28 @@ import com.nhaarman.listviewanimations.widget.DynamicListView;
 
 public class DragAndDropActivity extends MyListActivity {
 
-	private DynamicListView mListView;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+    @Override
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_draganddrop);
 
-		mListView = (DynamicListView) findViewById(R.id.activity_draganddrop_listview);
-		mListView.setDivider(null);
+        DynamicListView listView = (DynamicListView) findViewById(R.id.activity_draganddrop_listview);
+		listView.setDivider(null);
 
         TextView headerView =new TextView(this);
         headerView.setText("HEADER");
-        mListView.addHeaderView(headerView);
+        listView.addHeaderView(headerView);
 
 		final ArrayAdapter<Integer> adapter = createListAdapter();
 		AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(adapter);
 		animAdapter.setInitialDelayMillis(300);
-		animAdapter.setAbsListView(mListView);
-		mListView.setAdapter(animAdapter);
+		animAdapter.setAbsListView(listView);
+		listView.setAdapter(animAdapter);
 
 		Toast.makeText(this, "Long press an item to start dragging", Toast.LENGTH_LONG).show();
-        mListView.setOnItemMovedListener(new DynamicListView.OnItemMovedListener() {
+        listView.setOnItemMovedListener(new DynamicListView.OnItemMovedListener() {
             @Override
-            public void onItemMoved(int newPosition) {
+            public void onItemMoved(final int newPosition) {
                 Toast.makeText(getApplicationContext(), adapter.getItem(newPosition) + " moved to position " + newPosition, Toast.LENGTH_SHORT).show();
             }
         });

@@ -41,7 +41,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
     private ArrayAdapter<Integer> mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mAdapter = createListAdapter();
@@ -60,7 +60,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
     }
 
     @Override
-    public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
+    public void onDismiss(final AbsListView listView, final int[] reverseSortedPositions) {
         for (int position : reverseSortedPositions) {
             mAdapter.remove(position);
         }
@@ -74,7 +74,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
     }
 
     @Override
-    public void deleteItem(int position) {
+    public void deleteItem(final int position) {
         mAdapter.remove(position);
         mAdapter.notifyDataSetChanged();
     }
@@ -94,8 +94,8 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
     private class MyFormatCountDownCallback implements CountDownFormatter {
 
         @Override
-        public String getCountDownString(long millisUntilFinished) {
-            int seconds = (int) Math.ceil((millisUntilFinished / 1000.0));
+        public String getCountDownString(final long millisUntilFinished) {
+            int seconds = (int) Math.ceil(millisUntilFinished / 1000.0);
 
             if (seconds > 0) {
                 return getResources().getQuantityString(R.plurals.countdown_seconds, seconds, seconds);
@@ -107,7 +107,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
 	/* Non-ListViewAnimations related stuff below */
 
     @Override
-    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+    public boolean onNavigationItemSelected(final int itemPosition, final long itemId) {
         switch (itemPosition) {
             case 0:
                 setSwipeDismissAdapter();
@@ -133,7 +133,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
             TextView tv = (TextView) convertView;
             if (tv == null) {
                 tv = (TextView) LayoutInflater.from(SwipeDismissActivity.this).inflate(android.R.layout.simple_list_item_1, parent, false);

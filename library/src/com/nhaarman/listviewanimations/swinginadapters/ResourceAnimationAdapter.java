@@ -27,11 +27,11 @@ import com.nineoldandroids.animation.AnimatorInflater;
  * An implementation of AnimationAdapter which bases the animations on
  * resources.
  */
-@SuppressWarnings("UnusedDeclaration")
 public abstract class ResourceAnimationAdapter<T> extends AnimationAdapter {
 
     private final Context mContext;
 
+    @SuppressWarnings("UnusedDeclaration")
     public ResourceAnimationAdapter(final BaseAdapter baseAdapter, final Context context) {
         super(baseAdapter);
         mContext = context;

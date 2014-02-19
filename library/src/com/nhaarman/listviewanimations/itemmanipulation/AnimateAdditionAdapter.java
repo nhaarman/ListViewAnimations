@@ -245,7 +245,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             ValueAnimator heightAnimator = ValueAnimator.ofInt(1, originalHeight);
             heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
+                public void onAnimationUpdate(final ValueAnimator animation) {
                     ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                     layoutParams.height = (Integer) animation.getAnimatedValue();
                     view.setLayoutParams(layoutParams);
@@ -264,7 +264,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             animatorSet.setDuration(mInsertionAnimationDurationMs);
             animatorSet.addListener(new AnimatorListenerAdapter() {
                 @Override
-                public void onAnimationEnd(Animator animation) {
+                public void onAnimationEnd(final Animator animation) {
                     mInsertQueue.removeActiveIndex(position);
                 }
             });
@@ -282,7 +282,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * @return a non-null array of Animators.
      */
     @SuppressWarnings("UnusedParameters")
-    protected Animator[] getAdditionalAnimators(View view, ViewGroup parent) {
+    protected Animator[] getAdditionalAnimators(final View view, final ViewGroup parent) {
         return new Animator[]{};
     }
 

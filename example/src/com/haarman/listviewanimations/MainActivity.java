@@ -46,8 +46,8 @@ public class MainActivity extends Activity {
 
 	@SuppressLint("InlinedApi")
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		if (Build.VERSION.SDK_INT >= 19) {
+	protected void onCreate(final Bundle savedInstanceState) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		}
 
@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 
 		menu.findItem(R.id.menu_main_donate).setVisible(mService != null);
@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_main_github:
 			Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -91,37 +91,37 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void onGoogleCardsExampleClicked(View view) {
+	public void onGoogleCardsExampleClicked(final View view) {
 		Intent intent = new Intent(this, GoogleCardsActivity.class);
 		startActivity(intent);
 	}
 
-	public void onGridViewExampleClicked(View view) {
+	public void onGridViewExampleClicked(final View view) {
 		Intent intent = new Intent(this, GridViewActivity.class);
 		startActivity(intent);
 	}
 
-	public void onAppearanceClicked(View view) {
+	public void onAppearanceClicked(final View view) {
 		Intent intent = new Intent(this, AppearanceExamplesActivity.class);
 		startActivity(intent);
 	}
 
-	public void onItemManipulationClicked(View view) {
+	public void onItemManipulationClicked(final View view) {
 		Intent intent = new Intent(this, ItemManipulationsExamplesActivity.class);
 		startActivity(intent);
 	}
 
 	private IInAppBillingService mService;
 
-	private ServiceConnection mServiceConn = new ServiceConnection() {
+	private final ServiceConnection mServiceConn = new ServiceConnection() {
 		@Override
-		public void onServiceDisconnected(ComponentName name) {
+		public void onServiceDisconnected(final ComponentName name) {
 			mService = null;
 			//			supportInvalidateOptionsMenu();
 		}
 
 		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
+		public void onServiceConnected(final ComponentName name, final IBinder service) {
 			mService = IInAppBillingService.Stub.asInterface(service);
 			//			supportInvalidateOptionsMenu();
 
@@ -137,11 +137,10 @@ public class MainActivity extends Activity {
 							ArrayList<String> purchaseDataList = ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
 
 							if (purchaseDataList != null) {
-								for (int i = 0; i < purchaseDataList.size(); ++i) {
-									String purchaseData = purchaseDataList.get(i);
-									JSONObject json = new JSONObject(purchaseData);
-									mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
-								}
+                                for (String purchaseData : purchaseDataList) {
+                                    JSONObject json = new JSONObject(purchaseData);
+                                    mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
+                                }
 							}
 						}
 					} catch (RemoteException e) {
@@ -163,7 +162,7 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
@@ -187,12 +186,12 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private void buy(String sku) {
+	private void buy(final String sku) {
 		try {
 			Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), sku, "inapp", "bGoa+V7g/ysDXvKwqq+JTFn4uQZbPiQJo4pf9RzJ");
 			PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
 			if (pendingIntent != null) {
-				startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
+				startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), 0, 0, 0);
 			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
