@@ -29,6 +29,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.DismissableManager;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeOnTouchListener;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
@@ -69,6 +70,8 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
     private int mResIdOfTouchChild;
     private boolean mTouchChildTouched;
 
+    private DismissableManager mDismissableManager;
+
     public interface Callback {
 
         void onViewSwiped(long dismissViewItemId, int dismissPosition);
@@ -88,6 +91,15 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
 
     public void setEnabled(final boolean enabled) {
         mPaused = !enabled;
+    }
+
+    /**
+     * Set the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.DismissableManager} to specify which views can or cannot be swiped.
+     * @param dismissableManager null for no restrictions.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public void setDismissableManager(final DismissableManager dismissableManager) {
+        mDismissableManager = dismissableManager;
     }
 
     public AbsListView.OnScrollListener makeScrollListener() {
@@ -161,6 +173,15 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
         if (mDownView != null && mDownView instanceof ContextualUndoView) {
             mDownX = motionEvent.getRawX();
             mDownY = motionEvent.getRawY();
+            int downPosition = AdapterViewUtil.getPositionForView(mListView, mDownView);
+
+            if (mDismissableManager != null) {
+                long downId = mListView.getAdapter().getItemId(downPosition);
+                if (!mDismissableManager.isDismissable(downId, downPosition)) {
+                    /* Cancel, not dismissable */
+                    return false;
+                }
+            }
 
             mTouchChildTouched = !mIsParentHorizontalScrollContainer && mResIdOfTouchChild == 0;
 

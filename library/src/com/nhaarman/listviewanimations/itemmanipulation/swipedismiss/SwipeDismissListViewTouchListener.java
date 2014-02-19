@@ -83,6 +83,8 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
     private int mResIdOfTouchChild;
     private boolean mTouchChildTouched;
 
+    private DismissableManager mDismissableManager;
+
     /**
      * Constructs a new swipe-to-dismiss touch listener for the given list view.
      *
@@ -112,6 +114,15 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
     @SuppressWarnings("UnusedDeclaration")
     public void allowSwipe() {
         mDisallowSwipe = false;
+    }
+
+    /**
+     * Set the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.DismissableManager} to specify which views can or cannot be swiped.
+     * @param dismissableManager null for no restrictions.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public void setDismissableManager(final DismissableManager dismissableManager) {
+        mDismissableManager = dismissableManager;
     }
 
     @Override
@@ -176,6 +187,14 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
             mDownX = motionEvent.getRawX();
             mDownY = motionEvent.getRawY();
             int downPosition = AdapterViewUtil.getPositionForView(mListView, downView);
+
+            if (mDismissableManager != null) {
+                long downId = mListView.getAdapter().getItemId(downPosition);
+                if (!mDismissableManager.isDismissable(downId, downPosition)) {
+                    /* Cancel, not dismissable */
+                    return false;
+                }
+            }
 
             mCurrentDismissData = createPendingDismissData(downPosition, downView);
 
