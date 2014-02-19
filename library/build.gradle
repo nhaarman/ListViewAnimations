@@ -33,7 +33,7 @@ android {
         minSdkVersion 8
         targetSdkVersion 19
         versionName project.VERSION_NAME
-        versionCode Integer.parseInt(project.VERSION_CODE)
+        versionCode Integer.parseInt(new Date().format('yyyyMMddHH'))
     }
 
     packagingOptions {
