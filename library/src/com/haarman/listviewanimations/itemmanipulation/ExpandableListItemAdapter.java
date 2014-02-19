@@ -54,6 +54,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> {
 		mContentParentResId = DEFAULTCONTENTPARENTRESID;
 
 		mVisibleIds = new ArrayList<Long>();
+		mExpandedViews = new HashMap<Long, View>();
 	}
 
 	/**
