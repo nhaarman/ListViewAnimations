@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package com.haarman.listviewanimations.itemmanipulationexamples;
+package com.haarman.listviewanimations.itemmanipulationexamples;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -41,7 +41,7 @@ public class ExpandableListItemActivity extends MyListActivity {
     private boolean mLimited;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mExpandableListItemAdapter = new MyExpandableListItemAdapter(this, getItems());
@@ -55,24 +55,21 @@ public class ExpandableListItemActivity extends MyListActivity {
 
     private static class MyExpandableListItemAdapter extends ExpandableListItemAdapter<Integer> {
 
-        private Context mContext;
-        private LruCache<Integer, Bitmap> mMemoryCache;
+        private final Context mContext;
+        private final LruCache<Integer, Bitmap> mMemoryCache;
 
         /**
          * Creates a new ExpandableListItemAdapter with the specified list, or an empty list if
          * items == null.
          */
-        private MyExpandableListItemAdapter(Context context, List<Integer> items) {
+        private MyExpandableListItemAdapter(final Context context, final List<Integer> items) {
             super(context, R.layout.activity_expandablelistitem_card, R.id.activity_expandablelistitem_card_title, R.id.activity_expandablelistitem_card_content, items);
             mContext = context;
 
-            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-            // Use 1/8th of the available memory for this memory cache.
-            final int cacheSize = maxMemory;
+            final int cacheSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
             mMemoryCache = new LruCache<Integer, Bitmap>(cacheSize) {
                 @Override
-                protected int sizeOf(Integer key, Bitmap bitmap) {
+                protected int sizeOf(final Integer key, final Bitmap bitmap) {
                     // The cache size will be measured in kilobytes rather than
                     // number of items.
                     return bitmap.getRowBytes() * bitmap.getHeight() / 1024;
@@ -81,7 +78,7 @@ public class ExpandableListItemActivity extends MyListActivity {
         }
 
         @Override
-        public View getTitleView(int position, View convertView, ViewGroup parent) {
+        public View getTitleView(final int position, final View convertView, final ViewGroup parent) {
             TextView tv = (TextView) convertView;
             if (tv == null) {
                 tv = new TextView(mContext);
@@ -91,7 +88,7 @@ public class ExpandableListItemActivity extends MyListActivity {
         }
 
         @Override
-        public View getContentView(int position, View convertView, ViewGroup parent) {
+        public View getContentView(final int position, final View convertView, final ViewGroup parent) {
             ImageView imageView = (ImageView) convertView;
             if (imageView == null) {
                 imageView = new ImageView(mContext);
@@ -126,19 +123,19 @@ public class ExpandableListItemActivity extends MyListActivity {
             return imageView;
         }
 
-        private void addBitmapToMemoryCache(int key, Bitmap bitmap) {
+        private void addBitmapToMemoryCache(final int key, final Bitmap bitmap) {
             if (getBitmapFromMemCache(key) == null) {
                 mMemoryCache.put(key, bitmap);
             }
         }
 
-        private Bitmap getBitmapFromMemCache(int key) {
+        private Bitmap getBitmapFromMemCache(final int key) {
             return mMemoryCache.get(key);
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_expandablelistitem, menu);
         return super.onCreateOptionsMenu(menu);
     }

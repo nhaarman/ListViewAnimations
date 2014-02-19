@@ -51,7 +51,6 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  *
  * For performance reasons, do not use this class directly, but use the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter}.
  */
-@SuppressWarnings("UnusedDeclaration")
 @SuppressLint("Recycle")
 public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 
@@ -110,6 +109,7 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
         mDisallowSwipe = true;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void allowSwipe() {
         mDisallowSwipe = false;
     }

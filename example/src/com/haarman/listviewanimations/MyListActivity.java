@@ -32,7 +32,7 @@ public class MyListActivity extends BaseActivity {
 	private ListView mListView;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mylist);
 		mListView = (ListView) findViewById(R.id.activity_mylist_listview);
@@ -57,15 +57,15 @@ public class MyListActivity extends BaseActivity {
 
 	private static class MyListAdapter extends ArrayAdapter<Integer> {
 
-		private Context mContext;
+		private final Context mContext;
 
-		public MyListAdapter(Context context, ArrayList<Integer> items) {
+		public MyListAdapter(final Context context, final ArrayList<Integer> items) {
 			super(items);
 			mContext = context;
 		}
 
 		@Override
-		public long getItemId(int position) {
+		public long getItemId(final int position) {
 			return getItem(position).hashCode();
 		}
 
@@ -75,7 +75,7 @@ public class MyListActivity extends BaseActivity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, final View convertView, final ViewGroup parent) {
 			TextView tv = (TextView) convertView;
 			if (tv == null) {
 				tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);

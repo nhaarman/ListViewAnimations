@@ -43,7 +43,7 @@ public class AnimateDismissActivity extends BaseActivity {
     private MyListAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_animateremoval);
 
@@ -59,7 +59,7 @@ public class AnimateDismissActivity extends BaseActivity {
         button.setOnClickListener(new OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 animateDismissAdapter.animateDismiss(mSelectedPositions);
                 mSelectedPositions.clear();
             }
@@ -68,8 +68,8 @@ public class AnimateDismissActivity extends BaseActivity {
         listView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CheckedTextView tv = ((CheckedTextView) view);
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+                CheckedTextView tv = (CheckedTextView) view;
                 tv.toggle();
                 if (tv.isChecked()) {
                     mSelectedPositions.add(position);
@@ -83,7 +83,7 @@ public class AnimateDismissActivity extends BaseActivity {
     private class MyOnDismissCallback implements OnDismissCallback {
 
         @Override
-        public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
+        public void onDismiss(final AbsListView listView, final int[] reverseSortedPositions) {
             for (int position : reverseSortedPositions) {
                 mAdapter.remove(position);
             }
@@ -92,12 +92,12 @@ public class AnimateDismissActivity extends BaseActivity {
 
     private class MyListAdapter extends ArrayAdapter<Integer> {
 
-        public MyListAdapter(ArrayList<Integer> items) {
+        public MyListAdapter(final ArrayList<Integer> items) {
             super(items);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
             CheckedTextView tv = (CheckedTextView) convertView;
             if (tv == null) {
                 tv = (CheckedTextView) LayoutInflater.from(AnimateDismissActivity.this).inflate(R.layout.activity_animateremoval_row, parent, false);

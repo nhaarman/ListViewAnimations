@@ -37,8 +37,7 @@ import java.util.List;
  * A {@link BaseAdapterDecorator} class that provides animations to the removal
  * of items in the given {@link BaseAdapter}.
  */
-@SuppressWarnings("UnusedDeclaration")
-public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
+public class AnimateDismissAdapter extends BaseAdapterDecorator {
 
     private final OnDismissCallback mCallback;
 
@@ -50,7 +49,7 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
      *            indicated that she would like to dismiss one or more list
      *            items.
      */
-    public AnimateDismissAdapter(BaseAdapter baseAdapter, OnDismissCallback callback) {
+    public AnimateDismissAdapter(final BaseAdapter baseAdapter, final OnDismissCallback callback) {
         super(baseAdapter);
         mCallback = callback;
     }
@@ -58,14 +57,15 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
     /**
      * Animate dismissal of the item at given position.
      */
-    public void animateDismiss(int position) {
+    @SuppressWarnings("UnusedDeclaration")
+    public void animateDismiss(final int position) {
         animateDismiss(Arrays.asList(position));
     }
 
     /**
      * Animate dismissal of the items at given positions.
      */
-    public void animateDismiss(Collection<Integer> positions) {
+    public void animateDismiss(final Collection<Integer> positions) {
         final List<Integer> positionsCopy = new ArrayList<Integer>(positions);
         if (getAbsListView() == null) {
             throw new IllegalStateException("Call setAbsListView() on this AnimateDismissAdapter before calling setAdapter()!");
@@ -90,7 +90,7 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
             animatorSet.addListener(new AnimatorListenerAdapter() {
 
                 @Override
-                public void onAnimationEnd(Animator animator) {
+                public void onAnimationEnd(final Animator animator) {
                     invokeCallback(positionsCopy);
                 }
             });
@@ -100,7 +100,7 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
         }
     }
 
-    private void invokeCallback(Collection<Integer> positions) {
+    private void invokeCallback(final Collection<Integer> positions) {
         ArrayList<Integer> positionsList = new ArrayList<Integer>(positions);
         Collections.sort(positionsList);
 
@@ -111,7 +111,7 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
         mCallback.onDismiss(getAbsListView(), dismissPositions);
     }
 
-    private List<View> getVisibleViewsForPositions(Collection<Integer> positions) {
+    private List<View> getVisibleViewsForPositions(final Collection<Integer> positions) {
         List<View> views = new ArrayList<View>();
         for (int i = 0; i < getAbsListView().getChildCount(); i++) {
             View child = getAbsListView().getChildAt(i);
@@ -130,7 +130,7 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
         animator.addListener(new AnimatorListenerAdapter() {
 
             @Override
-            public void onAnimationEnd(Animator animator) {
+            public void onAnimationEnd(final Animator animator) {
                 lp.height = 0;
                 view.setLayoutParams(lp);
             }
@@ -139,7 +139,7 @@ public class AnimateDismissAdapter<T> extends BaseAdapterDecorator {
         animator.addUpdateListener(new AnimatorUpdateListener() {
 
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            public void onAnimationUpdate(final ValueAnimator valueAnimator) {
                 lp.height = (Integer) valueAnimator.getAnimatedValue();
                 view.setLayoutParams(lp);
             }

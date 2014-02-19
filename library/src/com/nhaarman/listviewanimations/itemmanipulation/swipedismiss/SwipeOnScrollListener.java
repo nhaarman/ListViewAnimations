@@ -29,18 +29,18 @@ public class SwipeOnScrollListener implements AbsListView.OnScrollListener {
 
     private SwipeDismissListViewTouchListener mTouchListener;
 
-    public void setTouchListener(SwipeDismissListViewTouchListener touchListener) {
+    public void setTouchListener(final SwipeDismissListViewTouchListener touchListener) {
         mTouchListener = touchListener;
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    public void onScrollStateChanged(final AbsListView view, final int scrollState) {
         if (scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
             mTouchListener.disallowSwipe();
         }
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
     }
 }

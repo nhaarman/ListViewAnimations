@@ -18,8 +18,6 @@ package com.haarman.listviewanimations.itemmanipulationexamples;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +38,7 @@ public class AnimateAdditionActivity extends MyListActivity implements AdapterVi
     private AnimateAdditionAdapter<String> mAnimateAdditionAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         MyAdapter myAdapter = new MyAdapter(this, getStringItems());
@@ -57,33 +55,33 @@ public class AnimateAdditionActivity extends MyListActivity implements AdapterVi
     private static ArrayList<String> getStringItems() {
         ArrayList<String> items = new ArrayList<String>();
         for (int i = 0; i < 1000; i++) {
-            items.add("This is row number " + String.valueOf(i));
+            items.add("This is row number " + i);
         }
         return items;
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mAnimateAdditionAdapter.insert(position, "This is newly added item " + String.valueOf(mAddedItemNumber));
+    public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+        mAnimateAdditionAdapter.insert(position, "This is newly added item " + mAddedItemNumber);
         mAddedItemNumber++;
     }
 
     private static class MyAdapter extends ArrayAdapter<String> {
 
-        private Context mContext;
+        private final Context mContext;
 
-        public MyAdapter(Context context, ArrayList<String> items) {
+        public MyAdapter(final Context context, final ArrayList<String> items) {
             super(items);
             mContext = context;
         }
 
         @Override
-        public long getItemId(int position) {
+        public long getItemId(final int position) {
             return getItem(position).hashCode();
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
             TextView tv = (TextView) convertView;
             if (tv == null) {
                 tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);

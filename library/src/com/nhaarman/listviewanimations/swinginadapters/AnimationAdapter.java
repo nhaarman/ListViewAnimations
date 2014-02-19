@@ -34,7 +34,6 @@ import com.nineoldandroids.view.ViewHelper;
  * views when they are first shown. The Animators applied include the animations
  * specified in {@link #getAnimators(ViewGroup, View)}, plus an alpha transition.
  */
-@SuppressWarnings("UnusedDeclaration")
 public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
     protected static final long DEFAULTANIMATIONDELAYMILLIS = 100;
@@ -96,6 +95,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * Will also call setShouldAnimate(true).
      * @param position the position.
      */
+    @SuppressWarnings("UnusedDeclaration")
     public void setShouldAnimateFromPosition(final int position) {
         mShouldAnimate = true;
         mFirstAnimatedPosition = position - 1;
@@ -107,6 +107,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * This call is also valid when the {@link View}s haven't been drawn yet.
      * Will also call setShouldAnimate(true).
      */
+    @SuppressWarnings("UnusedDeclaration")
     public void setShouldAnimateNotVisible() {
         if (getAbsListView() == null) {
             throw new IllegalStateException("Call setListView() on this AnimationAdapter before setShouldAnimateNotVisible()!");
@@ -260,6 +261,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * Set the delay in milliseconds before an animation of a view should start. Defaults to {@value #DEFAULTANIMATIONDELAYMILLIS}.
      * @param delayMillis the time in milliseconds.
      */
+    @SuppressWarnings("UnusedDeclaration")
     public void setAnimationDelayMillis(final long delayMillis) {
         mAnimationDelayMillis = delayMillis;
     }
@@ -275,6 +277,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * Set the duration of the animation in milliseconds. Defaults to {@value #DEFAULTANIMATIONDURATIONMILLIS}.
      * @param durationMillis the time in milliseconds.
      */
+    @SuppressWarnings("UnusedDeclaration")
     public void setAnimationDurationMillis(final long durationMillis) {
         mAnimationDurationMillis = durationMillis;
     }
