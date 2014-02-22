@@ -49,8 +49,8 @@ Setup
 Add the following to your `build.gradle`:
 
 	repositories {
-		<!-- repostart -->
-		<!-- repoend -->
+		<!--- repostart -->
+		<!--- repoend -->
 		mavenCentral()
 	}
 	
@@ -126,4 +126,4 @@ License
  [21]: https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes
  [22]: https://play.google.com/store/apps/details?id=com.seedform.counter
 
- <!-- versionName="2.6.0" -->
+ <!--- versionName="2.6.0" -->
