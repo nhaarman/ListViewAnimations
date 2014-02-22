@@ -1,10 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.haarman.listviewanimations"
-    android:versionCode="201311071"
-    android:versionName="2.5.2" >
-
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="19" />
-
-</manifest>
+<manifest package="com.nhaarman.listviewanimations" />

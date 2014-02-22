@@ -41,6 +41,13 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:onClick="onAnimateAdditionClicked"
+            android:text="@string/animateaddition" />
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:onClick="onExpandListItemAdapterClicked"
             android:text="@string/expandablelistitemadapter" />
     </LinearLayout>

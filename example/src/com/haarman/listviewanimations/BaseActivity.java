@@ -10,8 +10,8 @@ public class BaseActivity extends ActionBarActivity {
 
 	@SuppressLint("InlinedApi")
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		if (Build.VERSION.SDK_INT >= 19) {
+	protected void onCreate(final Bundle savedInstanceState) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		}
 		super.onCreate(savedInstanceState);
@@ -19,7 +19,7 @@ public class BaseActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();

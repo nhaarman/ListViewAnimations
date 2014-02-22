@@ -16,6 +16,7 @@
     <string name="draganddrop">Drag and Drop</string>
     <string name="swipedismiss">Swipe to dismiss</string>
     <string name="animateremoval">Animate dismiss</string>
+    <string name="animateaddition">Animate addition</string>
     <string name="removeselected">Remove selected</string>
     <string name="expandablelistitemadapter">Expand list items</string>
     <string name="itemdeleted">Item deleted</string>

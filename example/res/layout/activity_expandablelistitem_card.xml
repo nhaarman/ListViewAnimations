@@ -15,6 +15,6 @@
         android:id="@+id/activity_expandablelistitem_card_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp" />
+        android:paddingTop="4dp" />
 
 </LinearLayout>

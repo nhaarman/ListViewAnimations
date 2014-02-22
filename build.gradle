@@ -1,15 +1,23 @@
+import java.util.regex.Pattern
+
 buildscript {
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.1+'
+        classpath 'com.android.tools.build:gradle:0.8.+'
     }
 }
 
+def isReleaseBuild() {
+    println version
+    return version.contains("SNAPSHOT") == false
+}
+
 allprojects {
-    group = 'com.haarman.listviewanimations'
+    group = 'com.nhaarman.listviewanimations'
+    version = VERSION_NAME
 
     repositories {
         mavenCentral()
@@ -19,3 +27,61 @@ allprojects {
         options.encoding = 'UTF-8'
     }
 }
+
+
+task('increaseVersionCode') << {
+    def files = new File[2];
+    files[0] = file("library/AndroidManifest.xml")
+    files[1] = file("example/AndroidManifest.xml")
+    def pattern = Pattern.compile("versionCode=\"(\\d+)\"")
+    for (int i = 0; i < files.length; ++i) {
+        def manifestText = files[i].getText()
+        def matcher = pattern.matcher(manifestText)
+        matcher.find()
+        def currentVersionCode = Long.parseLong(matcher.group(1));
+        def versionCode = Long.parseLong(new Date().format('yyyyMMdd') + "1")
+        while (versionCode <= currentVersionCode) {
+            ++versionCode
+        }
+        println(versionCode)
+        def manifestContent = matcher.replaceAll("versionCode=\"" + versionCode + "\"")
+        files[i].write(manifestContent)
+    }
+}
+
+task('syncVersionName') << {
+    def manifestFiles = new File[2];
+    manifestFiles[0] = file("library/AndroidManifest.xml")
+    manifestFiles[1] = file("example/AndroidManifest.xml")
+    def pattern = Pattern.compile("versionName=\"(.+)\"")
+    for (int i = 0; i < manifestFiles.length; ++i) {
+        def manifestText = manifestFiles[i].getText()
+        def matcher = pattern.matcher(manifestText)
+        matcher.find()
+        def manifestContent = matcher.replaceAll("versionName=\"" + version + "\"")
+        manifestFiles[i].write(manifestContent)
+    }
+
+    def readmeFile = file("README.md")
+    def readmeText = readmeFile.getText()
+    def matcher = pattern.matcher(readmeText)
+    matcher.find()
+    def previousVersion = matcher.group(1)
+    def readmeContent = readmeText.replaceAll(previousVersion, version)
+
+    pattern = Pattern.compile("repostart -->(.+)<!-- repoend", Pattern.DOTALL)
+    matcher = pattern.matcher(readmeContent)
+    matcher.find()
+    def repo = isReleaseBuild() ? "\n\t\t" : "\n\t\tmaven {\n\t\t\turl \"https://oss.sonatype.org/content/repositories/snapshots\"\n\t\t}\n\t\t";
+    readmeContent = matcher.replaceAll("repostart -->" + repo + "<!-- repoend")
+
+    readmeFile.write(readmeContent)
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'generateReleaseBuildConfig') {
+        task.dependsOn 'increaseVersionCode'
+    }
+}
+
+apply plugin: 'android-reporting'

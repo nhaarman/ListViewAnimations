@@ -1,11 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.haarman.listviewanimations"
-    android:versionCode="201311071"
-    android:versionName="2.5.2" >
+    package="com.haarman.listviewanimations">
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="19" />
 
     <uses-permission android:name="com.android.vending.BILLING" />
 
@@ -13,8 +8,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity android:name="com.haarman.listviewanimations.MainActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name="com.haarman.listviewanimations.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,6 +34,9 @@
         <activity
             android:name="com.haarman.listviewanimations.itemmanipulationexamples.AnimateDismissActivity"
             android:label="@string/animateremoval" />
+        <activity
+            android:name="com.haarman.listviewanimations.itemmanipulationexamples.AnimateAdditionActivity"
+            android:label="@string/animateaddition" />
         <activity
             android:name="com.haarman.listviewanimations.GridViewActivity"
             android:label="@string/gridviewexample" />

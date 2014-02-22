@@ -30,16 +30,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
-import com.haarman.listviewanimations.itemmanipulation.SwipeDismissAdapter;
-import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.ArrayAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 public class GoogleCardsActivity extends BaseActivity implements OnDismissCallback {
 
 	private GoogleCardsAdapter mGoogleCardsAdapter;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_googlecards);
 
@@ -64,7 +65,7 @@ public class GoogleCardsActivity extends BaseActivity implements OnDismissCallba
 	}
 
 	@Override
-	public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
+	public void onDismiss(final AbsListView listView, final int[] reverseSortedPositions) {
 		for (int position : reverseSortedPositions) {
 			mGoogleCardsAdapter.remove(position);
 		}
@@ -72,19 +73,16 @@ public class GoogleCardsActivity extends BaseActivity implements OnDismissCallba
 
 	private static class GoogleCardsAdapter extends ArrayAdapter<Integer> {
 
-		private Context mContext;
-		private LruCache<Integer, Bitmap> mMemoryCache;
+		private final Context mContext;
+		private final LruCache<Integer, Bitmap> mMemoryCache;
 
-		public GoogleCardsAdapter(Context context) {
+		public GoogleCardsAdapter(final Context context) {
 			mContext = context;
 
-			final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-			// Use 1/8th of the available memory for this memory cache.
-			final int cacheSize = maxMemory;
+			final int cacheSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
 			mMemoryCache = new LruCache<Integer, Bitmap>(cacheSize) {
 				@Override
-				protected int sizeOf(Integer key, Bitmap bitmap) {
+				protected int sizeOf(final Integer key, final Bitmap bitmap) {
 					// The cache size will be measured in kilobytes rather than
 					// number of items.
 					return bitmap.getRowBytes() * bitmap.getHeight() / 1024;
@@ -93,7 +91,7 @@ public class GoogleCardsActivity extends BaseActivity implements OnDismissCallba
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, final View convertView, final ViewGroup parent) {
 			ViewHolder viewHolder;
 			View view = convertView;
 			if (view == null) {
@@ -114,7 +112,7 @@ public class GoogleCardsActivity extends BaseActivity implements OnDismissCallba
 			return view;
 		}
 
-		private void setImageView(ViewHolder viewHolder, int position) {
+		private void setImageView(final ViewHolder viewHolder, final int position) {
 			int imageResId;
 			switch (getItem(position) % 5) {
 			case 0:
@@ -141,13 +139,13 @@ public class GoogleCardsActivity extends BaseActivity implements OnDismissCallba
 			viewHolder.imageView.setImageBitmap(bitmap);
 		}
 
-		private void addBitmapToMemoryCache(int key, Bitmap bitmap) {
+		private void addBitmapToMemoryCache(final int key, final Bitmap bitmap) {
 			if (getBitmapFromMemCache(key) == null) {
 				mMemoryCache.put(key, bitmap);
 			}
 		}
 
-		private Bitmap getBitmapFromMemCache(int key) {
+		private Bitmap getBitmapFromMemCache(final int key) {
 			return mMemoryCache.get(key);
 		}
 

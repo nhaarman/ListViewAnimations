@@ -15,14 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
-import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+
+import com.nhaarman.listviewanimations.ArrayAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 public class GridViewActivity extends ActionBarActivity {
 
 	@SuppressLint("InlinedApi")
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		if (Build.VERSION.SDK_INT >= 19) {
+	protected void onCreate(final Bundle savedInstanceState) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		}
 		super.onCreate(savedInstanceState);
@@ -47,19 +49,17 @@ public class GridViewActivity extends ActionBarActivity {
 
 	private static class MyAdapter extends ArrayAdapter<Integer> {
 
-		private Context mContext;
-		private LruCache<Integer, Bitmap> mMemoryCache;
+		private final Context mContext;
+		private final LruCache<Integer, Bitmap> mMemoryCache;
 
-		public MyAdapter(Context context, List<Integer> list) {
+		public MyAdapter(final Context context, final List<Integer> list) {
 			super(list);
 			mContext = context;
-			final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
-			// Use 1/8th of the available memory for this memory cache.
-			final int cacheSize = maxMemory;
+			final int cacheSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
 			mMemoryCache = new LruCache<Integer, Bitmap>(cacheSize) {
 				@Override
-				protected int sizeOf(Integer key, Bitmap bitmap) {
+				protected int sizeOf(final Integer key, final Bitmap bitmap) {
 					// The cache size will be measured in kilobytes rather than
 					// number of items.
 					return bitmap.getRowBytes() * bitmap.getHeight() / 1024;
@@ -68,7 +68,7 @@ public class GridViewActivity extends ActionBarActivity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup viewGroup) {
+		public View getView(final int position, final View convertView, final ViewGroup viewGroup) {
 			ImageView imageView = (ImageView) convertView;
 
 			if (imageView == null) {
@@ -104,19 +104,19 @@ public class GridViewActivity extends ActionBarActivity {
 			return imageView;
 		}
 
-		private void addBitmapToMemoryCache(int key, Bitmap bitmap) {
+		private void addBitmapToMemoryCache(final int key, final Bitmap bitmap) {
 			if (getBitmapFromMemCache(key) == null) {
 				mMemoryCache.put(key, bitmap);
 			}
 		}
 
-		private Bitmap getBitmapFromMemCache(int key) {
+		private Bitmap getBitmapFromMemCache(final int key) {
 			return mMemoryCache.get(key);
 		}
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();

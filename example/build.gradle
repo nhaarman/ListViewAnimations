@@ -1,14 +1,13 @@
 apply plugin: 'android'
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.0'
-    compile 'com.android.support:appcompat-v7:18.0.+'
+    compile 'com.android.support:appcompat-v7:19.0.+'
     compile project(":library")
 }
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion '18.0.1'
+    compileSdkVersion 19
+    buildToolsVersion '19.0.1'
 
     sourceSets {
         main {
@@ -18,5 +17,39 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
+    }
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+        versionName project.VERSION_NAME
+        versionCode Integer.parseInt(new Date().format('yyyyMMddHH'))
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file(System.getProperty("user.home") + "/.android/debug.keystore")
+        }
+
+        release {
+            storeFile file(System.getProperty("user.home") + "/.android/nhaarman.keystore")
+            storePassword nhaarman_lva_storePassword
+            keyAlias nhaarman_lva_keyAlias
+            keyPassword nhaarman_lva_keyPassword
+        }
+    }
+
+    buildTypes {
+
+        debug {
+            debuggable true
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            debuggable false
+            signingConfig signingConfigs.release
+        }
+
     }
 }
