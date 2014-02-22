@@ -191,7 +191,7 @@ public class DynamicListView extends ListView {
         int position = pointToPosition(mDownX, mDownY);
         int itemNum = position - getFirstVisiblePosition();
         View selectedView = getChildAt(itemNum);
-        if (selectedView == null || position < getHeaderViewsCount()  || position >= getAdapter().getCount() - getHeaderViewsCount()) {
+        if (selectedView == null || position < getHeaderViewsCount() || position >= getAdapter().getCount() - getHeaderViewsCount()) {
             return;
         }
 
@@ -593,7 +593,7 @@ public class DynamicListView extends ListView {
                     setEnabled(true);
                     invalidate();
                     if (mOnItemMovedListener != null) {
-                        mOnItemMovedListener.onItemMoved(mLastMovedToIndex);
+                        mOnItemMovedListener.onItemMoved(mLastMovedToIndex - getHeaderViewsCount());
                     }
                 }
             });
