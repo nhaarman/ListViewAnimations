@@ -49,8 +49,6 @@ Setup
 Add the following to your `build.gradle`:
 
 	repositories {
-		<!--- repostart -->
-		<!--- repoend -->
 		mavenCentral()
 	}
 	
@@ -125,5 +123,3 @@ License
  [20]: https://play.google.com/store/apps/details?id=com.cafetaso.foodinfo
  [21]: https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes
  [22]: https://play.google.com/store/apps/details?id=com.seedform.counter
-
- <!--- versionName="2.6.0" -->
