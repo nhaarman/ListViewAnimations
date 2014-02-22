@@ -188,14 +188,16 @@ public class DynamicListView extends ListView {
     };
 
     private void makeCellMobile() {
-        mOriginalTranscriptMode = getTranscriptMode();
-        setTranscriptMode(TRANSCRIPT_MODE_NORMAL);
         int position = pointToPosition(mDownX, mDownY);
         int itemNum = position - getFirstVisiblePosition();
         View selectedView = getChildAt(itemNum);
-        if (selectedView == null) {
+        if (selectedView == null || position < getHeaderViewsCount()  || position >= getAdapter().getCount() - getHeaderViewsCount()) {
             return;
         }
+
+        mOriginalTranscriptMode = getTranscriptMode();
+        setTranscriptMode(TRANSCRIPT_MODE_NORMAL);
+
 
         mTotalOffset = 0;
 
@@ -389,7 +391,7 @@ public class DynamicListView extends ListView {
                 int deltaX = mLastEventX - mDownX;
 
                 if (!mCellIsMobile && mDynamicTouchChildTouched) {
-                    if ((Math.abs(deltaY) > mSlop) && (Math.abs(deltaY) > Math.abs(deltaX))) {
+                    if (Math.abs(deltaY) > mSlop && Math.abs(deltaY) > Math.abs(deltaX)) {
                         makeCellMobile();
 
                         // Cancel ListView's touch (un-highlighting the item)
@@ -481,6 +483,9 @@ public class DynamicListView extends ListView {
                 return;
             }
 
+            if (getPositionForView(switchView) < getHeaderViewsCount()) {
+                return;
+            }
             swapElements(originalItem, getPositionForView(switchView));
 
             BaseAdapter adapter;
