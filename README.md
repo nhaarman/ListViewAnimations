@@ -3,7 +3,6 @@ ListViewAnimations ([Play Store Demo][1])
 
 ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
 Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
-A mention to haarman.niek [at] gmail.com about your app using this library is very welcome! Start your message's title with `[LVA]`.
 
 Known applications using ListViewAnimations
 -----
@@ -17,9 +16,10 @@ Known applications using ListViewAnimations
 * Super BART ([Play Store][11])
 * DK FlashCards ([Play Store][15])
 * Counter Plus (Tally Counter) ([Play Store][22])
+* SimpleNews - RSS Reader ([Play Store][23])([Github][24])
 * Voorlees Verhaaltjes 2.0 ([Play Store][21])
 
-If you want your app to be listed as well please contact me via [Google Plus][8], or send me an email at haarman.niek [at] gmail.com, starting the title with `[LVA]`.
+If you want your app to be listed as well, just open an issue, stating your app name and a link to your app, and label it 'knownApp'.
 
 Features
 -----
@@ -30,6 +30,7 @@ ListViewAnimations provides the following features:
 * Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo (and optionally count down);
 * Drag-and-Drop reordering;
 * Animate dismissal of items;
+* Animate addition of items;
 * Smoothly expand your items to reveal more content;
 
 Setup
@@ -73,7 +74,6 @@ Please refer to the [Wiki][13] pages to learn more about how to use this library
 Contribute
 -----
 Please do! I'm happy to review and accept pull requests.
-Also if you've created an awesome appearance animation that you'd like to share, let 'em come!
 
 Developed By
 -----
@@ -83,7 +83,8 @@ Special Thanks
 -----
 * Roman Nurik - The ListViewAnimations library uses a modified version of his [SwipeDismissListViewTouchListener][5] to support swipe-to-dismiss.
 * DevBytes - Drag-and-Drop reordering is done by a modified version of their [DynamicListView][16].
-* Jake Warthon - To support devices pre-HC (<3.0), a jar file of [NineOldAndroids][2] is included.
+* Jake Warthon - To support devices pre-HC (<3.0), a copy of [NineOldAndroids][2] is included.
+* [Contributors][25]
 
 License
 -----
@@ -123,3 +124,6 @@ License
  [20]: https://play.google.com/store/apps/details?id=com.cafetaso.foodinfo
  [21]: https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes
  [22]: https://play.google.com/store/apps/details?id=com.seedform.counter
+ [23]: https://play.google.com/store/apps/details?id=de.dala.simplenews
+ [24]: https://github.com/Dalanie/SimpleNews
+ [25]: https://github.com/nhaarman/ListViewAnimations/graphs/contributors
