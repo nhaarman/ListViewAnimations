@@ -483,7 +483,7 @@ public class DynamicListView extends ListView {
                 return;
             }
 
-            if (getPositionForView(switchView) < getHeaderViewsCount()) {
+            if (getPositionForView(switchView) < getHeaderViewsCount() || getPositionForView(switchView) >= (getAdapter().getCount() - getHeaderViewsCount() - getFooterViewsCount())) {
                 return;
             }
             swapElements(originalItem, getPositionForView(switchView));
