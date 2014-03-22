@@ -6,20 +6,7 @@ Feel free to use it all you want in your Android apps provided that you cite thi
 
 Known applications using ListViewAnimations
 -----
-* Ultimate Tic-Tac-Toe ([Play Store][12])
-* Light Flow Lite - LED Control ([Play Store][18])
-* TreinVerkeer ([Play Store][6])
-* Running Coach ([Play Store][9])
-* Pearl Jam Lyrics ([Play Store][19])
-* Calorie Chart ([Play Store][20])
-* Car Hire ([Play Store][10])
-* Super BART ([Play Store][11])
-* DK FlashCards ([Play Store][15])
-* Counter Plus (Tally Counter) ([Play Store][22])
-* SimpleNews - RSS Reader ([Play Store][23])([Github][24])
-* Voorlees Verhaaltjes 2.0 ([Play Store][21])
-
-If you want your app to be listed as well, just open an issue, stating your app name and a link to your app, and label it 'knownApp'.
+[Ultimate Tic-Tac-Toe][12] | [Light Flow Lite - LED Control][18] | [TreinVerkeer][6] | [Pearl Jam Lyrics][19] | [Calorie Chart][20] | [Car Hire][10] | [Super BART][11] | [DK FlashCards][15] | [Counter Plus][22] | [SimpleNews - RSS Reader][23] | [Voorlees Verhaaltjes 2.0][21] | [Per-App Modes][26] | [SimpleNews][27]
 
 Features
 -----
@@ -127,3 +114,5 @@ License
  [23]: https://play.google.com/store/apps/details?id=de.dala.simplenews
  [24]: https://github.com/Dalanie/SimpleNews
  [25]: https://github.com/nhaarman/ListViewAnimations/graphs/contributors
+ [26]: https://play.google.com/store/apps/details?id=com.franco.perappmodes
+ [27]: https://play.google.com/store/apps/details?id=de.dala.simplenews
