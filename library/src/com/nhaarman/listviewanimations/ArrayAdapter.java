@@ -23,6 +23,7 @@ import com.nhaarman.listviewanimations.widget.DynamicListView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -236,6 +237,17 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
         boolean result = mItems.retainAll(objects);
         notifyDataSetChanged();
         return result;
+    }
+
+    /**
+     * Sorts the content of this adapter using the specified comparator.
+     *
+     * @param comparator The comparator used to sort the objects contained
+     *        in this adapter.
+     */
+    public void sort(Comparator<? super T> comparator) {
+    	Collections.sort(mItems, comparator);
+    	notifyDataSetChanged();
     }
 
     @Override
