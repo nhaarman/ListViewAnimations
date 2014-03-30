@@ -9,16 +9,6 @@ android {
     compileSdkVersion 19
     buildToolsVersion '19.0.3'
 
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
-    }
-
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 19
