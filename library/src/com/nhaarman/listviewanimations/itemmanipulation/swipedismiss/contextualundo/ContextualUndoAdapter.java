@@ -466,7 +466,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         private void restoreViewDimension(final View view) {
             ViewGroup.LayoutParams lp;
             lp = view.getLayoutParams();
-            lp.height = mOriginalHeight;
+            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             view.setLayoutParams(lp);
         }
 
