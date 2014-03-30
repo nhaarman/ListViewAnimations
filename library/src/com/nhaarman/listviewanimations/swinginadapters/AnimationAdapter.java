@@ -47,6 +47,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     private int mLastAnimatedPosition;
     private boolean mHasParentAnimationAdapter;
     private boolean mShouldAnimate = true;
+    private boolean mHasMeasuredGridView;
 
     private long mInitialDelayMillis = INITIALDELAYMILLIS;
     private long mAnimationDelayMillis = DEFAULTANIMATIONDELAYMILLIS;
@@ -76,6 +77,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         mLastAnimatedPosition = -1;
         mAnimationStartMillis = -1;
         mShouldAnimate = true;
+        mHasMeasuredGridView = false;
 
         if (getDecoratedBaseAdapter() instanceof AnimationAdapter) {
             ((AnimationAdapter) getDecoratedBaseAdapter()).reset();
@@ -148,7 +150,9 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     private void animateViewIfNecessary(final int position, final View view, final ViewGroup parent) {
-        boolean isMeasuringGridViewItem = getAbsListView() instanceof GridView && parent.getHeight() == 0;
+        /* GridView measures the first View which is returned by getView(int, View, ViewGroup), but does not use that View. */
+        boolean isMeasuringGridViewItem = getAbsListView() instanceof GridView && !mHasMeasuredGridView;
+        mHasMeasuredGridView = true;
 
         if (position > mLastAnimatedPosition && mShouldAnimate && !isMeasuringGridViewItem) {
             if (mFirstAnimatedPosition == -1) {

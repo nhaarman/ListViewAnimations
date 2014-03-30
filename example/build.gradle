@@ -1,13 +1,13 @@
 apply plugin: 'android'
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.0.+'
+    compile 'com.android.support:appcompat-v7:19.1.+'
     compile project(":library")
 }
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.1'
+    buildToolsVersion '19.0.3'
 
     sourceSets {
         main {
