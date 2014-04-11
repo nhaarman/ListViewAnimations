@@ -1,46 +1,48 @@
 language: java
 jdk: oraclejdk7
+
 env:
   matrix:
-  - ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
+    - ANDROID_SDKS=sysimg-19 ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a SKIN=WXGA800 LINT=true
   global:
-  - secure: Fo/btrr+HpwmQL6TNxZuh/TWRMouz9Z1RCo77tf3crNP4OHq9EAkduLc/b4i6HCGFM3fyfJ7AM5XMa3OQvXfF84FQnew7NGE6zB/CKFfKBIZyzntvrDg4VqWEAHzunT6+eBnGtxtrAE0bBo4MmUCklXWP8j5UAyjfFpSeJdOywY=
-  - secure: s56rqSiiwX40CQWeHTcbyVLRtwLP/pcHWqaVCKuXtZ/m9SgRI/SHp9o8ITI2dzr3syEeAkHjkJOkHQSpH0bHi1xKY4M9ODcCugwv+yDEELw1qmI6Cvwjvj1cKsG7ebt39OnCkz+TqhtI/iOEkxq7mTizFjNIxIImMkKxeQwcFgE=
+    - TERM=dumb
+    - secure: Fo/btrr+HpwmQL6TNxZuh/TWRMouz9Z1RCo77tf3crNP4OHq9EAkduLc/b4i6HCGFM3fyfJ7AM5XMa3OQvXfF84FQnew7NGE6zB/CKFfKBIZyzntvrDg4VqWEAHzunT6+eBnGtxtrAE0bBo4MmUCklXWP8j5UAyjfFpSeJdOywY=
+    - secure: s56rqSiiwX40CQWeHTcbyVLRtwLP/pcHWqaVCKuXtZ/m9SgRI/SHp9o8ITI2dzr3syEeAkHjkJOkHQSpH0bHi1xKY4M9ODcCugwv+yDEELw1qmI6Cvwjvj1cKsG7ebt39OnCkz+TqhtI/iOEkxq7mTizFjNIxIImMkKxeQwcFgE=
 
 before_install:
-- sudo chmod +x gradlew
-- sudo apt-get update -qq
-- if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm
-  ia32-libs ia32-libs-multiarch > /dev/null; fi
-- wget http://services.gradle.org/distributions/gradle-1.9-bin.zip
-- unzip -qq gradle-1.9-bin.zip
-- export GRADLE_HOME=$PWD/gradle-1.9
-- export PATH=$GRADLE_HOME/bin:$PATH
-- wget http://dl.google.com/android/android-sdk_r22.3-linux.tgz
-- tar xzf android-sdk_r22.3-linux.tgz
-- export ANDROID_HOME=$PWD/android-sdk-linux
-- export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-- echo yes | android update sdk --filter platform-tools --no-ui --force > /dev/null
-- echo yes | android update sdk --all --filter build-tools-19.0.3 --no-ui --force
-  > /dev/null
-- echo yes | android update sdk --filter android-19 --no-ui --force > /dev/null
-- echo yes | android update sdk --filter sysimg-19 --no-ui --force > /dev/null
-- echo yes | android update sdk --filter extra-android-support --no-ui --force > /dev/null
-- echo yes | android update sdk --filter extra-android-m2repository --no-ui --force
-  > /dev/null
-- echo nexusUsername=dummy >> gradle.properties
-- echo nexusPassword=dummy >> gradle.properties
-- echo nhaarman_lva_storePassword=dummy >> gradle.properties
-- echo nhaarman_lva_keyAlias=dummy >> gradle.properties
-- echo nhaarman_lva_keyPassword=dummy >> gradle.properties
-- echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-- emulator -avd test -no-skin -no-audio -no-window &
+  # Install base Android SDK
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libstdc++6:i386 lib32z1 expect
+  - export COMPONENTS=extra-android-m2repository,build-tools-19.0.3,android-19,$ANDROID_SDKS
+  - curl -3L https://raw.github.com/embarkmobile/android-sdk-installer/version-2/android-sdk-installer | bash /dev/stdin --install=$COMPONENTS
+  - source ~/.android-sdk-installer/env
+
+  # Create and start emulator
+  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI --skin $SKIN
+  - emulator -avd test -no-audio -no-window &
+
+  # Add dummy passwords
+  - echo nexusUsername=dummy >> gradle.properties
+  - echo nexusPassword=dummy >> gradle.properties
+  - echo nhaarman_lva_storePassword=dummy >> gradle.properties
+  - echo nhaarman_lva_keyAlias=dummy >> gradle.properties
+  - echo nhaarman_lva_keyPassword=dummy >> gradle.properties
+
 before_script:
-- chmod +x wait_for_emulator
-- ./wait_for_emulator
+  # Make sure the emulator has started before running tests
+  - wait_for_emulator
+
 install:
-- true
+ - true
+
 script:
-- TERM=dumb ./gradlew connectedCheck lint
+  - sudo chmod +x gradlew
+  - ./gradlew connectedCheck
+
+  - if [[ $LINT == 'true' ]]; then ./gradlew lint ; fi
+
 after_success:
-- ./gradlew uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}"
+  - ./gradlew uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}"
+
+notifications:
+  email: false
