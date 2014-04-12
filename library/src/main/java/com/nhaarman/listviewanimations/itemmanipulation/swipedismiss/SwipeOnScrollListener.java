@@ -25,6 +25,7 @@ import android.widget.AbsListView;
  * An {@link android.widget.AbsListView.OnScrollListener} that is used in conjunction with {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter}. Override this class to
  * provide a custom implementation of the OnScrollListener. Do not forget to call super on the overridden methods!
  */
+@Deprecated
 public class SwipeOnScrollListener implements AbsListView.OnScrollListener {
 
     private SwipeDismissListViewTouchListener mTouchListener;

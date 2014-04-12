@@ -86,6 +86,11 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
     private DismissableManager mDismissableManager;
 
     /**
+     * The OnScrollListener to redirect scroll events to.
+     */
+    private AbsListView.OnScrollListener mOnScrollListener;
+
+    /**
      * Constructs a new swipe-to-dismiss touch listener for the given list view.
      *
      * @param listView
@@ -94,6 +99,30 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
      *            The callback to trigger when the user has indicated that she
      *            would like to dismiss one or more list items.
      */
+    public SwipeDismissListViewTouchListener(final AbsListView listView, final OnDismissCallback callback) {
+        ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
+        mSlop = vc.getScaledTouchSlop();
+        mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * MIN_FLING_VELOCITY_FACTOR;
+        mMaxFlingVelocity = vc.getScaledMaximumFlingVelocity();
+        mAnimationTime = listView.getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
+        mListView = listView;
+        mCallback = callback;
+
+        AbsListView.OnScrollListener innerSwipeOnScrollListener = new InnerSwipeOnScrollListener();
+        mListView.setOnScrollListener(innerSwipeOnScrollListener);
+    }
+
+    /**
+     * Constructs a new swipe-to-dismiss touch listener for the given list view.
+     *
+     * @param listView
+     *            The list view whose items should be dismissable.
+     * @param callback
+     *            The callback to trigger when the user has indicated that she
+     *            would like to dismiss one or more list items.
+     * @deprecated use {@link #SwipeDismissListViewTouchListener(android.widget.AbsListView, com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback)} instead.
+     */
+    @Deprecated
     public SwipeDismissListViewTouchListener(final AbsListView listView, final OnDismissCallback callback, final SwipeOnScrollListener onScroll) {
         ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
         mSlop = vc.getScaledTouchSlop();
@@ -111,7 +140,6 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
         mDisallowSwipe = true;
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public void allowSwipe() {
         mDisallowSwipe = false;
     }
@@ -120,9 +148,16 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
      * Set the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.DismissableManager} to specify which views can or cannot be swiped.
      * @param dismissableManager null for no restrictions.
      */
-    @SuppressWarnings("UnusedDeclaration")
     public void setDismissableManager(final DismissableManager dismissableManager) {
         mDismissableManager = dismissableManager;
+    }
+
+    /**
+     * Set a custom {@link android.widget.AbsListView.OnScrollListener}. Call this method instead of {@link android.widget.AbsListView#setOnTouchListener(android.view.View.OnTouchListener)}.
+     * @param onScrollListener the OnScrollListener.
+     */
+    public void setOnScrollListener(final AbsListView.OnScrollListener onScrollListener) {
+        mOnScrollListener = onScrollListener;
     }
 
     @Override
@@ -465,5 +500,25 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 
     public void notifyDataSetChanged() {
         mVirtualListCount = mListView.getAdapter().getCount();
+    }
+
+    private class InnerSwipeOnScrollListener implements AbsListView.OnScrollListener {
+
+        @Override
+        public void onScrollStateChanged(final AbsListView view, final int scrollState) {
+            if (scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                disallowSwipe();
+            }
+            if (mOnScrollListener != null) {
+                mOnScrollListener.onScrollStateChanged(view, scrollState);
+            }
+        }
+
+        @Override
+        public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
+            if (mOnScrollListener != null) {
+                mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+            }
+        }
     }
 }
