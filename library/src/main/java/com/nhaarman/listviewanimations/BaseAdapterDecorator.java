@@ -32,34 +32,84 @@ import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
  */
 public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, ListViewSetter {
 
+    /**
+     * The {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
+     */
     private final BaseAdapter mDecoratedBaseAdapter;
 
-    private AbsListView mListView;
+    /**
+     * The {@link android.widget.AbsListView} this {@code BaseAdapterDecorator} will be bound to.
+     */
+    private AbsListView mAbsListView;
 
+    /**
+     * A boolean to indicate whether the {@link android.widget.AbsListView} is in a horizontal scroll container.
+     * @deprecated to be removed in 2.8.+.
+     */
+    // TODO: 2.8.+: remove
+    @Deprecated
     private boolean mIsParentHorizontalScrollContainer;
+
+    /**
+     * The resource id of the child that can be used to swipe a view away.
+     * @deprecated to be removed in 2.8.+.
+     */
+    // TODO: 2.8.+: remove
+    @Deprecated
     private int mResIdTouchChild;
 
+    /**
+     * Create a new {@code BaseAdapterDecorator}, decorating given {@link android.widget.BaseAdapter}.
+     * @param baseAdapter the {@code} BaseAdapter to decorate.
+     */
     public BaseAdapterDecorator(final BaseAdapter baseAdapter) {
         mDecoratedBaseAdapter = baseAdapter;
     }
 
+    /**
+     * Returns the {@link android.widget.BaseAdapter} that this {@code BaseAdapterDecorator} decorates.
+     */
+    protected BaseAdapter getDecoratedBaseAdapter() {
+        return mDecoratedBaseAdapter;
+    }
+
+    /**
+     * Returns the root {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
+     */
+    protected BaseAdapter getRootAdapter() {
+        BaseAdapter adapter = mDecoratedBaseAdapter;
+        while (adapter instanceof BaseAdapterDecorator) {
+            adapter = ((BaseAdapterDecorator) adapter).getDecoratedBaseAdapter();
+        }
+        return adapter;
+    }
+
     @Override
-    public void setAbsListView(final AbsListView listView) {
-        mListView = listView;
+    /**
+     * Sets the {@link android.widget.AbsListView} that this adapter will be bound to.
+     * Call this method before setting this adapter to the {@code AbsListView}.
+     * Also propagates the {@code AbsListView} to the decorated {@code BaseAdapter} if applicable.
+     */
+    public void setAbsListView(final AbsListView absListView) {
+        mAbsListView = absListView;
 
         if (mDecoratedBaseAdapter instanceof ListViewSetter) {
-            ((ListViewSetter) mDecoratedBaseAdapter).setAbsListView(listView);
+            ((ListViewSetter) mDecoratedBaseAdapter).setAbsListView(absListView);
         }
 
-        if (mListView instanceof DynamicListView) {
-            DynamicListView dynListView = (DynamicListView) mListView;
+        // TODO: 2.8.+: remove
+        if (mAbsListView instanceof DynamicListView) {
+            DynamicListView dynListView = (DynamicListView) mAbsListView;
             dynListView.setIsParentHorizontalScrollContainer(mIsParentHorizontalScrollContainer);
             dynListView.setDynamicTouchChild(mResIdTouchChild);
         }
     }
 
-    public AbsListView getAbsListView() {
-        return mListView;
+    /**
+     * Returns the {@link android.widget.AbsListView} this {@code BaseAdapterDecorator} is bound to.
+     */
+    protected AbsListView getAbsListView() {
+        return mAbsListView;
     }
 
     @Override
@@ -122,6 +172,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
         if (!(mDecoratedBaseAdapter instanceof ArrayAdapter<?>)) {
             // fix #35 dirty trick !
             // leads to an infinite loop when trying because ArrayAdapter triggers notifyDataSetChanged itself
+            // TODO: investigate
             mDecoratedBaseAdapter.notifyDataSetChanged();
         }
     }
@@ -133,6 +184,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     public void notifyDataSetChanged(final boolean force) {
         if (force || !(mDecoratedBaseAdapter instanceof ArrayAdapter<?>)) {
             // leads to an infinite loop when trying because ArrayAdapter triggers notifyDataSetChanged itself
+            // TODO: investigate
             mDecoratedBaseAdapter.notifyDataSetChanged();
         }
     }
@@ -153,31 +205,30 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     }
 
     @Override
-    public int getPositionForSection(final int section) {
+    public int getPositionForSection(final int sectionIndex) {
+        int result = 0;
         if (mDecoratedBaseAdapter instanceof SectionIndexer) {
-            return ((SectionIndexer) mDecoratedBaseAdapter).getPositionForSection(section);
+            result = ((SectionIndexer) mDecoratedBaseAdapter).getPositionForSection(sectionIndex);
         }
-        return 0;
+        return result;
     }
 
     @Override
     public int getSectionForPosition(final int position) {
+        int result = 0;
         if (mDecoratedBaseAdapter instanceof SectionIndexer) {
-            return ((SectionIndexer) mDecoratedBaseAdapter).getSectionForPosition(position);
+            result = ((SectionIndexer) mDecoratedBaseAdapter).getSectionForPosition(position);
         }
-        return 0;
+        return result;
     }
 
     @Override
     public Object[] getSections() {
+        Object[] result = null;
         if (mDecoratedBaseAdapter instanceof SectionIndexer) {
-            return ((SectionIndexer) mDecoratedBaseAdapter).getSections();
+            result = ((SectionIndexer) mDecoratedBaseAdapter).getSections();
         }
-        return null;
-    }
-
-    public BaseAdapter getDecoratedBaseAdapter() {
-        return mDecoratedBaseAdapter;
+        return result;
     }
 
     @Override
@@ -193,15 +244,23 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
      *
      * Call this method with the value 'true' to fix this behavior.
      * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list-item.
+     * @deprecated use {@link com.nhaarman.listviewanimations.widget.DynamicListView#setParentIsHorizontalScrollContainer()} instead. To be removed in 2.8.+.
      */
+    // TODO: 2.8.+: remove
+    @Deprecated
     public void setIsParentHorizontalScrollContainer(final boolean isParentHorizontalScrollContainer) {
         mIsParentHorizontalScrollContainer = isParentHorizontalScrollContainer;
-        if (mListView instanceof DynamicListView) {
-            DynamicListView dynListView = (DynamicListView) mListView;
+        if (mAbsListView instanceof DynamicListView) {
+            DynamicListView dynListView = (DynamicListView) mAbsListView;
             dynListView.setIsParentHorizontalScrollContainer(mIsParentHorizontalScrollContainer);
         }
     }
 
+    /**
+     * @deprecated to be removed in 2.8.+.
+     */
+    // TODO: 2.8.+: remove
+    @Deprecated
     public boolean isParentHorizontalScrollContainer() {
         return mIsParentHorizontalScrollContainer;
     }
@@ -214,16 +273,24 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
      * If the user touches an area outside that child (but inside the list-item view), then the swipe will not happen and the parent
      * will do its job instead (scrolling horizontally).
      *
-     * @param childResId The resource-ID of the list-items' child that the user should touch to be able to swipe the list-items.
+     * @param childResId The resource-ID of the list-items' child that the user should touch to be able to swipe the list items.
+     * @deprecated use {@link com.nhaarman.listviewanimations.widget.DynamicListView#setDynamicTouchChild(int)} instead. To be removed in 2.8.+.
      */
+    // TODO: 2.8.+: remove
+    @Deprecated
     public void setTouchChild(final int childResId) {
         mResIdTouchChild = childResId;
-        if (mListView instanceof DynamicListView) {
-            DynamicListView dynListView = (DynamicListView) mListView;
+        if (mAbsListView instanceof DynamicListView) {
+            DynamicListView dynListView = (DynamicListView) mAbsListView;
             dynListView.setDynamicTouchChild(mResIdTouchChild);
         }
     }
 
+    /**
+     * @deprecated to be removed in 2.8.+.
+     */
+    // TODO: 2.8.+: remove
+    @Deprecated
     public int getTouchChild() {
         return mResIdTouchChild;
     }

@@ -37,6 +37,16 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     private AbsListView.OnScrollListener mOnScrollListener;
 
     /**
+     * A boolean to indicate whether the {@link android.widget.AbsListView} is in a horizontal scroll container.
+     */
+    private boolean mParentIsHorizontalScrollContainer;
+
+    /**
+     * The resource id of the child that can be used to swipe a view away.
+     */
+    private int mSwipeTouchChildResId;
+
+    /**
      * Create a new SwipeDismissAdapter.
      *
      * @param baseAdapter       the {@link android.widget.BaseAdapter to use}
@@ -78,23 +88,49 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     }
 
     @Override
-    public void setAbsListView(final AbsListView listView) {
-        super.setAbsListView(listView);
+    public void setAbsListView(final AbsListView absListView) {
+        super.setAbsListView(absListView);
         if (getDecoratedBaseAdapter() instanceof ArrayAdapter<?>) {
             ((ArrayAdapter<?>) getDecoratedBaseAdapter()).propagateNotifyDataSetChanged(this);
         }
-        mSwipeDismissListViewTouchListener = createListViewTouchListener(listView);
-        mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
-        mSwipeDismissListViewTouchListener.setTouchChild(getTouchChild());
+        mSwipeDismissListViewTouchListener = createListViewTouchListener(absListView);
+        if (mParentIsHorizontalScrollContainer) {
+            mSwipeDismissListViewTouchListener.setParentIsHorizontalScrollContainer();
+        }
+        mSwipeDismissListViewTouchListener.setTouchChild(mSwipeTouchChildResId);
         mSwipeDismissListViewTouchListener.setOnScrollListener(mOnScrollListener);
-        listView.setOnTouchListener(mSwipeDismissListViewTouchListener);
+        absListView.setOnTouchListener(mSwipeDismissListViewTouchListener);
     }
 
-    @Override
-    public void setIsParentHorizontalScrollContainer(final boolean isParentHorizontalScrollContainer) {
-        super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+    /**
+     * If the adapter's {@link AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
+     * work, because the parent will prevent touch-events from reaching the {@code AbsListView}.
+     *
+     * Call this method to fix this behavior.
+     * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list item.
+     */
+    public void setParentIsHorizontalScrollContainer() {
+        mParentIsHorizontalScrollContainer = true;
+        mSwipeTouchChildResId = 0;
         if (mSwipeDismissListViewTouchListener != null) {
-            mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+            mSwipeDismissListViewTouchListener.setParentIsHorizontalScrollContainer();
+        }
+    }
+
+    /**
+     * If the adapter's {@link AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
+     * work, because the parent will prevent touch events from reaching the {@code AbsListView}.
+     *
+     * If a {@code AbsListView} view has a child with the given resource id, the user can still swipe the list item by touching that child.
+     * If the user touches an area outside that child (but inside the list item view), then the swipe will not happen and the parent
+     * will do its job instead (scrolling horizontally).
+     *
+     * @param childResId The resource id of the list items' child that the user should touch to be able to swipe the list items.
+     */
+    public void setSwipeTouchChildResId(final int childResId) {
+        mSwipeTouchChildResId = childResId;
+        if (mSwipeDismissListViewTouchListener != null) {
+            mSwipeDismissListViewTouchListener.setTouchChild(childResId);
         }
     }
 
@@ -103,14 +139,6 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
         super.notifyDataSetChanged();
         if (mSwipeDismissListViewTouchListener != null) {
             mSwipeDismissListViewTouchListener.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void setTouchChild(final int childResId) {
-        super.setTouchChild(childResId);
-        if (mSwipeDismissListViewTouchListener != null) {
-            mSwipeDismissListViewTouchListener.setTouchChild(childResId);
         }
     }
 }

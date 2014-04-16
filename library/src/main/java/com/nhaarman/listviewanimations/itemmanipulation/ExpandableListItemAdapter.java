@@ -51,7 +51,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     }
 
     /**
-     * Creates a new {@link ExpandableListItemAdapter} with the specified list,
+     * Creates a new {@code ExpandableListItemAdapter} with the specified list,
      * or an empty list if items == null.
      */
     public ExpandableListItemAdapter(final Context context, final List<T> items) {
@@ -89,8 +89,8 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     }
 
     @Override
-    public void setAbsListView(final AbsListView listView) {
-        mAbsListView = listView;
+    public void setAbsListView(final AbsListView absListView) {
+        mAbsListView = absListView;
     }
 
     /**

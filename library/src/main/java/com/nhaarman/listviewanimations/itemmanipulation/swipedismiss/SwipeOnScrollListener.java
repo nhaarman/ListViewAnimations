@@ -24,7 +24,10 @@ import android.widget.AbsListView;
 /**
  * An {@link android.widget.AbsListView.OnScrollListener} that is used in conjunction with {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter}. Override this class to
  * provide a custom implementation of the OnScrollListener. Do not forget to call super on the overridden methods!
+ * @deprecated use {@link SwipeDismissListViewTouchListener#SwipeDismissListViewTouchListener(android.widget.AbsListView, com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback)}
+ * instead, and call {@link SwipeDismissListViewTouchListener#setOnScrollListener(android.widget.AbsListView.OnScrollListener)}. To be removed in 2.8.+.
  */
+// TODO: 2.8.+: remove
 @Deprecated
 public class SwipeOnScrollListener implements AbsListView.OnScrollListener {
 

@@ -120,7 +120,7 @@ public class DynamicListView extends ListView {
     private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
 
     private OnTouchListener mOnTouchListener;
-    private boolean mIsParentHorizontalScrollContainer;
+    private boolean mParentIsHOrizontalScrollContainer;
     private int mResIdOfDynamicTouchChild;
     private boolean mDynamicTouchChildTouched;
     private int mSlop;
@@ -132,22 +132,22 @@ public class DynamicListView extends ListView {
     private OnItemMovedListener mOnItemMovedListener;
     private int mLastMovedToIndex;
 
-    public DynamicListView(Context context) {
+    public DynamicListView(final Context context) {
         super(context);
         init(context);
     }
 
-    public DynamicListView(Context context, AttributeSet attrs, int defStyle) {
+    public DynamicListView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         init(context);
     }
 
-    public DynamicListView(Context context, AttributeSet attrs) {
+    public DynamicListView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public void init(Context context) {
+    public void init(final Context context) {
         setOnItemLongClickListener(mOnItemLongClickListener);
         setOnScrollListener(mScrollListener);
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
@@ -156,7 +156,7 @@ public class DynamicListView extends ListView {
         mSlop = vc.getScaledTouchSlop();
     }
 
-    public void setAdapter(BaseAdapter adapter) {
+    public void setAdapter(final BaseAdapter adapter) {
         super.setAdapter(adapter);
     }
 
@@ -165,7 +165,7 @@ public class DynamicListView extends ListView {
     /**
      * @deprecated use #setAdapter(BaseAdapter) instead.
      */
-    public void setAdapter(ListAdapter adapter) {
+    public void setAdapter(final ListAdapter adapter) {
         if (!(adapter instanceof BaseAdapter)) {
             throw new IllegalArgumentException("DynamicListView needs a BaseAdapter!");
         }
@@ -177,7 +177,7 @@ public class DynamicListView extends ListView {
      * been selected, the hover cell is created and set up.
      */
     private OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
-        public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
+        public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int pos, final long id) {
             if (mResIdOfDynamicTouchChild == 0) {
                 mDynamicTouchChildTouched = true;
                 makeCellMobile();
@@ -219,7 +219,7 @@ public class DynamicListView extends ListView {
      * size. The hover cell's BitmapDrawable is drawn on top of the bitmap every
      * single time an invalidate call is made.
      */
-    private BitmapDrawable getAndAddHoverView(View v) {
+    private BitmapDrawable getAndAddHoverView(final View v) {
         int w = v.getWidth();
         int h = v.getHeight();
         int top = v.getTop();
@@ -240,7 +240,7 @@ public class DynamicListView extends ListView {
     /**
      * Returns a bitmap showing a screenshot of the view passed in.
      */
-    private Bitmap getBitmapFromView(View v) {
+    private Bitmap getBitmapFromView(final View v) {
         Bitmap bitmap = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         v.draw(canvas);
@@ -253,7 +253,7 @@ public class DynamicListView extends ListView {
      * item is either at the top or bottom of the list, mAboveItemId or mBelowItemId
      * may be invalid.
      */
-    private void updateNeighborViewsForId(long itemId) {
+    private void updateNeighborViewsForId(final long itemId) {
         int position = getPositionForId(itemId);
         ListAdapter adapter = getAdapter();
         if (!adapter.hasStableIds()) {
@@ -267,7 +267,7 @@ public class DynamicListView extends ListView {
     /**
      * Retrieves the view in the list corresponding to itemId
      */
-    private View getViewForId(long itemId) {
+    private View getViewForId(final long itemId) {
         int firstVisiblePosition = getFirstVisiblePosition();
         ListAdapter adapter = getAdapter();
         if (!adapter.hasStableIds()) {
@@ -288,7 +288,7 @@ public class DynamicListView extends ListView {
     /**
      * Retrieves the position in the list corresponding to itemId
      */
-    private int getPositionForId(long itemId) {
+    private int getPositionForId(final long itemId) {
         View v = getViewForId(itemId);
         if (v == null) {
             return -1;
@@ -303,7 +303,7 @@ public class DynamicListView extends ListView {
      * over the listview's items whenever the listview is redrawn.
      */
     @Override
-    protected void dispatchDraw(Canvas canvas) {
+    protected void dispatchDraw(final Canvas canvas) {
         super.dispatchDraw(canvas);
         if (mHoverCell != null) {
             mHoverCell.draw(canvas);
@@ -311,15 +311,15 @@ public class DynamicListView extends ListView {
     }
 
     @Override
-    public void setOnTouchListener(OnTouchListener l) {
+    public void setOnTouchListener(final OnTouchListener l) {
         mOnTouchListener = l;
     }
 
-    public void setOnHoverCellListener(OnHoverCellListener onHoverCellListener) {
+    public void setOnHoverCellListener(final OnHoverCellListener onHoverCellListener) {
         mOnHoverCellListener = onHoverCellListener;
     }
 
-    private Rect getChildViewRect(View parentView, View childView) {
+    private Rect getChildViewRect(final View parentView, View childView) {
         final Rect childRect = new Rect(childView.getLeft(), childView.getTop(), childView.getRight(), childView.getBottom());
         if (parentView == childView) {
             return childRect;
@@ -335,7 +335,7 @@ public class DynamicListView extends ListView {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(final MotionEvent event) {
         if (mSkipCallingOnTouchListener) {
             return super.onTouchEvent(event);
         }
@@ -357,7 +357,7 @@ public class DynamicListView extends ListView {
 
                 mDynamicTouchChildTouched = false;
                 if (mResIdOfDynamicTouchChild != 0) {
-                    mIsParentHorizontalScrollContainer = false;
+                    mParentIsHOrizontalScrollContainer = false;
 
                     int position = pointToPosition(mDownX, mDownY);
                     int childNum = (position != INVALID_POSITION) ? position - getFirstVisiblePosition() : -1;
@@ -372,7 +372,7 @@ public class DynamicListView extends ListView {
                     }
                 }
 
-                if (mIsParentHorizontalScrollContainer) {
+                if (mParentIsHOrizontalScrollContainer) {
                     // Do it now and don't wait until the user moves more than the
                     // slop factor.
                     getParent().requestDisallowInterceptTouchEvent(true);
@@ -424,10 +424,10 @@ public class DynamicListView extends ListView {
             case MotionEvent.ACTION_POINTER_UP:
             /*
              * If a multitouch event took place and the original touch dictating
-			 * the movement of the hover cell has ended, then the dragging event
-			 * ends and the hover cell is animated to its corresponding position
-			 * in the listview.
-			 */
+             * the movement of the hover cell has ended, then the dragging event
+             * ends and the hover cell is animated to its corresponding position
+             * in the listview.
+             */
                 pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
                 final int pointerId = event.getPointerId(pointerIndex);
                 if (pointerId == mActivePointerId) {
@@ -530,7 +530,7 @@ public class DynamicListView extends ListView {
         }
     }
 
-    private void swapElements(int indexOne, int indexTwo) {
+    private void swapElements(final int indexOne, final int indexTwo) {
         mLastMovedToIndex = indexTwo;
         ListAdapter adapter = getAdapter();
 
@@ -573,18 +573,18 @@ public class DynamicListView extends ListView {
             ObjectAnimator hoverViewAnimator = ObjectAnimator.ofObject(mHoverCell, "bounds", sBoundEvaluator, mHoverCellCurrentBounds);
             hoverViewAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                public void onAnimationUpdate(final ValueAnimator valueAnimator) {
                     invalidate();
                 }
             });
             hoverViewAnimator.addListener(new AnimatorListenerAdapter() {
                 @Override
-                public void onAnimationStart(Animator animation) {
+                public void onAnimationStart(final Animator animation) {
                     setEnabled(false);
                 }
 
                 @Override
-                public void onAnimationEnd(Animator animation) {
+                public void onAnimationEnd(final Animator animation) {
                     mAboveItemId = INVALID_ID;
                     mMobileItemId = INVALID_ID;
                     mBelowItemId = INVALID_ID;
@@ -626,13 +626,13 @@ public class DynamicListView extends ListView {
      * final location when the user lifts his finger by modifying the
      * BitmapDrawable's bounds.
      */
-    private final static TypeEvaluator<Rect> sBoundEvaluator = new TypeEvaluator<Rect>() {
-        public Rect evaluate(float fraction, Rect startValue, Rect endValue) {
+    private static final TypeEvaluator<Rect> sBoundEvaluator = new TypeEvaluator<Rect>() {
+        public Rect evaluate(final float fraction, final Rect startValue, final Rect endValue) {
             return new Rect(interpolate(startValue.left, endValue.left, fraction), interpolate(startValue.top, endValue.top, fraction), interpolate(startValue.right, endValue.right, fraction),
                     interpolate(startValue.bottom, endValue.bottom, fraction));
         }
 
-        public int interpolate(int start, int end, float fraction) {
+        public int interpolate(final int start, final int end, final float fraction) {
             return (int) (start + fraction * (end - start));
         }
     };
@@ -650,7 +650,7 @@ public class DynamicListView extends ListView {
      * or below the bounds of the listview. If so, the listview does an appropriate
      * upward or downward smooth scroll so as to reveal new items.
      */
-    private boolean handleMobileCellScroll(Rect r) {
+    private boolean handleMobileCellScroll(final Rect r) {
         int offset = computeVerticalScrollOffset();
         int height = getHeight();
         int extent = computeVerticalScrollExtent();
@@ -663,26 +663,52 @@ public class DynamicListView extends ListView {
             return true;
         }
 
-        if (hoverViewTop + hoverHeight >= height && (offset + extent) < range) {
+        if (hoverViewTop + hoverHeight >= height && offset + extent < range) {
             smoothScrollBy(mSmoothScrollAmountAtEdge, 0);
             return true;
         }
 
         return false;
     }
-
+    @Deprecated
+    /**
+     * @Deprecated use {@link #setParentIsHorizontalScrollContainer()} instead.
+     */
     public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
-        mIsParentHorizontalScrollContainer = (mResIdOfDynamicTouchChild == 0) && isParentHorizontalScrollContainer;
+        mParentIsHOrizontalScrollContainer = (mResIdOfDynamicTouchChild == 0) && isParentHorizontalScrollContainer;
+    }
+
+    /**
+     * If this {@code DynamicListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
+     * work, because the parent will prevent touch-events from reaching the {@code DynamicListView}.
+     *
+     * Call this method to fix this behavior.
+     * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list item.
+     * Will also reset the dynamic touch child, if set.
+     */
+    public void setParentIsHorizontalScrollContainer() {
+        mParentIsHOrizontalScrollContainer = true;
+        mResIdOfDynamicTouchChild = 0;
     }
 
     public boolean isParentHorizontalScrollContainer() {
-        return mIsParentHorizontalScrollContainer;
+        return mParentIsHOrizontalScrollContainer;
     }
 
-    public void setDynamicTouchChild(int childResId) {
+    /**
+     * If this {@code DynamicListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
+     * work, because the parent will prevent touch events from reaching the {@code DynamicListView}.
+     *
+     * If a {@code DynamicListView} view has a child with the given resource id, the user can still swipe the list item by touching that child.
+     * If the user touches an area outside that child (but inside the list item view), then the swipe will not happen and the parent
+     * will do its job instead (scrolling horizontally).
+     *
+     * @param childResId The resource id of the list items' child that the user should touch to be able to swipe the list items.
+     */
+    public void setDynamicTouchChild(final int childResId) {
         mResIdOfDynamicTouchChild = childResId;
         if (childResId != 0) {
-            setIsParentHorizontalScrollContainer(false);
+            mParentIsHOrizontalScrollContainer = false;
         }
     }
 
@@ -693,7 +719,7 @@ public class DynamicListView extends ListView {
      * scrolling takes place, the listview continuously checks if new cells became visible
      * and determines whether they are potential candidates for a cell swap.
      */
-    private OnScrollListener mScrollListener = new OnScrollListener() {
+    private final OnScrollListener mScrollListener = new OnScrollListener() {
 
         private int mPreviousFirstVisibleItem = -1;
         private int mPreviousVisibleItemCount = -1;
@@ -701,12 +727,13 @@ public class DynamicListView extends ListView {
         private int mCurrentVisibleItemCount;
         private int mCurrentScrollState;
 
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        @Override
+        public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
             mCurrentFirstVisibleItem = firstVisibleItem;
             mCurrentVisibleItemCount = visibleItemCount;
 
-            mPreviousFirstVisibleItem = (mPreviousFirstVisibleItem == -1) ? mCurrentFirstVisibleItem : mPreviousFirstVisibleItem;
-            mPreviousVisibleItemCount = (mPreviousVisibleItemCount == -1) ? mCurrentVisibleItemCount : mPreviousVisibleItemCount;
+            mPreviousFirstVisibleItem = mPreviousFirstVisibleItem == -1 ? mCurrentFirstVisibleItem : mPreviousFirstVisibleItem;
+            mPreviousVisibleItemCount = mPreviousVisibleItemCount == -1 ? mCurrentVisibleItemCount : mPreviousVisibleItemCount;
 
             checkAndHandleFirstVisibleCellChange();
             checkAndHandleLastVisibleCellChange();
@@ -716,7 +743,7 @@ public class DynamicListView extends ListView {
         }
 
         @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
+        public void onScrollStateChanged(final AbsListView view, final int scrollState) {
             mCurrentScrollState = scrollState;
             mScrollState = scrollState;
             isScrollCompleted();
@@ -770,10 +797,10 @@ public class DynamicListView extends ListView {
     };
 
     /**
-     * Set the {@link com.nhaarman.listviewanimations.widget.DynamicListView.OnItemMovedListener} to be notified when an item is dropped.
+     * Set the {@link OnItemMovedListener} to be notified when an item is dropped.
      */
-    public void setOnItemMovedListener(OnItemMovedListener onItemMovedListener) {
-        this.mOnItemMovedListener = onItemMovedListener;
+    public void setOnItemMovedListener(final OnItemMovedListener onItemMovedListener) {
+        mOnItemMovedListener = onItemMovedListener;
     }
 
     /**
@@ -791,6 +818,6 @@ public class DynamicListView extends ListView {
          * @param positionOne First adapter position.
          * @param positionTwo Second adapter position.
          */
-        public void swapItems(int positionOne, int positionTwo);
+        void swapItems(int positionOne, int positionTwo);
     }
 }

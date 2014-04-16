@@ -80,7 +80,7 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 
     private boolean mDisallowSwipe;
     private boolean mIsParentHorizontalScrollContainer;
-    private int mResIdOfTouchChild;
+    private int mTouchChildResId;
     private boolean mTouchChildTouched;
 
     private DismissableManager mDismissableManager;
@@ -120,8 +120,9 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
      * @param callback
      *            The callback to trigger when the user has indicated that she
      *            would like to dismiss one or more list items.
-     * @deprecated use {@link #SwipeDismissListViewTouchListener(android.widget.AbsListView, com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback)} instead.
+     * @deprecated use {@link #SwipeDismissListViewTouchListener(android.widget.AbsListView, com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback)} instead. To be removed in 2.8.+.
      */
+    // TODO: 2.8.+: remove
     @Deprecated
     public SwipeDismissListViewTouchListener(final AbsListView listView, final OnDismissCallback callback, final SwipeOnScrollListener onScroll) {
         ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
@@ -238,12 +239,12 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
                 mCurrentDismissData = null;
                 return false;
             } else {
-                mTouchChildTouched = !mIsParentHorizontalScrollContainer && mResIdOfTouchChild == 0;
+                mTouchChildTouched = !mIsParentHorizontalScrollContainer && mTouchChildResId == 0;
 
-                if (mResIdOfTouchChild != 0) {
+                if (mTouchChildResId != 0) {
                     mIsParentHorizontalScrollContainer = false;
 
-                    final View childView = downView.findViewById(mResIdOfTouchChild);
+                    final View childView = downView.findViewById(mTouchChildResId);
                     if (childView != null) {
                         final Rect childRect = getChildViewRect(mListView, childView);
                         if (childRect.contains((int) motionEvent.getX(), (int) motionEvent.getY())) {
@@ -456,7 +457,7 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
     /**
      * Here you can manage dismissed View.
      */
-    protected void recycleDismissedViewsItems(final List<PendingDismissData> pendingDismisses) {
+    protected void recycleDismissedViewsItems(final Iterable<PendingDismissData> pendingDismisses) {
         ViewGroup.LayoutParams lp;
         for (final PendingDismissData pendingDismiss : pendingDismisses) {
             // Reset view presentation
@@ -487,15 +488,41 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
         }
     }
 
+    /**
+     * @deprecated use {@link #setParentIsHorizontalScrollContainer()} instead. To be removed in 2.8.+.
+     */
+    // TODO: 2.8.+: remove
+    @Deprecated
     void setIsParentHorizontalScrollContainer(final boolean isParentHorizontalScrollContainer) {
-        mIsParentHorizontalScrollContainer = mResIdOfTouchChild == 0 && isParentHorizontalScrollContainer;
+        mIsParentHorizontalScrollContainer = mTouchChildResId == 0 && isParentHorizontalScrollContainer;
     }
 
+
+    /**
+     * If the adapter's {@link AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
+     * work, because the parent will prevent touch-events from reaching the {@code AbsListView}.
+     *
+     * Call this method to fix this behavior.
+     * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list item.
+     */
+    void setParentIsHorizontalScrollContainer(){
+        mIsParentHorizontalScrollContainer = true;
+        mTouchChildResId = 0;
+    }
+
+    /**
+     * If the adapter's {@link AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
+     * work, because the parent will prevent touch events from reaching the list-view.
+     *
+     * If a {@code AbsListView} view has a child with the given resource id, the user can still swipe the list item by touching that child.
+     * If the user touches an area outside that child (but inside the list item view), then the swipe will not happen and the parent
+     * will do its job instead (scrolling horizontally).
+     *
+     * @param childResId The resource id of the list items' child that the user should touch to be able to swipe the list items.
+     */
     void setTouchChild(final int childResId) {
-        mResIdOfTouchChild = childResId;
-        if (childResId != 0) {
-            setIsParentHorizontalScrollContainer(false);
-        }
+        mTouchChildResId = childResId;
+        mIsParentHorizontalScrollContainer = false;
     }
 
     public void notifyDataSetChanged() {

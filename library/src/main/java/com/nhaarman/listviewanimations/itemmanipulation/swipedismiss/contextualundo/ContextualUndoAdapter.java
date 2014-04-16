@@ -75,6 +75,16 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     private ContextualUndoListViewTouchListener mContextualUndoListViewTouchListener;
 
     /**
+     * A boolean to indicate whether the {@link android.widget.AbsListView} is in a horizontal scroll container.
+     */
+    private boolean mParentIsHorizontalScrollContainer;
+
+    /**
+     * The resource id of the child that can be used to swipe a view away.
+     */
+    private int mSwipeableChildResId;
+
+    /**
      * Create a new ContextualUndoAdapter based on given parameters.
      *
      * @param baseAdapter  The {@link BaseAdapter} to wrap
@@ -162,14 +172,14 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     }
 
     @Override
-    public void setAbsListView(final AbsListView listView) {
-        super.setAbsListView(listView);
-        mContextualUndoListViewTouchListener = new ContextualUndoListViewTouchListener(listView, this);
-        mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());
-        mContextualUndoListViewTouchListener.setTouchChild(getTouchChild());
-        listView.setOnTouchListener(mContextualUndoListViewTouchListener);
-        listView.setOnScrollListener(mContextualUndoListViewTouchListener.makeScrollListener());
-        listView.setOnHierarchyChangeListener(new HierarchyChangeListener());
+    public void setAbsListView(final AbsListView absListView) {
+        super.setAbsListView(absListView);
+        mContextualUndoListViewTouchListener = new ContextualUndoListViewTouchListener(absListView, this);
+        mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(mParentIsHorizontalScrollContainer);
+        mContextualUndoListViewTouchListener.setTouchChild(mSwipeableChildResId);
+        absListView.setOnTouchListener(mContextualUndoListViewTouchListener);
+        absListView.setOnScrollListener(mContextualUndoListViewTouchListener.makeScrollListener());
+        absListView.setOnHierarchyChangeListener(new HierarchyChangeListener());
     }
 
     @Override
@@ -342,34 +352,35 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         animator.start();
     }
 
-    @Override
-    public void setIsParentHorizontalScrollContainer(final boolean isParentHorizontalScrollContainer) {
-        super.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
+    /**
+     * If the adapter's {@link AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
+     * work, because the parent will prevent touch-events from reaching the {@code AbsListView}.
+     *
+     * Call this method to fix this behavior.
+     * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list item.
+     */
+    public void setParentIsHorizontalScrollContainer() {
+        mParentIsHorizontalScrollContainer = true;
+        mSwipeableChildResId = 0;
         if (mContextualUndoListViewTouchListener != null) {
-            mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer);
-        }
-    }
-
-    @Override
-    public void setTouchChild(final int childResId) {
-        super.setTouchChild(childResId);
-        if (mContextualUndoListViewTouchListener != null) {
-            mContextualUndoListViewTouchListener.setTouchChild(childResId);
+            mContextualUndoListViewTouchListener.setIsParentHorizontalScrollContainer(true);
         }
     }
 
     /**
-     * Removes any item that was swiped away.
-     * @param animate If true, animates the removal (collapsing the item).
-     *                If false, removes item immediately without animation.
-     * @deprecated use {@link #removePendingItem()} or {@link #animateRemovePendingItem()} instead.
+     * If the adapter's {@link AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
+     * work, because the parent will prevent touch events from reaching the list-view.
+     *
+     * If a {@code AbsListView} view has a child with the given resource id, the user can still swipe the list item by touching that child.
+     * If the user touches an area outside that child (but inside the list item view), then the swipe will not happen and the parent
+     * will do its job instead (scrolling horizontally).
+     *
+     * @param childResId The resource id of the list items' child that the user should touch to be able to swipe the list items.
      */
-    @Deprecated
-    public void removePendingItem(final boolean animate) {
-        if (animate) {
-            animateRemovePendingItem();
-        } else {
-            removePendingItem();
+    public void setSwipeableTouchChild(final int childResId) {
+        mSwipeableChildResId = childResId;
+        if (mContextualUndoListViewTouchListener != null) {
+            mContextualUndoListViewTouchListener.setTouchChild(childResId);
         }
     }
 
@@ -407,7 +418,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
          * @param position
          *            the position of the item that should be removed.
          */
-        public void deleteItem(int position);
+        void deleteItem(int position);
     }
 
     /**

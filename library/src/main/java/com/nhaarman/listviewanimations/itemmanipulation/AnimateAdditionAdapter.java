@@ -79,25 +79,16 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         mInsertQueue = new InsertQueue<T>(mInsertable);
     }
 
-    private BaseAdapter getRootAdapter() {
-        BaseAdapter adapter = getDecoratedBaseAdapter();
-        while (adapter instanceof BaseAdapterDecorator) {
-            adapter = ((BaseAdapterDecorator) adapter).getDecoratedBaseAdapter();
-        }
-
-        return adapter;
-    }
-
     @Override
     @Deprecated
     /**
      * @deprecated AnimateAdditionAdapter requires a ListView instance. Use {@link #setListView(android.widget.ListView)} instead.
      */
-    public void setAbsListView(final AbsListView listView) {
-        if (!(listView instanceof ListView)) {
+    public void setAbsListView(final AbsListView absListView) {
+        if (!(absListView instanceof ListView)) {
             throw new IllegalArgumentException("AnimateAdditionAdapter requires a ListView instance!");
         }
-        super.setAbsListView(listView);
+        super.setAbsListView(absListView);
     }
 
     public void setListView(final ListView listView) {
