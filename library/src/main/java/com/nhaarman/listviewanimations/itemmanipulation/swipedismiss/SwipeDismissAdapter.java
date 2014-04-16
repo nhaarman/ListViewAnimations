@@ -80,8 +80,8 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     @Override
     public void setAbsListView(final AbsListView listView) {
         super.setAbsListView(listView);
-        if (mDecoratedBaseAdapter instanceof ArrayAdapter<?>) {
-            ((ArrayAdapter<?>) mDecoratedBaseAdapter).propagateNotifyDataSetChanged(this);
+        if (getDecoratedBaseAdapter() instanceof ArrayAdapter<?>) {
+            ((ArrayAdapter<?>) getDecoratedBaseAdapter()).propagateNotifyDataSetChanged(this);
         }
         mSwipeDismissListViewTouchListener = createListViewTouchListener(listView);
         mSwipeDismissListViewTouchListener.setIsParentHorizontalScrollContainer(isParentHorizontalScrollContainer());

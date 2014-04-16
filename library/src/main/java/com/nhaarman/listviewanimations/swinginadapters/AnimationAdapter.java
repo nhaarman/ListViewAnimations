@@ -172,8 +172,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         ViewHelper.setAlpha(view, 0);
 
         Animator[] childAnimators;
-        if (mDecoratedBaseAdapter instanceof AnimationAdapter) {
-            childAnimators = ((AnimationAdapter) mDecoratedBaseAdapter).getAnimators(parent, view);
+        if (getDecoratedBaseAdapter() instanceof AnimationAdapter) {
+            childAnimators = ((AnimationAdapter) getDecoratedBaseAdapter()).getAnimators(parent, view);
         } else {
             childAnimators = new Animator[0];
         }
