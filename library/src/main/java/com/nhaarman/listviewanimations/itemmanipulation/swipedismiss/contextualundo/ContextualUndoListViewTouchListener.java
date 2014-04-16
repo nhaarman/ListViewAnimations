@@ -105,7 +105,7 @@ public class ContextualUndoListViewTouchListener implements SwipeOnTouchListener
     public AbsListView.OnScrollListener makeScrollListener() {
         return new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(final AbsListView absListView, final int scrollState) {
+            public void onScrollStateChanged(final AbsListView view, final int scrollState) {
                 setEnabled(scrollState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
                 if (mPaused) {
                     mCallback.onListScrolled();

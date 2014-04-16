@@ -104,7 +104,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
         }
     }
 
-	/* Non-ListViewAnimations related stuff below */
+    /* Non-ListViewAnimations related stuff below */
 
     @Override
     public boolean onNavigationItemSelected(final int itemPosition, final long itemId) {

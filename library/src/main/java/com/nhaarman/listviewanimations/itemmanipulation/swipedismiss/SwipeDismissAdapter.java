@@ -23,15 +23,13 @@ import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
 /**
- * Adds an option to swipe items in an AbsListView away.
- * Do not call {@link android.widget.AbsListView#setOnTouchListener(android.view.View.OnTouchListener)} or
- * {@link android.widget.AbsListView#setOnScrollListener(android.widget.AbsListView.OnScrollListener)} on your AbsListView! To use an {@link android.widget.AbsListView.OnScrollListener},
- * call {@link #setOnScrollListener(android.widget.AbsListView.OnScrollListener)} instead.
+ * Adds an option to swipe items in an {@link AbsListView} away.
+ * Do not call {@link android.widget.AbsListView#setOnTouchListener(android.view.View.OnTouchListener)} on your {@code AbsListView}!
  */
 public class SwipeDismissAdapter extends BaseAdapterDecorator {
 
     protected OnDismissCallback mOnDismissCallback;
-    protected SwipeDismissListViewTouchListener mSwipeDismissListViewTouchListener;
+    protected SwipeDismissTouchListener mDismissTouchListener;
     @Deprecated
     protected SwipeOnScrollListener mSwipeOnScrollListener;
     private AbsListView.OnScrollListener mOnScrollListener;
@@ -72,8 +70,8 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
         mSwipeOnScrollListener = swipeOnScrollListener;
     }
 
-    protected SwipeDismissListViewTouchListener createListViewTouchListener(final AbsListView listView) {
-        return new SwipeDismissListViewTouchListener(listView, mOnDismissCallback);
+    protected SwipeDismissTouchListener createListViewTouchListener(final AbsListView listView) {
+        return new SwipeDismissTouchListener(listView, mOnDismissCallback);
     }
 
     /**
@@ -93,13 +91,19 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
         if (getDecoratedBaseAdapter() instanceof ArrayAdapter<?>) {
             ((ArrayAdapter<?>) getDecoratedBaseAdapter()).propagateNotifyDataSetChanged(this);
         }
-        mSwipeDismissListViewTouchListener = createListViewTouchListener(absListView);
+        mDismissTouchListener = createListViewTouchListener(absListView);
         if (mParentIsHorizontalScrollContainer) {
-            mSwipeDismissListViewTouchListener.setParentIsHorizontalScrollContainer();
+            mDismissTouchListener.setParentIsHorizontalScrollContainer();
         }
-        mSwipeDismissListViewTouchListener.setTouchChild(mSwipeTouchChildResId);
-        mSwipeDismissListViewTouchListener.setOnScrollListener(mOnScrollListener);
-        absListView.setOnTouchListener(mSwipeDismissListViewTouchListener);
+        if (mSwipeTouchChildResId != 0) {
+            mDismissTouchListener.setTouchChild(mSwipeTouchChildResId);
+        }
+        absListView.setOnTouchListener(mDismissTouchListener);
+
+        // TODO: 2.8.+: remove
+        if (mOnScrollListener != null) {
+            absListView.setOnScrollListener(mOnScrollListener);
+        }
     }
 
     /**
@@ -112,8 +116,8 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     public void setParentIsHorizontalScrollContainer() {
         mParentIsHorizontalScrollContainer = true;
         mSwipeTouchChildResId = 0;
-        if (mSwipeDismissListViewTouchListener != null) {
-            mSwipeDismissListViewTouchListener.setParentIsHorizontalScrollContainer();
+        if (mDismissTouchListener != null) {
+            mDismissTouchListener.setParentIsHorizontalScrollContainer();
         }
     }
 
@@ -129,16 +133,16 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
      */
     public void setSwipeTouchChildResId(final int childResId) {
         mSwipeTouchChildResId = childResId;
-        if (mSwipeDismissListViewTouchListener != null) {
-            mSwipeDismissListViewTouchListener.setTouchChild(childResId);
+        if (mDismissTouchListener != null) {
+            mDismissTouchListener.setTouchChild(childResId);
         }
     }
 
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
-        if (mSwipeDismissListViewTouchListener != null) {
-            mSwipeDismissListViewTouchListener.notifyDataSetChanged();
+        if (mDismissTouchListener != null) {
+            mDismissTouchListener.notifyDataSetChanged();
         }
     }
 }

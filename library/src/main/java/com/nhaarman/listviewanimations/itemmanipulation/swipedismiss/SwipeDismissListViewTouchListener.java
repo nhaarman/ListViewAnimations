@@ -120,9 +120,8 @@ public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
      * @param callback
      *            The callback to trigger when the user has indicated that she
      *            would like to dismiss one or more list items.
-     * @deprecated use {@link #SwipeDismissListViewTouchListener(android.widget.AbsListView, com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback)} instead. To be removed in 2.8.+.
+     * @deprecated use {@link #SwipeDismissListViewTouchListener(android.widget.AbsListView, com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback)} instead.
      */
-    // TODO: 2.8.+: remove
     @Deprecated
     public SwipeDismissListViewTouchListener(final AbsListView listView, final OnDismissCallback callback, final SwipeOnScrollListener onScroll) {
         ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
