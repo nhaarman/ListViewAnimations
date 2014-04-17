@@ -29,7 +29,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 public class SwipeDismissAdapter extends BaseAdapterDecorator {
 
     protected OnDismissCallback mOnDismissCallback;
-    protected SwipeDismissTouchListener mDismissTouchListener;
+    protected SwipeTouchListener mDismissTouchListener;
     @Deprecated
     protected SwipeOnScrollListener mSwipeOnScrollListener;
     private AbsListView.OnScrollListener mOnScrollListener;
@@ -70,7 +70,7 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
         mSwipeOnScrollListener = swipeOnScrollListener;
     }
 
-    protected SwipeDismissTouchListener createListViewTouchListener(final AbsListView listView) {
+    protected SwipeTouchListener createListViewTouchListener(final AbsListView listView) {
         return new SwipeDismissTouchListener(listView, mOnDismissCallback);
     }
 

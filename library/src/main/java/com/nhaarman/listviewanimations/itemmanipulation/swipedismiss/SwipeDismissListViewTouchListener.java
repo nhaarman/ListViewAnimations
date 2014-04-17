@@ -50,8 +50,11 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  * clicks, etc.
  *
  * For performance reasons, do not use this class directly, but use the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter}.
+ * @deprecated use {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissTouchListener} instead. To be removed in 2.8.+.
  */
+// TODO: 2.8.+: remove
 @SuppressLint("Recycle")
+@Deprecated
 public class SwipeDismissListViewTouchListener implements SwipeOnTouchListener {
 
     private static final int MIN_FLING_VELOCITY_FACTOR = 16;
