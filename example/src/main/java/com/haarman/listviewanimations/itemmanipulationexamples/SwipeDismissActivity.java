@@ -29,6 +29,7 @@ import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SimpleSwipeUndoAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualundo.ContextualUndoAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualundo.ContextualUndoAdapter.CountDownFormatter;
@@ -60,7 +61,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
     }
 
     @Override
-    public void onDismiss(final AbsListView listView, final int[] reverseSortedPositions) {
+    public void onDismiss(final AbsListView absListView, final int[] reverseSortedPositions) {
         for (int position : reverseSortedPositions) {
             mAdapter.remove(position);
         }
@@ -68,7 +69,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
     }
 
     private void setContextualUndoAdapter() {
-        ContextualUndoAdapter adapter = new ContextualUndoAdapter(mAdapter, R.layout.undo_row, R.id.undo_row_undobutton, this);
+        SimpleSwipeUndoAdapter adapter = new SimpleSwipeUndoAdapter(createListAdapter(), this, this);
         adapter.setAbsListView(getListView());
         getListView().setAdapter(adapter);
     }
@@ -94,8 +95,8 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
     private class MyFormatCountDownCallback implements CountDownFormatter {
 
         @Override
-        public String getCountDownString(final long millisUntilFinished) {
-            int seconds = (int) Math.ceil(millisUntilFinished / 1000.0);
+        public String getCountDownString(final long millisLeft) {
+            int seconds = (int) Math.ceil(millisLeft / 1000.0f);
 
             if (seconds > 0) {
                 return getResources().getQuantityString(R.plurals.countdown_seconds, seconds, seconds);
@@ -128,7 +129,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
 
     private class AnimSelectionAdapter extends ArrayAdapter<String> {
 
-        public AnimSelectionAdapter() {
+        AnimSelectionAdapter() {
             addAll("Swipe-To-Dismiss", "Contextual Undo", "CU - Timed Delete", "CU - Count Down");
         }
 

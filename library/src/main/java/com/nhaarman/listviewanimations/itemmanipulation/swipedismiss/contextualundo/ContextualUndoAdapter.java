@@ -140,7 +140,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
     }
 
     @Override
-    public final View getView(final int position, final View convertView, final ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         final ViewHolder vh;
         ContextualUndoView contextualUndoView = (ContextualUndoView) convertView;
         if (contextualUndoView == null) {

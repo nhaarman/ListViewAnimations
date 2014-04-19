@@ -15,17 +15,10 @@
  */
 package com.haarman.listviewanimations;
 
-import java.util.ArrayList;
-
-import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.nhaarman.listviewanimations.ArrayAdapter;
+import java.util.ArrayList;
 
 public class MyListActivity extends BaseActivity {
 
@@ -43,7 +36,7 @@ public class MyListActivity extends BaseActivity {
         return mListView;
     }
 
-    protected ArrayAdapter<Integer> createListAdapter() {
+    protected MyListAdapter createListAdapter() {
         return new MyListAdapter(this, getItems());
     }
 
@@ -53,35 +46,5 @@ public class MyListActivity extends BaseActivity {
             items.add(i);
         }
         return items;
-    }
-
-    private static class MyListAdapter extends ArrayAdapter<Integer> {
-
-        private final Context mContext;
-
-        public MyListAdapter(final Context context, final ArrayList<Integer> items) {
-            super(items);
-            mContext = context;
-        }
-
-        @Override
-        public long getItemId(final int position) {
-            return getItem(position).hashCode();
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
-        @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
-            TextView tv = (TextView) convertView;
-            if (tv == null) {
-                tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
-            }
-            tv.setText("This is row number " + getItem(position));
-            return tv;
-        }
     }
 }
