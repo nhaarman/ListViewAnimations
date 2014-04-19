@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.UndoAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
 import java.util.List;
 
@@ -32,13 +32,12 @@ public class MyListAdapter extends ArrayAdapter<Integer> implements UndoAdapter 
 
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
-        View view = convertView;
+        TextView view = (TextView) convertView;
         if (view == null) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
+            view = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
         }
-        TextView tv = (TextView) view.findViewById(R.id.tv);
 
-        tv.setText("This is row number " + getItem(position));
+        view.setText("This is row number " + getItem(position));
         return view;
     }
 

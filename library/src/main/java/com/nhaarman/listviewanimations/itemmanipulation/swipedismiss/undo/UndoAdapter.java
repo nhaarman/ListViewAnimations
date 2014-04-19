@@ -1,10 +1,10 @@
-package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 
 import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * An interface used for {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SimpleSwipeUndoAdapter}.
+ * An interface used for {@link SimpleSwipeUndoAdapter}.
  * Used to provide the undo {@link View}s.
  */
 public interface UndoAdapter {

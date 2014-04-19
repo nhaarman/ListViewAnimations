@@ -11,5 +11,5 @@ public interface DismissableManager {
      * @param position the position of the item.
      * @return true if the item can be dismissed, false otherwise.
      */
-    public boolean isDismissable(long id, int position);
+    boolean isDismissable(long id, int position);
 }

@@ -1,4 +1,4 @@
-package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 
 import android.content.Context;
 import android.view.View;

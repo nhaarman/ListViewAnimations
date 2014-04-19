@@ -2,8 +2,10 @@ package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.view.View;
 
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoCallback;
+
 /**
- * A convenience implementation of {@link com.nhaarman.listviewanimations.itemmanipulation.UndoCallback} where optional methods have been implemented.
+ * A convenience implementation of {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoCallback} where optional methods have been implemented.
  */
 public abstract class UndoCallbackAdapter implements UndoCallback {
 

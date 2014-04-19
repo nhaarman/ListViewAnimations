@@ -1,10 +1,10 @@
-package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
-import com.nhaarman.listviewanimations.itemmanipulation.UndoCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissTouchListener;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
@@ -113,7 +113,7 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     }
 
     /**
-     * If necessary, notifies the {@link com.nhaarman.listviewanimations.itemmanipulation.UndoCallback} to remove dismissed object from the adapter,
+     * If necessary, notifies the {@link UndoCallback} to remove dismissed object from the adapter,
      * and restores the {@link View} presentations.
      */
     @Override

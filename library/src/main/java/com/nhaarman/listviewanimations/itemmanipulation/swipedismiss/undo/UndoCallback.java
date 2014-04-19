@@ -1,6 +1,8 @@
-package com.nhaarman.listviewanimations.itemmanipulation;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 
 import android.view.View;
+
+import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
 /**
  * A callback interface used to inform its client about a successful dismissal of one or more list item positions.

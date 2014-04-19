@@ -1,4 +1,4 @@
-package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -6,27 +6,26 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
-import com.nhaarman.listviewanimations.itemmanipulation.UndoCallback;
 
 /**
- * Adds swipe-undo behaviour to the {@link android.widget.AbsListView}, using a {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeUndoTouchListener}.
+ * Adds swipe-undo behaviour to the {@link android.widget.AbsListView}, using a {@link SwipeUndoTouchListener}.
  */
 public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
 
     /**
-     * The {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeUndoTouchListener} that is set to the {@link android.widget.AbsListView}.
+     * The {@link SwipeUndoTouchListener} that is set to the {@link android.widget.AbsListView}.
      */
     private SwipeUndoTouchListener mSwipeUndoTouchListener;
 
     /**
-     * The {@link com.nhaarman.listviewanimations.itemmanipulation.UndoCallback} that is used.
+     * The {@link UndoCallback} that is used.
      */
     private UndoCallback mUndoCallback;
 
     /**
      * Create a new {@code SwipeUndoAdapter}, decorating given {@link android.widget.BaseAdapter}.
      * @param baseAdapter the {@link android.widget.BaseAdapter} to decorate.
-     * @param undoCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.UndoCallback} that is used.
+     * @param undoCallback the {@link UndoCallback} that is used.
      */
     public SwipeUndoAdapter(final BaseAdapter baseAdapter, final UndoCallback undoCallback) {
         super(baseAdapter);
@@ -49,7 +48,7 @@ public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Set the {@link com.nhaarman.listviewanimations.itemmanipulation.UndoCallback} to use
+     * Set the {@link UndoCallback} to use
      */
     public void setUndoCallback(final UndoCallback undoCallback) {
         mUndoCallback = undoCallback;

@@ -1,4 +1,4 @@
-package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 
 import android.content.Context;
 import android.view.View;
@@ -7,10 +7,9 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
-import com.nhaarman.listviewanimations.itemmanipulation.UndoCallback;
 
 /**
- * An implementation of {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeUndoAdapter} which puts the primary and undo {@link View} in a {@link android.widget.FrameLayout},
+ * An implementation of {@link SwipeUndoAdapter} which puts the primary and undo {@link View} in a {@link android.widget.FrameLayout},
  * and handles the undo click event.
  */
 public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCallback {
@@ -23,7 +22,7 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     private final OnDismissCallback mOnDismissCallback;
 
     /**
-     * The {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.UndoAdapter} that provides the undo {@link View}s.
+     * The {@link UndoAdapter} that provides the undo {@link View}s.
      */
     private final UndoAdapter mUndoAdapter;
 
