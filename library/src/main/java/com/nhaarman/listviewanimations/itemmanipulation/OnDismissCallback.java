@@ -19,20 +19,20 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 /**
- * The callback interface used by {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissListViewTouchListener} to
- * inform its client about a successful dismissal of one or more list item
- * positions.
+ * A callback interface used to inform its client about a successful dismissal of one or more list item positions.
  */
 public interface OnDismissCallback {
+
     /**
      * Called when the user has indicated they she would like to dismiss one or
-     * more list item positions.
+     * more list item positions. When this method is called given positions should be
+     * removed from the adapter.
      *
-     * @param listView
-     *            The originating {@link ListView}.
+     * @param absListView
+     *            The originating {@link AbsListView}.
      * @param reverseSortedPositions
      *            An array of positions to dismiss, sorted in descending order
      *            for convenience.
      */
-    void onDismiss(AbsListView listView, int[] reverseSortedPositions);
+    void onDismiss(AbsListView absListView, int[] reverseSortedPositions);
 }

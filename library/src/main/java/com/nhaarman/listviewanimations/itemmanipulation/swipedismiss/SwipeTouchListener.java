@@ -34,6 +34,7 @@ import com.nineoldandroids.view.ViewHelper;
 
 /**
  * An {@link android.view.View.OnTouchListener} that makes the list items in a {@link AbsListView} swipeable.
+ * Implementations of this class should implement {@link #afterViewFling(android.view.View, int)} to specify what to do after an item has been swiped.
  */
 public abstract class SwipeTouchListener implements View.OnTouchListener {
 
@@ -90,9 +91,14 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     private VelocityTracker mVelocityTracker;
 
     /**
-     * The current {@link View} being swiped.
+     * The parent {@link View} being swiped.
      */
     private View mCurrentView;
+
+    /**
+     * The {@link View} that is actually being swiped.
+     */
+    private View mSwipingView;
 
     /**
      * The current position being swiped.
@@ -277,6 +283,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         mDownY = motionEvent.getRawY();
 
         mCurrentView = downView;
+        mSwipingView = getSwipeView(downView);
         mCurrentPosition = downPosition;
 
         mVelocityTracker = VelocityTracker.obtain();
@@ -363,8 +370,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         }
 
         if (mSwiping) {
-            ViewHelper.setTranslationX(mCurrentView, deltaX);
-            ViewHelper.setAlpha(mCurrentView, Math.max(0, Math.min(1, 1 - 2 * Math.abs(deltaX) / mViewWidth)));
+            ViewHelper.setTranslationX(mSwipingView, deltaX);
+            ViewHelper.setAlpha(mSwipingView, Math.max(0, Math.min(1, 1 - 2 * Math.abs(deltaX) / mViewWidth)));
             return true;
         }
         return false;
@@ -429,8 +436,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * @param flingToRight {@code true} if the {@code View} should be flinged to the right, {@code false} if it should be flinged to the left.
      */
     private void flingCurrentView(final boolean flingToRight) {
-        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(mCurrentView, "translationX", flingToRight ? mViewWidth : -mViewWidth);
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mCurrentView, "alpha", 0);
+        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(mSwipingView, "translationX", flingToRight ? mViewWidth : -mViewWidth);
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mSwipingView, "alpha", 0);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(xAnimator, alphaAnimator);
@@ -443,8 +450,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * Animates the pending {@link View} back to its original position.
      */
     private void restoreCurrentViewTranslation() {
-        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(mCurrentView, "translationX", 0);
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mCurrentView, "alpha", 1);
+        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(mSwipingView, "translationX", 0);
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mSwipingView, "alpha", 1);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(xAnimator, alphaAnimator);
@@ -462,6 +469,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         mDownX = 0;
         mDownY = 0;
         mCurrentView = null;
+        mSwipingView = null;
         mCurrentPosition = AdapterView.INVALID_POSITION;
         mSwiping = false;
     }
@@ -512,8 +520,9 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * @param view the {@code View} whose presentation should be restored.
      */
     protected void restoreViewPresentation(final View view) {
-        ViewHelper.setAlpha(view, 1);
-        ViewHelper.setTranslationX(view, 0);
+        View swipedView = getSwipeView(view);
+        ViewHelper.setAlpha(swipedView, 1);
+        ViewHelper.setTranslationX(swipedView, 0);
     }
 
     /**
@@ -521,6 +530,14 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      */
     protected int getActiveSwipeCount() {
         return mActiveSwipeCount;
+    }
+
+    /**
+     * Returns the {@link View} that should be swiped away. Must be a child of given {@code View}, or the {@code View} itself.
+     * @param view the parent {@link View}.
+     */
+    protected View getSwipeView(final View view) {
+        return view;
     }
 
     private static Rect getChildViewRect(final View parentView, final View childView) {

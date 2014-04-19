@@ -1,6 +1,5 @@
 package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -10,11 +9,14 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * A {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeTouchListener} that directly dismisses the items when swiped.
+ */
 public class SwipeDismissTouchListener extends SwipeTouchListener {
 
     /**
@@ -23,19 +25,19 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     private final OnDismissCallback mCallback;
 
     /**
-     * The duration of the fling animation.
+     * The duration of the dismiss animation
      */
     private final long mAnimationTime;
 
     /**
      * The {@link View}s that have been dismissed.
      */
-    private final Collection<View> mDismissedViews = new ArrayList<View>();
+    private final Collection<View> mDismissedViews = new LinkedList<View>();
 
     /**
      * The dismissed positions.
      */
-    private final List<Integer> mDismissedPositions = new ArrayList<Integer>();
+    private final List<Integer> mDismissedPositions = new LinkedList<Integer>();
 
     /**
      * The number of active dismiss animations.
@@ -70,9 +72,7 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
      * Animates the dismissed list item to zero-height and fires the dismiss callback when all dismissed list item animations have completed.
      * @param view the dismissed {@link View}.
      */
-    private void performDismiss(final View view, final int position) {
-        Log.v("SDTL", "Performing dismiss - " + position);
-
+    protected void performDismiss(final View view, final int position) {
         mDismissedViews.add(view);
         mDismissedPositions.add(position);
 
@@ -84,30 +84,36 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
         mActiveDismissCount++;
     }
 
-    private void finalizeDismiss() {
+    /**
+     * If necessary, notifies the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} to remove dismissed object from the adapter,
+     * and restores the {@link View} presentations.
+     */
+    protected void finalizeDismiss() {
         if (mActiveDismissCount == 0 && getActiveSwipeCount() == 0) {
-            restoreViewPresentations();
-            notifyCallback();
+            restoreViewPresentations(mDismissedViews);
+            notifyCallback(mDismissedPositions);
 
             mDismissedViews.clear();
             mDismissedPositions.clear();
         }
     }
 
-    private void notifyCallback() {
-        if (!mDismissedPositions.isEmpty()) {
-            Collections.sort(mDismissedPositions, Collections.reverseOrder());
+    protected void notifyCallback(final List<Integer> dismissedPositions) {
+        if (!dismissedPositions.isEmpty()) {
+            Collections.sort(dismissedPositions, Collections.reverseOrder());
 
-            int[] dismissPositions = new int[mDismissedPositions.size()];
-            for (int i = 0; i < mDismissedPositions.size(); i++) {
-                dismissPositions[i] = mDismissedPositions.get(i);
+            int[] dismissPositions = new int[dismissedPositions.size()];
+            int i = 0;
+            for (Integer dismissedPosition : dismissedPositions) {
+                dismissPositions[i] = dismissedPosition;
+                i++;
             }
             mCallback.onDismiss(getAbsListView(), dismissPositions);
         }
     }
 
-    private void restoreViewPresentations() {
-        for (View view : mDismissedViews) {
+    protected void restoreViewPresentations(final Iterable<View> views) {
+        for (View view : views) {
             restoreViewPresentation(view);
         }
     }
