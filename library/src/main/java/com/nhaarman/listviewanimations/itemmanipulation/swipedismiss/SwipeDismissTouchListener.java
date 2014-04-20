@@ -58,6 +58,15 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
         mAnimationTime = absListView.getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
     }
 
+    /**
+     * Dismisses the {@link View} corresponding to given position.
+     * Calling this method has the same effect as manually swiping an item off the screen.
+     * @param position the position of the item in the {@link android.widget.ListAdapter}.
+     */
+    public void dismiss(final int position) {
+        fling(position);
+    }
+
     @Override
     protected void afterCancelSwipe(final View view, final int position) {
         finalizeDismiss();
@@ -98,6 +107,10 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
         }
     }
 
+    /**
+     * Notifies the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} of dismissed items.
+     * @param dismissedPositions the positions that have been dismissed.
+     */
     protected void notifyCallback(final List<Integer> dismissedPositions) {
         if (!dismissedPositions.isEmpty()) {
             Collections.sort(dismissedPositions, Collections.reverseOrder());
@@ -112,6 +125,9 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
         }
     }
 
+    /**
+     * Restores the presentation of given {@link View}s by calling {@link #restoreViewPresentation(android.view.View)}.
+     */
     protected void restoreViewPresentations(final Iterable<View> views) {
         for (View view : views) {
             restoreViewPresentation(view);

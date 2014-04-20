@@ -29,7 +29,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 public class SwipeDismissAdapter extends BaseAdapterDecorator {
 
     protected OnDismissCallback mOnDismissCallback;
-    protected SwipeTouchListener mDismissTouchListener;
+    protected SwipeDismissTouchListener mDismissTouchListener;
     @Deprecated
     protected SwipeOnScrollListener mSwipeOnScrollListener;
     private AbsListView.OnScrollListener mOnScrollListener;
@@ -70,10 +70,6 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
         mSwipeOnScrollListener = swipeOnScrollListener;
     }
 
-    protected SwipeTouchListener createListViewTouchListener(final AbsListView listView) {
-        return new SwipeDismissTouchListener(listView, mOnDismissCallback);
-    }
-
     /**
      * Set a custom {@link android.widget.AbsListView.OnScrollListener}. Call this method instead of {@link android.widget.AbsListView#setOnTouchListener(android.view.View.OnTouchListener)}.
      * @param onScrollListener the OnScrollListener.
@@ -91,7 +87,8 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
         if (getDecoratedBaseAdapter() instanceof ArrayAdapter<?>) {
             ((ArrayAdapter<?>) getDecoratedBaseAdapter()).propagateNotifyDataSetChanged(this);
         }
-        mDismissTouchListener = createListViewTouchListener(absListView);
+        mDismissTouchListener = new SwipeDismissTouchListener(absListView, mOnDismissCallback);
+        ;
         if (mParentIsHorizontalScrollContainer) {
             mDismissTouchListener.setParentIsHorizontalScrollContainer();
         }
@@ -136,6 +133,15 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
         if (mDismissTouchListener != null) {
             mDismissTouchListener.setTouchChild(childResId);
         }
+    }
+
+    /**
+     * Dismisses the {@link android.view.View} corresponding to given position.
+     * Calling this method has the same effect as manually swiping an item off the screen.
+     * @param position the position of the item in the {@link android.widget.ListAdapter}.
+     */
+    public void dismiss(final int position) {
+        mDismissTouchListener.dismiss(position);
     }
 
     @Override

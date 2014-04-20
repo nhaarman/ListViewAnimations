@@ -22,8 +22,11 @@ import android.widget.ListView;
 
 public class AdapterViewUtil {
 
+    private AdapterViewUtil() {
+    }
+
     /**
-     * Get the position within the adapter's dataset for the view, where view is an adapter item or a descendant of an adapter item.
+     * Returns the position within the adapter's dataset for the view, where view is an adapter item or a descendant of an adapter item.
      * Unlike {@link AdapterView#getPositionForView(android.view.View)}, returned position will reflect the position of the item given view is representing,
      * by subtracting the header views count.
      * @param adapterView the AdapterView containing the view.
@@ -39,5 +42,23 @@ public class AdapterViewUtil {
         }
 
         return position;
+    }
+
+    /**
+     * Returns the {@link View} that represents the item for given position.
+     * @param adapterView the {@link android.widget.AdapterView} that should be examined
+     * @param position the position for which the {@code View} should be returned.
+     * @return the {@code View}, or {@code null} if the position is not currently visible.
+     */
+    public static View getViewForPosition(final AdapterView<?> adapterView, final int position) {
+        int childCount = adapterView.getChildCount();
+        View downView = null;
+        for (int i = 0; i < childCount && downView == null; i++) {
+            View child = adapterView.getChildAt(i);
+            if (getPositionForView(adapterView, child) == position) {
+                downView = child;
+            }
+        }
+        return downView;
     }
 }

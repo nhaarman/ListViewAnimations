@@ -226,6 +226,19 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         mSwipeEnabled = false;
     }
 
+    /**
+     * Flings the {@link View} corresponding to given position out of sight.
+     * Calling this method has the same effect as manually swiping an item off the screen.
+     * @param position the position of the item in the {@link android.widget.ListAdapter}.
+     */
+    public void fling(final int position) {
+        View downView = AdapterViewUtil.getViewForPosition(mAbsListView, position);
+        flingView(downView, position, true);
+
+        mActiveSwipeCount++;
+        mVirtualListCount--;
+    }
+
     @Override
     public boolean onTouch(final View view, final MotionEvent event) {
         if (mVirtualListCount == -1) {
@@ -436,13 +449,24 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * @param flingToRight {@code true} if the {@code View} should be flinged to the right, {@code false} if it should be flinged to the left.
      */
     private void flingCurrentView(final boolean flingToRight) {
-        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(mSwipingView, "translationX", flingToRight ? mViewWidth : -mViewWidth);
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mSwipingView, "alpha", 0);
+        flingView(mCurrentView, mCurrentPosition, flingToRight);
+    }
+
+    /**
+     * Flings given {@link View} out of sight.
+     * @param view the parent {@link View}.
+     * @param position the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
+     * @param flingToRight {@code true} {@code true} if the {@code View} should be flinged to the right, {@code false} if it should be flinged to the left.
+     */
+    private void flingView(final View view, final int position, final boolean flingToRight) {
+        View swipeView = getSwipeView(view);
+        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(swipeView, "translationX", flingToRight ? mViewWidth : -mViewWidth);
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(swipeView, "alpha", 0);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(xAnimator, alphaAnimator);
         animatorSet.setDuration(mAnimationTime);
-        animatorSet.addListener(new FlingAnimatorListener(mCurrentView, mCurrentPosition));
+        animatorSet.addListener(new FlingAnimatorListener(view, position));
         animatorSet.start();
     }
 
