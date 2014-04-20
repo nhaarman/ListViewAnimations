@@ -22,7 +22,6 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
-import com.nhaarman.listviewanimations.widget.DynamicListView;
 import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
 
 /**
@@ -41,22 +40,6 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
      * The {@link android.widget.AbsListView} this {@code BaseAdapterDecorator} will be bound to.
      */
     private AbsListView mAbsListView;
-
-    /**
-     * A boolean to indicate whether the {@link android.widget.AbsListView} is in a horizontal scroll container.
-     * @deprecated to be removed in 2.8.+.
-     */
-    // TODO: 2.8.+: remove
-    @Deprecated
-    private boolean mIsParentHorizontalScrollContainer;
-
-    /**
-     * The resource id of the child that can be used to swipe a view away.
-     * @deprecated to be removed in 2.8.+.
-     */
-    // TODO: 2.8.+: remove
-    @Deprecated
-    private int mResIdTouchChild;
 
     /**
      * Create a new {@code BaseAdapterDecorator}, decorating given {@link android.widget.BaseAdapter}.
@@ -84,24 +67,17 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
         return adapter;
     }
 
-    @Override
     /**
      * Sets the {@link android.widget.AbsListView} that this adapter will be bound to.
      * Call this method before setting this adapter to the {@code AbsListView}.
      * Also propagates the {@code AbsListView} to the decorated {@code BaseAdapter} if applicable.
      */
+    @Override
     public void setAbsListView(final AbsListView absListView) {
         mAbsListView = absListView;
 
         if (mDecoratedBaseAdapter instanceof ListViewSetter) {
             ((ListViewSetter) mDecoratedBaseAdapter).setAbsListView(absListView);
-        }
-
-        // TODO: 2.8.+: remove
-        if (mAbsListView instanceof DynamicListView) {
-            DynamicListView dynListView = (DynamicListView) mAbsListView;
-            dynListView.setIsParentHorizontalScrollContainer(mIsParentHorizontalScrollContainer);
-            dynListView.setDynamicTouchChild(mResIdTouchChild);
         }
     }
 
@@ -236,62 +212,5 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
         if (mDecoratedBaseAdapter instanceof Swappable) {
             ((Swappable) mDecoratedBaseAdapter).swapItems(positionOne, positionTwo);
         }
-    }
-
-    /**
-     * If the adapter's list-view is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
-     * work, because the parent will prevent touch-events from reaching the list-view.
-     *
-     * Call this method with the value 'true' to fix this behavior.
-     * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list-item.
-     * @deprecated use {@link com.nhaarman.listviewanimations.widget.DynamicListView#setParentIsHorizontalScrollContainer()} instead. To be removed in 2.8.+.
-     */
-    // TODO: 2.8.+: remove
-    @Deprecated
-    public void setIsParentHorizontalScrollContainer(final boolean isParentHorizontalScrollContainer) {
-        mIsParentHorizontalScrollContainer = isParentHorizontalScrollContainer;
-        if (mAbsListView instanceof DynamicListView) {
-            DynamicListView dynListView = (DynamicListView) mAbsListView;
-            dynListView.setIsParentHorizontalScrollContainer(mIsParentHorizontalScrollContainer);
-        }
-    }
-
-    /**
-     * @deprecated to be removed in 2.8.+.
-     */
-    // TODO: 2.8.+: remove
-    @Deprecated
-    public boolean isParentHorizontalScrollContainer() {
-        return mIsParentHorizontalScrollContainer;
-    }
-
-    /**
-     * If the adapter's list-view is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
-     * work, because the parent will prevent touch-events from reaching the list-view.
-     *
-     * If a list-item view has a child with the given resource-ID, the user can still swipe the list-item by touching that child.
-     * If the user touches an area outside that child (but inside the list-item view), then the swipe will not happen and the parent
-     * will do its job instead (scrolling horizontally).
-     *
-     * @param childResId The resource-ID of the list-items' child that the user should touch to be able to swipe the list items.
-     * @deprecated use {@link com.nhaarman.listviewanimations.widget.DynamicListView#setDynamicTouchChild(int)} instead. To be removed in 2.8.+.
-     */
-    // TODO: 2.8.+: remove
-    @Deprecated
-    public void setTouchChild(final int childResId) {
-        mResIdTouchChild = childResId;
-        if (mAbsListView instanceof DynamicListView) {
-            DynamicListView dynListView = (DynamicListView) mAbsListView;
-            dynListView.setDynamicTouchChild(mResIdTouchChild);
-        }
-    }
-
-    /**
-     * @deprecated to be removed in 2.8.+.
-     */
-    // TODO: 2.8.+: remove
-    @Deprecated
-    public int getTouchChild() {
-        return mResIdTouchChild;
     }
 }
