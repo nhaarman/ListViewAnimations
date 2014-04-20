@@ -61,10 +61,23 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     /**
      * Dismisses the {@link View} corresponding to given position.
      * Calling this method has the same effect as manually swiping an item off the screen.
-     * @param position the position of the item in the {@link android.widget.ListAdapter}.
+     * @param position the position of the item in the {@link android.widget.ListAdapter}. Must be visible.
      */
     public void dismiss(final int position) {
         fling(position);
+    }
+
+    @Override
+    public void fling(final int position) {
+        int firstVisiblePosition = getAbsListView().getFirstVisiblePosition();
+        int lastVisiblePosition = getAbsListView().getLastVisiblePosition();
+
+        if (firstVisiblePosition <= position && position <= lastVisiblePosition) {
+            super.fling(position);
+        } else {
+            mDismissedPositions.add(position);
+            finalizeDismiss();
+        }
     }
 
     @Override
@@ -140,6 +153,10 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.height = 0;
         view.setLayoutParams(layoutParams);
+    }
+
+    protected int getActiveDismissCount() {
+        return mActiveDismissCount;
     }
 
     /**

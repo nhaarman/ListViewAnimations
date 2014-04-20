@@ -7,9 +7,11 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.Util;
+import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * An implementation of {@link SwipeUndoAdapter} which puts the primary and undo {@link View} in a {@link android.widget.FrameLayout},
@@ -32,11 +34,13 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     /**
      * The positions of the items currently in the undo state.
      */
-    private final Collection<Integer> mUndoPositions = new HashSet<Integer>();
+    private final Collection<Integer> mUndoPositions = new ArrayList<Integer>();
 
     /**
-     * Create a new {@code SwipeUndoAdapter}, decorating given {@link android.widget.BaseAdapter}.
-     * @param undoAdapter the {@code} BaseAdapter to decorate.
+     * Create a new {@code SimpleSwipeUndoAdapter}, decorating given {@link android.widget.BaseAdapter}.
+     * @param undoAdapter the {@link android.widget.BaseAdapter} that is decorated. Must implement {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter}.
+     * @param context the {@link Context}.
+     * @param dismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} that is notified of dismissed items.
      */
     public <T extends BaseAdapter & UndoAdapter> SimpleSwipeUndoAdapter(final T undoAdapter, final Context context, final OnDismissCallback dismissCallback) {
         super(undoAdapter, null);
@@ -90,6 +94,26 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     @Override
     public void onDismiss(final AbsListView absListView, final int[] reverseSortedPositions) {
         mOnDismissCallback.onDismiss(absListView, reverseSortedPositions);
+
+        Collection<Integer> newUndoPositions = Util.processDeletions(mUndoPositions, reverseSortedPositions);
+        mUndoPositions.clear();
+        mUndoPositions.addAll(newUndoPositions);
+    }
+
+    @Override
+    public void undo(final View view) {
+        int position = AdapterViewUtil.getPositionForView(getAbsListView(), view);
+        undo(view, position);
+    }
+
+    /**
+     * Performs the undo animation and restores the original state for given {@link View}.
+     * @param view the parent {@code View} which contains both primary and undo {@code View}s.
+     * @param position the position of the item in the {@link android.widget.BaseAdapter} corresponding to the {@code View}.
+     */
+    protected void undo(final View view, final int position) {
+        super.undo(view);
+        mUndoPositions.remove(position);
     }
 
     private class UndoClickListener implements View.OnClickListener {
@@ -103,8 +127,7 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
 
         @Override
         public void onClick(final View v) {
-            undo(mView);
-            mUndoPositions.remove(mPosition);
+            undo(mView, mPosition);
         }
     }
 }

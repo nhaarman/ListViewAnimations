@@ -229,9 +229,15 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     /**
      * Flings the {@link View} corresponding to given position out of sight.
      * Calling this method has the same effect as manually swiping an item off the screen.
-     * @param position the position of the item in the {@link android.widget.ListAdapter}.
+     * @param position the position of the item in the {@link android.widget.ListAdapter}. Must be visible.
      */
     public void fling(final int position) {
+        int firstVisiblePosition = mAbsListView.getFirstVisiblePosition();
+        int lastVisiblePosition = mAbsListView.getLastVisiblePosition();
+        if (position < firstVisiblePosition || position > lastVisiblePosition) {
+            throw new IllegalArgumentException("View for position " + position + " not visible!");
+        }
+
         View downView = AdapterViewUtil.getViewForPosition(mAbsListView, position);
         flingView(downView, position, true);
 

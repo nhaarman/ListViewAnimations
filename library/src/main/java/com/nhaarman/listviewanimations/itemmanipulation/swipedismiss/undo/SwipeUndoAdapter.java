@@ -48,7 +48,7 @@ public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Set the {@link UndoCallback} to use
+     * Set the {@link UndoCallback} to use.
      */
     public void setUndoCallback(final UndoCallback undoCallback) {
         mUndoCallback = undoCallback;
@@ -60,5 +60,14 @@ public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
      */
     public void undo(final View view) {
         mSwipeUndoTouchListener.undo(view);
+    }
+
+    /**
+     * Dismisses the {@link android.view.View} corresponding to given position.
+     * Calling this method has the same effect as manually swiping an item off the screen.
+     * @param position the position of the item in the {@link android.widget.ListAdapter}. Must be visible.
+     */
+    public void dismiss(final int position) {
+        mSwipeUndoTouchListener.dismiss(position);
     }
 }

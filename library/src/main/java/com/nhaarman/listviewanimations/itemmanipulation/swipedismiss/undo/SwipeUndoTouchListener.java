@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissTouchListener;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.Util;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
@@ -41,11 +42,6 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     private final Collection<View> mDismissedViews = new LinkedList<View>();
 
     /**
-     * The number of active dismiss animations.
-     */
-    private int mActiveDismissCount;
-
-    /**
      * Constructs a new {@code SwipeDismissTouchListener} for the given {@link android.widget.AbsListView}.
 
      * @param absListView
@@ -53,7 +49,7 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
      */
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
     public SwipeUndoTouchListener(final AbsListView absListView, final UndoCallback callback) {
-        super(absListView, null);
+        super(absListView, callback);
         mCallback = callback;
     }
 
@@ -87,7 +83,6 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
         mDismissedViews.add(view);
         mDismissedPositions.add(position);
 
-        mActiveDismissCount++;
         mCallback.onDismiss(view, position);
     }
 
@@ -118,9 +113,13 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
      */
     @Override
     protected void finalizeDismiss() {
-        if (mUndoPositions.isEmpty() && mActiveDismissCount == 0 && getActiveSwipeCount() == 0) {
+        if (getActiveDismissCount() == 0 && getActiveSwipeCount() == 0) {
             restoreViewPresentations(mDismissedViews);
             notifyCallback(mDismissedPositions);
+
+            Collection<Integer> newUndoPositions = Util.processDeletions(mUndoPositions, mDismissedPositions);
+            mUndoPositions.clear();
+            mUndoPositions.addAll(newUndoPositions);
 
             mDismissedViews.clear();
             mDismissedPositions.clear();
