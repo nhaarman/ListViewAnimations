@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 /**
  * An implementation of {@link SwipeUndoAdapter} which puts the primary and undo {@link View} in a {@link android.widget.FrameLayout},
  * and handles the undo click event.
@@ -25,6 +28,11 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
      * The {@link UndoAdapter} that provides the undo {@link View}s.
      */
     private final UndoAdapter mUndoAdapter;
+
+    /**
+     * The positions of the items currently in the undo state.
+     */
+    private final Collection<Integer> mUndoPositions = new HashSet<Integer>();
 
     /**
      * Create a new {@code SwipeUndoAdapter}, decorating given {@link android.widget.BaseAdapter}.
@@ -50,7 +58,11 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
         View undoView = mUndoAdapter.getUndoView(position, view.getUndoView(), view);
         view.setUndoView(undoView);
 
-        mUndoAdapter.getUndoClickView(undoView).setOnClickListener(new UndoClickListener(view));
+        mUndoAdapter.getUndoClickView(undoView).setOnClickListener(new UndoClickListener(view, position));
+
+        boolean isInUndoState = mUndoPositions.contains(position);
+        primaryView.setVisibility(isInUndoState ? View.GONE : View.VISIBLE);
+        undoView.setVisibility(isInUndoState ? View.VISIBLE : View.GONE);
 
         return view;
     }
@@ -67,10 +79,12 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
 
     @Override
     public void onUndoShown(final View view, final int position) {
+        mUndoPositions.add(position);
     }
 
     @Override
     public void onDismiss(final View view, final int position) {
+        mUndoPositions.remove(position);
     }
 
     @Override
@@ -80,14 +94,17 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
 
     private class UndoClickListener implements View.OnClickListener {
         private final SwipeUndoView mView;
+        private final int mPosition;
 
-        UndoClickListener(final SwipeUndoView view) {
+        UndoClickListener(final SwipeUndoView view, final int position) {
             mView = view;
+            mPosition = position;
         }
 
         @Override
         public void onClick(final View v) {
             undo(mView);
+            mUndoPositions.remove(mPosition);
         }
     }
 }
