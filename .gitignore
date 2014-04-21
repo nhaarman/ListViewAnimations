@@ -1,6 +1,7 @@
 .settings/org.eclipse.jdt.core.prefs
 */.settings/org.eclipse.jdt.core.prefs
 **/bin/*
+**/target/*
 **/gen/*
 **/build/*
 **/.idea/*
