@@ -1,5 +1,6 @@
 package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -159,6 +160,12 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
         animatorSet.playTogether(undoAlphaAnimator, primaryAlphaAnimator, primaryXAnimator);
         animatorSet.addListener(new UndoAnimatorListener(undoView));
         animatorSet.start();
+    }
+
+    @Override
+    protected void directDismiss(final int position) {
+        mDismissedPositions.add(position);
+        finalizeDismiss();
     }
 
     /**

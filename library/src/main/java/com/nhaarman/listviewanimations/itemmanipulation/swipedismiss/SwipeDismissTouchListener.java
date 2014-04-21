@@ -1,10 +1,12 @@
 package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -27,7 +29,7 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     /**
      * The duration of the dismiss animation
      */
-    private final long mAnimationTime;
+    private final long mDismissAnimationTime;
 
     /**
      * The {@link View}s that have been dismissed.
@@ -45,6 +47,11 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     private int mActiveDismissCount;
 
     /**
+     * A handler for posting {@link java.lang.Runnable}s.
+     */
+    private final Handler mHandler = new Handler();
+
+    /**
      * Constructs a new {@code SwipeDismissTouchListener} for the given {@link android.widget.AbsListView}.
      *  @param absListView
      *            The {@code AbsListView} whose items should be dismissable.
@@ -55,7 +62,7 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     public SwipeDismissTouchListener(final AbsListView absListView, final OnDismissCallback callback) {
         super(absListView);
         mCallback = callback;
-        mAnimationTime = absListView.getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
+        mDismissAnimationTime = absListView.getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
     }
 
     /**
@@ -74,10 +81,25 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
 
         if (firstVisiblePosition <= position && position <= lastVisiblePosition) {
             super.fling(position);
+        } else if (position > lastVisiblePosition) {
+            directDismiss(position);
         } else {
-            mDismissedPositions.add(position);
-            finalizeDismiss();
+            dismissAbove(position);
         }
+    }
+
+    protected void directDismiss(final int position) {
+        mDismissedPositions.add(position);
+        finalizeDismiss();
+    }
+
+    private void dismissAbove(final int position) {
+        View view = AdapterViewUtil.getViewForPosition(getAbsListView(), getAbsListView().getFirstVisiblePosition());
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        final int scrollDistance = view.getMeasuredHeight();
+
+        getAbsListView().smoothScrollBy(scrollDistance, (int) getDismissAnimationTime());
+        mHandler.postDelayed(new RestoreScrollRunnable(scrollDistance, position), getDismissAnimationTime());
     }
 
     @Override
@@ -98,7 +120,7 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
         mDismissedViews.add(view);
         mDismissedPositions.add(position);
 
-        ValueAnimator animator = ValueAnimator.ofInt(view.getHeight(), 1).setDuration(mAnimationTime);
+        ValueAnimator animator = ValueAnimator.ofInt(view.getHeight(), 1).setDuration(mDismissAnimationTime);
         animator.addUpdateListener(new DismissAnimatorUpdateListener(view));
         animator.addListener(new DismissAnimatorListener());
         animator.start();
@@ -159,6 +181,10 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
         return mActiveDismissCount;
     }
 
+    public long getDismissAnimationTime() {
+        return mDismissAnimationTime;
+    }
+
     /**
      * An {@link com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener} which applies height animation to given {@link View}.
      */
@@ -184,6 +210,30 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
         public void onAnimationEnd(final Animator animation) {
             mActiveDismissCount--;
             finalizeDismiss();
+        }
+    }
+
+    /**
+     * A {@link Runnable} which applies the dismiss of a position, and restores the scroll position.
+     */
+    private class RestoreScrollRunnable implements Runnable {
+        private final int mScrollDistance;
+        private final int mPosition;
+
+        /**
+         * Creates a new {@code RestoreScrollRunnable}.
+         * @param scrollDistance The scroll distance in pixels to restore.
+         * @param position the position to dismiss
+         */
+        RestoreScrollRunnable(final int scrollDistance, final int position) {
+            mScrollDistance = scrollDistance;
+            mPosition = position;
+        }
+
+        @Override
+        public void run() {
+            getAbsListView().smoothScrollBy(-mScrollDistance, 1);
+            directDismiss(mPosition);
         }
     }
 }
