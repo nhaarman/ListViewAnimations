@@ -28,7 +28,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
  */
 public class SwipeDismissAdapter extends BaseAdapterDecorator {
 
-    private OnDismissCallback mOnDismissCallback;
+    private final OnDismissCallback mOnDismissCallback;
     private SwipeDismissTouchListener mDismissTouchListener;
 
     /**

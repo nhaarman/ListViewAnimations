@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.nhaarman.listviewanimations.widget;
 
 import android.content.Context;
@@ -37,7 +36,6 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeOnTouchListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -819,5 +817,16 @@ public class DynamicListView extends ListView {
          * @param positionTwo Second adapter position.
          */
         void swapItems(int positionOne, int positionTwo);
+    }
+
+    /**
+     * An OnTouchListener that should be used when list-view items can be swiped horizontally.
+     * @author Anton Spaans on 9/12/13.
+     */
+    public interface SwipeOnTouchListener extends View.OnTouchListener {
+        /**
+         * @return true if the user is currently swiping a list item horizontally.
+         */
+        boolean isSwiping();
     }
 }
