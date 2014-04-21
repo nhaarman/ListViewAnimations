@@ -1,12 +1,10 @@
 package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissTouchListener;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.Util;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;

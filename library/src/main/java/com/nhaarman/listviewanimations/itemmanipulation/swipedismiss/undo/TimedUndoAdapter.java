@@ -11,7 +11,9 @@ import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * A {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter} which automatically dismisses items after a timeout.
+ */
 public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
 
     /**

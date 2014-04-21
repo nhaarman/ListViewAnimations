@@ -7,7 +7,6 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.Util;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 
 import java.util.ArrayList;
