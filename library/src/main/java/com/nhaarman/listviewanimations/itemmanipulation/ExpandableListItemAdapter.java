@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014 Niek Haarman
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.content.Context;
@@ -31,12 +46,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     private static final int DEFAULTCONTENTPARENTRESID = 10001;
 
     private final Context mContext;
-    private int mViewLayoutResId;
     private final int mTitleParentResId;
     private final int mContentParentResId;
-    private int mActionViewResId;
     private final List<Long> mExpandedIds;
-
+    private int mViewLayoutResId;
+    private int mActionViewResId;
     private int mLimit;
 
     private AbsListView mAbsListView;
@@ -121,7 +135,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     }
 
     /**
-     * Set the {@link com.nhaarman.listviewanimations.itemmanipulation.ExpandCollapseListener} that should be notified of expand / collapse events.
+     * Set the {@link ExpandCollapseListener} that should be notified of expand / collapse events.
      */
     public void setExpandCollapseListener(final ExpandCollapseListener expandCollapseListener) {
         mExpandCollapseListener = expandCollapseListener;
@@ -170,18 +184,6 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         ViewGroup.LayoutParams layoutParams = viewHolder.contentParent.getLayoutParams();
         layoutParams.height = LayoutParams.WRAP_CONTENT;
         viewHolder.contentParent.setLayoutParams(layoutParams);
-
-        return view;
-    }
-
-    private ViewGroup createView(final ViewGroup parent) {
-        ViewGroup view;
-
-        if (mViewLayoutResId == 0) {
-            view = new RootView(mContext);
-        } else {
-            view = (ViewGroup) LayoutInflater.from(mContext).inflate(mViewLayoutResId, parent, false);
-        }
 
         return view;
     }
@@ -292,26 +294,6 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     }
 
     /**
-     * Return the content parent at the specified position.
-     *
-     * @param position Index of the view we want.
-     * @return the view if it exist, null otherwise.
-     */
-    private View getContentParent(final int position) {
-        View contentParent = null;
-
-        View parentView = findViewForPosition(position);
-        if (parentView != null) {
-            Object tag = parentView.getTag();
-            if (tag instanceof ViewHolder) {
-                contentParent = ((ViewHolder) tag).contentParent;
-            }
-        }
-
-        return contentParent;
-    }
-
-    /**
      * Expand the view at given position. Will do nothing if the view is already expanded.
      *
      * @param position the position to expand.
@@ -339,26 +321,6 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         toggle(position);
     }
 
-    private View findViewForPosition(final int position) {
-        View result = null;
-        for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
-            View childView = mAbsListView.getChildAt(i);
-            if (AdapterViewUtil.getPositionForView(mAbsListView, childView) == position) {
-                result = childView;
-            }
-        }
-        return result;
-    }
-
-    private int findPositionForId(final long id) {
-        for (int i = 0; i < getCount(); i++) {
-            if (getItemId(i) == id) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     /**
      * Toggle the {@link View} at given position, ignores header or footer Views.
      *
@@ -378,6 +340,58 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         } else if (contentParent == null && !isExpanded) {
             mExpandedIds.add(itemId);
         }
+    }
+
+    private ViewGroup createView(final ViewGroup parent) {
+        ViewGroup view;
+
+        if (mViewLayoutResId == 0) {
+            view = new RootView(mContext);
+        } else {
+            view = (ViewGroup) LayoutInflater.from(mContext).inflate(mViewLayoutResId, parent, false);
+        }
+
+        return view;
+    }
+
+    /**
+     * Return the content parent at the specified position.
+     *
+     * @param position Index of the view we want.
+     * @return the view if it exist, null otherwise.
+     */
+    private View getContentParent(final int position) {
+        View contentParent = null;
+
+        View parentView = findViewForPosition(position);
+        if (parentView != null) {
+            Object tag = parentView.getTag();
+            if (tag instanceof ViewHolder) {
+                contentParent = ((ViewHolder) tag).contentParent;
+            }
+        }
+
+        return contentParent;
+    }
+
+    private View findViewForPosition(final int position) {
+        View result = null;
+        for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
+            View childView = mAbsListView.getChildAt(i);
+            if (AdapterViewUtil.getPositionForView(mAbsListView, childView) == position) {
+                result = childView;
+            }
+        }
+        return result;
+    }
+
+    private int findPositionForId(final long id) {
+        for (int i = 0; i < getCount(); i++) {
+            if (getItemId(i) == id) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private void toggle(final View contentParent) {
@@ -418,18 +432,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         }
     }
 
-    private class TitleViewOnClickListener implements View.OnClickListener {
+    public interface ExpandCollapseListener {
 
-        private final View mContentParent;
+        void onItemExpanded(int position);
 
-        private TitleViewOnClickListener(final View contentParent) {
-            mContentParent = contentParent;
-        }
-
-        @Override
-        public void onClick(final View view) {
-            toggle(mContentParent);
-        }
+        void onItemCollapsed(int position);
     }
 
     private static class RootView extends LinearLayout {
@@ -506,16 +513,6 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
             animator.start();
         }
 
-        private static View findDirectChild(final View view, final AbsListView listView) {
-            View result = view;
-            View parent = (View) result.getParent();
-            while (parent != listView) {
-                result = parent;
-                parent = (View) result.getParent();
-            }
-            return result;
-        }
-
         public static ValueAnimator createHeightAnimator(final View view, final int start, final int end) {
             ValueAnimator animator = ValueAnimator.ofInt(start, end);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -530,6 +527,30 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
                 }
             });
             return animator;
+        }
+
+        private static View findDirectChild(final View view, final AbsListView listView) {
+            View result = view;
+            View parent = (View) result.getParent();
+            while (parent != listView) {
+                result = parent;
+                parent = (View) result.getParent();
+            }
+            return result;
+        }
+    }
+
+    private class TitleViewOnClickListener implements View.OnClickListener {
+
+        private final View mContentParent;
+
+        private TitleViewOnClickListener(final View contentParent) {
+            mContentParent = contentParent;
+        }
+
+        @Override
+        public void onClick(final View view) {
+            toggle(mContentParent);
         }
     }
 }

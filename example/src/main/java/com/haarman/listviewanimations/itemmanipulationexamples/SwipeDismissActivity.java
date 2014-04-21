@@ -26,19 +26,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.haarman.listviewanimations.MyListActivity;
-import com.haarman.listviewanimations.R;
+import com.haarman.listviewanimations.MyListAdapter;
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualundo.ContextualUndoAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualundo.ContextualUndoAdapter.CountDownFormatter;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualundo.ContextualUndoAdapter.DeleteItemCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedUndoAdapter;
 
 import java.util.Arrays;
 
-public class SwipeDismissActivity extends MyListActivity implements OnNavigationListener, OnDismissCallback, DeleteItemCallback {
+public class SwipeDismissActivity extends MyListActivity implements OnNavigationListener, OnDismissCallback {
 
-    private ArrayAdapter<Integer> mAdapter;
+    private MyListAdapter mAdapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -59,52 +58,25 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
         getListView().setAdapter(adapter);
     }
 
+    private void setContextualUndoAdapter() {
+        SimpleSwipeUndoAdapter adapter = new SimpleSwipeUndoAdapter(mAdapter, this, this);
+        adapter.setAbsListView(getListView());
+        getListView().setAdapter(adapter);
+    }
+
+    private void setContextualUndoWithTimedDeleteAdapter() {
+        TimedUndoAdapter adapter = new TimedUndoAdapter(mAdapter, this, this);
+        adapter.setAbsListView(getListView());
+        getListView().setAdapter(adapter);
+    }
+
     @Override
-    public void onDismiss(final AbsListView listView, final int[] reverseSortedPositions) {
+    public void onDismiss(final AbsListView absListView, final int[] reverseSortedPositions) {
         for (int position : reverseSortedPositions) {
             mAdapter.remove(position);
         }
         Toast.makeText(this, "Removed positions: " + Arrays.toString(reverseSortedPositions), Toast.LENGTH_SHORT).show();
     }
-
-    private void setContextualUndoAdapter() {
-        ContextualUndoAdapter adapter = new ContextualUndoAdapter(mAdapter, R.layout.undo_row, R.id.undo_row_undobutton, this);
-        adapter.setAbsListView(getListView());
-        getListView().setAdapter(adapter);
-    }
-
-    @Override
-    public void deleteItem(final int position) {
-        mAdapter.remove(position);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void setContextualUndoWithTimedDeleteAdapter() {
-        ContextualUndoAdapter adapter = new ContextualUndoAdapter(mAdapter, R.layout.undo_row, R.id.undo_row_undobutton, 3000, this);
-        adapter.setAbsListView(getListView());
-        getListView().setAdapter(adapter);
-    }
-
-    private void setContextualUndoWithTimedDeleteAndCountDownAdapter() {
-        ContextualUndoAdapter adapter = new ContextualUndoAdapter(mAdapter, R.layout.undo_row, R.id.undo_row_undobutton, 3000, R.id.undo_row_texttv, this, new MyFormatCountDownCallback());
-        adapter.setAbsListView(getListView());
-        getListView().setAdapter(adapter);
-    }
-
-    private class MyFormatCountDownCallback implements CountDownFormatter {
-
-        @Override
-        public String getCountDownString(final long millisUntilFinished) {
-            int seconds = (int) Math.ceil(millisUntilFinished / 1000.0);
-
-            if (seconds > 0) {
-                return getResources().getQuantityString(R.plurals.countdown_seconds, seconds, seconds);
-            }
-            return getString(R.string.countdown_dismissing);
-        }
-    }
-
-	/* Non-ListViewAnimations related stuff below */
 
     @Override
     public boolean onNavigationItemSelected(final int itemPosition, final long itemId) {
@@ -118,9 +90,6 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
             case 2:
                 setContextualUndoWithTimedDeleteAdapter();
                 return true;
-            case 3:
-                setContextualUndoWithTimedDeleteAndCountDownAdapter();
-                return true;
             default:
                 return false;
         }
@@ -128,8 +97,8 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
 
     private class AnimSelectionAdapter extends ArrayAdapter<String> {
 
-        public AnimSelectionAdapter() {
-            addAll("Swipe-To-Dismiss", "Contextual Undo", "CU - Timed Delete", "CU - Count Down");
+        AnimSelectionAdapter() {
+            addAll("Swipe-To-Dismiss", "Contextual Undo", "CU - Timed Delete");
         }
 
         @Override

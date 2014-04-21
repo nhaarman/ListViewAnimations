@@ -124,7 +124,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     public final View getView(final int position, final View convertView, final ViewGroup parent) {
         if (!mHasParentAnimationAdapter) {
             if (getAbsListView() == null) {
-                throw new IllegalStateException("Call setListView() on this AnimationAdapter before setAdapter()!");
+                throw new IllegalStateException("Call setAbsListView() on this AnimationAdapter before setAdapter()!");
             }
 
             if (convertView != null) {

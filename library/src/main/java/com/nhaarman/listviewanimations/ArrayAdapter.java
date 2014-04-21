@@ -246,8 +246,8 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Dy
      *        in this adapter.
      */
     public void sort(Comparator<? super T> comparator) {
-    	Collections.sort(mItems, comparator);
-    	notifyDataSetChanged();
+        Collections.sort(mItems, comparator);
+        notifyDataSetChanged();
     }
 
     @Override
