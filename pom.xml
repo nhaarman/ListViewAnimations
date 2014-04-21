@@ -8,7 +8,7 @@
         <version>7</version>
     </parent>
 
-    <groupId>com.haarman.listviewanimations</groupId>
+    <groupId>com.nhaarman.listviewanimations</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
 
@@ -16,7 +16,7 @@
     <description>An Android library which allows developers to easily add animations to ListView items</description>
     <url>https://github.com/nhaarman/ListViewAnimations</url>
     <inceptionYear>2013</inceptionYear>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>2.6.1-SNAPSHOT</version>
 
     <modules>
         <module>library</module>
@@ -55,22 +55,26 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.6</java.version>
-        <android.sdk.platform>16</android.sdk.platform>
+        <android.sdk.platform>19</android.sdk.platform>
 
         <!-- Dependency Versions -->
-        <android.version>4.1.1.4</android.version>
-        <android-support.version>r7</android-support.version>
+        <android.version>4.4.2_r3</android.version>
+        <android-support.version>19.1.0</android-support.version>
         <nineoldandroids.version>2.4.0</nineoldandroids.version>
-        <junit.version>4.10</junit.version>
+        <junit.version>4.11</junit.version>
+        <mockito.version>1.9.5</mockito.version>
+        <hamcrest.version>1.3</hamcrest.version>
 
         <!-- Plugin Versions -->
-        <android-maven-plugin.version>3.5.1</android-maven-plugin.version>
+        <android-maven-plugin.version>3.8.2</android-maven-plugin.version>
         <build-helper-maven-plugin.version>1.7</build-helper-maven-plugin.version>
         <maven-release-plugin.version>2.3.2</maven-release-plugin.version>
         <maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
         <maven-javadoc-plugin.version>2.9</maven-javadoc-plugin.version>
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
         <maven-gpg-plugin.version>1.4</maven-gpg-plugin.version>
+        <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+        <maven-jarsigner-plugin.version>1.3.2</maven-jarsigner-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -86,6 +90,18 @@
                 <artifactId>support-v4</artifactId>
                 <version>${android-support.version}</version>
             </dependency>
+            <dependency>
+				<groupId>android.support</groupId>
+			  	<artifactId>compatibility-v7-appcompat</artifactId>
+			  	<version>${android-support.version}</version>
+			  	<type>apklib</type>
+			</dependency>
+			<dependency>
+			  	<groupId>android.support</groupId>
+			  	<artifactId>compatibility-v7-appcompat</artifactId>
+			  	<version>${android-support.version}</version>
+				<type>jar</type>
+			</dependency>
 
             <!-- NineOldAndroids -->
             <dependency>
@@ -96,11 +112,35 @@
 
             <!-- Testing -->
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>org.hamcrest</groupId>
+						<artifactId>*</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>${mockito.version}</version>
+				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>org.hamcrest</groupId>
+						<artifactId>*</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-all</artifactId>
+				<version>${hamcrest.version}</version>
+				<scope>test</scope>
+			</dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -109,7 +149,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
@@ -122,7 +161,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
-                    <configuration>
+					<configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
                     </configuration>
@@ -136,11 +175,6 @@
                         <sdk>
                             <platform>${android.sdk.platform}</platform>
                         </sdk>
-                        <lintEnableLibraries>true</lintEnableLibraries>
-                        <lintFailOnError>false</lintFailOnError>
-                        <lintEnableHtml>true</lintEnableHtml>
-                        <lintConfig>${project.basedir}/lint.xml</lintConfig>
-                        <lintSkip>false</lintSkip>
                         <extractDuplicates>true</extractDuplicates>
                     </configuration>
                 </plugin>
@@ -161,19 +195,67 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc-plugin.version}</version>
+                    <configuration>
+						<quiet>true</quiet>
+					</configuration>
                 </plugin>
 
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>${maven-release-plugin.version}</version>
-                    <configuration>
-                        <tagNameFormat>@{project.version}</tagNameFormat>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
-                    </configuration>
+                	<groupId>org.apache.maven.plugins</groupId>
+                	<artifactId>maven-antrun-plugin</artifactId>
+                	<version>${maven-antrun-plugin.version}</version>
                 </plugin>
+                
+                <plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jarsigner-plugin</artifactId>
+					<version>${maven-jarsigner-plugin.version}</version>
+				</plugin>
             </plugins>
         </pluginManagement>
     </build>
 
+	<profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>signing</id>
+								<goals>
+									<goal>sign</goal>
+									<goal>verify</goal>
+								</goals>
+								<phase>package</phase>
+								<configuration>
+									<removeExistingSignatures>true</removeExistingSignatures>
+									<archiveDirectory />
+									<keystore>${sign.keystore}</keystore>
+									<alias>${sign.alias}</alias>
+									<storepass>${sign.storepass}</storepass>
+									<keypass>${sign.keypass}</keypass>
+									<verbose>true</verbose>
+									<tsa>https://timestamp.geotrust.com/tsa</tsa>
+									<arguments>
+										<argument>-sigalg</argument><argument>MD5withRSA</argument>
+										<argument>-digestalg</argument><argument>SHA1</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

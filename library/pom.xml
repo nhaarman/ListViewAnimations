@@ -2,12 +2,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.haarman.listviewanimations</groupId>
+        <groupId>com.nhaarman.listviewanimations</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>2.6.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>listviewanimations</artifactId>
+    <artifactId>library</artifactId>
     <packaging>apklib</packaging>
 
     <name>ListViewAnimations (Library)</name>
@@ -32,24 +32,28 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 
     <build>
-        <sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>src/androidTest/java</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
                 <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <id>runLint</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>lint</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <configuration>
+                    <androidManifestFile>${project.basedir}/src/main/AndroidManifest.xml</androidManifestFile>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -85,7 +89,7 @@
                     </execution>
                 </executions>
             </plugin>
-
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -95,9 +99,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                        <configuration>
-                            <quiet>true</quiet>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -107,6 +108,37 @@
                 <artifactId>maven-release-plugin</artifactId>
             </plugin>
         </plugins>
+        <pluginManagement>
+        	<plugins>
+        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        		<plugin>
+        			<groupId>org.eclipse.m2e</groupId>
+        			<artifactId>lifecycle-mapping</artifactId>
+        			<version>1.0.0</version>
+        			<configuration>
+        				<lifecycleMappingMetadata>
+        					<pluginExecutions>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>
+        									com.jayway.maven.plugins.android.generation2
+        								</groupId>
+        								<artifactId>android-maven-plugin</artifactId>
+        								<versionRange>[3.8.2,)</versionRange>
+        								<goals>
+        									<goal>consume-aar</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        					</pluginExecutions>
+        				</lifecycleMappingMetadata>
+        			</configuration>
+        		</plugin>
+        	</plugins>
+        </pluginManagement>
     </build>
 
 
@@ -122,19 +154,25 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>signing</id>
+								<goals>
+									<goal>sign</goal>
+									<goal>verify</goal>
+								</goals>
+								<phase>package</phase>
+								<inherited>true</inherited>
+								<configuration>
+									<includes>
+										<include>${project.build.directory}/${project.artifactId}.apklib</include>
+									</includes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
                 </plugins>
             </build>
         </profile>
