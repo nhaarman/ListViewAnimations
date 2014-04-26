@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Handler;
 
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
@@ -31,6 +32,7 @@ import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AnimateAdditionActivity extends MyListActivity implements AdapterView.OnItemClickListener {
 
@@ -50,12 +52,20 @@ public class AnimateAdditionActivity extends MyListActivity implements AdapterVi
         getListView().setOnItemClickListener(this);
 
         Toast.makeText(this, "Tap on an item to insert a new item", Toast.LENGTH_LONG).show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAnimateAdditionAdapter.insert(mAnimateAdditionAdapter.getCount(), "HALLO");
+                new Handler().postDelayed(this, 1000);
+            }
+        }, 1000);
     }
 
     private static ArrayList<String> getStringItems() {
         ArrayList<String> items = new ArrayList<String>();
         for (int i = 0; i < 1000; i++) {
-            items.add("This is row number " + i);
+//            items.add("This is row number " + i);
         }
         return items;
     }
@@ -70,14 +80,14 @@ public class AnimateAdditionActivity extends MyListActivity implements AdapterVi
 
         private final Context mContext;
 
-        public MyAdapter(final Context context, final ArrayList<String> items) {
+        MyAdapter(final Context context, final List<String> items) {
             super(items);
             mContext = context;
         }
 
         @Override
-        public long getItemId(final int position) {
-            return getItem(position).hashCode();
+        public long getItemId(final int location) {
+            return getItem(location).hashCode();
         }
 
         @Override

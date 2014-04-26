@@ -20,6 +20,7 @@ import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -52,15 +53,15 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
     private static final long DEFAULT_SCROLLDOWN_ANIMATION_MS = 300;
     private static final long DEFAULT_INSERTION_ANIMATION_MS = 300;
+
     private static final String ALPHA = "alpha";
+
+    private long mScrolldownAnimationDurationMs = DEFAULT_SCROLLDOWN_ANIMATION_MS;
+    private long mInsertionAnimationDurationMs = DEFAULT_INSERTION_ANIMATION_MS;
 
     private final Insertable<T> mInsertable;
     private final InsertQueue<T> mInsertQueue;
-
     private boolean mShouldAnimateDown = true;
-
-    private long mInsertionAnimationDurationMs = DEFAULT_INSERTION_ANIMATION_MS;
-    private long mScrolldownAnimationDurationMs = DEFAULT_SCROLLDOWN_ANIMATION_MS;
 
     /**
      * Create a new {@code AnimateAdditionAdapter} with given {@link android.widget.BaseAdapter}.
@@ -179,7 +180,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
                     view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                     scrollDistance -= view.getMeasuredHeight();
                 }
-            } else if (getAbsListView().getLastVisiblePosition() >= pair.first) {
+            } else if (getAbsListView().getLastVisiblePosition() >= pair.first || getAbsListView().getLastVisiblePosition() == AdapterView.INVALID_POSITION || !childrenFillAbsListView()) {
                 /* Inserting an item that becomes visible on screen */
                 int index = pair.first;
 
@@ -226,15 +227,25 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         ((ListView) getAbsListView()).setSelectionFromTop(firstVisiblePosition + numInsertedAbove, childTop);
     }
 
+    /**
+     * @return true if the children completely fill up the AbsListView.
+     */
+    private boolean childrenFillAbsListView() {
+        int childrenHeight = 0;
+        for (int i = 0; i < getAbsListView().getCount(); i++) {
+            View child = getAbsListView().getChildAt(i);
+            if (child != null) {
+                childrenHeight += child.getHeight();
+            }
+        }
+        return getAbsListView().getHeight() <= childrenHeight;
+    }
 
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         final View view = super.getView(position, convertView, parent);
 
-        System.out.println(position);
-
         if (mInsertQueue.getActiveIndexes().contains(position)) {
-            System.out.println("A!");
             int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.AT_MOST);
             int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.AT_MOST);
             view.measure(widthMeasureSpec, heightMeasureSpec);
