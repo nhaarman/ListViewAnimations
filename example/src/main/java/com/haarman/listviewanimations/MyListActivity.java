@@ -29,7 +29,6 @@ public class MyListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mylist);
         mListView = (ListView) findViewById(R.id.activity_mylist_listview);
-        mListView.setDivider(null);
     }
 
     public ListView getListView() {

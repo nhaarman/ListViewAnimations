@@ -39,53 +39,79 @@ import java.util.ArrayList;
 
 public class AppearanceExamplesActivity extends MyListActivity implements OnNavigationListener {
 
+    private static final String SAVEDINSTANCESTATE_ANIMATIONADAPTER = "savedinstancestate_animationadapter";
+
     private BaseAdapter mAdapter;
+    private AnimationAdapter mAnimAdapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mAdapter = new MyAdapter(this, getItems());
+        setAlphaAdapter();
 
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         getSupportActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        outState.putParcelable(SAVEDINSTANCESTATE_ANIMATIONADAPTER, mAnimAdapter.onSaveInstanceState());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mAnimAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(SAVEDINSTANCESTATE_ANIMATIONADAPTER));
+    }
+
     private void setAlphaAdapter() {
-        AnimationAdapter animAdapter = new AlphaInAnimationAdapter(mAdapter);
-        animAdapter.setAbsListView(getListView());
-        getListView().setAdapter(animAdapter);
+        if (!(mAnimAdapter instanceof AlphaInAnimationAdapter)) {
+            mAnimAdapter = new AlphaInAnimationAdapter(mAdapter);
+            mAnimAdapter.setAbsListView(getListView());
+            getListView().setAdapter(mAnimAdapter);
+        }
     }
 
     private void setLeftAdapter() {
-        AnimationAdapter animAdapter = new SwingLeftInAnimationAdapter(mAdapter);
-        animAdapter.setAbsListView(getListView());
-        getListView().setAdapter(animAdapter);
+        if (!(mAnimAdapter instanceof SwingLeftInAnimationAdapter)) {
+            mAnimAdapter = new SwingLeftInAnimationAdapter(mAdapter);
+            mAnimAdapter.setAbsListView(getListView());
+            getListView().setAdapter(mAnimAdapter);
+        }
     }
 
     private void setRightAdapter() {
-        AnimationAdapter animAdapter = new SwingRightInAnimationAdapter(mAdapter);
-        animAdapter.setAbsListView(getListView());
-        getListView().setAdapter(animAdapter);
+        if (!(mAnimAdapter instanceof SwingRightInAnimationAdapter)) {
+            mAnimAdapter = new SwingRightInAnimationAdapter(mAdapter);
+            mAnimAdapter.setAbsListView(getListView());
+            getListView().setAdapter(mAnimAdapter);
+        }
     }
 
     private void setBottomAdapter() {
-        AnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(mAdapter);
-        animAdapter.setAbsListView(getListView());
-        getListView().setAdapter(animAdapter);
+        if (!(mAnimAdapter instanceof SwingBottomInAnimationAdapter)) {
+            mAnimAdapter = new SwingBottomInAnimationAdapter(mAdapter);
+            mAnimAdapter.setAbsListView(getListView());
+            getListView().setAdapter(mAnimAdapter);
+        }
     }
 
     private void setBottomRightAdapter() {
-        AnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(new SwingRightInAnimationAdapter(mAdapter));
-        animAdapter.setAbsListView(getListView());
-        getListView().setAdapter(animAdapter);
+        mAnimAdapter = new SwingBottomInAnimationAdapter(new SwingRightInAnimationAdapter(mAdapter));
+        mAnimAdapter.setAbsListView(getListView());
+        getListView().setAdapter(mAnimAdapter);
     }
 
     private void setScaleAdapter() {
-        AnimationAdapter animAdapter = new ScaleInAnimationAdapter(mAdapter);
-        animAdapter.setAbsListView(getListView());
-        getListView().setAdapter(animAdapter);
+        if (!(mAnimAdapter instanceof ScaleInAnimationAdapter)) {
+            mAnimAdapter = new ScaleInAnimationAdapter(mAdapter);
+            mAnimAdapter.setAbsListView(getListView());
+            getListView().setAdapter(mAnimAdapter);
+        }
     }
 
     @Override
@@ -114,7 +140,7 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
         }
     }
 
-	/* Non-ListViewAnimations related stuff below */
+    /* Non-ListViewAnimations related stuff below */
 
     private static class MyAdapter extends ArrayAdapter<Integer> {
 

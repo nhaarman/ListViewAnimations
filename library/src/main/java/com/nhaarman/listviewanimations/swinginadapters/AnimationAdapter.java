@@ -17,6 +17,8 @@ package com.nhaarman.listviewanimations.swinginadapters;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,11 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
     protected static final long DEFAULTANIMATIONDELAYMILLIS = 100;
     protected static final long DEFAULTANIMATIONDURATIONMILLIS = 300;
+
+    private static final String SAVEDINSTANCESTATE_FIRSTANIMATEDPOSITION = "savedinstancestate_firstanimatedposition";
+    private static final String SAVEDINSTANCESTATE_LASTANIMATEDPOSITION = "savedinstancestate_lastanimatedposition";
+    private static final String SAVEDINSTANCESTATE_SHOULDANIMATE = "savedinstancestate_shouldanimate";
+
     private static final long INITIALDELAYMILLIS = 150;
     private static final String ALPHA = "alpha";
 
@@ -296,4 +303,30 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      *            The view that will be animated, as retrieved by getView()
      */
     public abstract Animator[] getAnimators(ViewGroup parent, View view);
+
+    /**
+     * Returns a Parcelable object containing the AnimationAdapter's current dynamic state.
+     */
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+
+        bundle.putInt(SAVEDINSTANCESTATE_FIRSTANIMATEDPOSITION, mFirstAnimatedPosition);
+        bundle.putInt(SAVEDINSTANCESTATE_LASTANIMATEDPOSITION, mLastAnimatedPosition);
+        bundle.putBoolean(SAVEDINSTANCESTATE_SHOULDANIMATE, mShouldAnimate);
+
+        return bundle;
+    }
+
+    /**
+     * Restores this AnimationAdapter's state.
+     * @param parcelable the Parcelable object previously returned by {@link #onSaveInstanceState()}.
+     */
+    public void onRestoreInstanceState(final Parcelable parcelable) {
+        if (parcelable instanceof Bundle) {
+            Bundle bundle = (Bundle) parcelable;
+            mFirstAnimatedPosition = bundle.getInt(SAVEDINSTANCESTATE_FIRSTANIMATEDPOSITION);
+            mLastAnimatedPosition = bundle.getInt(SAVEDINSTANCESTATE_LASTANIMATEDPOSITION);
+            mShouldAnimate = bundle.getBoolean(SAVEDINSTANCESTATE_SHOULDANIMATE);
+        }
+    }
 }
