@@ -2,12 +2,13 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 def sonatypeRepositoryUrl
-if (isReleaseBuild()) {
-    println 'RELEASE BUILD'
+if (isRelease == 'true') {
     sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+    println 'RELEASE BUILD ' + version
 } else {
-    println 'DEBUG BUILD'
     sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+    version = VERSION_NAME + '-SNAPSHOT'
+    println 'DEBUG BUILD ' + version
 }
 
 afterEvaluate { project ->
@@ -54,7 +55,7 @@ afterEvaluate { project ->
     }
 
     signing {
-        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+        required { isRelease && gradle.taskGraph.hasTask("uploadArchives") }
         sign configurations.archives
     }
 
@@ -64,13 +65,11 @@ afterEvaluate { project ->
 
     task androidJavadocsJar(type: Jar) {
         classifier = 'javadoc'
-        //basename = artifact_id
         from androidJavadocs.destinationDir
     }
 
     task androidSourcesJar(type: Jar) {
         classifier = 'sources'
-        //basename = artifact_id
         from android.sourceSets.main.allSource
     }
 

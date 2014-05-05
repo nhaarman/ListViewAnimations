@@ -42,7 +42,7 @@ script:
   - if [[ $LINT == 'true' ]]; then ./gradlew lint ; fi
 
 after_success:
-  - ./gradlew uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}"
+  - if [[ $TRAVIS_BRANCH == 'dev' ]]; then  ./gradlew uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
 
 notifications:
   email: false
