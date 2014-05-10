@@ -1,48 +1,36 @@
-language: java
+language: android
 jdk: oraclejdk7
 
 env:
   matrix:
-    - ANDROID_SDKS=sysimg-19 ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a SKIN=WXGA800 LINT=true
+    - ANDROID_SDKS=sysimg-19 ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a SKIN=WXGA800 LINT=true MAVEN=true
   global:
     - TERM=dumb
     - secure: Fo/btrr+HpwmQL6TNxZuh/TWRMouz9Z1RCo77tf3crNP4OHq9EAkduLc/b4i6HCGFM3fyfJ7AM5XMa3OQvXfF84FQnew7NGE6zB/CKFfKBIZyzntvrDg4VqWEAHzunT6+eBnGtxtrAE0bBo4MmUCklXWP8j5UAyjfFpSeJdOywY=
     - secure: s56rqSiiwX40CQWeHTcbyVLRtwLP/pcHWqaVCKuXtZ/m9SgRI/SHp9o8ITI2dzr3syEeAkHjkJOkHQSpH0bHi1xKY4M9ODcCugwv+yDEELw1qmI6Cvwjvj1cKsG7ebt39OnCkz+TqhtI/iOEkxq7mTizFjNIxIImMkKxeQwcFgE=
 
 before_install:
-  # Install base Android SDK
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libstdc++6:i386 lib32z1 expect
-  - export COMPONENTS=extra-android-m2repository,build-tools-19.0.3,android-19,$ANDROID_SDKS
-  - curl -3L https://raw.github.com/embarkmobile/android-sdk-installer/version-2/android-sdk-installer | bash /dev/stdin --install=$COMPONENTS
-  - source ~/.android-sdk-installer/env
+  - curl -3L -o wait_for_emulator https://github.com/embarkmobile/android-sdk-installer/raw/version-2/wait_for_emulator
+  - sudo chmod +x wait_for_emulator
 
-  # Create and start emulator
-  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI --skin $SKIN
-  - emulator -avd test -no-audio -no-window &
-
-  # Add dummy passwords
-  - echo nexusUsername=dummy >> gradle.properties
-  - echo nexusPassword=dummy >> gradle.properties
-  - echo nhaarman_lva_storePassword=dummy >> gradle.properties
-  - echo nhaarman_lva_keyAlias=dummy >> gradle.properties
-  - echo nhaarman_lva_keyPassword=dummy >> gradle.properties
+  # Start the emulator
+  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
 
 before_script:
-  # Make sure the emulator has started before running tests
-  - wait_for_emulator
+  # Downloads gradle stuff
+   - gradle
+  - ./wait_for_emulator
 
 install:
  - true
 
-script:
-  - sudo chmod +x gradlew
-  - ./gradlew connectedCheck
-
-  - if [[ $LINT == 'true' ]]; then ./gradlew lint ; fi
+ script:
+  - gradle connectedCheck
+  - if [[ $LINT == 'true' ]]; then gradle lint ; fi
 
 after_success:
-  - if [[ $TRAVIS_BRANCH == 'dev' ]]; then  ./gradlew uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
+  - if [[ $MAVEN == 'true' && $TRAVIS_BRANCH == 'dev' ]]; then gradle uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
 
 notifications:
   email: false
