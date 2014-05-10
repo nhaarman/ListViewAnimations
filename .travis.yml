@@ -19,13 +19,13 @@ before_install:
 
 before_script:
   # Downloads gradle stuff
-   - gradle
+  - gradle
   - ./wait_for_emulator
 
 install:
  - true
 
- script:
+script:
   - gradle connectedCheck
   - if [[ $LINT == 'true' ]]; then gradle lint ; fi
 
