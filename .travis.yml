@@ -1,6 +1,10 @@
 language: android
 jdk: oraclejdk7
 
+android:
+  components:
+    - build-tools-19.1.0
+
 env:
   matrix:
     - ANDROID_SDKS=sysimg-19 ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a SKIN=WXGA800 LINT=true MAVEN=true
