@@ -77,14 +77,14 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether retrieving the AbsListView yields the original AbsListView that was set.
      */
     public void testAbsListViewSet() {
-        assertThat(mSwipeTouchListener.getAbsListView(), is(mActivity.getAbsListView()));
+        assertThat("Wrong AbsListView returned", mSwipeTouchListener.getAbsListView(), is(mActivity.getAbsListView()));
     }
 
     /**
      * Tests whether swiping the first View triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testSwipeCallsAfterFirstViewFling() throws InterruptedException {
-        Assert.assertFalse(mSwipeTouchListener.afterViewFlingCalled);
+        Assert.assertFalse("afterViewFlingCalled == true", mSwipeTouchListener.afterViewFlingCalled);
 
         for (final MotionEvent event : mFirstViewMotionEvents) {
             mActivity.runOnUiThread(new DispatchTouchEventRunnable(event));
@@ -93,15 +93,15 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
         /* We need to wait for the fling animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);
 
-        Assert.assertTrue(mSwipeTouchListener.afterViewFlingCalled);
-        assertThat(mSwipeTouchListener.position, is(0));
+        Assert.assertTrue("afterViewFling not called", mSwipeTouchListener.afterViewFlingCalled);
+        assertThat("Wrong position called: " + mSwipeTouchListener.position, mSwipeTouchListener.position, is(0));
     }
 
     /**
      * Tests whether swiping the first View from right to left triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testSwipeCallsAfterFirstReverseViewFling() throws InterruptedException {
-        Assert.assertFalse(mSwipeTouchListener.afterViewFlingCalled);
+        Assert.assertFalse("afterViewFlingCalled == true", mSwipeTouchListener.afterViewFlingCalled);
 
         for (final MotionEvent event : mFirstViewReversedMotionEvents) {
             mActivity.runOnUiThread(new DispatchTouchEventRunnable(event));
@@ -110,15 +110,15 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
         /* We need to wait for the fling animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);
 
-        Assert.assertTrue(mSwipeTouchListener.afterViewFlingCalled);
-        assertThat(mSwipeTouchListener.position, is(0));
+        Assert.assertTrue("afterViewFling not called", mSwipeTouchListener.afterViewFlingCalled);
+        assertThat("Wrong position called: " + mSwipeTouchListener.position, mSwipeTouchListener.position, is(0));
     }
 
     /**
      * Tests whether swiping the last View triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testSwipeCallsAfterLastViewFling() throws InterruptedException {
-        Assert.assertFalse(mSwipeTouchListener.afterViewFlingCalled);
+        Assert.assertFalse("afterViewFlingCalled == true", mSwipeTouchListener.afterViewFlingCalled);
 
         for (final MotionEvent event : mLastViewMotionEvents) {
             mActivity.runOnUiThread(new DispatchTouchEventRunnable(event));
@@ -127,8 +127,8 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
         /* We need to wait for the fling animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);
 
-        Assert.assertTrue(mSwipeTouchListener.afterViewFlingCalled);
-        assertThat(mSwipeTouchListener.position, is(mActivity.getAbsListView().getLastVisiblePosition()));
+        Assert.assertTrue("afterViewFling not called", mSwipeTouchListener.afterViewFlingCalled);
+        assertThat("Wrong position called: " + mSwipeTouchListener.position, mSwipeTouchListener.position, is(mActivity.getAbsListView().getLastVisiblePosition()));
     }
 
     private static class TestSwipeTouchListener extends SwipeTouchListener {
