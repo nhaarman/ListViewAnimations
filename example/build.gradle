@@ -7,13 +7,18 @@ dependencies {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.3'
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 19
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(new Date().format('yyyyMMddHH'))
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     signingConfigs {

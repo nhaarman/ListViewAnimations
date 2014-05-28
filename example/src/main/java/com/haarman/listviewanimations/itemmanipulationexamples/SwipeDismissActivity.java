@@ -45,8 +45,6 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
 
         mAdapter = createListAdapter();
 
-        setSwipeDismissAdapter();
-
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         getSupportActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
