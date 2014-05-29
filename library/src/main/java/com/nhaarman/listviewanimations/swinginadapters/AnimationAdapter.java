@@ -19,6 +19,7 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.SystemClock;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,41 +38,93 @@ import com.nineoldandroids.view.ViewHelper;
  */
 public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
+    /* Key values for saving instance states */
     private static final String SAVEDINSTANCESTATE_FIRSTANIMATEDPOSITION = "savedinstancestate_firstanimatedposition";
     private static final String SAVEDINSTANCESTATE_LASTANIMATEDPOSITION = "savedinstancestate_lastanimatedposition";
     private static final String SAVEDINSTANCESTATE_SHOULDANIMATE = "savedinstancestate_shouldanimate";
 
     private static final String ALPHA = "alpha";
 
-    private static final long DEFAULT_ANIMATION_DELAY_MILLIS = 100;
-    private static final long DEFAULT_ANIMATION_DURATION_MILLIS = 300;
+    /**
+     * The default delay in millis before the first animation starts.
+     */
     private static final long INITIAL_DELAY_MILLIS = 150;
 
-    private long mAnimationDelayMillis = DEFAULT_ANIMATION_DELAY_MILLIS;
-    private long mAnimationDurationMillis = DEFAULT_ANIMATION_DURATION_MILLIS;
-    private long mInitialDelayMillis = INITIAL_DELAY_MILLIS;
+    /**
+     * The default delay in millis between view animations.
+     */
+    private static final long DEFAULT_ANIMATION_DELAY_MILLIS = 100;
 
+    /**
+     * The default duration in millis of the animations.
+     */
+    private static final long DEFAULT_ANIMATION_DURATION_MILLIS = 300;
+
+    /**
+     * The active Animators. Keys are hashcodes of the Views that are animated.
+     */
     private final SparseArray<Animator> mAnimators = new SparseArray<>();
 
+    /**
+     * Whether this instance does not wrap another AnimationAdapter. When this is set to false, animation is not applied to the views,
+     * since the wrapped AnimationAdapter will take care of that.
+     */
+    private final boolean mIsRootAnimationAdapter;
+
+    /**
+     * The delay in millis before the first animation starts.
+     */
+    private long mInitialDelayMillis = INITIAL_DELAY_MILLIS;
+
+    /**
+     * The delay in millis between view animations.
+     */
+    private long mAnimationDelayMillis = DEFAULT_ANIMATION_DELAY_MILLIS;
+
+    /**
+     * The duration in millis of the animations.
+     */
+    private long mAnimationDurationMillis = DEFAULT_ANIMATION_DURATION_MILLIS;
+
+    /**
+     * The start timestamp of the first animation, as returned by {@link android.os.SystemClock#uptimeMillis()}.
+     */
     private long mAnimationStartMillis;
 
+    /**
+     * The position of the item that is the first that was animated.
+     */
     private int mFirstAnimatedPosition;
+
+    /**
+     * The position of the last item that was animated.
+     */
     private int mLastAnimatedPosition;
 
-    private boolean mHasParentAnimationAdapter;
+    /**
+     * Whether animation is enabled. When this is set to false, no animation is applied to the views.
+     */
     private boolean mShouldAnimate = true;
-    private boolean mHasMeasuredGridView;
 
+    /**
+     * When the AbsListView instance is an instance of GridView, this boolean represents whether it has measured it first item yet. When this is set to true,
+     * animation is not applied to the view, as another call to getView will be made for the same position.
+     */
+    private boolean mIsMeasuringGridView = true;
+
+    /**
+     * Creates a new AnimationAdapter, wrapping given BaseAdapter.
+     * @param baseAdapter the BaseAdapter to wrap.
+     */
     protected AnimationAdapter(final BaseAdapter baseAdapter) {
         super(baseAdapter);
 
         mAnimationStartMillis = -1;
         mFirstAnimatedPosition = -1;
         mLastAnimatedPosition = -1;
+        mIsMeasuringGridView = true;
 
-        if (baseAdapter instanceof AnimationAdapter) {
-            ((AnimationAdapter) baseAdapter).setHasParentAnimationAdapter(true);
-        }
+        mIsRootAnimationAdapter = !(baseAdapter instanceof AnimationAdapter);
     }
 
     /**
@@ -84,7 +137,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         mLastAnimatedPosition = -1;
         mAnimationStartMillis = -1;
         mShouldAnimate = true;
-        mHasMeasuredGridView = false;
+        mIsMeasuringGridView = true;
 
         if (getDecoratedBaseAdapter() instanceof AnimationAdapter) {
             ((AnimationAdapter) getDecoratedBaseAdapter()).reset();
@@ -129,7 +182,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
     @Override
     public final View getView(final int position, final View convertView, final ViewGroup parent) {
-        if (!mHasParentAnimationAdapter) {
+        if (mIsRootAnimationAdapter) {
             if (getAbsListView() == null) {
                 throw new IllegalStateException("Call setAbsListView() on this AnimationAdapter before setAdapter()!");
             }
@@ -141,7 +194,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
         View itemView = super.getView(position, convertView, parent);
 
-        if (!mHasParentAnimationAdapter) {
+        if (mIsRootAnimationAdapter) {
             animateViewIfNecessary(position, itemView, parent);
         }
         return itemView;
@@ -158,8 +211,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
     private void animateViewIfNecessary(final int position, final View view, final ViewGroup parent) {
         /* GridView measures the first View which is returned by getView(int, View, ViewGroup), but does not use that View. */
-        boolean isMeasuringGridViewItem = getAbsListView() instanceof GridView && !mHasMeasuredGridView;
-        mHasMeasuredGridView = true;
+        boolean isMeasuringGridViewItem = getAbsListView() instanceof GridView && mIsMeasuringGridView;
+        mIsMeasuringGridView = false;
 
         if (position > mLastAnimatedPosition && mShouldAnimate && !isMeasuringGridViewItem) {
             if (mFirstAnimatedPosition == -1) {
@@ -173,7 +226,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
     private void animateView(final ViewGroup parent, final View view) {
         if (mAnimationStartMillis == -1) {
-            mAnimationStartMillis = System.currentTimeMillis();
+            mAnimationStartMillis = SystemClock.uptimeMillis();
         }
 
         ViewHelper.setAlpha(view, 0);
@@ -214,16 +267,9 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
             }
         } else {
             long delaySinceStart = (mLastAnimatedPosition - mFirstAnimatedPosition + 1) * mAnimationDelayMillis;
-            delay = mAnimationStartMillis + mInitialDelayMillis + delaySinceStart - System.currentTimeMillis();
+            delay = mAnimationStartMillis + mInitialDelayMillis + delaySinceStart - SystemClock.uptimeMillis();
         }
         return Math.max(0, delay);
-    }
-
-    /**
-     * Sets whether this AnimationAdapter is encapsulated by another AnimationAdapter. When this is set to true, this AnimationAdapter does not apply any animations to the views.
-     */
-    private void setHasParentAnimationAdapter(final boolean hasParentAnimationAdapter) {
-        mHasParentAnimationAdapter = hasParentAnimationAdapter;
     }
 
     /**
