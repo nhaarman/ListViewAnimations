@@ -83,7 +83,7 @@ public class ExpandableListItemActivity extends MyListActivity {
             if (tv == null) {
                 tv = new TextView(mContext);
             }
-            tv.setText(mContext.getString(R.string.expandorcollapsecard, getItem(position)));
+            tv.setText(mContext.getString(R.string.expandorcollapsecard, (int) getItem(position)));
             return tv;
         }
 

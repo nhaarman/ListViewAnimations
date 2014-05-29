@@ -24,11 +24,4 @@
     <string name="explainexpand">Tap on cards to expand or collapse them</string>
     <string name="expandorcollapsecard">This is card number %d</string>
 
-    <plurals name="countdown_seconds">
-        <item quantity="one">Dismissing in 1...</item>
-        <item quantity="other">Dismissing in %d...</item>
-    </plurals>
-    
-    <string name="countdown_dismissing">Dismissing</string>
-
 </resources>

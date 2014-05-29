@@ -1,15 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.haarman.listviewanimations"
-    android:versionCode="261"
-    android:versionName="2.6.1-SNAPSHOT">
+    package="com.haarman.listviewanimations">
 
     <uses-permission android:name="com.android.vending.BILLING" />
 
-    <uses-sdk 
-        android:minSdkVersion="8"
-        android:targetSdkVersion="19"
-        />
-    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
