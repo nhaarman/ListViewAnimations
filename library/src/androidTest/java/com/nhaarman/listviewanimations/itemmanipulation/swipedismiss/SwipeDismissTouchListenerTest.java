@@ -1,7 +1,6 @@
 package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.MotionEvent;
 import android.widget.AbsListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
@@ -9,17 +8,13 @@ import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.List;
-
-import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.dispatchSwipeMotionEvents;
+import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.*;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 @SuppressWarnings("AnonymousInnerClass")
 public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCase2<SwipeTouchListenerTestActivity> {
-
-    private static final int ANIMATION_SLEEP_DURATION = 1000;
 
     /**
      * An Activity hosting a ListView with items.
@@ -62,10 +57,7 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
      * Tests whether dismissing an item triggers a call to OnDismissCallback#onDismiss.
      */
     public void testSimpleDismiss() throws InterruptedException {
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-
-        /* We need to wait for the animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
 
         verify(mOnDismissCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{0}));
     }
@@ -75,10 +67,7 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
      */
     public void testDoubleDismiss() throws InterruptedException {
         dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 1);
-
-        /* We need to wait for the animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 1);
 
         verify(mOnDismissCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{1, 0}));
     }
@@ -89,10 +78,7 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
     public void testComplexDismiss() throws InterruptedException {
         dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
         dispatchSwipeMotionEvents(mActivity, mAbsListView, 3);
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 2);
-
-        /* We need to wait for the animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 2);
 
         verify(mOnDismissCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{3, 2, 0}));
     }
@@ -110,7 +96,7 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
         });
 
         /* We need to wait for the animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        Thread.sleep(1500);
 
         verify(mOnDismissCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{0}));
     }
@@ -127,7 +113,7 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
         });
 
         /* We need to wait for the animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        Thread.sleep(1500);
 
         verify(mOnDismissCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{0}));
     }

@@ -7,15 +7,13 @@ import android.widget.AbsListView;
 
 import java.util.List;
 
-import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.dispatchSwipeMotionEvents;
+import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.dispatchSwipeMotionEventsAndWait;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 
 @SuppressWarnings({"AnonymousInnerClass", "AnonymousInnerClassMayBeStatic"})
 public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<SwipeTouchListenerTestActivity> {
-
-    private static final int ANIMATION_SLEEP_DURATION = 1000;
 
     /**
      * The SwipeTouchListener under test.
@@ -67,10 +65,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether swiping the first View triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testSwipeFirstViewCallback() throws InterruptedException {
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-
-        /* We need to wait for the fling animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(true));
         assertThat(mSwipeTouchListener.position, is(0));
@@ -80,10 +75,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether swiping the first View from right to left triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testReverseSwipeFirstViewCallback() throws InterruptedException {
-        MotionEventUtils.dispatchReverseSwipeMotionEvents(mActivity, mAbsListView, 0);
-
-        /* We need to wait for the fling animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        MotionEventUtils.dispatchReverseSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(true));
         assertThat(mSwipeTouchListener.position, is(0));
@@ -93,10 +85,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether swiping the last View triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testSwipeLastViewCallback() throws InterruptedException {
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, mAbsListView.getLastVisiblePosition());
-
-        /* We need to wait for the fling animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, mAbsListView.getLastVisiblePosition());
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(true));
         assertThat(mSwipeTouchListener.position, is(mAbsListView.getLastVisiblePosition()));
@@ -107,10 +96,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      */
     public void testShortSwipe() throws InterruptedException {
         List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, 10, mViewWidth / 2 - mViewWidth / 10);
-        MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents);
-
-        /* We need to wait for the fling animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        MotionEventUtils.dispatchMotionEventsAndWait(mActivity, mAbsListView, motionEvents);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(false));
     }
@@ -120,10 +106,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      */
     public void testReverseShortSwipe() throws InterruptedException {
         List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, mViewWidth - 10, mViewWidth / 2 + mViewWidth / 10);
-        MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents);
-
-        /* We need to wait for the fling animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        MotionEventUtils.dispatchMotionEventsAndWait(mActivity, mAbsListView, motionEvents);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(false));
     }
@@ -140,8 +123,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
             }
         });
 
-        /* We need to wait for the fling animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        Thread.sleep(1000);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(true));
         assertThat(mSwipeTouchListener.position, is(0));
@@ -161,9 +143,6 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
 
         List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, 10, mViewWidth - 10);
         MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents);
-
-        /* We need to wait for the fling animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(false));
     }
@@ -193,19 +172,13 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
     public void testEnableDisableSwipe() throws InterruptedException {
         mSwipeTouchListener.disableSwipe();
 
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-
-        /* We need to wait for the fling animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(false));
 
         mSwipeTouchListener.enableSwipe();
 
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-
-        /* We need to wait for the fling animation to complete */
-        Thread.sleep(ANIMATION_SLEEP_DURATION);
+        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(true));
     }

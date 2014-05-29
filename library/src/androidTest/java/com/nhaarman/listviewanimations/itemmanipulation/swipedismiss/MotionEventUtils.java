@@ -15,6 +15,18 @@ public class MotionEventUtils {
     private MotionEventUtils() {
     }
 
+    public static void dispatchSwipeMotionEventsAndWait(final Activity activity, final AbsListView absListView, final int position) throws InterruptedException {
+        dispatchMotionEventsAndWait(activity, absListView, createSwipeMotionEvents(absListView, position));
+    }
+
+    public static void dispatchReverseSwipeMotionEventsAndWait(final Activity activity, final AbsListView absListView, final int position) throws InterruptedException {
+        dispatchMotionEventsAndWait(activity, absListView, createReverseSwipeMotionEvents(absListView, position));
+    }
+
+    public static void dispatchMotionEventsAndWait(final Activity activity, final View view, final Iterable<MotionEvent> motionEvents) throws InterruptedException {
+        dispatchMotionEvents(activity, view, motionEvents, true);
+    }
+
     public static void dispatchSwipeMotionEvents(final Activity activity, final AbsListView absListView, final int position) throws InterruptedException {
         dispatchMotionEvents(activity, absListView, createSwipeMotionEvents(absListView, position));
     }
@@ -24,10 +36,7 @@ public class MotionEventUtils {
     }
 
     public static void dispatchMotionEvents(final Activity activity, final View view, final Iterable<MotionEvent> motionEvents) throws InterruptedException {
-        for (final MotionEvent event : motionEvents) {
-            activity.runOnUiThread(new DispatchTouchEventRunnable(event, view));
-            Thread.sleep(10);
-        }
+        dispatchMotionEvents(activity, view, motionEvents, false);
     }
 
     public static List<MotionEvent> createSwipeMotionEvents(final AbsListView absListView, final int position) {
@@ -58,6 +67,17 @@ public class MotionEventUtils {
         return results;
     }
 
+    private static void dispatchMotionEvents(final Activity activity, final View view, final Iterable<MotionEvent> motionEvents, final boolean wait) throws InterruptedException {
+        for (final MotionEvent event : motionEvents) {
+            activity.runOnUiThread(new DispatchTouchEventRunnable(event, view));
+            Thread.sleep(100);
+        }
+
+        if (wait) {
+        /* We need to wait for the fling animation to complete */
+            Thread.sleep(1500);
+        }
+    }
 
     private static class DispatchTouchEventRunnable implements Runnable {
 
