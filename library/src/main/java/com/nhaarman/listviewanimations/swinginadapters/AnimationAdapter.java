@@ -32,9 +32,8 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
 /**
- * A {@link BaseAdapterDecorator} class which applies multiple {@link Animator}s at once to
- * views when they are first shown. The Animators applied include the animations
- * specified in {@link #getAnimators(ViewGroup, View)}, plus an alpha transition.
+ * A {@link BaseAdapterDecorator} class which applies multiple {@link Animator}s at once to views when they are first shown. The Animators applied include the animations specified
+ * in {@link #getAnimators(ViewGroup, View)}, plus an alpha transition.
  */
 public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
@@ -55,6 +54,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     private final SparseArray<Animator> mAnimators = new SparseArray<>();
 
     private long mAnimationStartMillis;
+
     private int mFirstAnimatedPosition;
     private int mLastAnimatedPosition;
 
@@ -62,7 +62,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     private boolean mShouldAnimate = true;
     private boolean mHasMeasuredGridView;
 
-    public AnimationAdapter(final BaseAdapter baseAdapter) {
+    protected AnimationAdapter(final BaseAdapter baseAdapter) {
         super(baseAdapter);
 
         mAnimationStartMillis = -1;
@@ -75,9 +75,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Call this method to reset animation status on all views. The next time
-     * {@link #notifyDataSetChanged()} is called on the base adapter, all views will
-     * animate again. Will also call {@link #setShouldAnimate(boolean)} with a value of true.
+     * Call this method to reset animation status on all views. The next time {@link #notifyDataSetChanged()} is called on the base adapter, all views will animate again. Will also
+     * call {@link #setShouldAnimate(boolean)} with a value of true.
      */
     public void reset() {
         mAnimators.clear();
@@ -94,6 +93,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
     /**
      * Set whether to animate the {@link View}s or not.
+     *
      * @param shouldAnimate true if the Views should be animated.
      */
     public void setShouldAnimate(final boolean shouldAnimate) {
@@ -101,8 +101,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Set the starting position for which items should animate. Given position will animate as well.
-     * Will also call setShouldAnimate(true).
+     * Set the starting position for which items should animate. Given position will animate as well. Will also call setShouldAnimate(true).
+     *
      * @param position the position.
      */
     @SuppressWarnings("UnusedDeclaration")
@@ -113,9 +113,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Set the starting position for which items should animate as the first position which isn't currently visible on screen.
-     * This call is also valid when the {@link View}s haven't been drawn yet.
-     * Will also call setShouldAnimate(true).
+     * Set the starting position for which items should animate as the first position which isn't currently visible on screen. This call is also valid when the {@link View}s
+     * haven't been drawn yet. Will also call setShouldAnimate(true).
      */
     @SuppressWarnings("UnusedDeclaration")
     public void setShouldAnimateNotVisible() {
@@ -197,23 +196,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         mAnimators.put(view.hashCode(), set);
     }
 
-    private Animator[] concatAnimators(final Animator[] childAnimators, final Animator[] animators, final Animator alphaAnimator) {
-        Animator[] allAnimators = new Animator[childAnimators.length + animators.length + 1];
-        int i;
-
-        for (i = 0; i < animators.length; ++i) {
-            allAnimators[i] = animators[i];
-        }
-
-        for (Animator childAnimator : childAnimators) {
-            allAnimators[i] = childAnimator;
-            ++i;
-        }
-
-        allAnimators[allAnimators.length - 1] = alphaAnimator;
-        return allAnimators;
-    }
-
     @SuppressLint("NewApi")
     private long calculateAnimationDelay() {
         long delay;
@@ -238,17 +220,15 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Set whether this AnimationAdapter is encapsulated by another
-     * AnimationAdapter. When this is set to true, this AnimationAdapter does
-     * not apply any animations to the views. Should not be set explicitly, the
-     * AnimationAdapter class manages this by itself.
+     * Sets whether this AnimationAdapter is encapsulated by another AnimationAdapter. When this is set to true, this AnimationAdapter does not apply any animations to the views.
      */
-    public void setHasParentAnimationAdapter(final boolean hasParentAnimationAdapter) {
+    private void setHasParentAnimationAdapter(final boolean hasParentAnimationAdapter) {
         mHasParentAnimationAdapter = hasParentAnimationAdapter;
     }
 
     /**
-     * Set the delay in milliseconds before the first animation should start. Defaults to {@value #INITIAL_DELAY_MILLIS}.
+     * Sets the delay in milliseconds before the first animation should start. Defaults to {@value #INITIAL_DELAY_MILLIS}.
+     *
      * @param delayMillis the time in milliseconds.
      */
     public void setInitialDelayMillis(final long delayMillis) {
@@ -256,7 +236,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Set the delay in milliseconds before an animation of a view should start. Defaults to {@value #DEFAULT_ANIMATION_DELAY_MILLIS}.
+     * Sets the delay in milliseconds before an animation of a view should start. Defaults to {@value #DEFAULT_ANIMATION_DELAY_MILLIS}.
+     *
      * @param delayMillis the time in milliseconds.
      */
     @SuppressWarnings("UnusedDeclaration")
@@ -265,7 +246,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Set the duration of the animation in milliseconds. Defaults to {@value #DEFAULT_ANIMATION_DURATION_MILLIS}.
+     * Sets the duration of the animation in milliseconds. Defaults to {@value #DEFAULT_ANIMATION_DURATION_MILLIS}.
+     *
      * @param durationMillis the time in milliseconds.
      */
     @SuppressWarnings("UnusedDeclaration")
@@ -274,15 +256,12 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Get the Animators to apply to the views. In addition to the returned
-     * Animators, an alpha transition will be applied to the view.
+     * Returns the Animators to apply to the views. In addition to the returned Animators, an alpha transition will be applied to the view.
      *
-     * @param parent
-     *            The parent of the view
-     * @param view
-     *            The view that will be animated, as retrieved by getView()
+     * @param parent The parent of the view
+     * @param view   The view that will be animated, as retrieved by getView().
      */
-    public abstract Animator[] getAnimators(ViewGroup parent, View view);
+    protected abstract Animator[] getAnimators(ViewGroup parent, View view);
 
     /**
      * Returns a Parcelable object containing the AnimationAdapter's current dynamic state.
@@ -299,6 +278,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
     /**
      * Restores this AnimationAdapter's state.
+     *
      * @param parcelable the Parcelable object previously returned by {@link #onSaveInstanceState()}.
      */
     public void onRestoreInstanceState(final Parcelable parcelable) {
@@ -308,5 +288,22 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
             mLastAnimatedPosition = bundle.getInt(SAVEDINSTANCESTATE_LASTANIMATEDPOSITION);
             mShouldAnimate = bundle.getBoolean(SAVEDINSTANCESTATE_SHOULDANIMATE);
         }
+    }
+
+    private static Animator[] concatAnimators(final Animator[] childAnimators, final Animator[] animators, final Animator alphaAnimator) {
+        Animator[] allAnimators = new Animator[childAnimators.length + animators.length + 1];
+        int i;
+
+        for (i = 0; i < animators.length; ++i) {
+            allAnimators[i] = animators[i];
+        }
+
+        for (Animator childAnimator : childAnimators) {
+            allAnimators[i] = childAnimator;
+            ++i;
+        }
+
+        allAnimators[allAnimators.length - 1] = alphaAnimator;
+        return allAnimators;
     }
 }
