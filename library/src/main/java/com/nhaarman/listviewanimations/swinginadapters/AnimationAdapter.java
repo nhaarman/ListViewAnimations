@@ -199,6 +199,9 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         return itemView;
     }
 
+    /**
+     * Cancels any existing animations for given View.
+     */
     private void cancelExistingAnimation(final View convertView) {
         int hashCode = convertView.hashCode();
         Animator animator = mAnimators.get(hashCode);
@@ -208,6 +211,13 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         }
     }
 
+    /**
+     * Animates given View if necessary.
+     *
+     * @param position the position of the item the View represents.
+     * @param view     the View that should be animated.
+     * @param parent   the parent the View is hosted in.
+     */
     private void animateViewIfNecessary(final int position, final View view, final ViewGroup parent) {
         /* GridView measures the first View which is returned by getView(int, View, ViewGroup), but does not use that View. On KitKat, it does this actually multiple times. */
         mGridViewPossiblyMeasuring = mGridViewPossiblyMeasuring && (mGridViewMeasuringPosition == -1 || mGridViewMeasuringPosition == position);
@@ -222,12 +232,18 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
                 mFirstAnimatedPosition = position;
             }
 
-            animateView(parent, view);
+            animateView(view, parent);
             mLastAnimatedPosition = position;
         }
     }
 
-    private void animateView(final ViewGroup parent, final View view) {
+    /**
+     * Animates given View.
+     *
+     * @param view   the View that should be animated.
+     * @param parent the parent the View is hosted in.
+     */
+    private void animateView(final View view, final ViewGroup parent) {
         if (mAnimationStartMillis == -1) {
             mAnimationStartMillis = SystemClock.uptimeMillis();
         }
@@ -252,6 +268,10 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         mAnimators.put(view.hashCode(), set);
     }
 
+
+    /**
+     * Returns the delay in milliseconds after which animation for View with position mLastAnimatedPosition + 1 should start.
+     */
     @SuppressLint("NewApi")
     private long calculateAnimationDelay() {
         long delay;
@@ -339,6 +359,9 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         }
     }
 
+    /**
+     * Merges given Animators into one array.
+     */
     private static Animator[] concatAnimators(final Animator[] childAnimators, final Animator[] animators, final Animator alphaAnimator) {
         Animator[] allAnimators = new Animator[childAnimators.length + animators.length + 1];
         int i;
