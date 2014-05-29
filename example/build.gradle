@@ -45,6 +45,9 @@ android {
             debuggable false
             signingConfig signingConfigs.release
         }
+    }
 
+    lintOptions {
+        abortOnError false
     }
 }

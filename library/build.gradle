@@ -34,6 +34,12 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
     }
+
+    lintOptions {
+        textReport true
+        textOutput 'stdout'
+        warningsAsErrors true
+    }
 }
 
 apply from: '../maven_push.gradle'

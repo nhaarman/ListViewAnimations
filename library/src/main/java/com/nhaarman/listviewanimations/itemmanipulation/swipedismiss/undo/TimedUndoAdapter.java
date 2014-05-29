@@ -50,7 +50,8 @@ public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
     /**
      * The {@link TimeoutRunnable}s which are posted. Keys are positions.
      */
-    private final Map<Integer, TimeoutRunnable> mRunnables = new HashMap<Integer, TimeoutRunnable>();
+    //noinspection UseSparseArrays
+    private final Map<Integer, TimeoutRunnable> mRunnables = new HashMap<>();
 
     /**
      * Creates a new {@code TimedUndoAdapter}, decorating given {@link android.widget.BaseAdapter}.
@@ -109,7 +110,8 @@ public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
         super.onDismiss(absListView, reverseSortedPositions);
 
         /* Adjust the pending timeout positions accordingly wrt the given dismissed positions */
-        Map<Integer, TimeoutRunnable> newRunnables = new HashMap<Integer, TimeoutRunnable>();
+        //noinspection UseSparseArrays
+        Map<Integer, TimeoutRunnable> newRunnables = new HashMap<>();
         for (int position : reverseSortedPositions) {
             for (int key : mRunnables.keySet()) {
                 TimeoutRunnable runnable = mRunnables.get(key);
