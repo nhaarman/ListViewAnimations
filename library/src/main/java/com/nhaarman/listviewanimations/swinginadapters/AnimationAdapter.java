@@ -49,43 +49,35 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * The default delay in millis before the first animation starts.
      */
     private static final long INITIAL_DELAY_MILLIS = 150;
-
-    /**
-     * The default delay in millis between view animations.
-     */
-    private static final long DEFAULT_ANIMATION_DELAY_MILLIS = 100;
-
-    /**
-     * The default duration in millis of the animations.
-     */
-    private static final long DEFAULT_ANIMATION_DURATION_MILLIS = 300;
-
-    /**
-     * The active Animators. Keys are hashcodes of the Views that are animated.
-     */
-    private final SparseArray<Animator> mAnimators = new SparseArray<>();
-
-    /**
-     * Whether this instance does not wrap another AnimationAdapter. When this is set to false, animation is not applied to the views,
-     * since the wrapped AnimationAdapter will take care of that.
-     */
-    private final boolean mIsRootAnimationAdapter;
-
     /**
      * The delay in millis before the first animation starts.
      */
     private long mInitialDelayMillis = INITIAL_DELAY_MILLIS;
-
+    /**
+     * The default delay in millis between view animations.
+     */
+    private static final long DEFAULT_ANIMATION_DELAY_MILLIS = 100;
     /**
      * The delay in millis between view animations.
      */
     private long mAnimationDelayMillis = DEFAULT_ANIMATION_DELAY_MILLIS;
-
+    /**
+     * The default duration in millis of the animations.
+     */
+    private static final long DEFAULT_ANIMATION_DURATION_MILLIS = 300;
     /**
      * The duration in millis of the animations.
      */
     private long mAnimationDurationMillis = DEFAULT_ANIMATION_DURATION_MILLIS;
-
+    /**
+     * The active Animators. Keys are hashcodes of the Views that are animated.
+     */
+    private final SparseArray<Animator> mAnimators = new SparseArray<>();
+    /**
+     * Whether this instance does not wrap another AnimationAdapter. When this is set to false, animation is not applied to the views, since the wrapped AnimationAdapter will take
+     * care of that.
+     */
+    private final boolean mIsRootAnimationAdapter;
     /**
      * The start timestamp of the first animation, as returned by {@link android.os.SystemClock#uptimeMillis()}.
      */
@@ -107,13 +99,18 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     private boolean mShouldAnimate = true;
 
     /**
-     * When the AbsListView instance is an instance of GridView, this boolean represents whether it has measured it first item yet. When this is set to true,
-     * animation is not applied to the view, as another call to getView will be made for the same position.
+     * If the AbsListView is an instance of GridView, this boolean indicates whether the GridView is possibly measuring the view.
      */
-    private boolean mIsMeasuringGridView = true;
+    private boolean mGridViewPossiblyMeasuring;
+
+    /**
+     * The position of the item that the GridView is possibly measuring.
+     */
+    private int mGridViewMeasuringPosition;
 
     /**
      * Creates a new AnimationAdapter, wrapping given BaseAdapter.
+     *
      * @param baseAdapter the BaseAdapter to wrap.
      */
     protected AnimationAdapter(final BaseAdapter baseAdapter) {
@@ -122,7 +119,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         mAnimationStartMillis = -1;
         mFirstAnimatedPosition = -1;
         mLastAnimatedPosition = -1;
-        mIsMeasuringGridView = true;
+        mGridViewPossiblyMeasuring = true;
+        mGridViewMeasuringPosition = -1;
 
         mIsRootAnimationAdapter = !(baseAdapter instanceof AnimationAdapter);
     }
@@ -137,7 +135,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         mLastAnimatedPosition = -1;
         mAnimationStartMillis = -1;
         mShouldAnimate = true;
-        mIsMeasuringGridView = true;
+        mGridViewPossiblyMeasuring = true;
+        mGridViewMeasuringPosition = -1;
 
         if (getDecoratedBaseAdapter() instanceof AnimationAdapter) {
             ((AnimationAdapter) getDecoratedBaseAdapter()).reset();
@@ -210,11 +209,15 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     private void animateViewIfNecessary(final int position, final View view, final ViewGroup parent) {
-        /* GridView measures the first View which is returned by getView(int, View, ViewGroup), but does not use that View. */
-        boolean isMeasuringGridViewItem = getAbsListView() instanceof GridView && mIsMeasuringGridView;
-        mIsMeasuringGridView = false;
+        /* GridView measures the first View which is returned by getView(int, View, ViewGroup), but does not use that View. On KitKat, it does this actually multiple times. */
+        mGridViewPossiblyMeasuring = mGridViewPossiblyMeasuring && (mGridViewMeasuringPosition == -1 || mGridViewMeasuringPosition == position);
 
-        if (position > mLastAnimatedPosition && mShouldAnimate && !isMeasuringGridViewItem) {
+        if (mGridViewPossiblyMeasuring) {
+            mGridViewMeasuringPosition = position;
+            mLastAnimatedPosition = -1;
+        }
+
+        if (position > mLastAnimatedPosition && mShouldAnimate) {
             if (mFirstAnimatedPosition == -1) {
                 mFirstAnimatedPosition = position;
             }
