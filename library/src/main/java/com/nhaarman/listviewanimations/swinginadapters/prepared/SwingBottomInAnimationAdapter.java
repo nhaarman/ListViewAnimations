@@ -30,37 +30,20 @@ import com.nineoldandroids.animation.ObjectAnimator;
 public class SwingBottomInAnimationAdapter extends SingleAnimationAdapter {
 
     private static final String TRANSLATION_Y = "translationY";
-    private final long mAnimationDelayMillis;
-    private final long mAnimationDurationMillis;
 
     public SwingBottomInAnimationAdapter(final BaseAdapter baseAdapter) {
-        this(baseAdapter, DEFAULTANIMATIONDELAYMILLIS, DEFAULTANIMATIONDURATIONMILLIS);
-    }
-
-    public SwingBottomInAnimationAdapter(final BaseAdapter baseAdapter, final long animationDelayMillis) {
-        this(baseAdapter, animationDelayMillis, DEFAULTANIMATIONDURATIONMILLIS);
+        super(baseAdapter);
     }
 
     public SwingBottomInAnimationAdapter(final BaseAdapter baseAdapter, final long animationDelayMillis, final long animationDurationMillis) {
         super(baseAdapter);
-        mAnimationDelayMillis = animationDelayMillis;
-        mAnimationDurationMillis = animationDurationMillis;
-    }
-
-    @Override
-    protected long getAnimationDelayMillis() {
-        return mAnimationDelayMillis;
-    }
-
-    @Override
-    protected long getAnimationDurationMillis() {
-        return mAnimationDurationMillis;
+        setAnimationDelayMillis(animationDelayMillis);
+        setAnimationDurationMillis(animationDurationMillis);
     }
 
     @Override
     protected Animator getAnimator(final ViewGroup parent, final View view) {
-        // TODO magic number
-        return ObjectAnimator.ofFloat(view, TRANSLATION_Y, 500, 0);
+        return ObjectAnimator.ofFloat(view, TRANSLATION_Y, parent.getMeasuredHeight() >> 1, 0);
     }
 
 }

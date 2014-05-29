@@ -38,31 +38,32 @@ import com.nineoldandroids.view.ViewHelper;
  */
 public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
-    protected static final long DEFAULTANIMATIONDELAYMILLIS = 100;
-    protected static final long DEFAULTANIMATIONDURATIONMILLIS = 300;
-
     private static final String SAVEDINSTANCESTATE_FIRSTANIMATEDPOSITION = "savedinstancestate_firstanimatedposition";
     private static final String SAVEDINSTANCESTATE_LASTANIMATEDPOSITION = "savedinstancestate_lastanimatedposition";
     private static final String SAVEDINSTANCESTATE_SHOULDANIMATE = "savedinstancestate_shouldanimate";
 
-    private static final long INITIALDELAYMILLIS = 150;
     private static final String ALPHA = "alpha";
 
-    private final SparseArray<Animator> mAnimators;
+    private static final long DEFAULT_ANIMATION_DELAY_MILLIS = 100;
+    private static final long DEFAULT_ANIMATION_DURATION_MILLIS = 300;
+    private static final long INITIAL_DELAY_MILLIS = 150;
+
+    private long mAnimationDelayMillis = DEFAULT_ANIMATION_DELAY_MILLIS;
+    private long mAnimationDurationMillis = DEFAULT_ANIMATION_DURATION_MILLIS;
+    private long mInitialDelayMillis = INITIAL_DELAY_MILLIS;
+
+    private final SparseArray<Animator> mAnimators = new SparseArray<>();
+
     private long mAnimationStartMillis;
     private int mFirstAnimatedPosition;
     private int mLastAnimatedPosition;
+
     private boolean mHasParentAnimationAdapter;
     private boolean mShouldAnimate = true;
     private boolean mHasMeasuredGridView;
 
-    private long mInitialDelayMillis = INITIALDELAYMILLIS;
-    private long mAnimationDelayMillis = DEFAULTANIMATIONDELAYMILLIS;
-    private long mAnimationDurationMillis = DEFAULTANIMATIONDURATIONMILLIS;
-
     public AnimationAdapter(final BaseAdapter baseAdapter) {
         super(baseAdapter);
-        mAnimators = new SparseArray<Animator>();
 
         mAnimationStartMillis = -1;
         mFirstAnimatedPosition = -1;
@@ -190,7 +191,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(concatAnimators(childAnimators, animators, alphaAnimator));
         set.setStartDelay(calculateAnimationDelay());
-        set.setDuration(getAnimationDurationMillis());
+        set.setDuration(mAnimationDurationMillis);
         set.start();
 
         mAnimators.put(view.hashCode(), set);
@@ -224,14 +225,14 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         int numberOfAnimatedItems = mLastAnimatedPosition - mFirstAnimatedPosition;
 
         if (numberOfItemsOnScreen + 1 < numberOfAnimatedItems) {
-            delay = getAnimationDelayMillis();
+            delay = mAnimationDelayMillis;
 
             if (getAbsListView() instanceof GridView && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                delay += getAnimationDelayMillis() * ((mLastAnimatedPosition + 1) % ((GridView) getAbsListView()).getNumColumns());
+                delay += mAnimationDelayMillis * ((mLastAnimatedPosition + 1) % ((GridView) getAbsListView()).getNumColumns());
             }
         } else {
-            long delaySinceStart = (mLastAnimatedPosition - mFirstAnimatedPosition + 1) * getAnimationDelayMillis();
-            delay = mAnimationStartMillis + getInitialDelayMillis() + delaySinceStart - System.currentTimeMillis();
+            long delaySinceStart = (mLastAnimatedPosition - mFirstAnimatedPosition + 1) * mAnimationDelayMillis;
+            delay = mAnimationStartMillis + mInitialDelayMillis + delaySinceStart - System.currentTimeMillis();
         }
         return Math.max(0, delay);
     }
@@ -247,14 +248,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Get the delay in milliseconds before the first animation should start. Defaults to {@value #INITIALDELAYMILLIS}.
-     */
-    protected long getInitialDelayMillis() {
-        return mInitialDelayMillis;
-    }
-
-    /**
-     * Set the delay in milliseconds before the first animation should start. Defaults to {@value #INITIALDELAYMILLIS}.
+     * Set the delay in milliseconds before the first animation should start. Defaults to {@value #INITIAL_DELAY_MILLIS}.
      * @param delayMillis the time in milliseconds.
      */
     public void setInitialDelayMillis(final long delayMillis) {
@@ -262,14 +256,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Get the delay in milliseconds before an animation of a view should start. Defaults to {@value #DEFAULTANIMATIONDELAYMILLIS}.
-     */
-    protected long getAnimationDelayMillis() {
-        return mAnimationDelayMillis;
-    }
-
-    /**
-     * Set the delay in milliseconds before an animation of a view should start. Defaults to {@value #DEFAULTANIMATIONDELAYMILLIS}.
+     * Set the delay in milliseconds before an animation of a view should start. Defaults to {@value #DEFAULT_ANIMATION_DELAY_MILLIS}.
      * @param delayMillis the time in milliseconds.
      */
     @SuppressWarnings("UnusedDeclaration")
@@ -278,14 +265,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Get the duration of the animation in milliseconds. Defaults to {@value #DEFAULTANIMATIONDURATIONMILLIS}.
-     */
-    protected long getAnimationDurationMillis() {
-        return mAnimationDurationMillis;
-    }
-
-    /**
-     * Set the duration of the animation in milliseconds. Defaults to {@value #DEFAULTANIMATIONDURATIONMILLIS}.
+     * Set the duration of the animation in milliseconds. Defaults to {@value #DEFAULT_ANIMATION_DURATION_MILLIS}.
      * @param durationMillis the time in milliseconds.
      */
     @SuppressWarnings("UnusedDeclaration")
