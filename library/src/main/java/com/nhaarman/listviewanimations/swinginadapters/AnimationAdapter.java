@@ -81,8 +81,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     private final SparseArray<Animator> mAnimators = new SparseArray<>();
 
     /**
-     * Whether this instance is the root AnimationAdapter. When this is set to false, animation is not applied to the views, since the wrapper AnimationAdapter will take
-     * care of that.
+     * Whether this instance is the root AnimationAdapter. When this is set to false, animation is not applied to the views, since the wrapper AnimationAdapter will take care of
+     * that.
      */
     private boolean mIsRootAdapter;
 
@@ -137,8 +137,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Sets whether this instance is wrapped by another instance of AnimationAdapter. If called, this instance will not apply any animations to the views,
-     * since the wrapper AnimationAdapter handles that.
+     * Sets whether this instance is wrapped by another instance of AnimationAdapter. If called, this instance will not apply any animations to the views, since the wrapper
+     * AnimationAdapter handles that.
      */
     private void setIsWrapped() {
         mIsRootAdapter = false;
@@ -286,7 +286,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
         mAnimators.put(view.hashCode(), set);
     }
-
 
     /**
      * Returns the delay in milliseconds after which animation for View with position mLastAnimatedPosition + 1 should start.
