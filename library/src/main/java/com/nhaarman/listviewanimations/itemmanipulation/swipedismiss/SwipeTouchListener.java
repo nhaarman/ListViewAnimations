@@ -465,6 +465,10 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * @param flingToRight {@code true} {@code true} if the {@code View} should be flinged to the right, {@code false} if it should be flinged to the left.
      */
     private void flingView(final View view, final int position, final boolean flingToRight) {
+        if (mViewWidth < 2) {
+            mViewWidth = mAbsListView.getWidth();
+        }
+
         View swipeView = getSwipeView(view);
         ObjectAnimator xAnimator = ObjectAnimator.ofFloat(swipeView, "translationX", flingToRight ? mViewWidth : -mViewWidth);
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(swipeView, "alpha", 0);
