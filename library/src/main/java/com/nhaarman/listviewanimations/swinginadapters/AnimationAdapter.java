@@ -49,35 +49,43 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * The default delay in millis before the first animation starts.
      */
     private static final long INITIAL_DELAY_MILLIS = 150;
+
     /**
      * The delay in millis before the first animation starts.
      */
     private long mInitialDelayMillis = INITIAL_DELAY_MILLIS;
+
     /**
      * The default delay in millis between view animations.
      */
     private static final long DEFAULT_ANIMATION_DELAY_MILLIS = 100;
+
     /**
      * The delay in millis between view animations.
      */
     private long mAnimationDelayMillis = DEFAULT_ANIMATION_DELAY_MILLIS;
+
     /**
      * The default duration in millis of the animations.
      */
     private static final long DEFAULT_ANIMATION_DURATION_MILLIS = 300;
+
     /**
      * The duration in millis of the animations.
      */
     private long mAnimationDurationMillis = DEFAULT_ANIMATION_DURATION_MILLIS;
+
     /**
      * The active Animators. Keys are hashcodes of the Views that are animated.
      */
     private final SparseArray<Animator> mAnimators = new SparseArray<>();
+
     /**
-     * Whether this instance does not wrap another AnimationAdapter. When this is set to false, animation is not applied to the views, since the wrapped AnimationAdapter will take
+     * Whether this instance is the root AnimationAdapter. When this is set to false, animation is not applied to the views, since the wrapper AnimationAdapter will take
      * care of that.
      */
-    private final boolean mIsRootAnimationAdapter;
+    private boolean mIsRootAdapter;
+
     /**
      * The start timestamp of the first animation, as returned by {@link android.os.SystemClock#uptimeMillis()}.
      */
@@ -121,8 +129,19 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         mLastAnimatedPosition = -1;
         mGridViewPossiblyMeasuring = true;
         mGridViewMeasuringPosition = -1;
+        mIsRootAdapter = true;
 
-        mIsRootAnimationAdapter = !(baseAdapter instanceof AnimationAdapter);
+        if (baseAdapter instanceof AnimationAdapter) {
+            ((AnimationAdapter) baseAdapter).setIsWrapped();
+        }
+    }
+
+    /**
+     * Sets whether this instance is wrapped by another instance of AnimationAdapter. If called, this instance will not apply any animations to the views,
+     * since the wrapper AnimationAdapter handles that.
+     */
+    private void setIsWrapped() {
+        mIsRootAdapter = false;
     }
 
     /**
@@ -181,7 +200,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
     @Override
     public final View getView(final int position, final View convertView, final ViewGroup parent) {
-        if (mIsRootAnimationAdapter) {
+        if (mIsRootAdapter) {
             if (getAbsListView() == null) {
                 throw new IllegalStateException("Call setAbsListView() on this AnimationAdapter before setAdapter()!");
             }
@@ -193,7 +212,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
         View itemView = super.getView(position, convertView, parent);
 
-        if (mIsRootAnimationAdapter) {
+        if (mIsRootAdapter) {
             animateViewIfNecessary(position, itemView, parent);
         }
         return itemView;
@@ -232,7 +251,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
                 mFirstAnimatedPosition = position;
             }
 
-            animateView(view, parent);
+            animateView(position, view, parent);
             mLastAnimatedPosition = position;
         }
     }
@@ -243,7 +262,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * @param view   the View that should be animated.
      * @param parent the parent the View is hosted in.
      */
-    private void animateView(final View view, final ViewGroup parent) {
+    private void animateView(final int position, final View view, final ViewGroup parent) {
         if (mAnimationStartMillis == -1) {
             mAnimationStartMillis = SystemClock.uptimeMillis();
         }
@@ -261,7 +280,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
         AnimatorSet set = new AnimatorSet();
         set.playTogether(concatAnimators(childAnimators, animators, alphaAnimator));
-        set.setStartDelay(calculateAnimationDelay());
+        set.setStartDelay(calculateAnimationDelay(position));
         set.setDuration(mAnimationDurationMillis);
         set.start();
 
@@ -273,26 +292,27 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * Returns the delay in milliseconds after which animation for View with position mLastAnimatedPosition + 1 should start.
      */
     @SuppressLint("NewApi")
-    private long calculateAnimationDelay() {
+    private long calculateAnimationDelay(final int position) {
         long delay;
 
         int lastVisiblePosition = getAbsListView().getLastVisiblePosition();
         int firstVisiblePosition = getAbsListView().getFirstVisiblePosition();
 
         int numberOfItemsOnScreen = lastVisiblePosition - firstVisiblePosition;
-        int numberOfAnimatedItems = mLastAnimatedPosition - mFirstAnimatedPosition;
+        int numberOfAnimatedItems = position - 1 - mFirstAnimatedPosition;
 
         if (numberOfItemsOnScreen + 1 < numberOfAnimatedItems) {
             delay = mAnimationDelayMillis;
 
             if (getAbsListView() instanceof GridView && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                delay += mAnimationDelayMillis * ((mLastAnimatedPosition + 1) % ((GridView) getAbsListView()).getNumColumns());
+                int numColumns = ((GridView) getAbsListView()).getNumColumns();
+                delay += mAnimationDelayMillis * (position % numColumns);
             }
         } else {
-            long delaySinceStart = (mLastAnimatedPosition - mFirstAnimatedPosition + 1) * mAnimationDelayMillis;
-            delay = mAnimationStartMillis + mInitialDelayMillis + delaySinceStart - SystemClock.uptimeMillis();
+            long delaySinceStart = (position - mFirstAnimatedPosition) * mAnimationDelayMillis;
+            delay = Math.max(0, mAnimationStartMillis + mInitialDelayMillis + delaySinceStart - SystemClock.uptimeMillis());
         }
-        return Math.max(0, delay);
+        return delay;
     }
 
     /**
