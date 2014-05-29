@@ -60,8 +60,8 @@ Please refer to the [Wiki][13] pages to learn more about how to use this library
 
 Contribute
 -----
-Please do! I'm happy to review and accept pull requests.
-When creating pull requests - please pull the latest `dev` branch, and make sure to merge in the `dev` branch as well.
+Please do! I'm happy to review and accept pull requests.  
+Please read the [Contributing wiki](https://github.com/nhaarman/ListViewAnimations/wiki/Contributing) before you do.
 
 Developed By
 -----
