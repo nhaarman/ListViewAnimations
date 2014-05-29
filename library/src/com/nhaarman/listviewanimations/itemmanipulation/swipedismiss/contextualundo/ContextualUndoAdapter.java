@@ -427,6 +427,7 @@ public class ContextualUndoAdapter extends BaseAdapterDecorator implements Conte
         public void run() {
             long millisRemaining = mAutoDeleteDelayMillis - (System.currentTimeMillis() - mDismissStartMillis);
             if (mCountDownFormatter != null) {
+		if(mCurrentRemovedId!=mCurrentRemovedView.getItemId())mCurrentRemovedView = getContextualUndoView(mCurrentRemovedId);
                 mCurrentRemovedView.updateCountDownTimer(mCountDownFormatter.getCountDownString(millisRemaining));
             }
 
