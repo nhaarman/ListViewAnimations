@@ -30,31 +30,15 @@ import com.nineoldandroids.animation.ObjectAnimator;
 public class SwingRightInAnimationAdapter extends SingleAnimationAdapter {
 
     private static final String TRANSLATION_X = "translationX";
-    private final long mAnimationDelayMillis;
-    private final long mAnimationDurationMillis;
 
     public SwingRightInAnimationAdapter(final BaseAdapter baseAdapter) {
-        this(baseAdapter, DEFAULTANIMATIONDELAYMILLIS, DEFAULTANIMATIONDURATIONMILLIS);
-    }
-
-    public SwingRightInAnimationAdapter(final BaseAdapter baseAdapter, final long animationDelayMillis) {
-        this(baseAdapter, animationDelayMillis, DEFAULTANIMATIONDURATIONMILLIS);
+        super(baseAdapter);
     }
 
     public SwingRightInAnimationAdapter(final BaseAdapter baseAdapter, final long animationDelayMillis, final long animationDurationMillis) {
         super(baseAdapter);
-        mAnimationDelayMillis = animationDelayMillis;
-        mAnimationDurationMillis = animationDurationMillis;
-    }
-
-    @Override
-    protected long getAnimationDelayMillis() {
-        return mAnimationDelayMillis;
-    }
-
-    @Override
-    protected long getAnimationDurationMillis() {
-        return mAnimationDurationMillis;
+        setAnimationDelayMillis(animationDelayMillis);
+        setAnimationDurationMillis(animationDurationMillis);
     }
 
     @Override

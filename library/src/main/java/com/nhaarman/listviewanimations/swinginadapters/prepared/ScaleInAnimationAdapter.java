@@ -25,41 +25,32 @@ import com.nineoldandroids.animation.ObjectAnimator;
 
 public class ScaleInAnimationAdapter extends AnimationAdapter {
 
-    private static final float DEFAULTSCALEFROM = 0.8f;
+    private static final float DEFAULT_SCALE_FROM = 0.8f;
+
     private static final String SCALE_X = "scaleX";
     private static final String SCALE_Y = "scaleY";
 
     private final float mScaleFrom;
-    private final long mAnimationDelayMillis;
-    private final long mAnimationDurationMillis;
 
     public ScaleInAnimationAdapter(final BaseAdapter baseAdapter) {
-        this(baseAdapter, DEFAULTSCALEFROM);
+        super(baseAdapter);
+        mScaleFrom = DEFAULT_SCALE_FROM;
     }
 
     public ScaleInAnimationAdapter(final BaseAdapter baseAdapter, final float scaleFrom) {
-        this(baseAdapter, scaleFrom, DEFAULTANIMATIONDELAYMILLIS, DEFAULTANIMATIONDURATIONMILLIS);
+        super(baseAdapter);
+        mScaleFrom = scaleFrom;
     }
 
     public ScaleInAnimationAdapter(final BaseAdapter baseAdapter, final float scaleFrom, final long animationDelayMillis, final long animationDurationMillis) {
         super(baseAdapter);
         mScaleFrom = scaleFrom;
-        mAnimationDelayMillis = animationDelayMillis;
-        mAnimationDurationMillis = animationDurationMillis;
+        setAnimationDelayMillis(animationDelayMillis);
+        setAnimationDurationMillis(animationDurationMillis);
     }
 
     @Override
-    protected long getAnimationDelayMillis() {
-        return mAnimationDelayMillis;
-    }
-
-    @Override
-    protected long getAnimationDurationMillis() {
-        return mAnimationDurationMillis;
-    }
-
-    @Override
-    public Animator[] getAnimators(final ViewGroup parent, final View view) {
+    protected Animator[] getAnimators(final ViewGroup parent, final View view) {
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, SCALE_X, mScaleFrom, 1f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, SCALE_Y, mScaleFrom, 1f);
         return new ObjectAnimator[]{scaleX, scaleY};

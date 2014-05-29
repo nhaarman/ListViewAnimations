@@ -29,17 +29,7 @@ public class AlphaInAnimationAdapter extends AnimationAdapter {
     }
 
     @Override
-    protected long getAnimationDelayMillis() {
-        return DEFAULTANIMATIONDELAYMILLIS;
-    }
-
-    @Override
-    protected long getAnimationDurationMillis() {
-        return DEFAULTANIMATIONDURATIONMILLIS;
-    }
-
-    @Override
-    public Animator[] getAnimators(final ViewGroup parent, final View view) {
+    protected Animator[] getAnimators(final ViewGroup parent, final View view) {
         return new Animator[0];
     }
 }

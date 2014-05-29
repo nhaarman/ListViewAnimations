@@ -27,18 +27,18 @@ import com.nineoldandroids.animation.AnimatorInflater;
  * An implementation of AnimationAdapter which bases the animations on
  * resources.
  */
-public abstract class ResourceAnimationAdapter<T> extends AnimationAdapter {
+public abstract class ResourceAnimationAdapter extends AnimationAdapter {
 
     private final Context mContext;
 
     @SuppressWarnings("UnusedDeclaration")
-    public ResourceAnimationAdapter(final BaseAdapter baseAdapter, final Context context) {
+    protected ResourceAnimationAdapter(final BaseAdapter baseAdapter, final Context context) {
         super(baseAdapter);
         mContext = context;
     }
 
     @Override
-    public Animator[] getAnimators(final ViewGroup parent, final View view) {
+    protected Animator[] getAnimators(final ViewGroup parent, final View view) {
         return new Animator[]{AnimatorInflater.loadAnimator(mContext, getAnimationResourceId())};
     }
 
