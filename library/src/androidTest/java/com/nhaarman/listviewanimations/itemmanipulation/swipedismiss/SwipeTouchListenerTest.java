@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 
 public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<SwipeTouchListenerTestActivity> {
 
-    private static final int ANIMATION_SLEEP_DURATION = 300;
+    private static final int ANIMATION_SLEEP_DURATION = 1000;
 
     /**
      * The SwipeTouchListener under test.
@@ -50,9 +50,11 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
         mActivity.getAbsListView().setOnTouchListener(mSwipeTouchListener);
 
         int viewWidth = mActivity.getAbsListView().getWidth() - 100;
-        mFirstViewMotionEvents = createMotionEvents(0, 100, viewWidth);
-        mFirstViewReversedMotionEvents = createMotionEvents(0, viewWidth, 100);
-        mLastViewMotionEvents = createMotionEvents(mActivity.getAbsListView().getLastVisiblePosition(), 100, viewWidth);
+        mFirstViewMotionEvents = createMotionEvents(0, 10, viewWidth);
+        mFirstViewReversedMotionEvents = createMotionEvents(0, viewWidth, 10);
+        mLastViewMotionEvents = createMotionEvents(mActivity.getAbsListView().getLastVisiblePosition(), 10, viewWidth);
+
+        getInstrumentation().waitForIdleSync();
     }
 
     private List<MotionEvent> createMotionEvents(final int position, final float fromX, final float toX) {
