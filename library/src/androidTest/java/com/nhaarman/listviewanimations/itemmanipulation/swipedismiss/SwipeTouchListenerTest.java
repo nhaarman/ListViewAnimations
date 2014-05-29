@@ -5,8 +5,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 
-import org.junit.Assert;
-
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -69,8 +67,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether swiping the first View triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testSwipeFirstViewCallback() throws InterruptedException {
-        List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, 10, mViewWidth - 10);
-        MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents);
+        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
 
         /* We need to wait for the fling animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);
@@ -83,8 +80,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether swiping the first View from right to left triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testReverseSwipeFirstViewCallback() throws InterruptedException {
-        List<MotionEvent> mFirstViewReversedMotionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, mViewWidth - 10, 10);
-        MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, mFirstViewReversedMotionEvents);
+        MotionEventUtils.dispatchReverseSwipeMotionEvents(mActivity, mAbsListView, 0);
 
         /* We need to wait for the fling animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);
@@ -97,8 +93,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether swiping the last View triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testSwipeLastViewCallback() throws InterruptedException {
-        List<MotionEvent> mLastViewMotionEvents = MotionEventUtils.createMotionEvents(mAbsListView, mAbsListView.getLastVisiblePosition(), 10, mViewWidth - 10);
-        MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, mLastViewMotionEvents);
+        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, mAbsListView.getLastVisiblePosition());
 
         /* We need to wait for the fling animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);
@@ -124,7 +119,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether swiping shorter than half of the view width from right to left doesn't trigger a call to SwipeTouchLister#afterViewFling.
      */
     public void testReverseShortSwipe() throws InterruptedException {
-        List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, mViewWidth / 2 + mViewWidth / 10, mViewWidth - 10);
+        List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, mViewWidth - 10, mViewWidth / 2 + mViewWidth / 10);
         MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents);
 
         /* We need to wait for the fling animation to complete */
@@ -198,8 +193,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
     public void testEnableDisableSwipe() throws InterruptedException {
         mSwipeTouchListener.disableSwipe();
 
-        List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, 10, mViewWidth - 10);
-        MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents);
+        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
 
         /* We need to wait for the fling animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);
@@ -208,7 +202,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
 
         mSwipeTouchListener.enableSwipe();
 
-        MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents);
+        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
 
         /* We need to wait for the fling animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);

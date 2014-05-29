@@ -49,12 +49,12 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     /**
      * The {@link View}s that have been dismissed.
      */
-    private final Collection<View> mDismissedViews = new LinkedList<View>();
+    private final Collection<View> mDismissedViews = new LinkedList<>();
 
     /**
      * The dismissed positions.
      */
-    private final List<Integer> mDismissedPositions = new LinkedList<Integer>();
+    private final List<Integer> mDismissedPositions = new LinkedList<>();
 
     /**
      * The number of active dismiss animations.

@@ -15,6 +15,15 @@ public class MotionEventUtils {
     private MotionEventUtils() {
     }
 
+    public static void dispatchSwipeMotionEvents(final Activity activity, final AbsListView absListView, final int position) throws InterruptedException {
+        dispatchMotionEvents(activity, absListView, createSwipeMotionEvents(absListView, position));
+    }
+
+    public static void dispatchReverseSwipeMotionEvents(final Activity activity, final AbsListView absListView, final int position) throws InterruptedException {
+        dispatchMotionEvents(activity, absListView, createReverseSwipeMotionEvents(absListView, position));
+    }
+
+
     public static void dispatchMotionEvents(final Activity activity, final View view, final Iterable<MotionEvent> motionEvents) throws InterruptedException {
         for (final MotionEvent event : motionEvents) {
             activity.runOnUiThread(new DispatchTouchEventRunnable(event, view));
@@ -25,6 +34,11 @@ public class MotionEventUtils {
     public static List<MotionEvent> createSwipeMotionEvents(final AbsListView absListView, final int position) {
         int viewWidth = absListView.getWidth();
         return createMotionEvents(absListView, position, 10, viewWidth - 10);
+    }
+
+    public static List<MotionEvent> createReverseSwipeMotionEvents(final AbsListView absListView, final int position) {
+        int viewWidth = absListView.getWidth();
+        return createMotionEvents(absListView, position, viewWidth - 10, 10);
     }
 
     public static List<MotionEvent> createMotionEvents(final AbsListView absListView, final int position, final float fromX, final float toX) {

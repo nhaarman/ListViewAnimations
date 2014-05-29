@@ -1,9 +1,6 @@
-package com.nhaarman.listviewanimations.itemmanipulation.tests;
+package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.util.Pair;
-
-import com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.InsertQueue;
 
 import junit.framework.TestCase;
 
@@ -13,10 +10,17 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static com.nhaarman.listviewanimations.itemmanipulation.tests.matchers.Matchers.*;
+import static com.nhaarman.listviewanimations.itemmanipulation.matchers.Matchers.pairWithValues;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class InsertQueueTest extends TestCase {
 
@@ -31,7 +35,7 @@ public class InsertQueueTest extends TestCase {
 
         MockitoAnnotations.initMocks(this);
 
-        mInsertQueue = new InsertQueue<Integer>(mInsertable);
+        mInsertQueue = new InsertQueue<>(mInsertable);
     }
 
     /**
