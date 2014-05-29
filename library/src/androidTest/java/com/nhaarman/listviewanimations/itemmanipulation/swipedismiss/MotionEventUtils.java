@@ -23,11 +23,10 @@ public class MotionEventUtils {
         dispatchMotionEvents(activity, absListView, createReverseSwipeMotionEvents(absListView, position));
     }
 
-
     public static void dispatchMotionEvents(final Activity activity, final View view, final Iterable<MotionEvent> motionEvents) throws InterruptedException {
         for (final MotionEvent event : motionEvents) {
             activity.runOnUiThread(new DispatchTouchEventRunnable(event, view));
-            Thread.sleep(100);
+            Thread.sleep(10);
         }
     }
 

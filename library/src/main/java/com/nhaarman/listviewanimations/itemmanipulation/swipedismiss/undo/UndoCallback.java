@@ -44,7 +44,7 @@ public interface UndoCallback extends OnDismissCallback {
 
     /**
      * Called when the user has definitively dismissed an item.<br>
-     * Do <i><b>NOT</b></i> remove the item from the adapter here!
+     * Do <i><b>NOT</b></i> remove the item from the adapter here! Instead do this in {@link #onDismiss(android.widget.AbsListView, int[])}.
      * @param view the parent {@code View}, which contains both the primary and the undo {@link View}s.
      * @param position the position of the item that is dismissed.
      */

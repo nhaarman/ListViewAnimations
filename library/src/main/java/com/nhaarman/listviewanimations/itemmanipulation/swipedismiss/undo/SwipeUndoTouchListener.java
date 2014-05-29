@@ -43,17 +43,17 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     /**
      * The positions that are in the undo state.
      */
-    private final Collection<Integer> mUndoPositions = new LinkedList<Integer>();
+    private final Collection<Integer> mUndoPositions = new LinkedList<>();
 
     /**
      * The positions that have been dismissed.
      */
-    private final List<Integer> mDismissedPositions = new LinkedList<Integer>();
+    private final List<Integer> mDismissedPositions = new LinkedList<>();
 
     /**
      * The {@link View}s that have been dismissed.
      */
-    private final Collection<View> mDismissedViews = new LinkedList<View>();
+    private final Collection<View> mDismissedViews = new LinkedList<>();
 
     /**
      * Constructs a new {@code SwipeDismissTouchListener} for the given {@link android.widget.AbsListView}.
@@ -68,7 +68,7 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     }
 
     @Override
-    public void afterViewFling(final View view, final int position) {
+    protected void afterViewFling(final View view, final int position) {
         if (mUndoPositions.contains(position)) {
             mUndoPositions.remove(position);
             performDismiss(view, position);

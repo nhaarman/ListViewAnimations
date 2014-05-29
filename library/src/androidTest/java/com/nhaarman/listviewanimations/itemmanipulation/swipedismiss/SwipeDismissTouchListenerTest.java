@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
+import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.dispatchSwipeMotionEvents;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -61,7 +62,7 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
      * Tests whether dismissing an item triggers a call to OnDismissCallback#onDismiss.
      */
     public void testSimpleDismiss() throws InterruptedException {
-        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
 
         /* We need to wait for the animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);
@@ -73,8 +74,8 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
      * Tests whether dismissing the first and second items triggers a correct call to OnDismissCallback#onDismiss.
      */
     public void testDoubleDismiss() throws InterruptedException {
-        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, 1);
+        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEvents(mActivity, mAbsListView, 1);
 
         /* We need to wait for the animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);
@@ -86,15 +87,14 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
      * Tests whether dismissing mixed positions triggers a correct call to OnDismissCallback#onDismiss.
      */
     public void testComplexDismiss() throws InterruptedException {
-        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, 5);
-        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, 3);
-        MotionEventUtils.dispatchSwipeMotionEvents(mActivity, mAbsListView, 2);
+        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEvents(mActivity, mAbsListView, 3);
+        dispatchSwipeMotionEvents(mActivity, mAbsListView, 2);
 
         /* We need to wait for the animation to complete */
         Thread.sleep(ANIMATION_SLEEP_DURATION);
 
-        verify(mOnDismissCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{5, 3, 2, 0}));
+        verify(mOnDismissCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{3, 2, 0}));
     }
 
 
