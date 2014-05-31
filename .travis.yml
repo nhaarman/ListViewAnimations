@@ -4,6 +4,7 @@ jdk: oraclejdk7
 android:
   components:
     - build-tools-19.1.0
+    - doc-19
 
 env:
   matrix:
@@ -36,7 +37,7 @@ script:
 
 after_success:
   - if [[ $MAVEN == 'true' && $TRAVIS_BRANCH == 'dev' ]]; then gradle uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
-  - gradle generateReleaseJavadoc publishGhPages
+  - gradle generateReleaseJavadoc publishGhPages -PBRANCH=$TRAVIS_BRANCH
 
 notifications:
   email: false

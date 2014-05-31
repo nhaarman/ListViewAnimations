@@ -45,10 +45,15 @@ android {
 import org.ajoberstar.grgit.*
 def repo = Grgit.open(".")
 
+def branch = repo.branch.current.name
+if(project.hasProperty('BRANCH')) {
+    branch = BRANCH
+}
+
 githubPages {
 
     repoUri = 'https://github.com/nhaarman/ListViewAnimations.git'
-    commitMessage = 'Updated docs for branch ' + repo.branch.current.name
+    commitMessage = 'Updated docs for branch ' + branch
     pages {
         from './build/docs/'
     }
