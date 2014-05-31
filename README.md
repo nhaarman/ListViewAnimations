@@ -60,7 +60,8 @@ Please refer to the [Wiki][13] pages to learn more about how to use this library
 
 Contribute
 -----
-Please do! I'm happy to review and accept pull requests.
+Please do! I'm happy to review and accept pull requests.  
+Please read the [Contributing wiki](https://github.com/nhaarman/ListViewAnimations/wiki/Contributing) before you do.
 
 Developed By
 -----
