@@ -1,5 +1,5 @@
 apply plugin: 'android-library'
-
+apply plugin: 'github-pages'
 
 dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
@@ -42,5 +42,22 @@ android {
     }
 }
 
+import org.ajoberstar.grgit.*
+def repo = Grgit.open(".")
+
+githubPages {
+
+    repoUri = 'https://github.com/nhaarman/ListViewAnimations.git'
+    commitMessage = '[skip-ci] Updated docs for branch ' + repo.branch.current.name
+    pages {
+        from './build/docs/'
+    }
+    credentials {
+        username = System.getenv('GH_TOKEN_LVA')
+        password = '\n'
+    }
+}
+
 apply from: '../maven_push.gradle'
 apply from: '../generateJavadoc.gradle'
+

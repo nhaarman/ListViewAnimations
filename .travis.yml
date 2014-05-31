@@ -12,6 +12,7 @@ env:
     - TERM=dumb
     - secure: Fo/btrr+HpwmQL6TNxZuh/TWRMouz9Z1RCo77tf3crNP4OHq9EAkduLc/b4i6HCGFM3fyfJ7AM5XMa3OQvXfF84FQnew7NGE6zB/CKFfKBIZyzntvrDg4VqWEAHzunT6+eBnGtxtrAE0bBo4MmUCklXWP8j5UAyjfFpSeJdOywY=
     - secure: s56rqSiiwX40CQWeHTcbyVLRtwLP/pcHWqaVCKuXtZ/m9SgRI/SHp9o8ITI2dzr3syEeAkHjkJOkHQSpH0bHi1xKY4M9ODcCugwv+yDEELw1qmI6Cvwjvj1cKsG7ebt39OnCkz+TqhtI/iOEkxq7mTizFjNIxIImMkKxeQwcFgE=
+    - secure: UOQ9keLBuJw5Ed/eYtXarwoGuJSSvgGTob+D9aU8hVRoTUXpSDuHtk9TdS4MNXQ33jgFZEsmkpwRmV54XVEGe6xcri1uys1JDzjc+SqTEgbEh1QktfIWGvOx49YZtI2Zei0324S2qXRtemKMw4N+1XRRMP/IXEogr26Xi5JLVcI=
 
 before_install:
   - curl -3L -o wait_for_emulator https://github.com/embarkmobile/android-sdk-installer/raw/version-2/wait_for_emulator
@@ -35,6 +36,7 @@ script:
 
 after_success:
   - if [[ $MAVEN == 'true' && $TRAVIS_BRANCH == 'dev' ]]; then gradle uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
+  - gradle generateReleaseJavadoc publishGhPages
 
 notifications:
   email: false

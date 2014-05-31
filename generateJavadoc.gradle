@@ -1,20 +1,30 @@
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.ajoberstar:gradle-git:0.8.+'
+    }
+
+}
+
+import org.ajoberstar.grgit.*
+def repo = Grgit.open(".")
+
 android.libraryVariants.all { variant ->
     task("generate${variant.name}Javadoc", type: Javadoc) {
-        if (project.hasProperty('ANDROID_HOME')) {
-            title = POM_NAME
-            description "Generates Javadoc for $variant.name."
-            source = variant.javaCompile.source
-            ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-            destinationDir file("/build/docs/javadoc")
-            classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
-            options.links("http://docs.oracle.com/javase/7/docs/api/");
-            println ANDROID_HOME + "/docs/reference"
-            options.linksOffline("http://d.android.com/reference", ANDROID_HOME + "/docs/reference")
-            options.setMemberLevel(JavadocMemberLevel.PACKAGE)
-            exclude '**/BuildConfig.java '
-            exclude '**/R.java'
-        } else {
-            println 'Missing ANDROID_HOME property! Something like C:/Android (Mind the slashes)'
-        }
+        title = POM_NAME + " (" + repo.branch.current.name + ")"
+        description "Generates Javadoc for $variant.name."
+        source = variant.javaCompile.source
+        ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+        destinationDir file("/build/docs/javadoc/" + repo.branch.current.name)
+        classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+        options.links("http://docs.oracle.com/javase/7/docs/api/");
+        options.linksOffline("http://d.android.com/reference", System.getenv('ANDROID_HOME') + "/docs/reference")
+        options.setMemberLevel(JavadocMemberLevel.PACKAGE)
+        exclude '**/BuildConfig.java '
+        exclude '**/R.java'
     }
 }
