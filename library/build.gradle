@@ -48,7 +48,7 @@ def repo = Grgit.open(".")
 githubPages {
 
     repoUri = 'https://github.com/nhaarman/ListViewAnimations.git'
-    commitMessage = '[skip-ci] Updated docs for branch ' + repo.branch.current.name
+    commitMessage = 'Updated docs for branch ' + repo.branch.current.name
     pages {
         from './build/docs/'
     }
