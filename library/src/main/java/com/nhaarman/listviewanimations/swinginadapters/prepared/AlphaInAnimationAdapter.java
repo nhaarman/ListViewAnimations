@@ -22,14 +22,17 @@ import android.widget.BaseAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nineoldandroids.animation.Animator;
 
+import android.support.annotation.NonNull;
+
 public class AlphaInAnimationAdapter extends AnimationAdapter {
 
-    public AlphaInAnimationAdapter(final BaseAdapter baseAdapter) {
+    public AlphaInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
     }
 
+    @NonNull
     @Override
-    protected Animator[] getAnimators(final ViewGroup parent, final View view) {
+    protected Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
         return new Animator[0];
     }
 }

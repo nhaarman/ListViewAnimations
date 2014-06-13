@@ -19,6 +19,8 @@ import android.view.View;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
+import android.support.annotation.NonNull;
+
 /**
  * A callback interface used to inform its client about a successful dismissal of one or more list item positions.
  */
@@ -26,27 +28,34 @@ public interface UndoCallback extends OnDismissCallback {
 
     /**
      * Returns the primary {@link View} contained in given {@code View}.
+     *
      * @param view the parent {@code View}, which contains both the primary and the undo {@link View}s.
      */
-    View getPrimaryView(View view);
+    @NonNull
+    View getPrimaryView(@NonNull View view);
+
     /**
      * Returns the undo {@link View} contained in given {@code View}.
+     *
      * @param view the parent {@code View}, which contains both the primary and the undo {@link View}s.
      */
-    View getUndoView(View view);
+    @NonNull
+    View getUndoView(@NonNull View view);
 
     /**
      * Called when the undo {@link View} is shown for given position.
-     * @param view the parent {@code View}, which contains both the primary and the undo {@link View}s.
+     *
+     * @param view     the parent {@code View}, which contains both the primary and the undo {@link View}s.
      * @param position the position for which the undo {@code View} is shown.
      */
-    void onUndoShown(View view, int position);
+    void onUndoShown(@NonNull View view, int position);
 
     /**
      * Called when the user has definitively dismissed an item.<br>
      * Do <i><b>NOT</b></i> remove the item from the adapter here! Instead do this in {@link #onDismiss(android.widget.AbsListView, int[])}.
-     * @param view the parent {@code View}, which contains both the primary and the undo {@link View}s.
+     *
+     * @param view     the parent {@code View}, which contains both the primary and the undo {@link View}s.
      * @param position the position of the item that is dismissed.
      */
-    void onDismiss(View view, int position);
+    void onDismiss(@NonNull View view, int position);
 }

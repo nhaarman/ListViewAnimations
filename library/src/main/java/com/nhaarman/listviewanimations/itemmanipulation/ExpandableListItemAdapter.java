@@ -16,6 +16,7 @@
 package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +32,12 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * An {@link ArrayAdapter} which allows items to be expanded using an animation.
@@ -45,22 +48,25 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     private static final int DEFAULTTITLEPARENTRESID = 10000;
     private static final int DEFAULTCONTENTPARENTRESID = 10001;
 
+    @NonNull
     private final Context mContext;
     private final int mTitleParentResId;
     private final int mContentParentResId;
+    @NonNull
     private final List<Long> mExpandedIds;
     private int mViewLayoutResId;
     private int mActionViewResId;
     private int mLimit;
 
+    @Nullable
     private AbsListView mAbsListView;
-
+    @Nullable
     private ExpandCollapseListener mExpandCollapseListener;
 
     /**
      * Creates a new ExpandableListItemAdapter with an empty list.
      */
-    public ExpandableListItemAdapter(final Context context) {
+    protected ExpandableListItemAdapter(@NonNull final Context context) {
         this(context, null);
     }
 
@@ -68,13 +74,13 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * Creates a new {@code ExpandableListItemAdapter} with the specified list,
      * or an empty list if items == null.
      */
-    public ExpandableListItemAdapter(final Context context, final List<T> items) {
+    protected ExpandableListItemAdapter(@NonNull final Context context, @Nullable final List<T> items) {
         super(items);
         mContext = context;
         mTitleParentResId = DEFAULTTITLEPARENTRESID;
         mContentParentResId = DEFAULTCONTENTPARENTRESID;
 
-        mExpandedIds = new ArrayList<Long>();
+        mExpandedIds = new ArrayList<>();
     }
 
     /**
@@ -82,7 +88,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * layout resource for the view; titleParentResId and contentParentResId
      * should be identifiers for ViewGroups within that layout.
      */
-    public ExpandableListItemAdapter(final Context context, final int layoutResId, final int titleParentResId, final int contentParentResId) {
+    protected ExpandableListItemAdapter(@NonNull final Context context, final int layoutResId, final int titleParentResId, final int contentParentResId) {
         this(context, layoutResId, titleParentResId, contentParentResId, null);
     }
 
@@ -92,18 +98,19 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * titleParentResId and contentParentResId should be identifiers for
      * ViewGroups within that layout.
      */
-    public ExpandableListItemAdapter(final Context context, final int layoutResId, final int titleParentResId, final int contentParentResId, final List<T> items) {
+    protected ExpandableListItemAdapter(@NonNull final Context context, final int layoutResId, final int titleParentResId, final int contentParentResId,
+                                        @Nullable final List<T> items) {
         super(items);
         mContext = context;
         mViewLayoutResId = layoutResId;
         mTitleParentResId = titleParentResId;
         mContentParentResId = contentParentResId;
 
-        mExpandedIds = new ArrayList<Long>();
+        mExpandedIds = new ArrayList<>();
     }
 
     @Override
-    public void setAbsListView(final AbsListView absListView) {
+    public void setAbsListView(@NonNull final AbsListView absListView) {
         mAbsListView = absListView;
     }
 
@@ -137,12 +144,13 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     /**
      * Set the {@link ExpandCollapseListener} that should be notified of expand / collapse events.
      */
-    public void setExpandCollapseListener(final ExpandCollapseListener expandCollapseListener) {
+    public void setExpandCollapseListener(@Nullable final ExpandCollapseListener expandCollapseListener) {
         mExpandCollapseListener = expandCollapseListener;
     }
 
     @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
+    @NonNull
+    public View getView(final int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
         ViewGroup view = (ViewGroup) convertView;
         ViewHolder viewHolder;
 
@@ -204,10 +212,12 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      *                    using. If it is not possible to convert this view to display
      *                    the correct data, this method can create a new view.
      * @param parent      The parent that this view will eventually be attached to
+     *
      * @return A View corresponding to the title of the data at the specified
      * position.
      */
-    public abstract View getTitleView(int position, View convertView, ViewGroup parent);
+    @NonNull
+    public abstract View getTitleView(int position, @Nullable View convertView, @NonNull ViewGroup parent);
 
     /**
      * Get a View that displays the <b>content of the data</b> at the specified
@@ -225,15 +235,18 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      *                    using. If it is not possible to convert this view to display
      *                    the correct data, this method can create a new view.
      * @param parent      The parent that this view will eventually be attached to
+     *
      * @return A View corresponding to the content of the data at the specified
      * position.
      */
-    public abstract View getContentView(int position, View convertView, ViewGroup parent);
+    @NonNull
+    public abstract View getContentView(int position, @Nullable View convertView, @NonNull ViewGroup parent);
 
     /**
      * Indicates if the item at the specified position is expanded.
      *
      * @param position Index of the view whose state we want.
+     *
      * @return true if the view is expanded, false otherwise.
      */
     public boolean isExpanded(final int position) {
@@ -245,15 +258,19 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * Return the title view at the specified position.
      *
      * @param position Index of the view we want.
+     *
      * @return the view if it exist, null otherwise.
      */
+    @Nullable
     public View getTitleView(final int position) {
         View titleView = null;
 
         View parentView = findViewForPosition(position);
-        Object tag = parentView.getTag();
-        if (tag instanceof ViewHolder) {
-            titleView = ((ViewHolder) tag).titleView;
+        if (parentView != null) {
+            Object tag = parentView.getTag();
+            if (tag instanceof ViewHolder) {
+                titleView = ((ViewHolder) tag).titleView;
+            }
         }
 
         return titleView;
@@ -263,8 +280,10 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * Return the content view at the specified position.
      *
      * @param position Index of the view we want.
+     *
      * @return the view if it exist, null otherwise.
      */
+    @Nullable
     public View getContentView(final int position) {
         View contentView = null;
 
@@ -283,7 +302,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
 
-        Set<Long> removedIds = new HashSet<Long>(mExpandedIds);
+        Collection<Long> removedIds = new HashSet<>(mExpandedIds);
 
         for (int i = 0; i < getCount(); ++i) {
             long id = getItemId(i);
@@ -342,7 +361,8 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         }
     }
 
-    private ViewGroup createView(final ViewGroup parent) {
+    @NonNull
+    private ViewGroup createView(@NonNull final ViewGroup parent) {
         ViewGroup view;
 
         if (mViewLayoutResId == 0) {
@@ -358,8 +378,10 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
      * Return the content parent at the specified position.
      *
      * @param position Index of the view we want.
+     *
      * @return the view if it exist, null otherwise.
      */
+    @Nullable
     private View getContentParent(final int position) {
         View contentParent = null;
 
@@ -374,7 +396,12 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         return contentParent;
     }
 
+    @Nullable
     private View findViewForPosition(final int position) {
+        if (mAbsListView == null) {
+            throw new IllegalStateException("Call setAbsListView on this ExpanableListItemAdapter!");
+        }
+
         View result = null;
         for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
             View childView = mAbsListView.getChildAt(i);
@@ -394,7 +421,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         return -1;
     }
 
-    private void toggle(final View contentParent) {
+    private void toggle(@NonNull final View contentParent) {
         boolean isVisible = contentParent.getVisibility() == View.VISIBLE;
         boolean shouldCollapseOther = !isVisible && mLimit > 0 && mExpandedIds.size() >= mLimit;
         if (shouldCollapseOther) {
@@ -444,7 +471,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         private ViewGroup mTitleViewGroup;
         private ViewGroup mContentViewGroup;
 
-        public RootView(final Context context) {
+        private RootView(@NonNull final Context context) {
             super(context);
             init();
         }
@@ -475,17 +502,19 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
             int origHeight = view.getHeight();
 
             ValueAnimator animator = createHeightAnimator(view, origHeight, 0);
-            animator.addListener(new AnimatorListenerAdapter() {
+            animator.addListener(
+                    new AnimatorListenerAdapter() {
 
-                @Override
-                public void onAnimationEnd(final Animator animator) {
-                    view.setVisibility(View.GONE);
-                }
-            });
+                        @Override
+                        public void onAnimationEnd(final Animator animation) {
+                            view.setVisibility(View.GONE);
+                        }
+                    }
+            );
             animator.start();
         }
 
-        public static void animateExpanding(final View view, final AbsListView listView) {
+        public static void animateExpanding(@NonNull final View view, @NonNull final AbsListView listView) {
             view.setVisibility(View.VISIBLE);
 
             View parent = (View) view.getParent();
@@ -494,42 +523,47 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
             view.measure(widthSpec, heightSpec);
 
             ValueAnimator animator = createHeightAnimator(view, 0, view.getMeasuredHeight());
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                final int listViewHeight = listView.getHeight();
-                final int listViewBottomPadding = listView.getPaddingBottom();
-                final View v = findDirectChild(view, listView);
+            animator.addUpdateListener(
+                    new ValueAnimator.AnimatorUpdateListener() {
+                        final int listViewHeight = listView.getHeight();
+                        final int listViewBottomPadding = listView.getPaddingBottom();
+                        final View v = findDirectChild(view, listView);
 
-                @Override
-                public void onAnimationUpdate(final ValueAnimator valueAnimator) {
-                    final int bottom = v.getBottom();
-                    if (bottom > listViewHeight) {
-                        final int top = v.getTop();
-                        if (top > 0) {
-                            listView.smoothScrollBy(Math.min(bottom - listViewHeight + listViewBottomPadding, top), 0);
+                        @Override
+                        public void onAnimationUpdate(final ValueAnimator animation) {
+                            final int bottom = v.getBottom();
+                            if (bottom > listViewHeight) {
+                                final int top = v.getTop();
+                                if (top > 0) {
+                                    listView.smoothScrollBy(Math.min(bottom - listViewHeight + listViewBottomPadding, top), 0);
+                                }
+                            }
                         }
                     }
-                }
-            });
+            );
             animator.start();
         }
 
         public static ValueAnimator createHeightAnimator(final View view, final int start, final int end) {
             ValueAnimator animator = ValueAnimator.ofInt(start, end);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            animator.addUpdateListener(
+                    new ValueAnimator.AnimatorUpdateListener() {
 
-                @Override
-                public void onAnimationUpdate(final ValueAnimator valueAnimator) {
-                    int value = (Integer) valueAnimator.getAnimatedValue();
+                        @Override
+                        public void onAnimationUpdate(final ValueAnimator animation) {
+                            int value = (Integer) animation.getAnimatedValue();
 
-                    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                    layoutParams.height = value;
-                    view.setLayoutParams(layoutParams);
-                }
-            });
+                            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                            layoutParams.height = value;
+                            view.setLayoutParams(layoutParams);
+                        }
+                    }
+            );
             return animator;
         }
 
-        private static View findDirectChild(final View view, final AbsListView listView) {
+        @NonNull
+        private static View findDirectChild(@NonNull final View view, @NonNull final AbsListView listView) {
             View result = view;
             View parent = (View) result.getParent();
             while (parent != listView) {

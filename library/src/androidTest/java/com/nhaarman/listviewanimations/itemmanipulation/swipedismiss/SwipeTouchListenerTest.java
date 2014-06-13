@@ -5,6 +5,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.dispatchSwipeMotionEventsAndWait;
@@ -193,7 +195,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
         }
 
         @Override
-        protected void afterViewFling(final View view, final int position) {
+        protected void afterViewFling(@NonNull final View view, final int position) {
             afterViewFlingCalled = true;
             this.position = position;
         }

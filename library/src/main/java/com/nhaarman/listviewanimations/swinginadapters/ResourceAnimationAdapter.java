@@ -23,22 +23,26 @@ import android.widget.BaseAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorInflater;
 
+import android.support.annotation.NonNull;
+
 /**
  * An implementation of AnimationAdapter which bases the animations on
  * resources.
  */
 public abstract class ResourceAnimationAdapter extends AnimationAdapter {
 
+    @NonNull
     private final Context mContext;
 
     @SuppressWarnings("UnusedDeclaration")
-    protected ResourceAnimationAdapter(final BaseAdapter baseAdapter, final Context context) {
+    protected ResourceAnimationAdapter(@NonNull final BaseAdapter baseAdapter, @NonNull final Context context) {
         super(baseAdapter);
         mContext = context;
     }
 
+    @NonNull
     @Override
-    protected Animator[] getAnimators(final ViewGroup parent, final View view) {
+    protected Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
         return new Animator[]{AnimatorInflater.loadAnimator(mContext, getAnimationResourceId())};
     }
 

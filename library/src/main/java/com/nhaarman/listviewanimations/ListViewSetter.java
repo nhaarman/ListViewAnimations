@@ -17,7 +17,9 @@ package com.nhaarman.listviewanimations;
 
 import android.widget.AbsListView;
 
+import android.support.annotation.NonNull;
+
 public interface ListViewSetter {
 
-    void setAbsListView(AbsListView absListView);
+    void setAbsListView(@NonNull AbsListView absListView);
 }

@@ -34,6 +34,8 @@ import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.AnimateDismissAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +85,7 @@ public class AnimateDismissActivity extends BaseActivity {
     private class MyOnDismissCallback implements OnDismissCallback {
 
         @Override
-        public void onDismiss(final AbsListView listView, final int[] reverseSortedPositions) {
+        public void onDismiss(@NonNull final AbsListView listView, @NonNull final int[] reverseSortedPositions) {
             for (int position : reverseSortedPositions) {
                 mAdapter.remove(position);
             }

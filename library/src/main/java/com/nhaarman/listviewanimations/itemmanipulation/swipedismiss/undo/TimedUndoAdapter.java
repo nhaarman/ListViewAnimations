@@ -23,6 +23,8 @@ import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
+import android.support.annotation.NonNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +47,7 @@ public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
     /**
      * A {@link Handler} to post {@link TimeoutRunnable}s to.
      */
+    @NonNull
     private final Handler mHandler = new Handler();
 
     /**
@@ -55,11 +58,13 @@ public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
 
     /**
      * Creates a new {@code TimedUndoAdapter}, decorating given {@link android.widget.BaseAdapter}.
-     * @param undoAdapter the {@link android.widget.BaseAdapter} that is decorated. Must implement {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter}.
-     * @param context the {@link android.content.Context}.
+     *
+     * @param undoAdapter     the {@link android.widget.BaseAdapter} that is decorated. Must implement {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo
+     * .UndoAdapter}.
+     * @param context         the {@link android.content.Context}.
      * @param dismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} that is notified of dismissed items.
      */
-    public <T extends BaseAdapter & UndoAdapter> TimedUndoAdapter(final T undoAdapter, final Context context, final OnDismissCallback dismissCallback) {
+    public <T extends BaseAdapter & UndoAdapter> TimedUndoAdapter(@NonNull final T undoAdapter, @NonNull final Context context, @NonNull final OnDismissCallback dismissCallback) {
         super(undoAdapter, context, dismissCallback);
     }
 
@@ -72,7 +77,7 @@ public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
     }
 
     @Override
-    public void onUndoShown(final View view, final int position) {
+    public void onUndoShown(@NonNull final View view, final int position) {
         super.onUndoShown(view, position);
         TimeoutRunnable timeoutRunnable = new TimeoutRunnable(position);
         mRunnables.put(position, timeoutRunnable);
@@ -80,13 +85,13 @@ public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
     }
 
     @Override
-    public void onDismiss(final View view, final int position) {
+    public void onDismiss(@NonNull final View view, final int position) {
         super.onDismiss(view, position);
         cancelCallback(position);
     }
 
     @Override
-    protected void undo(final View view, final int position) {
+    protected void undo(@NonNull final View view, final int position) {
         super.undo(view, position);
         cancelCallback(position);
     }
@@ -106,7 +111,7 @@ public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
     }
 
     @Override
-    public void onDismiss(final AbsListView absListView, final int[] reverseSortedPositions) {
+    public void onDismiss(@NonNull final AbsListView absListView, @NonNull final int[] reverseSortedPositions) {
         super.onDismiss(absListView, reverseSortedPositions);
 
         /* Adjust the pending timeout positions accordingly wrt the given dismissed positions */

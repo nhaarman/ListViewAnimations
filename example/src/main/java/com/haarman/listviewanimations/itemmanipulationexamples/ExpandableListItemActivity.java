@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,8 +78,9 @@ public class ExpandableListItemActivity extends MyListActivity {
             };
         }
 
+        @NonNull
         @Override
-        public View getTitleView(final int position, final View convertView, final ViewGroup parent) {
+        public View getTitleView(final int position, final View convertView, @NonNull final ViewGroup parent) {
             TextView tv = (TextView) convertView;
             if (tv == null) {
                 tv = new TextView(mContext);
@@ -87,8 +89,9 @@ public class ExpandableListItemActivity extends MyListActivity {
             return tv;
         }
 
+        @NonNull
         @Override
-        public View getContentView(final int position, final View convertView, final ViewGroup parent) {
+        public View getContentView(final int position, final View convertView, @NonNull final ViewGroup parent) {
             ImageView imageView = (ImageView) convertView;
             if (imageView == null) {
                 imageView = new ImageView(mContext);

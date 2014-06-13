@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -77,7 +78,8 @@ public class DynamicListView extends ListView {
     }
 
     /**
-     * Implement this interface to be notified of ordering changes. Call {@link #setOnItemMovedListener(com.nhaarman.listviewanimations.widget.DynamicListView.OnItemMovedListener)}.
+     * Implement this interface to be notified of ordering changes. Call {@link #setOnItemMovedListener(com.nhaarman.listviewanimations.widget.DynamicListView
+     * .OnItemMovedListener)}.
      */
     public interface OnItemMovedListener {
         /**
@@ -301,7 +303,7 @@ public class DynamicListView extends ListView {
      * over the listview's items whenever the listview is redrawn.
      */
     @Override
-    protected void dispatchDraw(final Canvas canvas) {
+    protected void dispatchDraw(@NonNull final Canvas canvas) {
         super.dispatchDraw(canvas);
         if (mHoverCell != null) {
             mHoverCell.draw(canvas);
@@ -333,7 +335,7 @@ public class DynamicListView extends ListView {
     }
 
     @Override
-    public boolean onTouchEvent(final MotionEvent event) {
+    public boolean onTouchEvent(@NonNull final MotionEvent event) {
         if (mSkipCallingOnTouchListener) {
             return super.onTouchEvent(event);
         }
@@ -481,7 +483,8 @@ public class DynamicListView extends ListView {
                 return;
             }
 
-            if (getPositionForView(switchView) < getHeaderViewsCount() || getPositionForView(switchView) >= (getAdapter().getCount() - getHeaderViewsCount() - getFooterViewsCount())) {
+            if (getPositionForView(switchView) < getHeaderViewsCount() || getPositionForView(switchView) >= (getAdapter().getCount() - getHeaderViewsCount() -
+                    getFooterViewsCount())) {
                 return;
             }
             swapElements(originalItem, getPositionForView(switchView));
@@ -505,26 +508,28 @@ public class DynamicListView extends ListView {
             updateNeighborViewsForId(mMobileItemId);
 
             final ViewTreeObserver observer = getViewTreeObserver();
-            observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                public boolean onPreDraw() {
-                    observer.removeOnPreDrawListener(this);
+            observer.addOnPreDrawListener(
+                    new ViewTreeObserver.OnPreDrawListener() {
+                        public boolean onPreDraw() {
+                            observer.removeOnPreDrawListener(this);
 
-                    View switchView = getViewForId(switchItemId);
+                            View switchView = getViewForId(switchItemId);
 
-                    mTotalOffset += deltaY;
+                            mTotalOffset += deltaY;
 
-                    int switchViewNewTop = switchView.getTop();
-                    int delta = switchViewStartTop - switchViewNewTop;
+                            int switchViewNewTop = switchView.getTop();
+                            int delta = switchViewStartTop - switchViewNewTop;
 
-                    ViewHelper.setTranslationY(switchView, delta);
+                            ViewHelper.setTranslationY(switchView, delta);
 
-                    ObjectAnimator animator = ObjectAnimator.ofFloat(switchView, "translationY", 0);
-                    animator.setDuration(MOVE_DURATION);
-                    animator.start();
+                            ObjectAnimator animator = ObjectAnimator.ofFloat(switchView, "translationY", 0);
+                            animator.setDuration(MOVE_DURATION);
+                            animator.start();
 
-                    return true;
-                }
-            });
+                            return true;
+                        }
+                    }
+            );
         }
     }
 
@@ -569,32 +574,36 @@ public class DynamicListView extends ListView {
             mHoverCellCurrentBounds.offsetTo(mHoverCellOriginalBounds.left, mobileView.getTop());
 
             ObjectAnimator hoverViewAnimator = ObjectAnimator.ofObject(mHoverCell, "bounds", sBoundEvaluator, mHoverCellCurrentBounds);
-            hoverViewAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(final ValueAnimator valueAnimator) {
-                    invalidate();
-                }
-            });
-            hoverViewAnimator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(final Animator animation) {
-                    setEnabled(false);
-                }
-
-                @Override
-                public void onAnimationEnd(final Animator animation) {
-                    mAboveItemId = INVALID_ID;
-                    mMobileItemId = INVALID_ID;
-                    mBelowItemId = INVALID_ID;
-                    mobileView.setVisibility(VISIBLE);
-                    mHoverCell = null;
-                    setEnabled(true);
-                    invalidate();
-                    if (mOnItemMovedListener != null) {
-                        mOnItemMovedListener.onItemMoved(mLastMovedToIndex - getHeaderViewsCount());
+            hoverViewAnimator.addUpdateListener(
+                    new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(final ValueAnimator valueAnimator) {
+                            invalidate();
+                        }
                     }
-                }
-            });
+            );
+            hoverViewAnimator.addListener(
+                    new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(final Animator animation) {
+                            setEnabled(false);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(final Animator animation) {
+                            mAboveItemId = INVALID_ID;
+                            mMobileItemId = INVALID_ID;
+                            mBelowItemId = INVALID_ID;
+                            mobileView.setVisibility(VISIBLE);
+                            mHoverCell = null;
+                            setEnabled(true);
+                            invalidate();
+                            if (mOnItemMovedListener != null) {
+                                mOnItemMovedListener.onItemMoved(mLastMovedToIndex - getHeaderViewsCount());
+                            }
+                        }
+                    }
+            );
             hoverViewAnimator.start();
         } else {
             touchEventsCancelled();
@@ -626,8 +635,12 @@ public class DynamicListView extends ListView {
      */
     private static final TypeEvaluator<Rect> sBoundEvaluator = new TypeEvaluator<Rect>() {
         public Rect evaluate(final float fraction, final Rect startValue, final Rect endValue) {
-            return new Rect(interpolate(startValue.left, endValue.left, fraction), interpolate(startValue.top, endValue.top, fraction), interpolate(startValue.right, endValue.right, fraction),
-                    interpolate(startValue.bottom, endValue.bottom, fraction));
+            return new Rect(
+                    interpolate(startValue.left, endValue.left, fraction),
+                    interpolate(startValue.top, endValue.top, fraction),
+                    interpolate(startValue.right, endValue.right, fraction),
+                    interpolate(startValue.bottom, endValue.bottom, fraction)
+            );
         }
 
         public int interpolate(final int start, final int end, final float fraction) {
@@ -668,6 +681,7 @@ public class DynamicListView extends ListView {
 
         return false;
     }
+
     @Deprecated
     /**
      * @Deprecated use {@link #setParentIsHorizontalScrollContainer()} instead.
@@ -679,7 +693,7 @@ public class DynamicListView extends ListView {
     /**
      * If this {@code DynamicListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
      * work, because the parent will prevent touch-events from reaching the {@code DynamicListView}.
-     *
+     * <p/>
      * Call this method to fix this behavior.
      * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list item.
      * Will also reset the dynamic touch child, if set.
@@ -696,7 +710,7 @@ public class DynamicListView extends ListView {
     /**
      * If this {@code DynamicListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
      * work, because the parent will prevent touch events from reaching the {@code DynamicListView}.
-     *
+     * <p/>
      * If a {@code DynamicListView} view has a child with the given resource id, the user can still swipe the list item by touching that child.
      * If the user touches an area outside that child (but inside the list item view), then the swipe will not happen and the parent
      * will do its job instead (scrolling horizontally).
@@ -821,6 +835,7 @@ public class DynamicListView extends ListView {
 
     /**
      * An OnTouchListener that should be used when list-view items can be swiped horizontally.
+     *
      * @author Anton Spaans on 9/12/13.
      */
     public interface SwipeOnTouchListener extends View.OnTouchListener {

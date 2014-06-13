@@ -15,6 +15,7 @@
  */
 package com.nhaarman.listviewanimations.swinginadapters.prepared;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -31,18 +32,19 @@ public class SwingBottomInAnimationAdapter extends SingleAnimationAdapter {
 
     private static final String TRANSLATION_Y = "translationY";
 
-    public SwingBottomInAnimationAdapter(final BaseAdapter baseAdapter) {
+    public SwingBottomInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
     }
 
-    public SwingBottomInAnimationAdapter(final BaseAdapter baseAdapter, final long animationDelayMillis, final long animationDurationMillis) {
+    public SwingBottomInAnimationAdapter(@NonNull final BaseAdapter baseAdapter, final long animationDelayMillis, final long animationDurationMillis) {
         super(baseAdapter);
         setAnimationDelayMillis(animationDelayMillis);
         setAnimationDurationMillis(animationDurationMillis);
     }
 
     @Override
-    protected Animator getAnimator(final ViewGroup parent, final View view) {
+    @NonNull
+    protected Animator getAnimator(@NonNull final ViewGroup parent, @NonNull final View view) {
         return ObjectAnimator.ofFloat(view, TRANSLATION_Y, parent.getMeasuredHeight() >> 1, 0);
     }
 

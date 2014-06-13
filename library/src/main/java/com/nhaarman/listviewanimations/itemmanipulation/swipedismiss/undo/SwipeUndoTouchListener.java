@@ -26,6 +26,8 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
+import android.support.annotation.NonNull;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,37 +40,40 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     /**
      * The callback which gets notified of events.
      */
+    @NonNull
     private final UndoCallback mCallback;
 
     /**
      * The positions that are in the undo state.
      */
+    @NonNull
     private final Collection<Integer> mUndoPositions = new LinkedList<>();
 
     /**
      * The positions that have been dismissed.
      */
+    @NonNull
     private final List<Integer> mDismissedPositions = new LinkedList<>();
 
     /**
      * The {@link View}s that have been dismissed.
      */
+    @NonNull
     private final Collection<View> mDismissedViews = new LinkedList<>();
 
     /**
      * Constructs a new {@code SwipeDismissTouchListener} for the given {@link android.widget.AbsListView}.
-
-     * @param absListView
-     *            The {@code AbsListView} whose items should be dismissable.
+     *
+     * @param absListView The {@code AbsListView} whose items should be dismissable.
      */
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
-    public SwipeUndoTouchListener(final AbsListView absListView, final UndoCallback callback) {
+    public SwipeUndoTouchListener(@NonNull final AbsListView absListView, @NonNull final UndoCallback callback) {
         super(absListView, callback);
         mCallback = callback;
     }
 
     @Override
-    protected void afterViewFling(final View view, final int position) {
+    protected void afterViewFling(@NonNull final View view, final int position) {
         if (mUndoPositions.contains(position)) {
             mUndoPositions.remove(position);
             performDismiss(view, position);
@@ -82,16 +87,17 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     }
 
     @Override
-    protected void afterCancelSwipe(final View view, final int position) {
+    protected void afterCancelSwipe(@NonNull final View view, final int position) {
         finalizeDismiss();
     }
 
     /**
      * Animates the dismissed list item to zero-height and fires the dismiss callback when all dismissed list item animations have completed.
+     *
      * @param view the dismissed {@link View}.
      */
     @Override
-    protected void performDismiss(final View view, final int position) {
+    protected void performDismiss(@NonNull final View view, final int position) {
         super.performDismiss(view, position);
 
         mDismissedViews.add(view);
@@ -102,9 +108,10 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
 
     /**
      * Sets the visibility of the primary {@link View} to {@link View#GONE}, and animates the undo {@code View} in to view.
+     *
      * @param view the parent {@code View} which contains both primary and undo {@code View}s.
      */
-    private void showUndoView(final View view) {
+    private void showUndoView(@NonNull final View view) {
         mCallback.getPrimaryView(view).setVisibility(View.GONE);
 
         View undoView = mCallback.getUndoView(view);
@@ -114,9 +121,10 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
 
     /**
      * Sets the visibility of the primary {@link View} to {@link View#VISIBLE}, and that of the undo {@code View} to {@link View#GONE}.
+     *
      * @param view the parent {@code View} which contains both primary and undo {@code View}s.
      */
-    private void hideUndoView(final View view) {
+    private void hideUndoView(@NonNull final View view) {
         mCallback.getPrimaryView(view).setVisibility(View.VISIBLE);
         mCallback.getUndoView(view).setVisibility(View.GONE);
     }
@@ -145,7 +153,7 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
      * Also calls its super implementation.
      */
     @Override
-    protected void restoreViewPresentation(final View view) {
+    protected void restoreViewPresentation(@NonNull final View view) {
         super.restoreViewPresentation(view);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.height = 0;
@@ -154,9 +162,10 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
 
     /**
      * Performs the undo animation and restores the original state for given {@link View}.
+     *
      * @param view the parent {@code View} which contains both primary and undo {@code View}s.
      */
-    public void undo(final View view) {
+    public void undo(@NonNull final View view) {
         int position = AdapterViewUtil.getPositionForView(getAbsListView(), view);
         mUndoPositions.remove(position);
 
@@ -185,14 +194,16 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
      * An {@link com.nineoldandroids.animation.Animator.AnimatorListener} which finalizes the undo when the animation is finished.
      */
     private class UndoAnimatorListener extends AnimatorListenerAdapter {
+
+        @NonNull
         private final View mUndoView;
 
-        UndoAnimatorListener(final View undoView) {
+        UndoAnimatorListener(@NonNull final View undoView) {
             mUndoView = undoView;
         }
 
         @Override
-        public void onAnimationEnd(final Animator animation) {
+        public void onAnimationEnd(@NonNull final Animator animation) {
             mUndoView.setVisibility(View.GONE);
             finalizeDismiss();
         }

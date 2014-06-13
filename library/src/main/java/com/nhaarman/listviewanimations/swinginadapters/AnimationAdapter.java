@@ -32,6 +32,9 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * A {@link BaseAdapterDecorator} class which applies multiple {@link Animator}s at once to views when they are first shown. The Animators applied include the animations specified
  * in {@link #getAnimators(ViewGroup, View)}, plus an alpha transition.
@@ -121,7 +124,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      *
      * @param baseAdapter the BaseAdapter to wrap.
      */
-    protected AnimationAdapter(final BaseAdapter baseAdapter) {
+    protected AnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
 
         mAnimationStartMillis = -1;
@@ -176,7 +179,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      *
      * @param position the position.
      */
-    @SuppressWarnings("UnusedDeclaration")
     public void setShouldAnimateFromPosition(final int position) {
         mShouldAnimate = true;
         mFirstAnimatedPosition = position - 1;
@@ -187,10 +189,9 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * Set the starting position for which items should animate as the first position which isn't currently visible on screen. This call is also valid when the {@link View}s
      * haven't been drawn yet. Will also call setShouldAnimate(true).
      */
-    @SuppressWarnings("UnusedDeclaration")
     public void setShouldAnimateNotVisible() {
         if (getAbsListView() == null) {
-            throw new IllegalStateException("Call setListView() on this AnimationAdapter before setShouldAnimateNotVisible()!");
+            throw new IllegalStateException("Call setAbsListView() on this AnimationAdapter before setShouldAnimateNotVisible()!");
         }
 
         mShouldAnimate = true;
@@ -198,8 +199,9 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
         mLastAnimatedPosition = getAbsListView().getLastVisiblePosition();
     }
 
+    @NonNull
     @Override
-    public final View getView(final int position, final View convertView, final ViewGroup parent) {
+    public final View getView(final int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
         if (mIsRootAdapter) {
             if (getAbsListView() == null) {
                 throw new IllegalStateException("Call setAbsListView() on this AnimationAdapter before setAdapter()!");
@@ -221,8 +223,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     /**
      * Cancels any existing animations for given View.
      */
-    private void cancelExistingAnimation(final View convertView) {
-        int hashCode = convertView.hashCode();
+    private void cancelExistingAnimation(@NonNull final View view) {
+        int hashCode = view.hashCode();
         Animator animator = mAnimators.get(hashCode);
         if (animator != null) {
             animator.end();
@@ -237,7 +239,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * @param view     the View that should be animated.
      * @param parent   the parent the View is hosted in.
      */
-    private void animateViewIfNecessary(final int position, final View view, final ViewGroup parent) {
+    private void animateViewIfNecessary(final int position, @NonNull final View view, @NonNull final ViewGroup parent) {
         /* GridView measures the first View which is returned by getView(int, View, ViewGroup), but does not use that View. On KitKat, it does this actually multiple times. */
         mGridViewPossiblyMeasuring = mGridViewPossiblyMeasuring && (mGridViewMeasuringPosition == -1 || mGridViewMeasuringPosition == position);
 
@@ -262,7 +264,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * @param view   the View that should be animated.
      * @param parent the parent the View is hosted in.
      */
-    private void animateView(final int position, final View view, final ViewGroup parent) {
+    private void animateView(final int position, @NonNull final View view, @NonNull final ViewGroup parent) {
         if (mAnimationStartMillis == -1) {
             mAnimationStartMillis = SystemClock.uptimeMillis();
         }
@@ -292,6 +294,10 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      */
     @SuppressLint("NewApi")
     private long calculateAnimationDelay(final int position) {
+        if (getAbsListView() == null) {
+            throw new IllegalStateException("Call setAbsListView() on this AnimationAdapter before setAdapter()!");
+        }
+
         long delay;
 
         int lastVisiblePosition = getAbsListView().getLastVisiblePosition();
@@ -328,7 +334,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      *
      * @param delayMillis the time in milliseconds.
      */
-    @SuppressWarnings("UnusedDeclaration")
     public void setAnimationDelayMillis(final long delayMillis) {
         mAnimationDelayMillis = delayMillis;
     }
@@ -338,7 +343,6 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      *
      * @param durationMillis the time in milliseconds.
      */
-    @SuppressWarnings("UnusedDeclaration")
     public void setAnimationDurationMillis(final long durationMillis) {
         mAnimationDurationMillis = durationMillis;
     }
@@ -349,11 +353,13 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      * @param parent The parent of the view
      * @param view   The view that will be animated, as retrieved by getView().
      */
-    protected abstract Animator[] getAnimators(ViewGroup parent, View view);
+    @NonNull
+    protected abstract Animator[] getAnimators(@NonNull ViewGroup parent, @NonNull View view);
 
     /**
      * Returns a Parcelable object containing the AnimationAdapter's current dynamic state.
      */
+    @NonNull
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
 
@@ -369,7 +375,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
      *
      * @param parcelable the Parcelable object previously returned by {@link #onSaveInstanceState()}.
      */
-    public void onRestoreInstanceState(final Parcelable parcelable) {
+    public void onRestoreInstanceState(@Nullable final Parcelable parcelable) {
         if (parcelable instanceof Bundle) {
             Bundle bundle = (Bundle) parcelable;
             mFirstAnimatedPosition = bundle.getInt(SAVEDINSTANCESTATE_FIRSTANIMATEDPOSITION);
@@ -381,7 +387,8 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     /**
      * Merges given Animators into one array.
      */
-    private static Animator[] concatAnimators(final Animator[] childAnimators, final Animator[] animators, final Animator alphaAnimator) {
+    @NonNull
+    private static Animator[] concatAnimators(@NonNull final Animator[] childAnimators, @NonNull final Animator[] animators, @NonNull final Animator alphaAnimator) {
         Animator[] allAnimators = new Animator[childAnimators.length + animators.length + 1];
         int i;
 

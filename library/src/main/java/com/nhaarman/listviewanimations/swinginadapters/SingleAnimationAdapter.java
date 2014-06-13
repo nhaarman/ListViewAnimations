@@ -21,18 +21,21 @@ import android.widget.BaseAdapter;
 
 import com.nineoldandroids.animation.Animator;
 
+import android.support.annotation.NonNull;
+
 /**
  * An implementation of AnimationAdapter which applies a single Animator to
  * views.
  */
 public abstract class SingleAnimationAdapter extends AnimationAdapter {
 
-    public SingleAnimationAdapter(final BaseAdapter baseAdapter) {
+    protected SingleAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
     }
 
+    @NonNull
     @Override
-    protected Animator[] getAnimators(final ViewGroup parent, final View view) {
+    protected Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
         Animator animator = getAnimator(parent, view);
         return new Animator[]{animator};
     }
@@ -40,12 +43,11 @@ public abstract class SingleAnimationAdapter extends AnimationAdapter {
     /**
      * Get the {@link Animator} to apply to the {@link View}.
      *
-     * @param parent
-     *            the {@link ViewGroup} which is the parent of the View.
-     * @param view
-     *            the View that will be animated, as retrieved by
-     *            {@link #getView(int, View, ViewGroup)}.
+     * @param parent the {@link ViewGroup} which is the parent of the View.
+     * @param view   the View that will be animated, as retrieved by
+     *               {@link #getView(int, View, ViewGroup)}.
      */
-    protected abstract Animator getAnimator(ViewGroup parent, View view);
+    @NonNull
+    protected abstract Animator getAnimator(@NonNull ViewGroup parent, @NonNull View view);
 
 }

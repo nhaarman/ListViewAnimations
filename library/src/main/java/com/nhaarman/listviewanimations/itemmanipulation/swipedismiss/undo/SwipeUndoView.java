@@ -19,6 +19,9 @@ import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * A convenience class which holds a primary and a undo {@link View}.
  */
@@ -27,11 +30,13 @@ class SwipeUndoView extends FrameLayout {
     /**
      * The primary {@link View}.
      */
+    @Nullable
     private View mPrimaryView;
 
     /**
      * The undo {@link View}.
      */
+    @Nullable
     private View mUndoView;
 
     /**
@@ -44,7 +49,7 @@ class SwipeUndoView extends FrameLayout {
     /**
      * Sets the primary {@link View}. Removes any existing primary {@code View} if present.
      */
-    void setPrimaryView(final View primaryView) {
+    void setPrimaryView(@NonNull final View primaryView) {
         if (mPrimaryView != null) {
             removeView(mPrimaryView);
         }
@@ -55,7 +60,7 @@ class SwipeUndoView extends FrameLayout {
     /**
      * Sets the undo {@link View}. Removes any existing primary {@code View} if present, and sets the visibility of the {@code undoView} to {@link #GONE}.
      */
-    void setUndoView(final View undoView) {
+    void setUndoView(@NonNull final View undoView) {
         if (mUndoView != null) {
             removeView(mUndoView);
         }
@@ -67,6 +72,7 @@ class SwipeUndoView extends FrameLayout {
     /**
      * Returns the undo {@link View}.
      */
+    @Nullable
     View getUndoView() {
         return mUndoView;
     }
@@ -74,6 +80,7 @@ class SwipeUndoView extends FrameLayout {
     /**
      * Returns the primary {@link View}.
      */
+    @Nullable
     View getPrimaryView() {
         return mPrimaryView;
     }

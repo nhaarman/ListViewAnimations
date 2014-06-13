@@ -18,6 +18,8 @@ package com.nhaarman.listviewanimations.itemmanipulation;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import android.support.annotation.NonNull;
+
 /**
  * A callback interface used to inform its client about a successful dismissal of one or more list item positions.
  */
@@ -28,11 +30,9 @@ public interface OnDismissCallback {
      * more list item positions. When this method is called given positions should be
      * removed from the adapter.
      *
-     * @param absListView
-     *            The originating {@link AbsListView}.
-     * @param reverseSortedPositions
-     *            An array of positions to dismiss, sorted in descending order
-     *            for convenience.
+     * @param absListView            The originating {@link AbsListView}.
+     * @param reverseSortedPositions An array of positions to dismiss, sorted in descending order
+     *                               for convenience.
      */
-    void onDismiss(AbsListView absListView, int[] reverseSortedPositions);
+    void onDismiss(@NonNull AbsListView absListView, @NonNull int[] reverseSortedPositions);
 }

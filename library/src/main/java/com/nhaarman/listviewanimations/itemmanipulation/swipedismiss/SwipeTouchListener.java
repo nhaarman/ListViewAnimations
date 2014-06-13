@@ -32,6 +32,9 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * An {@link android.view.View.OnTouchListener} that makes the list items in a {@link AbsListView} swipeable.
  * Implementations of this class should implement {@link #afterViewFling(android.view.View, int)} to specify what to do after an item has been swiped.
@@ -63,6 +66,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     /**
      * The {@link android.widget.AbsListView} that is controlled.
      */
+    @NonNull
     private final AbsListView mAbsListView;
 
     /**
@@ -88,16 +92,19 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     /**
      * The {@code VelocityTracker} used in the swipe movement.
      */
+    @Nullable
     private VelocityTracker mVelocityTracker;
 
     /**
      * The parent {@link View} being swiped.
      */
+    @Nullable
     private View mCurrentView;
 
     /**
      * The {@link View} that is actually being swiped.
      */
+    @Nullable
     private View mSwipingView;
 
     /**
@@ -127,6 +134,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * The {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.DismissableManager} which decides
      * whether or not a list item can be swiped.
      */
+    @Nullable
     private DismissableManager mDismissableManager;
 
     /**
@@ -142,11 +150,10 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     /**
      * Constructs a new {@code SwipeTouchListener} for the given {@link android.widget.AbsListView}.
      *
-     * @param absListView
-     *            The {@code AbsListView} whose items should be dismissable.
+     * @param absListView The {@code AbsListView} whose items should be dismissable.
      */
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
-    public SwipeTouchListener(final AbsListView absListView) {
+    protected SwipeTouchListener(@NonNull final AbsListView absListView) {
         ViewConfiguration vc = ViewConfiguration.get(absListView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * MIN_FLING_VELOCITY_FACTOR;
@@ -157,16 +164,17 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
     /**
      * Sets the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.DismissableManager} to specify which views can or cannot be swiped.
+     *
      * @param dismissableManager {@code null} for no restrictions.
      */
-    public void setDismissableManager(final DismissableManager dismissableManager) {
+    public void setDismissableManager(@Nullable final DismissableManager dismissableManager) {
         mDismissableManager = dismissableManager;
     }
 
     /**
      * If the {@link AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
      * work, because the parent will prevent touch-events from reaching the {@code AbsListView}.
-     *
+     * <p/>
      * Call this method to fix this behavior.
      * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list item.
      */
@@ -178,7 +186,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     /**
      * If the {@link AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
      * work, because the parent will prevent touch events from reaching the {@code AbsListView}.
-     *
+     * <p/>
      * If a {@code AbsListView} view has a child with the given resource id, the user can still swipe the list item by touching that child.
      * If the user touches an area outside that child (but inside the list item view), then the swipe will not happen and the parent
      * will do its job instead (scrolling horizontally).
@@ -199,6 +207,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
     /**
      * Returns whether the user is currently swiping an item.
+     *
      * @return {@code true} if the user is swiping an item.
      */
     public boolean isSwiping() {
@@ -208,6 +217,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     /**
      * Returns the {@link android.widget.AbsListView} this class is controlling.
      */
+    @NonNull
     public AbsListView getAbsListView() {
         return mAbsListView;
     }
@@ -229,6 +239,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     /**
      * Flings the {@link View} corresponding to given position out of sight.
      * Calling this method has the same effect as manually swiping an item off the screen.
+     *
      * @param position the position of the item in the {@link android.widget.ListAdapter}. Must be visible.
      */
     public void fling(final int position) {
@@ -239,6 +250,9 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         }
 
         View downView = AdapterViewUtil.getViewForPosition(mAbsListView, position);
+        if (downView == null) {
+            throw new IllegalStateException("No view found for position " + position);
+        }
         flingView(downView, position, true);
 
         mActiveSwipeCount++;
@@ -246,7 +260,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     }
 
     @Override
-    public boolean onTouch(final View view, final MotionEvent event) {
+    public boolean onTouch(@NonNull final View view, @NonNull final MotionEvent event) {
         if (mVirtualListCount == -1) {
             mVirtualListCount = mAbsListView.getAdapter().getCount();
         }
@@ -276,7 +290,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         return result;
     }
 
-    private boolean handleDownEvent(final MotionEvent motionEvent) {
+    private boolean handleDownEvent(@NonNull final MotionEvent motionEvent) {
         if (!mSwipeEnabled) {
             return false;
         }
@@ -312,10 +326,13 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
     /**
      * Returns the child {@link View} that was touched, by performing a hit test.
+     *
      * @param motionEvent the {@link MotionEvent} to find the {@code View} for.
+     *
      * @return the touched {@code View}, or {@code null} if none found.
      */
-    private View findDownView(final MotionEvent motionEvent) {
+    @Nullable
+    private View findDownView(@NonNull final MotionEvent motionEvent) {
         Rect rect = new Rect();
         int childCount = mAbsListView.getChildCount();
         int[] listViewCoords = new int[2];
@@ -335,7 +352,9 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
     /**
      * Finds out whether the item represented by given position is dismissable.
+     *
      * @param position the position of the item.
+     *
      * @return {@code true} if the item is dismissable, false otherwise.
      */
     private boolean isDismissable(final int position) {
@@ -348,7 +367,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         return true;
     }
 
-    private void disableHorizontalScrollContainerIfNecessary(final MotionEvent motionEvent, final View view) {
+    private void disableHorizontalScrollContainerIfNecessary(@NonNull final MotionEvent motionEvent, @NonNull final View view) {
         if (mParentIsHorizontalScrollContainer) {
             mAbsListView.requestDisallowInterceptTouchEvent(true);
         } else if (mTouchChildResId != 0) {
@@ -364,8 +383,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         }
     }
 
-    private boolean handleMoveEvent(final MotionEvent motionEvent) {
-        if (mVelocityTracker == null) {
+    private boolean handleMoveEvent(@NonNull final MotionEvent motionEvent) {
+        if (mVelocityTracker == null || mCurrentView == null) {
             return false;
         }
 
@@ -397,7 +416,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     }
 
     private boolean handleCancelEvent() {
-        if (mVelocityTracker == null) {
+        if (mVelocityTracker == null || mCurrentView == null) {
             return false;
         }
 
@@ -410,8 +429,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         return false;
     }
 
-    private boolean handleUpEvent(final MotionEvent motionEvent) {
-        if (mVelocityTracker == null) {
+    private boolean handleUpEvent(@NonNull final MotionEvent motionEvent) {
+        if (mVelocityTracker == null || mCurrentView == null) {
             return false;
         }
 
@@ -452,19 +471,23 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
     /**
      * Flings the pending {@link View} out of sight.
+     *
      * @param flingToRight {@code true} if the {@code View} should be flinged to the right, {@code false} if it should be flinged to the left.
      */
     private void flingCurrentView(final boolean flingToRight) {
-        flingView(mCurrentView, mCurrentPosition, flingToRight);
+        if (mCurrentView != null) {
+            flingView(mCurrentView, mCurrentPosition, flingToRight);
+        }
     }
 
     /**
      * Flings given {@link View} out of sight.
-     * @param view the parent {@link View}.
-     * @param position the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
+     *
+     * @param view         the parent {@link View}.
+     * @param position     the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
      * @param flingToRight {@code true} {@code true} if the {@code View} should be flinged to the right, {@code false} if it should be flinged to the left.
      */
-    private void flingView(final View view, final int position, final boolean flingToRight) {
+    private void flingView(@NonNull final View view, final int position, final boolean flingToRight) {
         if (mViewWidth < 2) {
             mViewWidth = mAbsListView.getWidth();
         }
@@ -484,6 +507,10 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * Animates the pending {@link View} back to its original position.
      */
     private void restoreCurrentViewTranslation() {
+        if (mCurrentView == null) {
+            return;
+        }
+
         ObjectAnimator xAnimator = ObjectAnimator.ofFloat(mSwipingView, "translationX", 0);
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mSwipingView, "alpha", 1);
 
@@ -498,7 +525,10 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * Resets the fields to the initial values, ready to start over.
      */
     private void reset() {
-        mVelocityTracker.recycle();
+        if (mVelocityTracker != null) {
+            mVelocityTracker.recycle();
+        }
+
         mVelocityTracker = null;
         mDownX = 0;
         mDownY = 0;
@@ -510,50 +540,56 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
     /**
      * Called when the user starts swiping a {@link View}.
-     * @param view the {@code View} that is being swiped.
+     *
+     * @param view     the {@code View} that is being swiped.
      * @param position the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
      */
-    protected void onStartSwipe(final View view, final int position) {
+    protected void onStartSwipe(@NonNull final View view, final int position) {
     }
 
     /**
      * Called when the swipe movement is canceled. A restore animation starts at this point.
-     * @param view the {@code View} that was swiped.
+     *
+     * @param view     the {@code View} that was swiped.
      * @param position the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
      */
-    protected void onCancelSwipe(final View view, final int position) {
+    protected void onCancelSwipe(@NonNull final View view, final int position) {
     }
 
     /**
      * Called after the restore animation of a canceled swipe movement ends.
-     * @param view the {@code View} that is being swiped.
+     *
+     * @param view     the {@code View} that is being swiped.
      * @param position the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
      */
-    protected void afterCancelSwipe(final View view, final int position) {
+    protected void afterCancelSwipe(@NonNull final View view, final int position) {
     }
 
     /**
      * Called when the user lifted their finger off the screen, and the {@link View} should be swiped away. A fling animation starts at this point.
-     * @param view the {@code View} that is being flinged.
+     *
+     * @param view     the {@code View} that is being flinged.
      * @param position the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
      */
-    protected void beforeViewFling(final View view, final int position) {
+    protected void beforeViewFling(@NonNull final View view, final int position) {
     }
 
     /**
      * Called after the fling animation of a succesful swipe ends.
      * Users of this class should implement any finalizing behavior at this point, such as notifying the adapter.
-     * @param view the {@code View} that is being swiped.
+     *
+     * @param view     the {@code View} that is being swiped.
      * @param position the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
      */
-    protected abstract void afterViewFling(View view, int position);
+    protected abstract void afterViewFling(@NonNull View view, int position);
 
     /**
      * Restores the {@link View}'s {@code alpha} and {@code translationX} values.
      * Users of this class should call this method when recycling {@code View}s.
+     *
      * @param view the {@code View} whose presentation should be restored.
      */
-    protected void restoreViewPresentation(final View view) {
+    protected void restoreViewPresentation(@NonNull final View view) {
         View swipedView = getSwipeView(view);
         ViewHelper.setAlpha(swipedView, 1);
         ViewHelper.setTranslationX(swipedView, 0);
@@ -568,9 +604,11 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
     /**
      * Returns the {@link View} that should be swiped away. Must be a child of given {@code View}, or the {@code View} itself.
+     *
      * @param view the parent {@link View}.
      */
-    protected View getSwipeView(final View view) {
+    @NonNull
+    protected View getSwipeView(@NonNull final View view) {
         return view;
     }
 
@@ -592,16 +630,17 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      */
     private class FlingAnimatorListener extends AnimatorListenerAdapter {
 
+        @NonNull
         private final View mView;
         private final int mPosition;
 
-        private FlingAnimatorListener(final View view, final int position) {
+        private FlingAnimatorListener(@NonNull final View view, final int position) {
             mView = view;
             mPosition = position;
         }
 
         @Override
-        public void onAnimationEnd(final Animator animation) {
+        public void onAnimationEnd(@NonNull final Animator animation) {
             mActiveSwipeCount--;
             afterViewFling(mView, mPosition);
         }
@@ -612,16 +651,17 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      */
     private class RestoreAnimatorListener extends AnimatorListenerAdapter {
 
+        @NonNull
         private final View mView;
         private final int mPosition;
 
-        private RestoreAnimatorListener(final View view, final int position) {
+        private RestoreAnimatorListener(@NonNull final View view, final int position) {
             mView = view;
             mPosition = position;
         }
 
         @Override
-        public void onAnimationEnd(final Animator animation) {
+        public void onAnimationEnd(@NonNull final Animator animation) {
             mActiveSwipeCount--;
             afterCancelSwipe(mView, mPosition);
         }

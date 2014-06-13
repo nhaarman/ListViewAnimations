@@ -15,6 +15,7 @@
  */
 package com.nhaarman.listviewanimations.itemmanipulation;
 
+import android.support.annotation.NonNull;
 import android.util.Pair;
 
 import java.util.ArrayList;
@@ -28,43 +29,48 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A class to insert items only when there are no active items.
- * A pending index-item pair can have two states: active and pending. When inserting new items, the {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter.Insertable#add
+ * A pending index-item pair can have two states: active and pending. When inserting new items, the {@link com.nhaarman.listviewanimations.itemmanipulation
+ * .AnimateAdditionAdapter.Insertable#add
  * (int, Object)} method will be called directly if there are no active index-item pairs.
  * Otherwise, pairs will be queued until the active list is empty.
  */
 public class InsertQueue<T> {
 
+    @NonNull
     private final AnimateAdditionAdapter.Insertable<T> mInsertable;
 
-    private final Set<AtomicInteger> mActiveIndexes = new HashSet<AtomicInteger>();
-    private final List<Pair<Integer, T>> mPendingItemsToInsert = new ArrayList<Pair<Integer, T>>();
+    @NonNull
+    private final Collection<AtomicInteger> mActiveIndexes = new HashSet<>();
 
-    public InsertQueue(final AnimateAdditionAdapter.Insertable<T> insertable) {
+    @NonNull
+    private final List<Pair<Integer, T>> mPendingItemsToInsert = new ArrayList<>();
+
+    public InsertQueue(@NonNull final AnimateAdditionAdapter.Insertable<T> insertable) {
         mInsertable = insertable;
     }
 
     /**
      * Insert an item into the queue at given index. Will directly call {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter.Insertable#add(int,
      * Object)} if there are no active index-item pairs. Otherwise, the pair will be queued.
+     *
      * @param index the index at which the item should be inserted.
-     * @param item the item to insert.
+     * @param item  the item to insert.
      */
-    public void insert(final int index, final T item) {
+    public void insert(final int index, @NonNull final T item) {
         if (mActiveIndexes.isEmpty() && mPendingItemsToInsert.isEmpty()) {
             mActiveIndexes.add(new AtomicInteger(index));
             //noinspection unchecked
             mInsertable.add(index, item);
         } else {
-            mPendingItemsToInsert.add(new Pair<Integer, T>(index, item));
+            mPendingItemsToInsert.add(new Pair<>(index, item));
         }
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public void insert(final Pair<Integer, T>... indexItemPair) {
+    public void insert(@NonNull final Pair<Integer, T>... indexItemPair) {
         insert(Arrays.asList(indexItemPair));
     }
 
-    public void insert(final List<Pair<Integer, T>> indexItemPairs) {
+    public void insert(@NonNull final Collection<Pair<Integer, T>> indexItemPairs) {
         if (mActiveIndexes.isEmpty() && mPendingItemsToInsert.isEmpty()) {
             for (Pair<Integer, T> pair : indexItemPairs) {
                 for (AtomicInteger existing : mActiveIndexes) {
@@ -91,6 +97,7 @@ public class InsertQueue<T> {
 
     /**
      * Clear the active state for given index. Will insert any pending pairs if this call leads to a state where there are no active pairs.
+     *
      * @param index the index to remove.
      */
     public void removeActiveIndex(final int index) {
@@ -125,8 +132,9 @@ public class InsertQueue<T> {
     /**
      * Returns a collection of currently active indexes.
      */
+    @NonNull
     public Collection<Integer> getActiveIndexes() {
-        HashSet<Integer> result = new HashSet<Integer>();
+        Collection<Integer> result = new HashSet<>();
         for (AtomicInteger i : mActiveIndexes) {
             result.add(i.get());
         }
@@ -136,6 +144,7 @@ public class InsertQueue<T> {
     /**
      * Returns a {@code List} of {@code Pair}s with the index and items that are pending to be inserted, in the order they were requested.
      */
+    @NonNull
     public List<Pair<Integer, T>> getPendingItemsToInsert() {
         return mPendingItemsToInsert;
     }

@@ -35,6 +35,8 @@ import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
+import android.support.annotation.NonNull;
+
 public class GoogleCardsActivity extends BaseActivity implements OnDismissCallback {
 
 	private GoogleCardsAdapter mGoogleCardsAdapter;
@@ -65,7 +67,7 @@ public class GoogleCardsActivity extends BaseActivity implements OnDismissCallba
 	}
 
 	@Override
-	public void onDismiss(final AbsListView listView, final int[] reverseSortedPositions) {
+	public void onDismiss(@NonNull final AbsListView listView, @NonNull final int[] reverseSortedPositions) {
 		for (int position : reverseSortedPositions) {
 			mGoogleCardsAdapter.remove(position);
 		}

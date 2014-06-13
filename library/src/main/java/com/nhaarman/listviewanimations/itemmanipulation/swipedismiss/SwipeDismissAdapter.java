@@ -22,13 +22,19 @@ import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * Adds an option to swipe items in an {@link AbsListView} away.
  * Do not call {@link android.widget.AbsListView#setOnTouchListener(android.view.View.OnTouchListener)} on your {@code AbsListView}!
  */
 public class SwipeDismissAdapter extends BaseAdapterDecorator {
 
+    @NonNull
     private final OnDismissCallback mOnDismissCallback;
+
+    @Nullable
     private SwipeDismissTouchListener mDismissTouchListener;
 
     /**
@@ -47,13 +53,13 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
      * @param baseAdapter       the {@link android.widget.BaseAdapter to use}
      * @param onDismissCallback the {@link OnDismissCallback} to be notified of dismissed items.
      */
-    public SwipeDismissAdapter(final BaseAdapter baseAdapter, final OnDismissCallback onDismissCallback) {
+    public SwipeDismissAdapter(@NonNull final BaseAdapter baseAdapter, @NonNull final OnDismissCallback onDismissCallback) {
         super(baseAdapter);
         mOnDismissCallback = onDismissCallback;
     }
 
     @Override
-    public void setAbsListView(final AbsListView absListView) {
+    public void setAbsListView(@NonNull final AbsListView absListView) {
         super.setAbsListView(absListView);
         if (getDecoratedBaseAdapter() instanceof ArrayAdapter<?>) {
             ((ArrayAdapter<?>) getDecoratedBaseAdapter()).propagateNotifyDataSetChanged(this);
@@ -71,7 +77,7 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     /**
      * If the adapter's {@link AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
      * work, because the parent will prevent touch-events from reaching the {@code AbsListView}.
-     *
+     * <p/>
      * Call this method to fix this behavior.
      * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list item.
      */
@@ -86,7 +92,7 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     /**
      * If the adapter's {@link AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
      * work, because the parent will prevent touch events from reaching the {@code AbsListView}.
-     *
+     * <p/>
      * If a {@code AbsListView} view has a child with the given resource id, the user can still swipe the list item by touching that child.
      * If the user touches an area outside that child (but inside the list item view), then the swipe will not happen and the parent
      * will do its job instead (scrolling horizontally).
@@ -103,9 +109,13 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     /**
      * Dismisses the {@link android.view.View} corresponding to given position.
      * Calling this method has the same effect as manually swiping an item off the screen.
+     *
      * @param position the position of the item in the {@link android.widget.ListAdapter}.
      */
     public void dismiss(final int position) {
+        if (mDismissTouchListener == null) {
+            throw new IllegalStateException("Call setAbsListView on this SwipeDismissAdapter!");
+        }
         mDismissTouchListener.dismiss(position);
     }
 

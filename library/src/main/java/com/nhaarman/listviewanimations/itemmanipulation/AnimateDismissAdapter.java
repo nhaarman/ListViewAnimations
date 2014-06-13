@@ -15,6 +15,7 @@
  */
 package com.nhaarman.listviewanimations.itemmanipulation;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -28,7 +29,6 @@ import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -39,17 +39,17 @@ import java.util.List;
  */
 public class AnimateDismissAdapter extends BaseAdapterDecorator {
 
+    @NonNull
     private final OnDismissCallback mCallback;
 
     /**
      * Create a new AnimateDismissAdapter based on the given {@link BaseAdapter}.
      *
-     * @param callback
-     *            The {@link OnDismissCallback} to trigger when the user has
-     *            indicated that she would like to dismiss one or more list
-     *            items.
+     * @param callback The {@link OnDismissCallback} to trigger when the user has
+     *                 indicated that she would like to dismiss one or more list
+     *                 items.
      */
-    public AnimateDismissAdapter(final BaseAdapter baseAdapter, final OnDismissCallback callback) {
+    public AnimateDismissAdapter(@NonNull final BaseAdapter baseAdapter, @NonNull final OnDismissCallback callback) {
         super(baseAdapter);
         mCallback = callback;
     }
@@ -59,22 +59,24 @@ public class AnimateDismissAdapter extends BaseAdapterDecorator {
      */
     @SuppressWarnings("UnusedDeclaration")
     public void animateDismiss(final int position) {
-        animateDismiss(Arrays.asList(position));
+        animateDismiss(Collections.singletonList(position));
     }
 
     /**
      * Animate dismissal of the items at given positions.
      */
-    public void animateDismiss(final Collection<Integer> positions) {
-        final List<Integer> positionsCopy = new ArrayList<Integer>(positions);
+    public void animateDismiss(@NonNull final Collection<Integer> positions) {
+        final Collection<Integer> positionsCopy = new ArrayList<>(positions);
         if (getAbsListView() == null) {
             throw new IllegalStateException("Call setAbsListView() on this AnimateDismissAdapter before calling setAdapter()!");
         }
 
         List<View> views = getVisibleViewsForPositions(positionsCopy);
 
-        if (!views.isEmpty()) {
-            List<Animator> animators = new ArrayList<Animator>();
+        if (views.isEmpty()) {
+            invokeCallback(positionsCopy);
+        } else {
+            List<Animator> animators = new ArrayList<>();
             for (final View view : views) {
                 animators.add(createAnimatorForView(view));
             }
@@ -87,21 +89,25 @@ public class AnimateDismissAdapter extends BaseAdapterDecorator {
             }
 
             animatorSet.playTogether(animatorsArray);
-            animatorSet.addListener(new AnimatorListenerAdapter() {
+            animatorSet.addListener(
+                    new AnimatorListenerAdapter() {
 
-                @Override
-                public void onAnimationEnd(final Animator animator) {
-                    invokeCallback(positionsCopy);
-                }
-            });
+                        @Override
+                        public void onAnimationEnd(final Animator animation) {
+                            invokeCallback(positionsCopy);
+                        }
+                    }
+            );
             animatorSet.start();
-        } else {
-            invokeCallback(positionsCopy);
         }
     }
 
-    private void invokeCallback(final Collection<Integer> positions) {
-        ArrayList<Integer> positionsList = new ArrayList<Integer>(positions);
+    private void invokeCallback(@NonNull final Collection<Integer> positions) {
+        if (getAbsListView() == null) {
+            throw new IllegalArgumentException("Call setAbsListView() on this AnimateDismissAdapter before calling setAdapter()!");
+        }
+
+        ArrayList<Integer> positionsList = new ArrayList<>(positions);
         Collections.sort(positionsList);
 
         int[] dismissPositions = new int[positionsList.size()];
@@ -111,8 +117,13 @@ public class AnimateDismissAdapter extends BaseAdapterDecorator {
         mCallback.onDismiss(getAbsListView(), dismissPositions);
     }
 
-    private List<View> getVisibleViewsForPositions(final Collection<Integer> positions) {
-        List<View> views = new ArrayList<View>();
+    @NonNull
+    private List<View> getVisibleViewsForPositions(@NonNull final Collection<Integer> positions) {
+        if (getAbsListView() == null) {
+            throw new IllegalArgumentException("Call setAbsListView() on this AnimateDismissAdapter before calling setAdapter()!");
+        }
+
+        List<View> views = new ArrayList<>();
         for (int i = 0; i < getAbsListView().getChildCount(); i++) {
             View child = getAbsListView().getChildAt(i);
             if (positions.contains(AdapterViewUtil.getPositionForView(getAbsListView(), child))) {
@@ -122,28 +133,33 @@ public class AnimateDismissAdapter extends BaseAdapterDecorator {
         return views;
     }
 
-    private Animator createAnimatorForView(final View view) {
+    @NonNull
+    private Animator createAnimatorForView(@NonNull final View view) {
         final ViewGroup.LayoutParams lp = view.getLayoutParams();
         final int originalHeight = view.getHeight();
 
         ValueAnimator animator = ValueAnimator.ofInt(originalHeight, 0);
-        animator.addListener(new AnimatorListenerAdapter() {
+        animator.addListener(
+                new AnimatorListenerAdapter() {
 
-            @Override
-            public void onAnimationEnd(final Animator animator) {
-                lp.height = 0;
-                view.setLayoutParams(lp);
-            }
-        });
+                    @Override
+                    public void onAnimationEnd(final Animator animation) {
+                        lp.height = 0;
+                        view.setLayoutParams(lp);
+                    }
+                }
+        );
 
-        animator.addUpdateListener(new AnimatorUpdateListener() {
+        animator.addUpdateListener(
+                new AnimatorUpdateListener() {
 
-            @Override
-            public void onAnimationUpdate(final ValueAnimator valueAnimator) {
-                lp.height = (Integer) valueAnimator.getAnimatedValue();
-                view.setLayoutParams(lp);
-            }
-        });
+                    @Override
+                    public void onAnimationUpdate(final ValueAnimator animation) {
+                        lp.height = (Integer) animation.getAnimatedValue();
+                        view.setLayoutParams(lp);
+                    }
+                }
+        );
 
         return animator;
     }

@@ -19,6 +19,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 public class AdapterViewUtil {
 
     private AdapterViewUtil() {
@@ -28,12 +31,14 @@ public class AdapterViewUtil {
      * Returns the position within the adapter's dataset for the view, where view is an adapter item or a descendant of an adapter item.
      * Unlike {@link AdapterView#getPositionForView(android.view.View)}, returned position will reflect the position of the item given view is representing,
      * by subtracting the header views count.
+     *
      * @param adapterView the AdapterView containing the view.
-     * @param view an adapter item or a descendant of an adapter item. This must be visible in given AdapterView at the time of the call.
+     * @param view        an adapter item or a descendant of an adapter item. This must be visible in given AdapterView at the time of the call.
+     *
      * @return the position of the item in the AdapterView represented by given view, or {@link AdapterView#INVALID_POSITION} if the view does not
      * correspond to a list item (or it is not visible).
      */
-    public static int getPositionForView(final AdapterView<?> adapterView, final View view) {
+    public static int getPositionForView(@NonNull final AdapterView<?> adapterView, @NonNull final View view) {
         int position = adapterView.getPositionForView(view);
 
         if (adapterView instanceof ListView) {
@@ -45,11 +50,14 @@ public class AdapterViewUtil {
 
     /**
      * Returns the {@link View} that represents the item for given position.
+     *
      * @param adapterView the {@link android.widget.AdapterView} that should be examined
-     * @param position the position for which the {@code View} should be returned.
+     * @param position    the position for which the {@code View} should be returned.
+     *
      * @return the {@code View}, or {@code null} if the position is not currently visible.
      */
-    public static View getViewForPosition(final AdapterView<?> adapterView, final int position) {
+    @Nullable
+    public static View getViewForPosition(@NonNull final AdapterView<?> adapterView, final int position) {
         int childCount = adapterView.getChildCount();
         View downView = null;
         for (int i = 0; i < childCount && downView == null; i++) {

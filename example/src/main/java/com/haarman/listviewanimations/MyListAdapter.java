@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 public class MyListAdapter extends ArrayAdapter<Integer> implements UndoAdapter {
@@ -41,8 +43,9 @@ public class MyListAdapter extends ArrayAdapter<Integer> implements UndoAdapter 
         return view;
     }
 
+    @NonNull
     @Override
-    public View getUndoView(final int position, final View convertView, final ViewGroup parent) {
+    public View getUndoView(final int position, final View convertView, @NonNull final ViewGroup parent) {
         View view = convertView;
         if (view == null) {
             view = LayoutInflater.from(mContext).inflate(R.layout.undo_row, parent, false);
@@ -50,8 +53,9 @@ public class MyListAdapter extends ArrayAdapter<Integer> implements UndoAdapter 
         return view;
     }
 
+    @NonNull
     @Override
-    public View getUndoClickView(final View view) {
+    public View getUndoClickView(@NonNull final View view) {
         return view.findViewById(R.id.undo_row_undobutton);
     }
 }

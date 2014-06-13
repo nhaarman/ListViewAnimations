@@ -16,6 +16,7 @@
 package com.nhaarman.listviewanimations;
 
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -24,9 +25,12 @@ import android.widget.SectionIndexer;
 
 import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * A decorator class that enables decoration of an instance of the {@link BaseAdapter} class.
- *
+ * <p/>
  * Classes extending this class can override methods and provide extra functionality before or after calling the super method.
  */
 public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, ListViewSetter {
@@ -34,24 +38,28 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     /**
      * The {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
      */
+    @NonNull
     private final BaseAdapter mDecoratedBaseAdapter;
 
     /**
      * The {@link android.widget.AbsListView} this {@code BaseAdapterDecorator} will be bound to.
      */
+    @Nullable
     private AbsListView mAbsListView;
 
     /**
      * Create a new {@code BaseAdapterDecorator}, decorating given {@link android.widget.BaseAdapter}.
+     *
      * @param baseAdapter the {@code} BaseAdapter to decorate.
      */
-    public BaseAdapterDecorator(final BaseAdapter baseAdapter) {
+    protected BaseAdapterDecorator(@NonNull final BaseAdapter baseAdapter) {
         mDecoratedBaseAdapter = baseAdapter;
     }
 
     /**
      * Returns the {@link android.widget.BaseAdapter} that this {@code BaseAdapterDecorator} decorates.
      */
+    @NonNull
     protected BaseAdapter getDecoratedBaseAdapter() {
         return mDecoratedBaseAdapter;
     }
@@ -59,6 +67,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     /**
      * Returns the root {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
      */
+    @NonNull
     protected BaseAdapter getRootAdapter() {
         BaseAdapter adapter = mDecoratedBaseAdapter;
         while (adapter instanceof BaseAdapterDecorator) {
@@ -68,12 +77,11 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     }
 
     /**
-     * Sets the {@link android.widget.AbsListView} that this adapter will be bound to.
-     * Call this method before setting this adapter to the {@code AbsListView}.
-     * Also propagates the {@code AbsListView} to the decorated {@code BaseAdapter} if applicable.
+     * Sets the {@link android.widget.AbsListView} that this adapter will be bound to. Call this method before setting this adapter to the {@code AbsListView}. Also propagates the
+     * {@code AbsListView} to the decorated {@code BaseAdapter} if applicable.
      */
     @Override
-    public void setAbsListView(final AbsListView absListView) {
+    public void setAbsListView(@NonNull final AbsListView absListView) {
         mAbsListView = absListView;
 
         if (mDecoratedBaseAdapter instanceof ListViewSetter) {
@@ -84,6 +92,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     /**
      * Returns the {@link android.widget.AbsListView} this {@code BaseAdapterDecorator} is bound to.
      */
+    @Nullable
     protected AbsListView getAbsListView() {
         return mAbsListView;
     }
@@ -104,7 +113,8 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     }
 
     @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
+    @NonNull
+    public View getView(final int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
         return mDecoratedBaseAdapter.getView(position, convertView, parent);
     }
 
@@ -114,7 +124,8 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     }
 
     @Override
-    public View getDropDownView(final int position, final View convertView, final ViewGroup parent) {
+    @NonNull
+    public View getDropDownView(final int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
         return mDecoratedBaseAdapter.getDropDownView(position, convertView, parent);
     }
 
@@ -171,12 +182,12 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     }
 
     @Override
-    public void registerDataSetObserver(final DataSetObserver observer) {
+    public void registerDataSetObserver(@NonNull final DataSetObserver observer) {
         mDecoratedBaseAdapter.registerDataSetObserver(observer);
     }
 
     @Override
-    public void unregisterDataSetObserver(final DataSetObserver observer) {
+    public void unregisterDataSetObserver(@NonNull final DataSetObserver observer) {
         mDecoratedBaseAdapter.unregisterDataSetObserver(observer);
     }
 
@@ -199,8 +210,9 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     }
 
     @Override
+    @NonNull
     public Object[] getSections() {
-        Object[] result = null;
+        Object[] result = new Object[0];
         if (mDecoratedBaseAdapter instanceof SectionIndexer) {
             result = ((SectionIndexer) mDecoratedBaseAdapter).getSections();
         }
@@ -211,6 +223,8 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     public void swapItems(final int positionOne, final int positionTwo) {
         if (mDecoratedBaseAdapter instanceof Swappable) {
             ((Swappable) mDecoratedBaseAdapter).swapItems(positionOne, positionTwo);
+        } else {
+            Log.w("ListViewAnimations", "Warning: swapItems called on an adapter that does not implements Swappable!");
         }
     }
 }

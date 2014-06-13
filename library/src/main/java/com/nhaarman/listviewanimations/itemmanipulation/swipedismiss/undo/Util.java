@@ -15,6 +15,8 @@
  */
 package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,7 +28,8 @@ class Util {
     private Util() {
     }
 
-    static Collection<Integer> processDeletions(final Collection<Integer> positions, final int[] dismissedPositions) {
+    @NonNull
+    static Collection<Integer> processDeletions(@NonNull final Collection<Integer> positions, @NonNull final int[] dismissedPositions) {
         List<Integer> dismissedList = new ArrayList<Integer>();
         for (int position : dismissedPositions) {
             dismissedList.add(position);
@@ -36,11 +39,14 @@ class Util {
 
     /**
      * Removes positions in {@code dismissedPositions} from {@code positions}, and shifts the remaining positions accordingly.
-     * @param positions the list of positions to remove from.
+     *
+     * @param positions          the list of positions to remove from.
      * @param dismissedPositions the list of positions to remove.
+     *
      * @return a new {@link Collection} instance, containing the resulting positions.
      */
-    static Collection<Integer> processDeletions(final Collection<Integer> positions, final List<Integer> dismissedPositions) {
+    @NonNull
+    static Collection<Integer> processDeletions(@NonNull final Collection<Integer> positions, @NonNull final List<Integer> dismissedPositions) {
         Collection<Integer> result = new ArrayList<Integer>(positions);
         Collections.sort(dismissedPositions, Collections.reverseOrder());
         Collection<Integer> newUndoPositions = new ArrayList<Integer>();

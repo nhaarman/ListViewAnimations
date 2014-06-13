@@ -15,6 +15,7 @@
  */
 package com.nhaarman.listviewanimations.swinginadapters.prepared;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -31,18 +32,19 @@ public class SwingRightInAnimationAdapter extends SingleAnimationAdapter {
 
     private static final String TRANSLATION_X = "translationX";
 
-    public SwingRightInAnimationAdapter(final BaseAdapter baseAdapter) {
+    public SwingRightInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
     }
 
-    public SwingRightInAnimationAdapter(final BaseAdapter baseAdapter, final long animationDelayMillis, final long animationDurationMillis) {
+    public SwingRightInAnimationAdapter(@NonNull final BaseAdapter baseAdapter, final long animationDelayMillis, final long animationDurationMillis) {
         super(baseAdapter);
         setAnimationDelayMillis(animationDelayMillis);
         setAnimationDurationMillis(animationDurationMillis);
     }
 
+    @NonNull
     @Override
-    protected Animator getAnimator(final ViewGroup parent, final View view) {
+    protected Animator getAnimator(@NonNull final ViewGroup parent, @NonNull final View view) {
         return ObjectAnimator.ofFloat(view, TRANSLATION_X, parent.getWidth(), 0);
     }
 }
