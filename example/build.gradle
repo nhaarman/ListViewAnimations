@@ -2,7 +2,9 @@ apply plugin: 'android'
 
 dependencies {
     compile 'com.android.support:appcompat-v7:19.1.+'
+
     compile project(':lib-core')
+    compile project(':lib-core-slh')
     compile project(':lib-manipulation')
 }
 

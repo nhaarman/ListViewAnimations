@@ -44,159 +44,161 @@ import com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulations
 
 public class MainActivity extends Activity {
 
-	@SuppressLint("InlinedApi")
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-		}
+    @SuppressLint("InlinedApi")
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
 
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-		bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"), mServiceConn, Context.BIND_AUTO_CREATE);
-	}
+        startActivity(new Intent(this, StickyListHeadersActivity.class));
 
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_main, menu);
+        bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"), mServiceConn, Context.BIND_AUTO_CREATE);
+    }
 
-		menu.findItem(R.id.menu_main_donate).setVisible(mService != null);
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
 
-		return super.onCreateOptionsMenu(menu);
-	}
+        menu.findItem(R.id.menu_main_donate).setVisible(mService != null);
 
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_main_github:
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setData(Uri.parse("http://nhaarman.github.io/ListViewAnimations?ref=app"));
-			startActivity(intent);
-			return true;
-		case R.id.menu_main_beer:
-			buy("beer");
-			return true;
-		case R.id.menu_main_beer2:
-			buy("beer2");
-			return true;
-		case R.id.menu_main_beer3:
-			buy("beer3");
-			return true;
-		case R.id.menu_main_beer4:
-			buy("beer4");
-			return true;
-		}
+        return super.onCreateOptionsMenu(menu);
+    }
 
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_main_github:
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://nhaarman.github.io/ListViewAnimations?ref=app"));
+                startActivity(intent);
+                return true;
+            case R.id.menu_main_beer:
+                buy("beer");
+                return true;
+            case R.id.menu_main_beer2:
+                buy("beer2");
+                return true;
+            case R.id.menu_main_beer3:
+                buy("beer3");
+                return true;
+            case R.id.menu_main_beer4:
+                buy("beer4");
+                return true;
+        }
 
-	public void onGoogleCardsExampleClicked(final View view) {
-		Intent intent = new Intent(this, GoogleCardsActivity.class);
-		startActivity(intent);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
-	public void onGridViewExampleClicked(final View view) {
-		Intent intent = new Intent(this, GridViewActivity.class);
-		startActivity(intent);
-	}
+    public void onGoogleCardsExampleClicked(final View view) {
+        Intent intent = new Intent(this, GoogleCardsActivity.class);
+        startActivity(intent);
+    }
 
-	public void onAppearanceClicked(final View view) {
-		Intent intent = new Intent(this, AppearanceExamplesActivity.class);
-		startActivity(intent);
-	}
+    public void onGridViewExampleClicked(final View view) {
+        Intent intent = new Intent(this, GridViewActivity.class);
+        startActivity(intent);
+    }
 
-	public void onItemManipulationClicked(final View view) {
-		Intent intent = new Intent(this, ItemManipulationsExamplesActivity.class);
-		startActivity(intent);
-	}
+    public void onAppearanceClicked(final View view) {
+        Intent intent = new Intent(this, AppearanceExamplesActivity.class);
+        startActivity(intent);
+    }
 
-	private IInAppBillingService mService;
+    public void onItemManipulationClicked(final View view) {
+        Intent intent = new Intent(this, ItemManipulationsExamplesActivity.class);
+        startActivity(intent);
+    }
 
-	private final ServiceConnection mServiceConn = new ServiceConnection() {
-		@Override
-		public void onServiceDisconnected(final ComponentName name) {
-			mService = null;
-			//			supportInvalidateOptionsMenu();
-		}
+    private IInAppBillingService mService;
 
-		@Override
-		public void onServiceConnected(final ComponentName name, final IBinder service) {
-			mService = IInAppBillingService.Stub.asInterface(service);
-			//			supportInvalidateOptionsMenu();
+    private final ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(final ComponentName name) {
+            mService = null;
+            //			supportInvalidateOptionsMenu();
+        }
 
-			new Thread() {
+        @Override
+        public void onServiceConnected(final ComponentName name, final IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+            //			supportInvalidateOptionsMenu();
 
-				@Override
-				public void run() {
-					try {
-						Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
+            new Thread() {
 
-						int response = ownedItems.getInt("RESPONSE_CODE");
-						if (response == 0) {
-							ArrayList<String> purchaseDataList = ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+                @Override
+                public void run() {
+                    try {
+                        Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
 
-							if (purchaseDataList != null) {
+                        int response = ownedItems.getInt("RESPONSE_CODE");
+                        if (response == 0) {
+                            ArrayList<String> purchaseDataList = ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+
+                            if (purchaseDataList != null) {
                                 for (String purchaseData : purchaseDataList) {
                                     JSONObject json = new JSONObject(purchaseData);
                                     mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
                                 }
-							}
-						}
-					} catch (RemoteException e) {
-						e.printStackTrace();
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-				}
-			}.start();
-		}
-	};
+                            }
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+        }
+    };
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if (mServiceConn != null) {
-			unbindService(mServiceConn);
-		}
-	}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mServiceConn != null) {
+            unbindService(mServiceConn);
+        }
+    }
 
-	@Override
-	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == RESULT_OK) {
-			Toast.makeText(this, "Thank you!", Toast.LENGTH_LONG).show();
+        if (resultCode == RESULT_OK) {
+            Toast.makeText(this, "Thank you!", Toast.LENGTH_LONG).show();
 
-			new Thread() {
+            new Thread() {
 
-				@Override
-				public void run() {
-					try {
-						JSONObject json = new JSONObject(data.getStringExtra("INAPP_PURCHASE_DATA"));
-						mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
-					} catch (JSONException e) {
-						e.printStackTrace();
-					} catch (RemoteException e) {
-						e.printStackTrace();
-					}
-				}
+                @Override
+                public void run() {
+                    try {
+                        JSONObject json = new JSONObject(data.getStringExtra("INAPP_PURCHASE_DATA"));
+                        mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-			}.start();
-		}
-	}
+            }.start();
+        }
+    }
 
-	private void buy(final String sku) {
-		try {
-			Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), sku, "inapp", "bGoa+V7g/ysDXvKwqq+JTFn4uQZbPiQJo4pf9RzJ");
-			PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-			if (pendingIntent != null) {
-				startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), 0, 0, 0);
-			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (SendIntentException e) {
-			e.printStackTrace();
-		}
-	}
+    private void buy(final String sku) {
+        try {
+            Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), sku, "inapp", "bGoa+V7g/ysDXvKwqq+JTFn4uQZbPiQJo4pf9RzJ");
+            PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+            if (pendingIntent != null) {
+                startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), 0, 0, 0);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (SendIntentException e) {
+            e.printStackTrace();
+        }
+    }
 }

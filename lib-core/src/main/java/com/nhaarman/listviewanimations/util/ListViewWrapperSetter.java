@@ -15,12 +15,11 @@
  */
 package com.nhaarman.listviewanimations.util;
 
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
-import android.support.annotation.NonNull;
+public interface ListViewWrapperSetter<T extends ViewGroup> {
 
-public interface ListViewSetter {
-
-    void setAbsListView(@NonNull AbsListView absListView);
+    void setListViewWrapper(@NonNull final ListViewWrapper<T> listViewWrapper);
 }
