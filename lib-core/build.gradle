@@ -1,6 +1,10 @@
 apply plugin: 'android-library'
 apply plugin: 'github-pages'
 
+
+apply from: '../pushMaven.gradle'
+apply from: '../generateJavadoc.gradle'
+
 dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.android.support:support-annotations:+'
@@ -63,6 +67,3 @@ githubPages {
         password = '\n'
     }
 }
-
-apply from: '../pushMaven.gradle'
-apply from: '../generateJavadoc.gradle'
