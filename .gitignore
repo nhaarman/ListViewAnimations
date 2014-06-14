@@ -11,4 +11,4 @@
 /.idea/workspace.xml
 .DS_Store
 .metadata/*
-**/com_crashlytics_export_strings.xml
+**.hprof

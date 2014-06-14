@@ -64,5 +64,5 @@ githubPages {
     }
 }
 
-apply from: '../maven_push.gradle'
+apply from: '../pushMaven.gradle'
 apply from: '../generateJavadoc.gradle'

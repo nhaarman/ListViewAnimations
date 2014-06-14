@@ -55,12 +55,12 @@ afterEvaluate { project ->
     }
 
     signing {
-        required { isRelease && gradle.taskGraph.hasTask("uploadArchives") }
+        required { isRelease == 'true' && gradle.taskGraph.hasTask("uploadArchives") }
         sign configurations.archives
     }
 
     task androidJavadocs(type: Javadoc) {
-        source = android.sourceSets.main.allJava
+        source = android.sourceSets.main.java
     }
 
     task androidJavadocsJar(type: Jar) {
@@ -70,11 +70,11 @@ afterEvaluate { project ->
 
     task androidSourcesJar(type: Jar) {
         classifier = 'sources'
-        from android.sourceSets.main.allSource
+        from android.sourceSets.main.java.sourceFiles
     }
 
     task coreLibJar(type: Jar) {
-        from fileTree(dir: 'build/classes/release').matching { include 'com/nhaarman/listviewanimations/**' }
+        from fileTree(dir: './build/intermediates/classes/release').matching { include 'com/nhaarman/listviewanimations/**' }
     }
 
     artifacts {
