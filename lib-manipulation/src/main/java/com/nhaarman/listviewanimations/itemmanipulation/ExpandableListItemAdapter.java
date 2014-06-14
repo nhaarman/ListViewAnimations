@@ -51,6 +51,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     private final Context mContext;
     private final int mTitleParentResId;
     private final int mContentParentResId;
+
     @NonNull
     private final List<Long> mExpandedIds;
     private int mViewLayoutResId;

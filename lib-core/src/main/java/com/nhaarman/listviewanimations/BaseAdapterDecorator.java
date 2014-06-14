@@ -23,6 +23,8 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
+import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
+import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nhaarman.listviewanimations.util.ListViewSetter;
 import com.nhaarman.listviewanimations.util.Swappable;
 
@@ -34,7 +36,7 @@ import android.support.annotation.Nullable;
  * <p/>
  * Classes extending this class can override methods and provide extra functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, ListViewSetter {
+public abstract class BaseAdapterDecorator<T extends ViewGroup> extends BaseAdapter implements SectionIndexer, Swappable, ListViewSetter {
 
     /**
      * The {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
@@ -43,10 +45,10 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     private final BaseAdapter mDecoratedBaseAdapter;
 
     /**
-     * The {@link android.widget.AbsListView} this {@code BaseAdapterDecorator} will be bound to.
+     * The {@link com.nhaarman.listviewanimations.util.ListViewWrapper} containing the ListView this {@code BaseAdapterDecorator} will be bound to.
      */
     @Nullable
-    private AbsListView mAbsListView;
+    private ListViewWrapper<T> mListViewWrapper;
 
     /**
      * Create a new {@code BaseAdapterDecorator}, decorating given {@link android.widget.BaseAdapter}.
@@ -72,7 +74,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     protected BaseAdapter getRootAdapter() {
         BaseAdapter adapter = mDecoratedBaseAdapter;
         while (adapter instanceof BaseAdapterDecorator) {
-            adapter = ((BaseAdapterDecorator) adapter).getDecoratedBaseAdapter();
+            adapter = ((BaseAdapterDecorator<?>) adapter).getDecoratedBaseAdapter();
         }
         return adapter;
     }
@@ -83,7 +85,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
      */
     @Override
     public void setAbsListView(@NonNull final AbsListView absListView) {
-        mAbsListView = absListView;
+        mListViewWrapper = new AbsListViewWrapper(absListView);
 
         if (mDecoratedBaseAdapter instanceof ListViewSetter) {
             ((ListViewSetter) mDecoratedBaseAdapter).setAbsListView(absListView);
@@ -91,11 +93,11 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     }
 
     /**
-     * Returns the {@link android.widget.AbsListView} this {@code BaseAdapterDecorator} is bound to.
+     * Returns the {@link com.nhaarman.listviewanimations.util.ListViewWrapper} containing the ListView this {@code BaseAdapterDecorator} is bound to.
      */
     @Nullable
-    protected AbsListView getAbsListView() {
-        return mAbsListView;
+    public ListViewWrapper<T> getListViewWrapper() {
+        return mListViewWrapper;
     }
 
     @Override

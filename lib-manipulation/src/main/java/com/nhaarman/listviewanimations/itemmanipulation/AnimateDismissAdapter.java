@@ -37,10 +37,10 @@ import java.util.List;
  * A {@link BaseAdapterDecorator} class that provides animations to the removal
  * of items in the given {@link android.widget.BaseAdapter}.
  */
-public class AnimateDismissAdapter extends BaseAdapterDecorator {
+public class AnimateDismissAdapter<T extends ViewGroup> extends BaseAdapterDecorator<T> {
 
     @NonNull
-    private final OnDismissCallback mCallback;
+    private final OnDismissCallback<T> mCallback;
 
     /**
      * Create a new AnimateDismissAdapter based on the given {@link android.widget.BaseAdapter}.
@@ -67,7 +67,7 @@ public class AnimateDismissAdapter extends BaseAdapterDecorator {
      */
     public void animateDismiss(@NonNull final Collection<Integer> positions) {
         final Collection<Integer> positionsCopy = new ArrayList<>(positions);
-        if (getAbsListView() == null) {
+        if (getListViewWrapper() == null) {
             throw new IllegalStateException("Call setAbsListView() on this AnimateDismissAdapter before calling setAdapter()!");
         }
 
@@ -103,7 +103,7 @@ public class AnimateDismissAdapter extends BaseAdapterDecorator {
     }
 
     private void invokeCallback(@NonNull final Collection<Integer> positions) {
-        if (getAbsListView() == null) {
+        if (getListViewWrapper() == null) {
             throw new IllegalArgumentException("Call setAbsListView() on this AnimateDismissAdapter before calling setAdapter()!");
         }
 
@@ -114,19 +114,19 @@ public class AnimateDismissAdapter extends BaseAdapterDecorator {
         for (int i = 0; i < positionsList.size(); i++) {
             dismissPositions[i] = positionsList.get(positionsList.size() - 1 - i);
         }
-        mCallback.onDismiss(getAbsListView(), dismissPositions);
+        mCallback.onDismiss(getListViewWrapper().getListView(), dismissPositions);
     }
 
     @NonNull
     private List<View> getVisibleViewsForPositions(@NonNull final Collection<Integer> positions) {
-        if (getAbsListView() == null) {
+        if (getListViewWrapper() == null) {
             throw new IllegalArgumentException("Call setAbsListView() on this AnimateDismissAdapter before calling setAdapter()!");
         }
 
         List<View> views = new ArrayList<>();
-        for (int i = 0; i < getAbsListView().getChildCount(); i++) {
-            View child = getAbsListView().getChildAt(i);
-            if (positions.contains(AdapterViewUtil.getPositionForView(getAbsListView(), child))) {
+        for (int i = 0; i < getListViewWrapper().getChildCount(); i++) {
+            View child = getListViewWrapper().getChildAt(i);
+            if (child != null && positions.contains(AdapterViewUtil.getPositionForView(getListViewWrapper(), child))) {
                 views.add(child);
             }
         }

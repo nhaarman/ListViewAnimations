@@ -15,17 +15,15 @@
  */
 package com.haarman.listviewanimations;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,125 +33,125 @@ import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
-import android.support.annotation.NonNull;
+import java.util.ArrayList;
 
-public class GoogleCardsActivity extends BaseActivity implements OnDismissCallback {
+public class GoogleCardsActivity extends BaseActivity implements OnDismissCallback<ListView> {
 
-	private GoogleCardsAdapter mGoogleCardsAdapter;
+    private GoogleCardsAdapter mGoogleCardsAdapter;
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_googlecards);
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_googlecards);
 
-		ListView listView = (ListView) findViewById(R.id.activity_googlecards_listview);
+        ListView listView = (ListView) findViewById(R.id.activity_googlecards_listview);
 
-		mGoogleCardsAdapter = new GoogleCardsAdapter(this);
-		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new SwipeDismissAdapter(mGoogleCardsAdapter, this));
-		swingBottomInAnimationAdapter.setInitialDelayMillis(300);
-		swingBottomInAnimationAdapter.setAbsListView(listView);
+        mGoogleCardsAdapter = new GoogleCardsAdapter(this);
+        SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new SwipeDismissAdapter(mGoogleCardsAdapter, this));
+        swingBottomInAnimationAdapter.setInitialDelayMillis(300);
+        swingBottomInAnimationAdapter.setAbsListView(listView);
 
-		listView.setAdapter(swingBottomInAnimationAdapter);
+        listView.setAdapter(swingBottomInAnimationAdapter);
 
-		mGoogleCardsAdapter.addAll(getItems());
-	}
+        mGoogleCardsAdapter.addAll(getItems());
+    }
 
-	private ArrayList<Integer> getItems() {
-		ArrayList<Integer> items = new ArrayList<Integer>();
-		for (int i = 0; i < 100; i++) {
-			items.add(i);
-		}
-		return items;
-	}
+    private ArrayList<Integer> getItems() {
+        ArrayList<Integer> items = new ArrayList<Integer>();
+        for (int i = 0; i < 100; i++) {
+            items.add(i);
+        }
+        return items;
+    }
 
-	@Override
-	public void onDismiss(@NonNull final AbsListView listView, @NonNull final int[] reverseSortedPositions) {
-		for (int position : reverseSortedPositions) {
-			mGoogleCardsAdapter.remove(position);
-		}
-	}
+    @Override
+    public void onDismiss(@NonNull final ListView listView, @NonNull final int[] reverseSortedPositions) {
+        for (int position : reverseSortedPositions) {
+            mGoogleCardsAdapter.remove(position);
+        }
+    }
 
-	private static class GoogleCardsAdapter extends ArrayAdapter<Integer> {
+    private static class GoogleCardsAdapter extends ArrayAdapter<Integer> {
 
-		private final Context mContext;
-		private final LruCache<Integer, Bitmap> mMemoryCache;
+        private final Context mContext;
+        private final LruCache<Integer, Bitmap> mMemoryCache;
 
-		public GoogleCardsAdapter(final Context context) {
-			mContext = context;
+        public GoogleCardsAdapter(final Context context) {
+            mContext = context;
 
-			final int cacheSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
-			mMemoryCache = new LruCache<Integer, Bitmap>(cacheSize) {
-				@Override
-				protected int sizeOf(final Integer key, final Bitmap bitmap) {
-					// The cache size will be measured in kilobytes rather than
-					// number of items.
-					return bitmap.getRowBytes() * bitmap.getHeight() / 1024;
-				}
-			};
-		}
+            final int cacheSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            mMemoryCache = new LruCache<Integer, Bitmap>(cacheSize) {
+                @Override
+                protected int sizeOf(final Integer key, final Bitmap bitmap) {
+                    // The cache size will be measured in kilobytes rather than
+                    // number of items.
+                    return bitmap.getRowBytes() * bitmap.getHeight() / 1024;
+                }
+            };
+        }
 
-		@Override
-		public View getView(final int position, final View convertView, final ViewGroup parent) {
-			ViewHolder viewHolder;
-			View view = convertView;
-			if (view == null) {
-				view = LayoutInflater.from(mContext).inflate(R.layout.activity_googlecards_card, parent, false);
+        @Override
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
+            ViewHolder viewHolder;
+            View view = convertView;
+            if (view == null) {
+                view = LayoutInflater.from(mContext).inflate(R.layout.activity_googlecards_card, parent, false);
 
-				viewHolder = new ViewHolder();
-				viewHolder.textView = (TextView) view.findViewById(R.id.activity_googlecards_card_textview);
-				view.setTag(viewHolder);
+                viewHolder = new ViewHolder();
+                viewHolder.textView = (TextView) view.findViewById(R.id.activity_googlecards_card_textview);
+                view.setTag(viewHolder);
 
-				viewHolder.imageView = (ImageView) view.findViewById(R.id.activity_googlecards_card_imageview);
-			} else {
-				viewHolder = (ViewHolder) view.getTag();
-			}
+                viewHolder.imageView = (ImageView) view.findViewById(R.id.activity_googlecards_card_imageview);
+            } else {
+                viewHolder = (ViewHolder) view.getTag();
+            }
 
-			viewHolder.textView.setText("This is card " + (getItem(position) + 1));
-			setImageView(viewHolder, position);
+            viewHolder.textView.setText("This is card " + (getItem(position) + 1));
+            setImageView(viewHolder, position);
 
-			return view;
-		}
+            return view;
+        }
 
-		private void setImageView(final ViewHolder viewHolder, final int position) {
-			int imageResId;
-			switch (getItem(position) % 5) {
-			case 0:
-				imageResId = R.drawable.img_nature1;
-				break;
-			case 1:
-				imageResId = R.drawable.img_nature2;
-				break;
-			case 2:
-				imageResId = R.drawable.img_nature3;
-				break;
-			case 3:
-				imageResId = R.drawable.img_nature4;
-				break;
-			default:
-				imageResId = R.drawable.img_nature5;
-			}
+        private void setImageView(final ViewHolder viewHolder, final int position) {
+            int imageResId;
+            switch (getItem(position) % 5) {
+                case 0:
+                    imageResId = R.drawable.img_nature1;
+                    break;
+                case 1:
+                    imageResId = R.drawable.img_nature2;
+                    break;
+                case 2:
+                    imageResId = R.drawable.img_nature3;
+                    break;
+                case 3:
+                    imageResId = R.drawable.img_nature4;
+                    break;
+                default:
+                    imageResId = R.drawable.img_nature5;
+            }
 
-			Bitmap bitmap = getBitmapFromMemCache(imageResId);
-			if (bitmap == null) {
-				bitmap = BitmapFactory.decodeResource(mContext.getResources(), imageResId);
-				addBitmapToMemoryCache(imageResId, bitmap);
-			}
-			viewHolder.imageView.setImageBitmap(bitmap);
-		}
+            Bitmap bitmap = getBitmapFromMemCache(imageResId);
+            if (bitmap == null) {
+                bitmap = BitmapFactory.decodeResource(mContext.getResources(), imageResId);
+                addBitmapToMemoryCache(imageResId, bitmap);
+            }
+            viewHolder.imageView.setImageBitmap(bitmap);
+        }
 
-		private void addBitmapToMemoryCache(final int key, final Bitmap bitmap) {
-			if (getBitmapFromMemCache(key) == null) {
-				mMemoryCache.put(key, bitmap);
-			}
-		}
+        private void addBitmapToMemoryCache(final int key, final Bitmap bitmap) {
+            if (getBitmapFromMemCache(key) == null) {
+                mMemoryCache.put(key, bitmap);
+            }
+        }
 
-		private Bitmap getBitmapFromMemCache(final int key) {
-			return mMemoryCache.get(key);
-		}
+        private Bitmap getBitmapFromMemCache(final int key) {
+            return mMemoryCache.get(key);
+        }
 
-		private static class ViewHolder {
-			TextView textView;
-			ImageView imageView;
-		}
-	}
+        private static class ViewHolder {
+            TextView textView;
+            ImageView imageView;
+        }
+    }
 }
