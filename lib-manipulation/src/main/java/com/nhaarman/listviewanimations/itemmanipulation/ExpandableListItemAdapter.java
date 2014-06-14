@@ -27,7 +27,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.ListViewSetter;
+import com.nhaarman.listviewanimations.util.ListViewSetter;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;

@@ -8,7 +8,8 @@ import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.*;
+import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.dispatchSwipeMotionEvents;
+import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.dispatchSwipeMotionEventsAndWait;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;

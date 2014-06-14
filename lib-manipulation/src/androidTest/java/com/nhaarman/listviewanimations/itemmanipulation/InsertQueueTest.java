@@ -2,6 +2,8 @@ package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.util.Pair;
 
+import com.nhaarman.listviewanimations.util.Insertable;
+
 import junit.framework.TestCase;
 
 import org.mockito.ArgumentCaptor;
@@ -10,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import static com.nhaarman.listviewanimations.itemmanipulation.matchers.Matchers.pairWithValues;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
@@ -22,12 +23,14 @@ import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import static com.nhaarman.listviewanimations.itemmanipulation.matchers.Matchers.*;
+
 public class InsertQueueTest extends TestCase {
 
     private InsertQueue<Integer> mInsertQueue;
 
     @Mock
-    private AnimateAdditionAdapter.Insertable<Integer> mInsertable;
+    private Insertable<Integer> mInsertable;
 
     @Override
     protected void setUp() throws Exception {

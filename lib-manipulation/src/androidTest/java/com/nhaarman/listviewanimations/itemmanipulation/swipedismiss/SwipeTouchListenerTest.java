@@ -1,11 +1,10 @@
 package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
+import android.support.annotation.NonNull;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
-
-import android.support.annotation.NonNull;
 
 import java.util.List;
 

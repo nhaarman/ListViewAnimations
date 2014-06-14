@@ -23,7 +23,8 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
-import com.nhaarman.listviewanimations.widget.DynamicListView.Swappable;
+import com.nhaarman.listviewanimations.util.ListViewSetter;
+import com.nhaarman.listviewanimations.util.Swappable;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

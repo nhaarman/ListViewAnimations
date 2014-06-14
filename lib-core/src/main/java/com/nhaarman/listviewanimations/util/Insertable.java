@@ -1,4 +1,4 @@
-package com.nhaarman.listviewanimations;
+package com.nhaarman.listviewanimations.util;
 
 import android.support.annotation.NonNull;
 

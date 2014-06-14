@@ -27,7 +27,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
-import com.nhaarman.listviewanimations.Insertable;
+import com.nhaarman.listviewanimations.util.Insertable;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;

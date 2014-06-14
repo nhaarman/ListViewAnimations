@@ -18,7 +18,7 @@ package com.nhaarman.listviewanimations.itemmanipulation;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
-import com.nhaarman.listviewanimations.Insertable;
+import com.nhaarman.listviewanimations.util.Insertable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

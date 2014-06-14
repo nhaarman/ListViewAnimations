@@ -37,6 +37,7 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.nhaarman.listviewanimations.util.Swappable;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -45,10 +46,10 @@ import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
 /**
- * The DynamicListView is an extension of {@link ListView} that supports cell dragging
+ * The DynamicListView is an extension of {@link android.widget.ListView} that supports cell dragging
  * and swapping.
  * </p>
- * Make sure your adapter has stable ids, and override {@link ListAdapter#hasStableIds()} to return true.</br>
+ * Make sure your adapter has stable ids, and override {@link android.widget.ListAdapter#hasStableIds()} to return true.</br>
  * </p>
  * This layout is in charge of positioning the hover cell in the correct location
  * on the screen in response to user touch events. It uses the position of the
@@ -816,29 +817,11 @@ public class DynamicListView extends ListView {
     }
 
     /**
-     * Interface, usually implemented by a {@link com.nhaarman.listviewanimations.BaseAdapterDecorator},
-     * that indicates that it can swap the visual position of two list items.
-     *
-     * @author Anton Spaans on 9/11/13.
-     */
-    public interface Swappable {
-
-        /**
-         * Swaps the item on the first adapter position with the item on the second adapter position.
-         * Be sure to call {@link android.widget.BaseAdapter#notifyDataSetChanged()} if appropriate when implementing this method.
-         *
-         * @param positionOne First adapter position.
-         * @param positionTwo Second adapter position.
-         */
-        void swapItems(int positionOne, int positionTwo);
-    }
-
-    /**
      * An OnTouchListener that should be used when list-view items can be swiped horizontally.
      *
      * @author Anton Spaans on 9/12/13.
      */
-    public interface SwipeOnTouchListener extends View.OnTouchListener {
+    public interface SwipeOnTouchListener extends OnTouchListener {
         /**
          * @return true if the user is currently swiping a list item horizontally.
          */

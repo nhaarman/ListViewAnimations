@@ -17,7 +17,8 @@ package com.nhaarman.listviewanimations;
 
 import android.widget.BaseAdapter;
 
-import com.nhaarman.listviewanimations.widget.DynamicListView;
+import com.nhaarman.listviewanimations.util.Insertable;
+import com.nhaarman.listviewanimations.util.Swappable;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,11 +32,11 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * A {@code true} {@link ArrayList} adapter providing access to all ArrayList methods. Also implements {@link DynamicListView.Swappable} for easy object swapping, and {@link
- * Insertable} for inserting objects.
+ * A {@code true} {@link ArrayList} adapter providing access to all ArrayList methods. Also implements {@link Swappable} for easy object swapping, and {@link
+ * com.nhaarman.listviewanimations.util.Insertable} for inserting objects.
  */
 @SuppressWarnings("UnusedDeclaration")
-public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, DynamicListView.Swappable, Insertable<T> {
+public abstract class ArrayAdapter<T> extends BaseAdapter implements List<T>, Swappable, Insertable<T> {
 
     @NonNull
     private final List<T> mItems;
