@@ -5,8 +5,16 @@ apply from: '../pushMaven.gradle'
 apply from: '../generateJavadoc.gradle'
 apply from: '../publishGhPages.gradle'
 
+configurations {
+    provided
+}
+
+android.libraryVariants.all {
+    variant -> variant.javaCompile.classpath += configurations.provided
+}
+
 dependencies {
-    compile project(':lib-core')
+    provided project(':lib-core')
 
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.android.support:support-annotations:+'
