@@ -1,6 +1,9 @@
 apply plugin: 'android-library'
 apply plugin: 'github-pages'
 
+apply from: '../pushMaven.gradle'
+apply from: '../generateJavadoc.gradle'
+
 dependencies {
     compile project(':lib-core')
 
@@ -65,6 +68,3 @@ githubPages {
         password = '\n'
     }
 }
-
-apply from: '../maven_push.gradle'
-apply from: '../generateJavadoc.gradle'
