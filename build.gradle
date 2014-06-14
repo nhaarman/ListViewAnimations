@@ -5,7 +5,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:0.11.+'
-        classpath 'org.ajoberstar:gradle-git:0.8.+'
+        classpath 'org.ajoberstar:gradle-git:0.9.+'
     }
 }
 

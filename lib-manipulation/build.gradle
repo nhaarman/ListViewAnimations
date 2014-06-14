@@ -3,6 +3,7 @@ apply plugin: 'github-pages'
 
 apply from: '../pushMaven.gradle'
 apply from: '../generateJavadoc.gradle'
+apply from: '../publishGhPages.gradle'
 
 dependencies {
     compile project(':lib-core')
@@ -48,23 +49,3 @@ android {
     }
 }
 
-import org.ajoberstar.grgit.*
-def repo = Grgit.open(".")
-
-def branch = repo.branch.current.name
-if(project.hasProperty('BRANCH')) {
-    branch = BRANCH
-}
-
-githubPages {
-
-    repoUri = 'https://github.com/nhaarman/ListViewAnimations.git'
-    commitMessage = 'Updated docs for branch ' + branch
-    pages {
-        from './build/docs/'
-    }
-    credentials {
-        username = System.getenv('GH_TOKEN_LVA')
-        password = '\n'
-    }
-}
