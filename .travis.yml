@@ -36,8 +36,8 @@ script:
   - if [[ $LINT == 'true' ]]; then gradle lint ; fi
 
 after_success:
-  - if [[ $MAVEN == 'true' && $TRAVIS_BRANCH == 'dev' && $TRAVIS_PULL_REQUEST == 'false' ]]; then gradle uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
   - if [[ $TRAVIS_PULL_REQUEST == 'false' ]]; then gradle generateReleaseJavadoc publishGhPages -PBRANCH=$TRAVIS_BRANCH ; fi
+  - if [[ $MAVEN == 'true' && $TRAVIS_BRANCH == 'dev' && $TRAVIS_PULL_REQUEST == 'false' ]]; then gradle uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
 
 notifications:
   email: false
