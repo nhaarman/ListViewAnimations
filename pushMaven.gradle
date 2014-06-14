@@ -55,7 +55,7 @@ afterEvaluate { project ->
     }
 
     signing {
-        required { isRelease && gradle.taskGraph.hasTask("uploadArchives") }
+        required { isRelease == 'true' && gradle.taskGraph.hasTask("uploadArchives") }
         sign configurations.archives
     }
 
