@@ -8,10 +8,10 @@
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>library</artifactId>
+	<artifactId>lib-core-slh</artifactId>
 	<packaging>apklib</packaging>
 
-	<name>ListViewAnimations (Library)</name>
+	<name>ListViewAnimations (StickyListHeaders Library)</name>
 
 	<dependencies>
 		<!-- Android -->
