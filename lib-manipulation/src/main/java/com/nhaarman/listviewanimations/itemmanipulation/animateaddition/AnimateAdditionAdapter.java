@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nhaarman.listviewanimations.itemmanipulation;
+package com.nhaarman.listviewanimations.itemmanipulation.animateaddition;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +27,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.itemmanipulation.InsertQueue;
 import com.nhaarman.listviewanimations.util.Insertable;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
@@ -37,21 +38,19 @@ import com.nineoldandroids.animation.ValueAnimator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 /**
- * An EXPERIMENTAL adapter for inserting rows into the {@link android.widget.ListView} with an animation. The root {@link android.widget.BaseAdapter} should implement {@link Insertable},
+ * An adapter for inserting rows into the {@link android.widget.ListView} with an animation. The root {@link android.widget.BaseAdapter} should implement {@link Insertable},
  * otherwise an {@link IllegalArgumentException} is thrown. This class only works with an instance of {@code ListView}!
  * <p/>
  * Usage:<br>
  * - Wrap a new instance of this class around a {@link android.widget.BaseAdapter}. <br>
  * - Set a {@code ListView} to this class using {@link #setListView(android.widget.ListView)}.<br>
- * - Call {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#insert(int, Object)} to animate the addition of an item.
+ * - Call {@link AnimateAdditionAdapter#insert(int, Object)} to animate the addition of an item.
  * <p/>
- * Extend this class and override {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#getAdditionalAnimators(android.view.View,
+ * Extend this class and override {@link AnimateAdditionAdapter#getAdditionalAnimators(android.view.View,
  * android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
  */
-@SuppressWarnings("unchecked")
 public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
 
     private static final long DEFAULT_SCROLLDOWN_ANIMATION_MS = 300;
@@ -68,6 +67,9 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
     @NonNull
     private final InsertQueue<T> mInsertQueue;
 
+    /**
+     * Describes whether the list should animate downwards when items are added above the first visible item.
+     */
     private boolean mShouldAnimateDown = true;
 
     /**
@@ -100,12 +102,15 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
         super.setAbsListView(absListView);
     }
 
+    /**
+     * Sets the {@link android.widget.ListView} that is used for this {@code AnimateAdditionAdapter}.
+     */
     public void setListView(@NonNull final ListView listView) {
         super.setAbsListView(listView);
     }
 
     /**
-     * Set whether the list should animate downwards when items are added above the first visible item.
+     * Sets whether the list should animate downwards when items are added above the first visible item.
      *
      * @param shouldAnimateDown defaults to {@code true}.
      */
@@ -166,7 +171,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
             throw new IllegalStateException("Call setListView on this AnimateAdditionAdapter!");
         }
 
-        List<Pair<Integer, T>> visibleViews = new ArrayList<>();
+        Collection<Pair<Integer, T>> visibleViews = new ArrayList<>();
         Collection<Integer> insertedPositions = new ArrayList<>();
         Collection<Integer> insertedBelowPositions = new ArrayList<>();
 
@@ -247,7 +252,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
      */
     private boolean childrenFillAbsListView() {
         if (getListViewWrapper() == null) {
-            throw new IllegalStateException("Call setListView on this AnimateAdditionAdapter!");
+            throw new IllegalStateException("Call setListView on this AnimateAdditionAdapter first!");
         }
 
         int childrenHeight = 0;
@@ -267,22 +272,13 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
 
         if (mInsertQueue.getActiveIndexes().contains(position)) {
             int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.AT_MOST);
-            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.AT_MOST);
+            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED);
             view.measure(widthMeasureSpec, heightMeasureSpec);
 
             int originalHeight = view.getMeasuredHeight();
 
             ValueAnimator heightAnimator = ValueAnimator.ofInt(1, originalHeight);
-            heightAnimator.addUpdateListener(
-                    new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(final ValueAnimator animation) {
-                            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                            layoutParams.height = (Integer) animation.getAnimatedValue();
-                            view.setLayoutParams(layoutParams);
-                        }
-                    }
-            );
+            heightAnimator.addUpdateListener(new HeightUpdater(view));
 
             ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, ALPHA, 0, 1);
 
@@ -294,14 +290,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
             System.arraycopy(customAnimators, 0, animators, 2, customAnimators.length);
             animatorSet.playTogether(animators);
             animatorSet.setDuration(mInsertionAnimationDurationMs);
-            animatorSet.addListener(
-                    new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(final Animator animation) {
-                            mInsertQueue.removeActiveIndex(position);
-                        }
-                    }
-            );
+            animatorSet.addListener(new ExpandAnimationListener(position));
             animatorSet.start();
         }
 
@@ -316,8 +305,43 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
      *
      * @return a non-null array of Animators.
      */
+    @SuppressWarnings({"MethodMayBeStatic", "UnusedParameters"})
     @NonNull
     protected Animator[] getAdditionalAnimators(@NonNull final View view, @NonNull final ViewGroup parent) {
         return new Animator[]{};
+    }
+
+    /**
+     * A class which applies the animated height value to a {@code View}.
+     */
+    private static class HeightUpdater implements ValueAnimator.AnimatorUpdateListener {
+        private final View mView;
+
+        HeightUpdater(final View view) {
+            mView = view;
+        }
+
+        @Override
+        public void onAnimationUpdate(final ValueAnimator animation) {
+            ViewGroup.LayoutParams layoutParams = mView.getLayoutParams();
+            layoutParams.height = (Integer) animation.getAnimatedValue();
+            mView.setLayoutParams(layoutParams);
+        }
+    }
+
+    /**
+     * A class which removes the active index from the {@code InsertQueue} when the animation has finished.
+     */
+    private class ExpandAnimationListener extends AnimatorListenerAdapter {
+        private final int mPosition;
+
+        ExpandAnimationListener(final int position) {
+            mPosition = position;
+        }
+
+        @Override
+        public void onAnimationEnd(final Animator animation) {
+            mInsertQueue.removeActiveIndex(mPosition);
+        }
     }
 }
