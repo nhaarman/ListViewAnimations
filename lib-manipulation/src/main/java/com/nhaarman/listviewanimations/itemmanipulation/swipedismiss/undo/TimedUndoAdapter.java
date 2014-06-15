@@ -19,6 +19,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
@@ -30,7 +31,7 @@ import java.util.Map;
 /**
  * A {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter} which automatically dismisses items after a timeout.
  */
-public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
+public class TimedUndoAdapter<T extends ViewGroup> extends SimpleSwipeUndoAdapter<T> {
 
     /**
      * The default time in milliseconds before an item in the undo state should automatically dismiss.
@@ -59,7 +60,7 @@ public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
      * Creates a new {@code TimedUndoAdapter}, decorating given {@link android.widget.BaseAdapter}.
      *
      * @param undoAdapter     the {@link android.widget.BaseAdapter} that is decorated. Must implement {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo
-     * .UndoAdapter}.
+     *                        .UndoAdapter}.
      * @param context         the {@link android.content.Context}.
      * @param dismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} that is notified of dismissed items.
      */
@@ -110,8 +111,8 @@ public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
     }
 
     @Override
-    public void onDismiss(@NonNull final AbsListView absListView, @NonNull final int[] reverseSortedPositions) {
-        super.onDismiss(absListView, reverseSortedPositions);
+    public void onDismiss(@NonNull final T listView, @NonNull final int[] reverseSortedPositions) {
+        super.onDismiss(listView, reverseSortedPositions);
 
         /* Adjust the pending timeout positions accordingly wrt the given dismissed positions */
         //noinspection UseSparseArrays

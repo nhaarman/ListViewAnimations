@@ -11,7 +11,7 @@
 	<artifactId>lib-manipulation</artifactId>
 	<packaging>apklib</packaging>
 
-	<name>ListViewAnimations (Itemmanipulation Library)</name>
+	<name>ListViewAnimations (Manipulation Library)</name>
 
 	<dependencies>
 		<!-- Android -->

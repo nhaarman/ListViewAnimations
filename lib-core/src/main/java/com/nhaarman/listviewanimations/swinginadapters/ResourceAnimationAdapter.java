@@ -29,7 +29,7 @@ import android.support.annotation.NonNull;
  * An implementation of AnimationAdapter which bases the animations on
  * resources.
  */
-public abstract class ResourceAnimationAdapter extends AnimationAdapter {
+public abstract class ResourceAnimationAdapter<T extends ViewGroup> extends AnimationAdapter<T> {
 
     @NonNull
     private final Context mContext;
@@ -42,7 +42,7 @@ public abstract class ResourceAnimationAdapter extends AnimationAdapter {
 
     @NonNull
     @Override
-    protected Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
+    public Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
         return new Animator[]{AnimatorInflater.loadAnimator(mContext, getAnimationResourceId())};
     }
 

@@ -17,7 +17,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.simple.SwingBottomInAnimationAdapter;
 
 public class GridViewActivity extends ActionBarActivity {
 
@@ -33,7 +33,7 @@ public class GridViewActivity extends ActionBarActivity {
 		GridView gridView = (GridView) findViewById(R.id.activity_gridview_gv);
 		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new MyAdapter(this, getItems()));
 		swingBottomInAnimationAdapter.setAbsListView(gridView);
-		swingBottomInAnimationAdapter.setInitialDelayMillis(300);
+		swingBottomInAnimationAdapter.getViewAnimator().setInitialDelayMillis(300);
 		gridView.setAdapter(swingBottomInAnimationAdapter);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
