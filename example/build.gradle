@@ -2,6 +2,7 @@ apply plugin: 'android'
 
 dependencies {
     compile 'com.android.support:appcompat-v7:19.1.+'
+    compile 'se.emilsjolander:stickylistheaders:2.4.0'
 
     compile project(':lib-core')
     compile project(':lib-core-slh')
