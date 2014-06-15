@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
-import com.nhaarman.listviewanimations.util.StickyListHeadersAdapterDecorator;
+import com.nhaarman.listviewanimations.swinginadapters.StickyListHeadersAdapterDecorator;
+import com.nhaarman.listviewanimations.swinginadapters.simple.SLHAlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.util.StickyListHeadersListViewWrapper;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -28,7 +28,7 @@ public class StickyListHeadersActivity extends Activity {
             integers.add(i);
         }
 
-        AlphaInAnimationAdapter animationAdapter = new AlphaInAnimationAdapter(integers);
+        SLHAlphaInAnimationAdapter animationAdapter = new SLHAlphaInAnimationAdapter(integers);
         StickyListHeadersAdapterDecorator stickyListHeadersAdapterDecorator = new StickyListHeadersAdapterDecorator(animationAdapter);
         stickyListHeadersAdapterDecorator.setListViewWrapper(new StickyListHeadersListViewWrapper(mListView));
         mListView.setAdapter(stickyListHeadersAdapterDecorator);
@@ -46,7 +46,7 @@ public class StickyListHeadersActivity extends Activity {
 
         @Override
         public long getHeaderId(final int i) {
-            return i;
+            return i/10;
         }
 
         @Override

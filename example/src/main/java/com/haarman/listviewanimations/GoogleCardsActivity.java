@@ -31,7 +31,7 @@ import android.widget.TextView;
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.simple.SwingBottomInAnimationAdapter;
 
 import java.util.ArrayList;
 
@@ -48,8 +48,8 @@ public class GoogleCardsActivity extends BaseActivity implements OnDismissCallba
 
         mGoogleCardsAdapter = new GoogleCardsAdapter(this);
         SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new SwipeDismissAdapter(mGoogleCardsAdapter, this));
-        swingBottomInAnimationAdapter.setInitialDelayMillis(300);
         swingBottomInAnimationAdapter.setAbsListView(listView);
+        swingBottomInAnimationAdapter.getViewAnimator().setInitialDelayMillis(300);
 
         listView.setAdapter(swingBottomInAnimationAdapter);
 

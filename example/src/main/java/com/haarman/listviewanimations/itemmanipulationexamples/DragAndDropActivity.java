@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.widget.DynamicListView;
 
 public class DragAndDropActivity extends MyListActivity {
@@ -41,8 +41,8 @@ public class DragAndDropActivity extends MyListActivity {
 
         final ArrayAdapter<Integer> adapter = createListAdapter();
         AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(adapter);
-        animAdapter.setInitialDelayMillis(300);
         animAdapter.setAbsListView(listView);
+        animAdapter.getViewAnimator().setInitialDelayMillis(300);
         listView.setAdapter(animAdapter);
 
         Toast.makeText(this, "Long press an item to start dragging", Toast.LENGTH_LONG).show();
