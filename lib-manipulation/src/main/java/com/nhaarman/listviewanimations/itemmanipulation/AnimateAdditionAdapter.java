@@ -51,7 +51,6 @@ import java.util.List;
  * Extend this class and override {@link com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter#getAdditionalAnimators(android.view.View,
  * android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
  */
-@SuppressWarnings("unchecked")
 public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
     private static final long DEFAULT_SCROLLDOWN_ANIMATION_MS = 300;
@@ -267,7 +266,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
         if (mInsertQueue.getActiveIndexes().contains(position)) {
             int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.AT_MOST);
-            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.AT_MOST);
+            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED);
             view.measure(widthMeasureSpec, heightMeasureSpec);
 
             int originalHeight = view.getMeasuredHeight();
