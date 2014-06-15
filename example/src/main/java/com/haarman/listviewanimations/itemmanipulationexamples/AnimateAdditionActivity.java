@@ -24,12 +24,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Handler;
 
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.AnimateAdditionAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.animateaddition.AnimateAdditionAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,19 +52,21 @@ public class AnimateAdditionActivity extends MyListActivity implements AdapterVi
 
         Toast.makeText(this, "Tap on an item to insert a new item", Toast.LENGTH_LONG).show();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAnimateAdditionAdapter.insert(mAnimateAdditionAdapter.getCount(), "HALLO");
-                new Handler().postDelayed(this, 1000);
-            }
-        }, 1000);
+//        new Handler().postDelayed(
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mAnimateAdditionAdapter.insert(mAnimateAdditionAdapter.getCount(), "HALLO");
+//                        new Handler().postDelayed(this, 1000);
+//                    }
+//                }, 1000
+//        );
     }
 
     private static ArrayList<String> getStringItems() {
         ArrayList<String> items = new ArrayList<String>();
         for (int i = 0; i < 1000; i++) {
-//            items.add("This is row number " + i);
+            items.add("This is row number " + i);
         }
         return items;
     }
@@ -96,6 +97,21 @@ public class AnimateAdditionActivity extends MyListActivity implements AdapterVi
             if (tv == null) {
                 tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
             }
+
+            int color;
+            switch (getItem(position).hashCode() % 3) {
+                case 0:
+                    color = mContext.getResources().getColor(android.R.color.holo_blue_light);
+                    break;
+                case 1:
+                    color = mContext.getResources().getColor(android.R.color.holo_red_light);
+                    break;
+                default:
+                    color = mContext.getResources().getColor(android.R.color.holo_green_light);
+                    break;
+            }
+
+            tv.setBackgroundColor(color);
             tv.setText(getItem(position));
             return tv;
         }
