@@ -21,11 +21,14 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- NineOldAndroids -->
-		<dependency>
-			<groupId>com.nineoldandroids</groupId>
-			<artifactId>library</artifactId>
-		</dependency>
+        <!-- Library -->
+        <dependency>
+            <groupId>com.nhaarman.listviewanimations</groupId>
+            <artifactId>lib-core</artifactId>
+            <version>${project.version}</version>
+            <type>apklib</type>
+            <scope>provided</scope>
+        </dependency>
 
 		<!-- Testing -->
 		<dependency>
