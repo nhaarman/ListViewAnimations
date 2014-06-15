@@ -48,6 +48,13 @@
             <version>${project.version}</version>
             <type>apklib</type>
         </dependency>
+
+        <!-- StickyListHeaders -->
+        <dependency>
+            <groupId>se.emilsjolander</groupId>
+            <artifactId>library</artifactId>
+            <version>2.4.0</version>
+        </dependency>
 	</dependencies>
 
 	<build>

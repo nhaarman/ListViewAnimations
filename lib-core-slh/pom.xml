@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.nhaarman.listviewanimations</groupId>
 		<artifactId>parent</artifactId>
-		<version>2.6.1-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>library</artifactId>
@@ -21,11 +21,22 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- NineOldAndroids -->
-		<dependency>
-			<groupId>com.nineoldandroids</groupId>
-			<artifactId>library</artifactId>
-		</dependency>
+        <!-- Library -->
+        <dependency>
+            <groupId>com.nhaarman.listviewanimations</groupId>
+            <artifactId>lib-core</artifactId>
+            <version>${project.version}</version>
+            <type>apklib</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- StickyListHeaders -->
+        <dependency>
+            <groupId>se.emilsjolander</groupId>
+            <artifactId>library</artifactId>
+            <version>2.4.0</version>
+            <scope>provided</scope>
+        </dependency>
 
 		<!-- Testing -->
 		<dependency>
