@@ -51,7 +51,7 @@ import java.util.Collection;
  * Extend this class and override {@link AnimateAdditionAdapter#getAdditionalAnimators(android.view.View,
  * android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
  */
-public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
+public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
 
     private static final long DEFAULT_SCROLLDOWN_ANIMATION_MS = 300;
     private static final long DEFAULT_INSERTION_ANIMATION_MS = 300;
@@ -167,7 +167,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * @param indexItemPairs the index-item pairs to insert. The first argument of the {@code Pair} is the index, the second argument is the item.
      */
     public void insert(@NonNull final Iterable<Pair<Integer, T>> indexItemPairs) {
-        if (getAbsListView() == null) {
+        if (getListViewWrapper() == null) {
             throw new IllegalStateException("Call setListView on this AnimateAdditionAdapter!");
         }
 
@@ -179,7 +179,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         int numInsertedAbove = 0;
 
         for (Pair<Integer, T> pair : indexItemPairs) {
-            if (getAbsListView().getFirstVisiblePosition() > pair.first) {
+            if (getListViewWrapper().getFirstVisiblePosition() > pair.first) {
                 /* Inserting an item above the first visible position */
                 int index = pair.first;
 
@@ -195,11 +195,11 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
                 numInsertedAbove++;
 
                 if (mShouldAnimateDown) {
-                    View view = getView(pair.first, null, getAbsListView());
+                    View view = getView(pair.first, null, getListViewWrapper().getListView());
                     view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                     scrollDistance -= view.getMeasuredHeight();
                 }
-            } else if (getAbsListView().getLastVisiblePosition() >= pair.first || getAbsListView().getLastVisiblePosition() == AdapterView.INVALID_POSITION ||
+            } else if (getListViewWrapper().getLastVisiblePosition() >= pair.first || getListViewWrapper().getLastVisiblePosition() == AdapterView.INVALID_POSITION ||
                     !childrenFillAbsListView()) {
                 /* Inserting an item that becomes visible on screen */
                 int index = pair.first;
@@ -236,33 +236,33 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         }
 
         if (mShouldAnimateDown) {
-            getAbsListView().smoothScrollBy(scrollDistance, (int) (mScrolldownAnimationDurationMs * numInsertedAbove));
+            getListViewWrapper().getListView().smoothScrollBy(scrollDistance, (int) (mScrolldownAnimationDurationMs * numInsertedAbove));
         }
 
         mInsertQueue.insert(visibleViews);
 
-        int firstVisiblePosition = getAbsListView().getFirstVisiblePosition();
-        View firstChild = getAbsListView().getChildAt(0);
+        int firstVisiblePosition = getListViewWrapper().getFirstVisiblePosition();
+        View firstChild = getListViewWrapper().getChildAt(0);
         int childTop = firstChild == null ? 0 : firstChild.getTop();
-        ((ListView) getAbsListView()).setSelectionFromTop(firstVisiblePosition + numInsertedAbove, childTop);
+        getListViewWrapper().getListView().setSelectionFromTop(firstVisiblePosition + numInsertedAbove, childTop);
     }
 
     /**
      * @return true if the children completely fill up the AbsListView.
      */
     private boolean childrenFillAbsListView() {
-        if (getAbsListView() == null) {
+        if (getListViewWrapper() == null) {
             throw new IllegalStateException("Call setListView on this AnimateAdditionAdapter first!");
         }
 
         int childrenHeight = 0;
-        for (int i = 0; i < getAbsListView().getCount(); i++) {
-            View child = getAbsListView().getChildAt(i);
+        for (int i = 0; i < getListViewWrapper().getCount(); i++) {
+            View child = getListViewWrapper().getChildAt(i);
             if (child != null) {
                 childrenHeight += child.getHeight();
             }
         }
-        return getAbsListView().getHeight() <= childrenHeight;
+        return getListViewWrapper().getListView().getHeight() <= childrenHeight;
     }
 
     @Override

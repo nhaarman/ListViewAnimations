@@ -13,26 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.swinginadapters.prepared;
-
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-
-import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.nineoldandroids.animation.Animator;
+package com.nhaarman.listviewanimations.util;
 
 import android.support.annotation.NonNull;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 
-public class AlphaInAnimationAdapter extends AnimationAdapter {
+public interface ListViewWrapperSetter<T extends ViewGroup> {
 
-    public AlphaInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
-        super(baseAdapter);
-    }
-
-    @NonNull
-    @Override
-    protected Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
-        return new Animator[0];
-    }
+    void setListViewWrapper(@NonNull final ListViewWrapper<T> listViewWrapper);
 }

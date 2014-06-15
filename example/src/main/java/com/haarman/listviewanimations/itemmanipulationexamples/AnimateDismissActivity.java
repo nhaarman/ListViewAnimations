@@ -82,10 +82,10 @@ public class AnimateDismissActivity extends BaseActivity {
         });
     }
 
-    private class MyOnDismissCallback implements OnDismissCallback {
+    private class MyOnDismissCallback implements OnDismissCallback<ListView> {
 
         @Override
-        public void onDismiss(@NonNull final AbsListView listView, @NonNull final int[] reverseSortedPositions) {
+        public void onDismiss(@NonNull final ListView listView, @NonNull final int[] reverseSortedPositions) {
             for (int position : reverseSortedPositions) {
                 mAdapter.remove(position);
             }

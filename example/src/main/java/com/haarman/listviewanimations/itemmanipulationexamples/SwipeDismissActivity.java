@@ -16,12 +16,13 @@
 package com.haarman.listviewanimations.itemmanipulationexamples;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,11 +34,9 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismis
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedUndoAdapter;
 
-import android.support.annotation.NonNull;
-
 import java.util.Arrays;
 
-public class SwipeDismissActivity extends MyListActivity implements OnNavigationListener, OnDismissCallback {
+public class SwipeDismissActivity extends MyListActivity implements OnNavigationListener, OnDismissCallback<ListView> {
 
     private MyListAdapter mAdapter;
 
@@ -71,7 +70,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
     }
 
     @Override
-    public void onDismiss(@NonNull final AbsListView absListView, @NonNull final int[] reverseSortedPositions) {
+    public void onDismiss(@NonNull final ListView listView, @NonNull final int[] reverseSortedPositions) {
         for (int position : reverseSortedPositions) {
             mAdapter.remove(position);
         }

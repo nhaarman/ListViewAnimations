@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.swinginadapters.prepared;
+package com.nhaarman.listviewanimations.swinginadapters.simple.generic;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -23,9 +24,7 @@ import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 
-import android.support.annotation.NonNull;
-
-public class ScaleInAnimationAdapter extends AnimationAdapter {
+public class ScaleInAnimationAdapterGen<T extends ViewGroup> extends AnimationAdapter<T> {
 
     private static final float DEFAULT_SCALE_FROM = 0.8f;
 
@@ -34,26 +33,18 @@ public class ScaleInAnimationAdapter extends AnimationAdapter {
 
     private final float mScaleFrom;
 
-    public ScaleInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
-        super(baseAdapter);
-        mScaleFrom = DEFAULT_SCALE_FROM;
+    public ScaleInAnimationAdapterGen(@NonNull final BaseAdapter baseAdapter) {
+        this(baseAdapter, DEFAULT_SCALE_FROM);
     }
 
-    public ScaleInAnimationAdapter(@NonNull final BaseAdapter baseAdapter, final float scaleFrom) {
+    public ScaleInAnimationAdapterGen(@NonNull final BaseAdapter baseAdapter, final float scaleFrom) {
         super(baseAdapter);
         mScaleFrom = scaleFrom;
-    }
-
-    public ScaleInAnimationAdapter(@NonNull final BaseAdapter baseAdapter, final float scaleFrom, final long animationDelayMillis, final long animationDurationMillis) {
-        super(baseAdapter);
-        mScaleFrom = scaleFrom;
-        setAnimationDelayMillis(animationDelayMillis);
-        setAnimationDurationMillis(animationDurationMillis);
     }
 
     @NonNull
     @Override
-    protected Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
+    public Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, SCALE_X, mScaleFrom, 1f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, SCALE_Y, mScaleFrom, 1f);
         return new ObjectAnimator[]{scaleX, scaleY};

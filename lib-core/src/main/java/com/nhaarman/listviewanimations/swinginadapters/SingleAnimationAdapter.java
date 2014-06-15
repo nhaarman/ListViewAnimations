@@ -27,7 +27,7 @@ import android.support.annotation.NonNull;
  * An implementation of AnimationAdapter which applies a single Animator to
  * views.
  */
-public abstract class SingleAnimationAdapter extends AnimationAdapter {
+public abstract class SingleAnimationAdapter<T extends ViewGroup> extends AnimationAdapter<T> {
 
     protected SingleAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
@@ -35,7 +35,7 @@ public abstract class SingleAnimationAdapter extends AnimationAdapter {
 
     @NonNull
     @Override
-    protected Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
+    public Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
         Animator animator = getAnimator(parent, view);
         return new Animator[]{animator};
     }

@@ -15,6 +15,7 @@
  */
 package com.nhaarman.listviewanimations.util;
 
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import android.support.annotation.NonNull;

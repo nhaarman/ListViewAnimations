@@ -16,6 +16,8 @@
 package com.nhaarman.listviewanimations;
 
 import android.database.DataSetObserver;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +25,18 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
+import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 import com.nhaarman.listviewanimations.util.ListViewSetter;
+import com.nhaarman.listviewanimations.util.ListViewWrapper;
+import com.nhaarman.listviewanimations.util.ListViewWrapperSetter;
 import com.nhaarman.listviewanimations.util.Swappable;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 /**
  * A decorator class that enables decoration of an instance of the {@link BaseAdapter} class.
  * <p/>
  * Classes extending this class can override methods and provide extra functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, ListViewSetter {
+public abstract class BaseAdapterDecorator<T extends ViewGroup> extends BaseAdapter implements SectionIndexer, Swappable, ListViewSetter, ListViewWrapperSetter<T> {
 
     /**
      * The {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
@@ -43,10 +45,10 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     private final BaseAdapter mDecoratedBaseAdapter;
 
     /**
-     * The {@link android.widget.AbsListView} this {@code BaseAdapterDecorator} will be bound to.
+     * The {@link com.nhaarman.listviewanimations.util.ListViewWrapper} containing the ListView this {@code BaseAdapterDecorator} will be bound to.
      */
     @Nullable
-    private AbsListView mAbsListView;
+    private ListViewWrapper<T> mListViewWrapper;
 
     /**
      * Create a new {@code BaseAdapterDecorator}, decorating given {@link android.widget.BaseAdapter}.
@@ -61,7 +63,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
      * Returns the {@link android.widget.BaseAdapter} that this {@code BaseAdapterDecorator} decorates.
      */
     @NonNull
-    protected BaseAdapter getDecoratedBaseAdapter() {
+    public BaseAdapter getDecoratedBaseAdapter() {
         return mDecoratedBaseAdapter;
     }
 
@@ -72,7 +74,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     protected BaseAdapter getRootAdapter() {
         BaseAdapter adapter = mDecoratedBaseAdapter;
         while (adapter instanceof BaseAdapterDecorator) {
-            adapter = ((BaseAdapterDecorator) adapter).getDecoratedBaseAdapter();
+            adapter = ((BaseAdapterDecorator<?>) adapter).getDecoratedBaseAdapter();
         }
         return adapter;
     }
@@ -83,7 +85,7 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
      */
     @Override
     public void setAbsListView(@NonNull final AbsListView absListView) {
-        mAbsListView = absListView;
+        mListViewWrapper = new AbsListViewWrapper(absListView);
 
         if (mDecoratedBaseAdapter instanceof ListViewSetter) {
             ((ListViewSetter) mDecoratedBaseAdapter).setAbsListView(absListView);
@@ -91,11 +93,24 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     }
 
     /**
-     * Returns the {@link android.widget.AbsListView} this {@code BaseAdapterDecorator} is bound to.
+     * Alternative to {@link #setAbsListView(android.widget.AbsListView)}. Sets the {@link com.nhaarman.listviewanimations.util.ListViewWrapper} which contains the ListView
+     * this adapter will be bound to. Call this method before setting this adapter to the ListView. Also propagates to the decorated {@code BaseAdapter} if applicable.
+     */
+    @Override
+    public void setListViewWrapper(@NonNull final ListViewWrapper<T> listViewWrapper) {
+        mListViewWrapper = listViewWrapper;
+
+        if (mDecoratedBaseAdapter instanceof ListViewWrapperSetter) {
+            ((ListViewWrapperSetter<T>) mDecoratedBaseAdapter).setListViewWrapper(listViewWrapper);
+        }
+    }
+
+    /**
+     * Returns the {@link com.nhaarman.listviewanimations.util.ListViewWrapper} containing the ListView this {@code BaseAdapterDecorator} is bound to.
      */
     @Nullable
-    protected AbsListView getAbsListView() {
-        return mAbsListView;
+    public ListViewWrapper<T> getListViewWrapper() {
+        return mListViewWrapper;
     }
 
     @Override

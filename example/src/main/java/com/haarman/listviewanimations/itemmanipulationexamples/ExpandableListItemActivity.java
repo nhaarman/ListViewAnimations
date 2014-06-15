@@ -32,7 +32,7 @@ import android.widget.Toast;
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.itemmanipulation.ExpandableListItemAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.simple.AlphaInAnimationAdapter;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class ExpandableListItemActivity extends MyListActivity {
         mExpandableListItemAdapter = new MyExpandableListItemAdapter(this, getItems());
         AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(mExpandableListItemAdapter);
         alphaInAnimationAdapter.setAbsListView(getListView());
-        alphaInAnimationAdapter.setInitialDelayMillis(500);
+        alphaInAnimationAdapter.getViewAnimator().setInitialDelayMillis(500);
         getListView().setAdapter(alphaInAnimationAdapter);
 
         Toast.makeText(this, R.string.explainexpand, Toast.LENGTH_LONG).show();

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.swinginadapters.prepared;
+package com.nhaarman.listviewanimations.swinginadapters.simple.generic;
 
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -26,26 +26,19 @@ import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
  * An implementation of the AnimationAdapter class which applies a
- * swing-in-from-the-left-animation to views.
+ * swing-in-from-the-right-animation to views.
  */
-@SuppressWarnings("UnusedDeclaration")
-public class SwingLeftInAnimationAdapter extends SingleAnimationAdapter {
+public class SwingRightInAnimationAdapterGen<T extends ViewGroup> extends SingleAnimationAdapter<T> {
 
     private static final String TRANSLATION_X = "translationX";
 
-    public SwingLeftInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
+    public SwingRightInAnimationAdapterGen(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
-    }
-
-    public SwingLeftInAnimationAdapter(@NonNull final BaseAdapter baseAdapter, final long animationDelayMillis, final long animationDurationMillis) {
-        super(baseAdapter);
-        setAnimationDelayMillis(animationDelayMillis);
-        setAnimationDurationMillis(animationDurationMillis);
     }
 
     @NonNull
     @Override
     protected Animator getAnimator(@NonNull final ViewGroup parent, @NonNull final View view) {
-        return ObjectAnimator.ofFloat(view, TRANSLATION_X, 0 - parent.getWidth(), 0);
+        return ObjectAnimator.ofFloat(view, TRANSLATION_X, parent.getWidth(), 0);
     }
 }
