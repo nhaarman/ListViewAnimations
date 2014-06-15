@@ -1,2 +1,1 @@
-include ':library'
-include ':example'
+include ':example', 'lib-core', 'lib-manipulation'

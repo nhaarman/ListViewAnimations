@@ -8,10 +8,10 @@
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>example</artifactId>
-	<packaging>apk</packaging>
+	<artifactId>lib-manipulation</artifactId>
+	<packaging>apklib</packaging>
 
-	<name>ListViewAnimations (Example)</name>
+	<name>ListViewAnimations (Itemmanipulation Library)</name>
 
 	<dependencies>
 		<!-- Android -->
@@ -19,20 +19,6 @@
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>support-v4</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>android.support</groupId>
-			<artifactId>compatibility-v7-appcompat</artifactId>
-			<type>apklib</type>
-		</dependency>
-		<dependency>
-			<groupId>android.support</groupId>
-			<artifactId>compatibility-v7-appcompat</artifactId>
-			<type>jar</type>
 		</dependency>
 
 		<!-- Library -->
@@ -42,15 +28,27 @@
 			<version>${project.version}</version>
 			<type>apklib</type>
 		</dependency>
+
+		<!-- Testing -->
 		<dependency>
-			<groupId>com.nhaarman.listviewanimations</groupId>
-			<artifactId>lib-manipulation</artifactId>
-			<version>${project.version}</version>
-			<type>apklib</type>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
+		<testSourceDirectory>src/androidTest/java</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
@@ -58,8 +56,6 @@
 				<extensions>true</extensions>
 				<configuration>
 					<androidManifestFile>${project.basedir}/src/main/AndroidManifest.xml</androidManifestFile>
-					<resourceDirectory>${project.basedir}/src/main/res</resourceDirectory>
-					<aidlSourceDirectory>${project.basedir}/src/main/aidl</aidlSourceDirectory>
 				</configuration>
 			</plugin>
 
@@ -69,7 +65,6 @@
 				<executions>
 					<execution>
 						<phase>package</phase>
-						<id>attach-artifact</id>
 						<goals>
 							<goal>attach-artifact</goal>
 						</goals>
@@ -142,19 +137,6 @@
 										<ignore></ignore>
 									</action>
 								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-antrun-plugin</artifactId>
-										<versionRange>[1.7,)</versionRange>
-										<goals>
-											<goal>run</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -162,6 +144,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
 
 	<profiles>
 		<profile>
@@ -188,37 +171,9 @@
 								<inherited>true</inherited>
 								<configuration>
 									<includes>
-										<include>${project.build.directory}/${project.artifactId}.apk</include>
+										<include>${project.build.directory}/${project.artifactId}.apklib</include>
 									</includes>
 								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-						<artifactId>android-maven-plugin</artifactId>
-						<inherited>true</inherited>
-						<configuration>
-							<release>true</release>
-							<sign>
-								<debug>false</debug>
-							</sign>
-							<zipalign>
-								<skip>false</skip>
-								<verbose>true</verbose>
-								<outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk</outputApk>
-							</zipalign>
-							<manifest>
-								<debuggable>false</debuggable>
-							</manifest>
-						</configuration>
-						<executions>
-							<execution>
-								<id>alignApk</id>
-								<phase>package</phase>
-								<goals>
-									<goal>zipalign</goal>
-								</goals>
 							</execution>
 						</executions>
 					</plugin>

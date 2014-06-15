@@ -24,7 +24,7 @@ android.libraryVariants.all { variant ->
         description "Generates Javadoc for $variant.name."
         source = variant.javaCompile.source
         ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-        def folder = branch == 'master' ? VERSION_NAME : branch
+        def folder = (branch == 'master' ? VERSION_NAME : branch) + "/" + project.name
         destinationDir file("./build/docs/javadoc/" + folder)
         classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
         options.links("http://docs.oracle.com/javase/7/docs/api/");
