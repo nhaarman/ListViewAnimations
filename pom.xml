@@ -13,16 +13,16 @@
 	<artifactId>parent</artifactId>
 	<packaging>pom</packaging>
 
-	<name>ListViewAnimations</name>
+	<name>ListViewAnimations (Parent)</name>
 	<description>An Android library which allows developers to easily add animations to ListView items</description>
 	<url>https://github.com/nhaarman/ListViewAnimations</url>
 	<inceptionYear>2013</inceptionYear>
 	<version>3.0.0-SNAPSHOT</version>
 
 	<modules>
-        <module>example</module>
-        <module>lib-core</module>
-        <module>lib-manipulation</module>
+		<module>example</module>
+		<module>lib-core</module>
+		<module>lib-manipulation</module>
 	</modules>
 
 	<scm>
@@ -56,7 +56,7 @@
 		<!-- Project Properties -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.6</java.version>
+		<java.version>1.7</java.version>
 		<android.sdk.platform>19</android.sdk.platform>
 
 		<!-- Dependency Versions -->
@@ -68,14 +68,13 @@
 		<hamcrest.version>1.3</hamcrest.version>
 
 		<!-- Plugin Versions -->
-		<android-maven-plugin.version>3.8.2</android-maven-plugin.version>
+		<android-maven-plugin.version>3.9.0-rc.2</android-maven-plugin.version>
 		<build-helper-maven-plugin.version>1.7</build-helper-maven-plugin.version>
 		<maven-release-plugin.version>2.3.2</maven-release-plugin.version>
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
 		<maven-javadoc-plugin.version>2.9</maven-javadoc-plugin.version>
 		<maven-source-plugin.version>2.2.1</maven-source-plugin.version>
 		<maven-gpg-plugin.version>1.4</maven-gpg-plugin.version>
-		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
 		<maven-jarsigner-plugin.version>1.3.2</maven-jarsigner-plugin.version>
 	</properties>
 
@@ -104,7 +103,13 @@
 				<version>${android-support.version}</version>
 				<type>jar</type>
 			</dependency>
-
+			<dependency>
+				<groupId>com.android.support</groupId>
+				<artifactId>support-annotations</artifactId>
+				<version>${android-support.version}</version>
+				<type>jar</type>
+			</dependency>
+			
 			<!-- NineOldAndroids -->
 			<dependency>
 				<groupId>com.nineoldandroids</groupId>
@@ -200,12 +205,6 @@
 					<configuration>
 						<quiet>true</quiet>
 					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<version>${maven-antrun-plugin.version}</version>
 				</plugin>
 
 				<plugin>

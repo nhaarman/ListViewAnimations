@@ -36,18 +36,18 @@
 		</dependency>
 
 		<!-- Library -->
-        <dependency>
-            <groupId>com.nhaarman.listviewanimations</groupId>
-            <artifactId>lib-core</artifactId>
-            <version>${project.version}</version>
-            <type>apklib</type>
-        </dependency>
-        <dependency>
-            <groupId>com.nhaarman.listviewanimations</groupId>
-            <artifactId>lib-manipulation</artifactId>
-            <version>${project.version}</version>
-            <type>apklib</type>
-        </dependency>
+		<dependency>
+			<groupId>com.nhaarman.listviewanimations</groupId>
+			<artifactId>lib-core</artifactId>
+			<version>${project.version}</version>
+			<type>apklib</type>
+		</dependency>
+		<dependency>
+			<groupId>com.nhaarman.listviewanimations</groupId>
+			<artifactId>lib-manipulation</artifactId>
+			<version>${project.version}</version>
+			<type>apklib</type>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -59,41 +59,8 @@
 				<configuration>
 					<androidManifestFile>${project.basedir}/src/main/AndroidManifest.xml</androidManifestFile>
 					<resourceDirectory>${project.basedir}/src/main/res</resourceDirectory>
+					<aidlSourceDirectory>${project.basedir}/src/main/aidl</aidlSourceDirectory>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>initialize</phase>
-						<configuration>
-							<target>
-								<copy todir="src/main/java">
-									<fileset dir="src/main/aidl">
-										<include name="**/*.aidl" />
-									</fileset>
-								</copy>
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<phase>install</phase>
-						<configuration>
-							<target>
-								<delete dir="src/main/java/com/android" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>
