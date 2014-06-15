@@ -1,7 +1,7 @@
 apply plugin: 'android'
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.1.+'
+    compile 'com.android.support:support-v4:19.1.+'
     compile 'se.emilsjolander:stickylistheaders:2.4.0'
 
     compile project(':lib-core')
@@ -14,7 +14,7 @@ android {
     buildToolsVersion '19.1.0'
 
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion 14
         targetSdkVersion 19
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(new Date().format('yyyyMMddHH'))

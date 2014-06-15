@@ -15,11 +15,10 @@
  */
 package com.haarman.listviewanimations.appearanceexamples;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.haarman.listviewanimations.MyListActivity;
+import com.haarman.listviewanimations.MyListAdapter;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
@@ -38,7 +38,7 @@ import com.nhaarman.listviewanimations.swinginadapters.simple.SwingRightInAnimat
 
 import java.util.ArrayList;
 
-public class AppearanceExamplesActivity extends MyListActivity implements OnNavigationListener {
+public class AppearanceExamplesActivity extends MyListActivity implements ActionBar.OnNavigationListener {
 
     private static final String SAVEDINSTANCESTATE_ANIMATIONADAPTER = "savedinstancestate_animationadapter";
 
@@ -49,12 +49,12 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAdapter = new MyAdapter(this, getItems());
+        mAdapter = new MyListAdapter(this, getItems());
         setAlphaAdapter();
 
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        getSupportActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        getActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
+        getActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Override
@@ -143,31 +143,6 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
 
     /* Non-ListViewAnimations related stuff below */
 
-    private static class MyAdapter extends ArrayAdapter<Integer> {
-
-        private final Context mContext;
-
-        public MyAdapter(final Context context, final ArrayList<Integer> items) {
-            super(items);
-            mContext = context;
-        }
-
-        @Override
-        public long getItemId(final int position) {
-            return getItem(position).hashCode();
-        }
-
-        @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
-            TextView tv = (TextView) convertView;
-            if (tv == null) {
-                tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
-            }
-            tv.setText("This is row number " + getItem(position));
-            return tv;
-        }
-    }
-
     private class AnimSelectionAdapter extends ArrayAdapter<String> {
 
         public AnimSelectionAdapter() {
@@ -182,6 +157,7 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
             }
 
             tv.setText(getItem(position));
+            tv.setTextColor(getResources().getColor(android.R.color.white));
 
             return tv;
         }

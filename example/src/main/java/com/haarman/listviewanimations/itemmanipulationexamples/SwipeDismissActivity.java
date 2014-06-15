@@ -15,10 +15,9 @@
  */
 package com.haarman.listviewanimations.itemmanipulationexamples;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedU
 
 import java.util.Arrays;
 
-public class SwipeDismissActivity extends MyListActivity implements OnNavigationListener, OnDismissCallback<ListView> {
+public class SwipeDismissActivity extends MyListActivity implements ActionBar.OnNavigationListener, OnDismissCallback<ListView> {
 
     private MyListAdapter mAdapter;
 
@@ -46,9 +45,9 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
 
         mAdapter = createListAdapter();
 
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        getSupportActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        getActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
+        getActionBar().setDisplayShowTitleEnabled(false);
     }
 
     private void setSwipeDismissAdapter() {

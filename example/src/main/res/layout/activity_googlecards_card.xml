@@ -11,7 +11,10 @@
         android:id="@+id/activity_googlecards_card_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp" />
+        android:fontFamily="sans-serif-light"
+        android:textColor="?android:attr/textColorSecondary"
+        android:paddingBottom="8dp"
+        style="@android:style/TextAppearance.DeviceDefault.Large" />
 
     <ImageView
         android:id="@+id/activity_googlecards_card_imageview"

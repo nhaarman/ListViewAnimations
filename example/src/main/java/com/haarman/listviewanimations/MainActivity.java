@@ -54,8 +54,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startActivity(new Intent(this, StickyListHeadersActivity.class));
-
         bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"), mServiceConn, Context.BIND_AUTO_CREATE);
     }
 
@@ -113,13 +111,17 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    public void onSLHClicked(final View view) {
+        Intent intent = new Intent(this, StickyListHeadersActivity.class);
+        startActivity(intent);
+    }
+
     private IInAppBillingService mService;
 
     private final ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(final ComponentName name) {
             mService = null;
-            //			supportInvalidateOptionsMenu();
         }
 
         @Override

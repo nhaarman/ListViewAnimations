@@ -16,16 +16,16 @@
 package com.haarman.listviewanimations.itemmanipulationexamples;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.haarman.listviewanimations.R;
 
-public class ItemManipulationsExamplesActivity extends ActionBarActivity {
+public class ItemManipulationsExamplesActivity extends Activity {
 
     @SuppressLint("InlinedApi")
     @Override
@@ -36,7 +36,7 @@ public class ItemManipulationsExamplesActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_examples_itemmanipulations);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void onDragAndDropClicked(final View view) {

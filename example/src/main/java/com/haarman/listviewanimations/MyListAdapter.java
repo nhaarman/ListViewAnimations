@@ -40,6 +40,23 @@ public class MyListAdapter extends ArrayAdapter<Integer> implements UndoAdapter 
         }
 
         view.setText("This is row number " + getItem(position));
+
+        int backgroundColorResId;
+        switch (getItem(position) % 4) {
+            case 0:
+                backgroundColorResId = R.color.holo_red_light_transparent;
+                break;
+            case 1:
+                backgroundColorResId = R.color.holo_blue_light_transparent;
+                break;
+            case 2:
+                backgroundColorResId = R.color.holo_green_light_transparent;
+                break;
+            default:
+                backgroundColorResId = R.color.holo_purple_light_transparent;
+        }
+        view.setBackgroundColor(mContext.getResources().getColor(backgroundColorResId));
+
         return view;
     }
 
