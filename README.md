@@ -22,11 +22,6 @@ ListViewAnimations provides the following features:
 
 Setup
 -----
-* In Eclipse, just import the library as an Android library project.
-* Project > Clean to generate the binaries you need, like R.java, etc.
-* Then, just add ListViewAnimations as a dependency to your existing project and you're good to go!
-
-**Or**:
 
 * [Download the .jar file][4]
 * [Download the latest NineOldAndroids .jar file][17]
@@ -40,7 +35,7 @@ Add the following to your `build.gradle`:
 		mavenCentral()
 	}
 	
-	dependencies{
+	dependencies {
 		compile 'com.nhaarman.listviewanimations:library:2.6.0'
 	}
 

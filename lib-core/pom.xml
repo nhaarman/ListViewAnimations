@@ -11,7 +11,7 @@
 	<artifactId>lib-core</artifactId>
 	<packaging>apklib</packaging>
 
-	<name>ListViewAnimations (Library)</name>
+	<name>ListViewAnimations (Core Library)</name>
 
 	<dependencies>
 		<!-- Android -->
@@ -19,6 +19,11 @@
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+				<groupId>com.android.support</groupId>
+				<artifactId>support-annotations</artifactId>
+				<type>jar</type>
 		</dependency>
 
 		<!-- NineOldAndroids -->
