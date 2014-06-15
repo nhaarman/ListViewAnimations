@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.nhaarman.listviewanimations</groupId>
 		<artifactId>parent</artifactId>
-		<version>2.6.1-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>example</artifactId>
@@ -36,12 +36,18 @@
 		</dependency>
 
 		<!-- Library -->
-		<dependency>
-			<groupId>com.nhaarman.listviewanimations</groupId>
-			<artifactId>library</artifactId>
-			<version>${project.version}</version>
-			<type>apklib</type>
-		</dependency>
+        <dependency>
+            <groupId>com.nhaarman.listviewanimations</groupId>
+            <artifactId>lib-core</artifactId>
+            <version>${project.version}</version>
+            <type>apklib</type>
+        </dependency>
+        <dependency>
+            <groupId>com.nhaarman.listviewanimations</groupId>
+            <artifactId>lib-manipulation</artifactId>
+            <version>${project.version}</version>
+            <type>apklib</type>
+        </dependency>
 	</dependencies>
 
 	<build>

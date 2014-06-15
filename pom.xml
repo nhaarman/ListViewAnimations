@@ -17,11 +17,12 @@
 	<description>An Android library which allows developers to easily add animations to ListView items</description>
 	<url>https://github.com/nhaarman/ListViewAnimations</url>
 	<inceptionYear>2013</inceptionYear>
-	<version>2.6.1-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 
 	<modules>
-		<module>library</module>
-		<module>example</module>
+        <module>example</module>
+        <module>lib-core</module>
+        <module>lib-manipulation</module>
 	</modules>
 
 	<scm>
