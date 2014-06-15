@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Niek Haarman
+ * Copyright 2013 Niek Haarman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.swinginadapters.prepared;
-
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-
-import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.nineoldandroids.animation.Animator;
+package com.nhaarman.listviewanimations.swinginadapters.simple;
 
 import android.support.annotation.NonNull;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 
-public class AlphaInAnimationAdapter extends AnimationAdapter {
+import com.nhaarman.listviewanimations.swinginadapters.simple.generic.SwingRightInAnimationAdapterGen;
 
-    public AlphaInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
+/**
+ * An implementation of the AnimationAdapter class which applies a
+ * swing-in-from-the-right-animation to views.
+ */
+public class SwingRightInAnimationAdapter extends SwingRightInAnimationAdapterGen<ListView> {
+
+    public SwingRightInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
-    }
-
-    @NonNull
-    @Override
-    protected Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
-        return new Animator[0];
     }
 }

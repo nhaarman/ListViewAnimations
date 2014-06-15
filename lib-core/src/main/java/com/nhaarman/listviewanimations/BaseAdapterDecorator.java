@@ -92,6 +92,10 @@ public abstract class BaseAdapterDecorator<T extends ViewGroup> extends BaseAdap
         }
     }
 
+    /**
+     * Alternative to {@link #setAbsListView(android.widget.AbsListView)}. Sets the {@link com.nhaarman.listviewanimations.util.ListViewWrapper} which contains the ListView
+     * this adapter will be bound to. Call this method before setting this adapter to the ListView. Also propagates to the decorated {@code BaseAdapter} if applicable.
+     */
     @Override
     public void setListViewWrapper(@NonNull final ListViewWrapper<T> listViewWrapper) {
         mListViewWrapper = listViewWrapper;

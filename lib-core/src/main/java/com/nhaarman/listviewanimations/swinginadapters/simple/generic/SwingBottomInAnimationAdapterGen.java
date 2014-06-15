@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.swinginadapters.prepared;
+package com.nhaarman.listviewanimations.swinginadapters.simple.generic;
 
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -28,18 +28,12 @@ import com.nineoldandroids.animation.ObjectAnimator;
  * An implementation of the AnimationAdapter class which applies a
  * swing-in-from-bottom-animation to views.
  */
-public class SwingBottomInAnimationAdapter extends SingleAnimationAdapter {
+public class SwingBottomInAnimationAdapterGen<T extends ViewGroup> extends SingleAnimationAdapter<T> {
 
     private static final String TRANSLATION_Y = "translationY";
 
-    public SwingBottomInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
+    public SwingBottomInAnimationAdapterGen(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
-    }
-
-    public SwingBottomInAnimationAdapter(@NonNull final BaseAdapter baseAdapter, final long animationDelayMillis, final long animationDurationMillis) {
-        super(baseAdapter);
-        setAnimationDelayMillis(animationDelayMillis);
-        setAnimationDurationMillis(animationDurationMillis);
     }
 
     @Override
