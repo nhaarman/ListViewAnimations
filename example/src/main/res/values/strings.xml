@@ -30,5 +30,7 @@
     <string name="moved">%1$d moved to position %2$d</string>
     <string name="long_press_to_drag">Long press an item to start dragging</string>
     <string name="removed_positions">Removed positions: %s</string>
+    <string name="tap_to_insert">Tap on an item to insert a new item</string>
+    <string name="newly_added_item">This is newly added item %d</string>
 
 </resources>

@@ -16,7 +16,6 @@
 package com.haarman.listviewanimations.itemmanipulation;
 
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.haarman.listviewanimations.MyListActivity;

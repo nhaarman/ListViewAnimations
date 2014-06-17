@@ -18,8 +18,6 @@ package com.haarman.listviewanimations;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
 public class MyListActivity extends BaseActivity {
 
     private ListView mListView;

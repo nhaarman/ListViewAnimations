@@ -16,13 +16,9 @@
 package com.haarman.listviewanimations.itemmanipulation;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.BaseAdapter;
 
 import com.haarman.listviewanimations.BaseActivity;
 import com.haarman.listviewanimations.R;
