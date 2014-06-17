@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.itemmanipulationexamples;
+package com.haarman.listviewanimations.itemmanipulation;
 
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.haarman.listviewanimations.MyListActivity;
@@ -35,24 +34,29 @@ public class DragAndDropActivity extends MyListActivity {
         DynamicListView listView = (DynamicListView) findViewById(R.id.activity_draganddrop_listview);
         listView.setDivider(null);
 
-        TextView headerView = new TextView(this);
-        headerView.setText("HEADER");
-        listView.addHeaderView(headerView);
-
-        final ArrayAdapter<Integer> adapter = createListAdapter();
+        final ArrayAdapter<String> adapter = createListAdapter();
         AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(adapter);
         animAdapter.setAbsListView(listView);
-        animAdapter.getViewAnimator().setInitialDelayMillis(300);
-        listView.setAdapter(animAdapter);
 
-        Toast.makeText(this, "Long press an item to start dragging", Toast.LENGTH_LONG).show();
-        listView.setOnItemMovedListener(
-                new DynamicListView.OnItemMovedListener() {
-                    @Override
-                    public void onItemMoved(final int newPosition) {
-                        Toast.makeText(getApplicationContext(), adapter.getItem(newPosition) + " moved to position " + newPosition, Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
+        assert animAdapter.getViewAnimator() != null;
+        animAdapter.getViewAnimator().setInitialDelayMillis(300);
+
+        listView.setAdapter(animAdapter);
+        listView.setOnItemMovedListener(new MyOnItemMovedListener(adapter));
+
+        Toast.makeText(this, getString(R.string.long_press_to_drag), Toast.LENGTH_LONG).show();
+    }
+
+    private class MyOnItemMovedListener implements DynamicListView.OnItemMovedListener {
+        private final ArrayAdapter<String> mAdapter;
+
+        MyOnItemMovedListener(final ArrayAdapter<String> adapter) {
+            mAdapter = adapter;
+        }
+
+        @Override
+        public void onItemMoved(final int newPosition) {
+            Toast.makeText(getApplicationContext(), getString(R.string.moved, mAdapter.getItem(newPosition), newPosition), Toast.LENGTH_SHORT).show();
+        }
     }
 }

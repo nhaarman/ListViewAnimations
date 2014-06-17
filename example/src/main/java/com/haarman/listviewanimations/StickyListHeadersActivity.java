@@ -1,59 +1,34 @@
 package com.haarman.listviewanimations;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.StickyListHeadersAdapterDecorator;
 import com.nhaarman.listviewanimations.swinginadapters.simple.SLHAlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.util.StickyListHeadersListViewWrapper;
 
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class StickyListHeadersActivity extends Activity {
-
-    private StickyListHeadersListView mListView;
+public class StickyListHeadersActivity extends BaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListView = new StickyListHeadersListView(this);
-        setContentView(mListView);
-        MyAdapter integers = new MyAdapter();
-        for (int i = 0; i < 100; i++) {
-            integers.add(i);
-        }
+        setContentView(R.layout.activity_stickylistheaders);
 
-        SLHAlphaInAnimationAdapter animationAdapter = new SLHAlphaInAnimationAdapter(integers);
+        StickyListHeadersListView listView = (StickyListHeadersListView) findViewById(R.id.activity_stickylistheaders_listview);
+        listView.setFitsSystemWindows(true);
+
+        MyListAdapter adapter = new MyListAdapter(this);
+        SLHAlphaInAnimationAdapter animationAdapter = new SLHAlphaInAnimationAdapter(adapter);
         StickyListHeadersAdapterDecorator stickyListHeadersAdapterDecorator = new StickyListHeadersAdapterDecorator(animationAdapter);
-        stickyListHeadersAdapterDecorator.setListViewWrapper(new StickyListHeadersListViewWrapper(mListView));
-        mListView.setAdapter(stickyListHeadersAdapterDecorator);
-    }
+        stickyListHeadersAdapterDecorator.setListViewWrapper(new StickyListHeadersListViewWrapper(listView));
 
+        assert animationAdapter.getViewAnimator() != null;
+        animationAdapter.getViewAnimator().setInitialDelayMillis(500);
 
-    private class MyAdapter extends ArrayAdapter<Integer> implements StickyListHeadersAdapter {
+        assert stickyListHeadersAdapterDecorator.getViewAnimator() != null;
+        stickyListHeadersAdapterDecorator.getViewAnimator().setInitialDelayMillis(500);
 
-        @Override
-        public View getHeaderView(final int i, final View view, final ViewGroup viewGroup) {
-            TextView tv = new TextView(StickyListHeadersActivity.this);
-            tv.setText("Header");
-            return tv;
-        }
-
-        @Override
-        public long getHeaderId(final int i) {
-            return i/10;
-        }
-
-        @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
-            TextView tv = new TextView(StickyListHeadersActivity.this);
-            tv.setText("Position: " + position);
-            return tv;
-        }
+        listView.setAdapter(stickyListHeadersAdapterDecorator);
     }
 }

@@ -18,8 +18,6 @@ package com.haarman.listviewanimations;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
 public class MyListActivity extends BaseActivity {
 
     private ListView mListView;
@@ -36,14 +34,6 @@ public class MyListActivity extends BaseActivity {
     }
 
     protected MyListAdapter createListAdapter() {
-        return new MyListAdapter(this, getItems());
-    }
-
-    public static ArrayList<Integer> getItems() {
-        ArrayList<Integer> items = new ArrayList<Integer>();
-        for (int i = 0; i < 1000; i++) {
-            items.add(i);
-        }
-        return items;
+        return new MyListAdapter(this);
     }
 }

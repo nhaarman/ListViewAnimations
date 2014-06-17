@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.appearanceexamples;
+package com.haarman.listviewanimations.appearance;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.OnNavigationListener;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.haarman.listviewanimations.MyListActivity;
+import com.haarman.listviewanimations.MyListAdapter;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
@@ -36,37 +39,26 @@ import com.nhaarman.listviewanimations.swinginadapters.simple.SwingBottomInAnima
 import com.nhaarman.listviewanimations.swinginadapters.simple.SwingLeftInAnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.simple.SwingRightInAnimationAdapter;
 
-import java.util.ArrayList;
-
-public class AppearanceExamplesActivity extends MyListActivity implements OnNavigationListener {
+public class AppearanceExamplesActivity extends MyListActivity implements ActionBar.OnNavigationListener {
 
     private static final String SAVEDINSTANCESTATE_ANIMATIONADAPTER = "savedinstancestate_animationadapter";
 
     private BaseAdapter mAdapter;
-    private AnimationAdapter mAnimAdapter;
+    private AnimationAdapter<AbsListView> mAnimAdapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAdapter = new MyAdapter(this, getItems());
+        mAdapter = new MyListAdapter(this);
         setAlphaAdapter();
 
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        getSupportActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-    }
+        assert getActionBar() != null;
+        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        getActionBar().setDisplayShowTitleEnabled(false);
 
-    @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        outState.putParcelable(SAVEDINSTANCESTATE_ANIMATIONADAPTER, mAnimAdapter.onSaveInstanceState());
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull final Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mAnimAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(SAVEDINSTANCESTATE_ANIMATIONADAPTER));
+        SpinnerAdapter animSelectionAdapter = new AnimSelectionAdapter(this);
+        getActionBar().setListNavigationCallbacks(animSelectionAdapter, this);
     }
 
     private void setAlphaAdapter() {
@@ -116,6 +108,18 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull final Bundle outState) {
+        outState.putParcelable(SAVEDINSTANCESTATE_ANIMATIONADAPTER, mAnimAdapter.onSaveInstanceState());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull final Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mAnimAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(SAVEDINSTANCESTATE_ANIMATIONADAPTER));
+    }
+
+    @Override
     public boolean onNavigationItemSelected(final int itemPosition, final long itemId) {
         switch (itemPosition) {
             case 0:
@@ -141,44 +145,22 @@ public class AppearanceExamplesActivity extends MyListActivity implements OnNavi
         }
     }
 
-    /* Non-ListViewAnimations related stuff below */
-
-    private static class MyAdapter extends ArrayAdapter<Integer> {
+    private static class AnimSelectionAdapter extends ArrayAdapter<String> {
 
         private final Context mContext;
 
-        public MyAdapter(final Context context, final ArrayList<Integer> items) {
-            super(items);
+        AnimSelectionAdapter(@NonNull final Context context) {
             mContext = context;
+            String[] items = context.getResources().getStringArray(R.array.appearance_examples);
+            addAll(items);
         }
 
         @Override
-        public long getItemId(final int position) {
-            return getItem(position).hashCode();
-        }
-
-        @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
+        public View getView(final int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
             TextView tv = (TextView) convertView;
             if (tv == null) {
-                tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
-            }
-            tv.setText("This is row number " + getItem(position));
-            return tv;
-        }
-    }
-
-    private class AnimSelectionAdapter extends ArrayAdapter<String> {
-
-        public AnimSelectionAdapter() {
-            addAll("Alpha", "Left", "Right", "Bottom", "Bottom right", "Scale");
-        }
-
-        @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
-            TextView tv = (TextView) convertView;
-            if (tv == null) {
-                tv = (TextView) LayoutInflater.from(AppearanceExamplesActivity.this).inflate(android.R.layout.simple_list_item_1, parent, false);
+                tv = (TextView) LayoutInflater.from(mContext).inflate(android.R.layout.simple_list_item_1, parent, false);
+                tv.setTextColor(mContext.getResources().getColor(android.R.color.white));
             }
 
             tv.setText(getItem(position));

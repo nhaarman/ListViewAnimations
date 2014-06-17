@@ -78,6 +78,14 @@ public class StickyListHeadersAdapterDecorator extends BaseAdapterDecorator<Stic
         setListViewWrapper(stickyListHeadersListViewWrapper);
     }
 
+    /**
+     * Returns the {@link com.nhaarman.listviewanimations.swinginadapters.ViewAnimator} responsible for animating the header Views in this adapter.
+     */
+    @Nullable
+    public ViewAnimator<StickyListHeadersListView> getViewAnimator() {
+        return mViewAnimator;
+    }
+
     @Override
     public void setListViewWrapper(@NonNull final ListViewWrapper<StickyListHeadersListView> listViewWrapper) {
         super.setListViewWrapper(listViewWrapper);
@@ -89,9 +97,9 @@ public class StickyListHeadersAdapterDecorator extends BaseAdapterDecorator<Stic
         if (getListViewWrapper() == null) {
             throw new IllegalStateException("Call setStickyListHeadersListView() on this AnimationAdapter first!");
         }
-        assert mViewAnimator != null;
 
         if (convertView != null) {
+            assert mViewAnimator != null;
             mViewAnimator.cancelExistingAnimation(convertView);
         }
 
@@ -122,7 +130,7 @@ public class StickyListHeadersAdapterDecorator extends BaseAdapterDecorator<Stic
     }
 
     @Override
-    public long getHeaderId(final int i) {
-        return mStickyListHeadersAdapter.getHeaderId(i);
+    public long getHeaderId(final int position) {
+        return mStickyListHeadersAdapter.getHeaderId(position);
     }
 }

@@ -16,33 +16,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.haarman.listviewanimations.appearanceexamples.AppearanceExamplesActivity"
+            android:name="com.haarman.listviewanimations.appearance.AppearanceExamplesActivity"
             android:label="@string/appearance" />
         <activity
-            android:name="com.haarman.listviewanimations.GoogleCardsActivity"
+            android:name=".googlecards.GoogleCardsActivity"
             android:label="@string/googlecards" />
         <activity
-            android:name="com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity"
+            android:name="com.haarman.listviewanimations.itemmanipulation.ItemManipulationsExamplesActivity"
             android:label="@string/itemmanipulation" />
         <activity
-            android:name="com.haarman.listviewanimations.itemmanipulationexamples.DragAndDropActivity"
+            android:name="com.haarman.listviewanimations.itemmanipulation.DragAndDropActivity"
             android:label="@string/draganddrop" />
         <activity
-            android:name="com.haarman.listviewanimations.itemmanipulationexamples.SwipeDismissActivity"
+            android:name="com.haarman.listviewanimations.itemmanipulation.SwipeDismissActivity"
             android:label="@string/swipedismiss" />
         <activity
-            android:name="com.haarman.listviewanimations.itemmanipulationexamples.AnimateDismissActivity"
-            android:label="@string/animateremoval" />
-        <activity
-            android:name="com.haarman.listviewanimations.itemmanipulationexamples.AnimateAdditionActivity"
+            android:name="com.haarman.listviewanimations.itemmanipulation.AnimateAdditionActivity"
             android:label="@string/animateaddition" />
         <activity
-            android:name="com.haarman.listviewanimations.GridViewActivity"
+            android:name=".gridview.GridViewActivity"
             android:label="@string/gridviewexample" />
         <activity
-            android:name="com.haarman.listviewanimations.itemmanipulationexamples.ExpandableListItemActivity"
+            android:name=".itemmanipulation.expandablelistitems.ExpandableListItemActivity"
             android:label="@string/expandablelistitemadapter" />
-        <activity android:name=".StickyListHeadersActivity" />
+        <activity
+            android:name=".StickyListHeadersActivity"
+            android:label="@string/stickylistheaders" />
     </application>
 
 </manifest>

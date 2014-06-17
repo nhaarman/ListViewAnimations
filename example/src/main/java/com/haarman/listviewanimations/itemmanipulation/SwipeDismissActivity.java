@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.itemmanipulationexamples;
+package com.haarman.listviewanimations.itemmanipulation;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import android.widget.Toast;
 
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.MyListAdapter;
+import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
@@ -36,7 +36,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedU
 
 import java.util.Arrays;
 
-public class SwipeDismissActivity extends MyListActivity implements OnNavigationListener, OnDismissCallback<ListView> {
+public class SwipeDismissActivity extends MyListActivity implements ActionBar.OnNavigationListener, OnDismissCallback<ListView> {
 
     private MyListAdapter mAdapter;
 
@@ -46,25 +46,26 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
 
         mAdapter = createListAdapter();
 
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        getSupportActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        assert getActionBar() != null;
+        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        getActionBar().setListNavigationCallbacks(new AnimSelectionAdapter(), this);
+        getActionBar().setDisplayShowTitleEnabled(false);
     }
 
     private void setSwipeDismissAdapter() {
-        SwipeDismissAdapter adapter = new SwipeDismissAdapter(mAdapter, this);
+        SwipeDismissAdapter<ListView> adapter = new SwipeDismissAdapter(mAdapter, this);
         adapter.setAbsListView(getListView());
         getListView().setAdapter(adapter);
     }
 
     private void setContextualUndoAdapter() {
-        SimpleSwipeUndoAdapter adapter = new SimpleSwipeUndoAdapter(mAdapter, this, this);
+        SimpleSwipeUndoAdapter<ListView> adapter = new SimpleSwipeUndoAdapter(mAdapter, this, this);
         adapter.setAbsListView(getListView());
         getListView().setAdapter(adapter);
     }
 
     private void setContextualUndoWithTimedDeleteAdapter() {
-        TimedUndoAdapter adapter = new TimedUndoAdapter(mAdapter, this, this);
+        TimedUndoAdapter<ListView> adapter = new TimedUndoAdapter(mAdapter, this, this);
         adapter.setAbsListView(getListView());
         getListView().setAdapter(adapter);
     }
@@ -74,7 +75,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
         for (int position : reverseSortedPositions) {
             mAdapter.remove(position);
         }
-        Toast.makeText(this, "Removed positions: " + Arrays.toString(reverseSortedPositions), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.removed_positions, Arrays.toString(reverseSortedPositions)), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -97,7 +98,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
     private class AnimSelectionAdapter extends ArrayAdapter<String> {
 
         AnimSelectionAdapter() {
-            addAll("Swipe-To-Dismiss", "Contextual Undo", "CU - Timed Delete");
+            addAll(getResources().getStringArray(R.array.swipedismiss));
         }
 
         @Override
@@ -105,6 +106,7 @@ public class SwipeDismissActivity extends MyListActivity implements OnNavigation
             TextView tv = (TextView) convertView;
             if (tv == null) {
                 tv = (TextView) LayoutInflater.from(SwipeDismissActivity.this).inflate(android.R.layout.simple_list_item_1, parent, false);
+                tv.setTextColor(getResources().getColor(android.R.color.white));
             }
 
             tv.setText(getItem(position));

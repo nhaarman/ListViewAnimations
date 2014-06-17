@@ -16,12 +16,13 @@
 package com.nhaarman.listviewanimations.swinginadapters.simple;
 
 import android.support.annotation.NonNull;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.swinginadapters.simple.generic.ScaleInAnimationAdapterGen;
 
-public class ScaleInAnimationAdapter extends ScaleInAnimationAdapterGen<ListView> {
+public class ScaleInAnimationAdapter extends ScaleInAnimationAdapterGen<AbsListView> {
 
     public ScaleInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
