@@ -20,9 +20,10 @@
 	<version>3.0.0-SNAPSHOT</version>
 
 	<modules>
-		<module>example</module>
 		<module>lib-core</module>
+		<module>lib-core-slh</module>
 		<module>lib-manipulation</module>
+		<module>example</module>
 	</modules>
 
 	<scm>
@@ -115,6 +116,14 @@
 				<groupId>com.nineoldandroids</groupId>
 				<artifactId>library</artifactId>
 				<version>${nineoldandroids.version}</version>
+			</dependency>
+			
+			<!-- StickyListHeaders -->
+			<dependency>
+				<groupId>se.emilsjolander</groupId>
+				<artifactId>stickylistheaders</artifactId>
+				<version>2.4.0</version>
+				<type>aar</type>
 			</dependency>
 
 			<!-- Testing -->
