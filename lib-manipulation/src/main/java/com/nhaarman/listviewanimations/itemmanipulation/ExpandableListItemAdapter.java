@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -111,6 +110,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         mExpandedIds = new ArrayList<>();
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void setListViewWrapper(@NonNull final ListViewWrapper listViewWrapper) {
         mListViewWrapper = listViewWrapper;
@@ -169,7 +169,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         }
 
         View titleView = getTitleView(position, viewHolder.titleView, viewHolder.titleParent);
-        if (titleView != viewHolder.titleView) {
+        if (!titleView.equals(viewHolder.titleView)) {
             viewHolder.titleParent.removeAllViews();
             viewHolder.titleParent.addView(titleView);
 
@@ -182,7 +182,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         viewHolder.titleView = titleView;
 
         View contentView = getContentView(position, viewHolder.contentView, viewHolder.contentParent);
-        if (contentView != viewHolder.contentView) {
+        if (!contentView.equals(viewHolder.contentView)) {
             viewHolder.contentParent.removeAllViews();
             viewHolder.contentParent.addView(contentView);
         }
@@ -407,7 +407,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         View result = null;
         for (int i = 0; i < mListViewWrapper.getChildCount() && result == null; i++) {
             View childView = mListViewWrapper.getChildAt(i);
-            if (AdapterViewUtil.getPositionForView(mListViewWrapper, childView) == position) {
+            if (childView != null && AdapterViewUtil.getPositionForView(mListViewWrapper, childView) == position) {
                 result = childView;
             }
         }
@@ -424,6 +424,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     }
 
     private void toggle(@NonNull final View contentParent) {
+        if (mListViewWrapper == null) {
+            throw new IllegalStateException("No ListView set!");
+        }
+
+
         boolean isVisible = contentParent.getVisibility() == View.VISIBLE;
         boolean shouldCollapseOther = !isVisible && mLimit > 0 && mExpandedIds.size() >= mLimit;
         if (shouldCollapseOther) {
@@ -568,7 +573,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         private static View findDirectChild(@NonNull final View view, @NonNull final ViewGroup listView) {
             View result = view;
             View parent = (View) result.getParent();
-            while (parent != listView) {
+            while (!parent.equals(listView)) {
                 result = parent;
                 parent = (View) result.getParent();
             }
