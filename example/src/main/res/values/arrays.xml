@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="appearance_examples">
+        <item>Alpha</item>
+        <item>Left</item>
+        <item>Right</item>
+        <item>Bottom</item>
+        <item>Bottom right</item>
+        <item>Scale</item>
+    </string-array>
+
+    <string-array name="swipedismiss">
+        <item>Swipe-To-Dismiss</item>
+        <item>Contextual Undo</item>
+        <item>CU - Timed Delete</item>
+    </string-array>
+
+</resources>

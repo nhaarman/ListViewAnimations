@@ -17,6 +17,7 @@ package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
@@ -28,10 +29,10 @@ import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
  * Adds an option to swipe items in an {@link android.widget.AbsListView} away.
  * Do not call {@link android.widget.AbsListView#setOnTouchListener(android.view.View.OnTouchListener)} on your {@code AbsListView}!
  */
-public class SwipeDismissAdapter extends BaseAdapterDecorator {
+public class SwipeDismissAdapter<T extends ViewGroup> extends BaseAdapterDecorator<T> {
 
     @NonNull
-    private final OnDismissCallback mOnDismissCallback;
+    private final OnDismissCallback<T> mOnDismissCallback;
 
     @Nullable
     private SwipeDismissTouchListener mDismissTouchListener;

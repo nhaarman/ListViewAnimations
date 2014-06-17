@@ -10,8 +10,5 @@
     <color name="purple_transparent">#aa432677</color>
 
     <color name="holo_red_light_transparent">#aaff4444</color>
-    <color name="holo_green_light_transparent">#aa99cc00</color>
-    <color name="holo_blue_light_transparent">#aa33b5e5</color>
-    <color name="holo_purple_light_transparent">#aaaa66cc</color>
 
 </resources>

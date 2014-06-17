@@ -36,14 +36,6 @@ public class MyListActivity extends BaseActivity {
     }
 
     protected MyListAdapter createListAdapter() {
-        return new MyListAdapter(this, getItems());
-    }
-
-    public static ArrayList<Integer> getItems() {
-        ArrayList<Integer> items = new ArrayList<Integer>();
-        for (int i = 0; i < 1000; i++) {
-            items.add(i);
-        }
-        return items;
+        return new MyListAdapter(this);
     }
 }

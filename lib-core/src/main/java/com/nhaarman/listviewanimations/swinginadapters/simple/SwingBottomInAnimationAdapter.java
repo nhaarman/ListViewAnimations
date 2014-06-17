@@ -16,6 +16,7 @@
 package com.nhaarman.listviewanimations.swinginadapters.simple;
 
 import android.support.annotation.NonNull;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -25,7 +26,7 @@ import com.nhaarman.listviewanimations.swinginadapters.simple.generic.SwingBotto
  * An implementation of the AnimationAdapter class which applies a
  * swing-in-from-bottom-animation to views.
  */
-public class SwingBottomInAnimationAdapter extends SwingBottomInAnimationAdapterGen<ListView> {
+public class SwingBottomInAnimationAdapter extends SwingBottomInAnimationAdapterGen<AbsListView> {
 
     public SwingBottomInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);

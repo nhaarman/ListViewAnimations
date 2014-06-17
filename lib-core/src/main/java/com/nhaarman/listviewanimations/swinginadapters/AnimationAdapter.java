@@ -125,6 +125,9 @@ public abstract class AnimationAdapter<T extends ViewGroup> extends BaseAdapterD
         }
     }
 
+    /**
+     * Returns the {@link com.nhaarman.listviewanimations.swinginadapters.ViewAnimator} responsible for animating the Views in this adapter.
+     */
     @Nullable
     public ViewAnimator<T> getViewAnimator() {
         return mViewAnimator;

@@ -15,11 +15,6 @@
  */
 package com.haarman.listviewanimations;
 
-import java.util.ArrayList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -36,19 +31,30 @@ import android.os.RemoteException;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
-import com.haarman.listviewanimations.appearanceexamples.AppearanceExamplesActivity;
-import com.haarman.listviewanimations.itemmanipulationexamples.ItemManipulationsExamplesActivity;
+import com.haarman.listviewanimations.appearance.AppearanceExamplesActivity;
+import com.haarman.listviewanimations.googlecards.GoogleCardsActivity;
+import com.haarman.listviewanimations.gridview.GridViewActivity;
+import com.haarman.listviewanimations.itemmanipulation.ItemManipulationsExamplesActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity {
+
+    private static final String URL_GITHUB_IO = "http://nhaarman.github.io/ListViewAnimations?ref=app";
+
+    private final ServiceConnection mServiceConn = new MyServiceConnection();
+    private IInAppBillingService mService;
 
     @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
 
         super.onCreate(savedInstanceState);
@@ -71,7 +77,7 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.menu_main_github:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://nhaarman.github.io/ListViewAnimations?ref=app"));
+                intent.setData(Uri.parse(URL_GITHUB_IO));
                 startActivity(intent);
                 return true;
             case R.id.menu_main_beer:
@@ -116,53 +122,10 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-    private IInAppBillingService mService;
-
-    private final ServiceConnection mServiceConn = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(final ComponentName name) {
-            mService = null;
-        }
-
-        @Override
-        public void onServiceConnected(final ComponentName name, final IBinder service) {
-            mService = IInAppBillingService.Stub.asInterface(service);
-            //			supportInvalidateOptionsMenu();
-
-            new Thread() {
-
-                @Override
-                public void run() {
-                    try {
-                        Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
-
-                        int response = ownedItems.getInt("RESPONSE_CODE");
-                        if (response == 0) {
-                            ArrayList<String> purchaseDataList = ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
-
-                            if (purchaseDataList != null) {
-                                for (String purchaseData : purchaseDataList) {
-                                    JSONObject json = new JSONObject(purchaseData);
-                                    mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
-                                }
-                            }
-                        }
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }.start();
-        }
-    };
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mServiceConn != null) {
-            unbindService(mServiceConn);
-        }
+        unbindService(mServiceConn);
     }
 
     @Override
@@ -170,23 +133,9 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            Toast.makeText(this, "Thank you!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.thanks), Toast.LENGTH_LONG).show();
 
-            new Thread() {
-
-                @Override
-                public void run() {
-                    try {
-                        JSONObject json = new JSONObject(data.getStringExtra("INAPP_PURCHASE_DATA"));
-                        mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }.start();
+            new Thread(new ConsumePurchaseRunnable(data)).start();
         }
     }
 
@@ -197,10 +146,63 @@ public class MainActivity extends Activity {
             if (pendingIntent != null) {
                 startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), 0, 0, 0);
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (SendIntentException e) {
-            e.printStackTrace();
+        } catch (RemoteException | SendIntentException ignored) {
+            Toast.makeText(this, getString(R.string.exception), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class MyServiceConnection implements ServiceConnection {
+        @Override
+        public void onServiceDisconnected(final ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(final ComponentName name, final IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+
+            new Thread(new RetrievePurchasesRunnable()).start();
+        }
+    }
+
+    private class RetrievePurchasesRunnable implements Runnable {
+        @Override
+        public void run() {
+            try {
+                Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
+
+                int response = ownedItems.getInt("RESPONSE_CODE");
+                if (response == 0) {
+                    Iterable<String> purchaseDataList = ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+
+                    if (purchaseDataList != null) {
+                        for (String purchaseData : purchaseDataList) {
+                            JSONObject json = new JSONObject(purchaseData);
+                            mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
+                        }
+                    }
+                }
+            } catch (RemoteException | JSONException ignored) {
+                Toast.makeText(MainActivity.this, getString(R.string.exception), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private class ConsumePurchaseRunnable implements Runnable {
+        private final Intent mData;
+
+        ConsumePurchaseRunnable(final Intent data) {
+            mData = data;
+        }
+
+        @Override
+        public void run() {
+            try {
+                JSONObject json = new JSONObject(mData.getStringExtra("INAPP_PURCHASE_DATA"));
+                mService.consumePurchase(3, getPackageName(), json.getString("purchaseToken"));
+            } catch (JSONException | RemoteException ignored) {
+                Toast.makeText(MainActivity.this, getString(R.string.exception), Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

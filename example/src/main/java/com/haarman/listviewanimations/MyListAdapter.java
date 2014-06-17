@@ -1,6 +1,7 @@
 package com.haarman.listviewanimations;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,22 +10,22 @@ import android.widget.TextView;
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
-import android.support.annotation.NonNull;
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-import java.util.List;
-
-public class MyListAdapter extends ArrayAdapter<Integer> implements UndoAdapter {
+public class MyListAdapter extends ArrayAdapter<String> implements UndoAdapter, StickyListHeadersAdapter {
 
     private final Context mContext;
 
-    public MyListAdapter(final Context context, final List<Integer> items) {
-        super(items);
+    public MyListAdapter(final Context context) {
         mContext = context;
+        for (int i = 0; i < 1000; i++) {
+            add(mContext.getString(R.string.row_number, i));
+        }
     }
 
     @Override
-    public long getItemId(final int location) {
-        return getItem(location).hashCode();
+    public long getItemId(final int position) {
+        return getItem(position).hashCode();
     }
 
     @Override
@@ -39,23 +40,7 @@ public class MyListAdapter extends ArrayAdapter<Integer> implements UndoAdapter 
             view = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
         }
 
-        view.setText("This is row number " + getItem(position));
-
-        int backgroundColorResId;
-        switch (getItem(position) % 4) {
-            case 0:
-                backgroundColorResId = R.color.holo_red_light_transparent;
-                break;
-            case 1:
-                backgroundColorResId = R.color.holo_blue_light_transparent;
-                break;
-            case 2:
-                backgroundColorResId = R.color.holo_green_light_transparent;
-                break;
-            default:
-                backgroundColorResId = R.color.holo_purple_light_transparent;
-        }
-        view.setBackgroundColor(mContext.getResources().getColor(backgroundColorResId));
+        view.setText(getItem(position));
 
         return view;
     }
@@ -74,5 +59,22 @@ public class MyListAdapter extends ArrayAdapter<Integer> implements UndoAdapter 
     @Override
     public View getUndoClickView(@NonNull final View view) {
         return view.findViewById(R.id.undo_row_undobutton);
+    }
+
+    @Override
+    public View getHeaderView(final int position, final View convertView, final ViewGroup parent) {
+        TextView view = (TextView) convertView;
+        if (view == null) {
+            view = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_header, parent, false);
+        }
+
+        view.setText(mContext.getString(R.string.header, getHeaderId(position)));
+
+        return view;
+    }
+
+    @Override
+    public long getHeaderId(final int position) {
+        return position / 10;
     }
 }

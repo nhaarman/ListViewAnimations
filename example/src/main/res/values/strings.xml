@@ -16,13 +16,19 @@
     <string name="gridviewexample">GridView</string>
     <string name="draganddrop">Drag and Drop</string>
     <string name="swipedismiss">Swipe to dismiss</string>
-    <string name="animateremoval">Animate dismiss</string>
     <string name="animateaddition">Animate addition</string>
-    <string name="removeselected">Remove selected</string>
     <string name="expandablelistitemadapter">Expand list items</string>
     <string name="itemdeleted">Item deleted</string>
     <string name="taptoundo">Tap to undo</string>
     <string name="explainexpand">Tap on cards to expand or collapse them</string>
     <string name="expandorcollapsecard">This is card number %d</string>
+    <string name="row_number">This is row number %d</string>
+    <string name="header">Header %d</string>
+    <string name="card_number">This is card %d</string>
+    <string name="thanks">Thank you!</string>
+    <string name="exception">Oops! Something went wrong!</string>
+    <string name="moved">%d moved to position %d</string>
+    <string name="long_press_to_drag">Long press an item to start dragging</string>
+    <string name="removed_positions">Removed positions: %s</string>
 
 </resources>

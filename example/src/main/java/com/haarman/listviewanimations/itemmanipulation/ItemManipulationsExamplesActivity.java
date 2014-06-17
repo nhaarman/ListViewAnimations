@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.haarman.listviewanimations.itemmanipulationexamples;
+package com.haarman.listviewanimations.itemmanipulation;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,21 +22,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.BaseAdapter;
 
+import com.haarman.listviewanimations.BaseActivity;
 import com.haarman.listviewanimations.R;
+import com.haarman.listviewanimations.itemmanipulation.expandablelistitems.ExpandableListItemActivity;
 
-public class ItemManipulationsExamplesActivity extends Activity {
+public class ItemManipulationsExamplesActivity extends BaseActivity {
 
     @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_examples_itemmanipulations);
-
-        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void onDragAndDropClicked(final View view) {
@@ -49,11 +47,6 @@ public class ItemManipulationsExamplesActivity extends Activity {
         startActivity(intent);
     }
 
-    public void onAnimateRemovalClicked(final View view) {
-        Intent intent = new Intent(this, AnimateDismissActivity.class);
-        startActivity(intent);
-    }
-
     public void onAnimateAdditionClicked(final View view) {
         Intent intent = new Intent(this, AnimateAdditionActivity.class);
         startActivity(intent);
@@ -62,16 +55,5 @@ public class ItemManipulationsExamplesActivity extends Activity {
     public void onExpandListItemAdapterClicked(final View view) {
         Intent intent = new Intent(this, ExpandableListItemActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

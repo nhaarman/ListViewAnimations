@@ -71,9 +71,9 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:padding="12dp"
+                    android:layout_height="match_parent"
                     android:background="@color/green_transparent"
-                    android:layout_height="match_parent">
+                    android:padding="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -92,7 +92,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="2dp"
                 android:layout_weight="1"
-
                 android:foreground="?android:attr/selectableItemBackground"
                 android:onClick="onAppearanceClicked">
 
@@ -104,10 +103,10 @@
                     android:src="@drawable/img_main_appearance" />
 
                 <FrameLayout
-                    android:padding="12dp"
-                    android:background="@color/blue_transparent"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/blue_transparent"
+                    android:padding="12dp">
 
 
                     <TextView
@@ -135,19 +134,31 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
-                android:background="@color/red_transparent"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:onClick="onItemManipulationClicked"
-                android:padding="12dp">
+                android:onClick="onItemManipulationClicked">
 
-                <TextView
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="@string/itemmanipulation"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:layout_gravity="right|bottom"
+                    android:scaleType="center"
+                    android:src="@drawable/img_main_itemmanipulation" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/red_transparent"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/itemmanipulation"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </FrameLayout>
 
             </FrameLayout>
 
@@ -158,18 +169,31 @@
                 android:layout_weight="1"
                 android:background="@color/purple_transparent"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:onClick="onSLHClicked"
-                android:padding="12dp">
+                android:onClick="onSLHClicked">
 
-                <TextView
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="@string/stickylistheaders"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:layout_gravity="right|bottom"
+                    android:scaleType="center"
+                    android:src="@drawable/img_main_stickylistheaders" />
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/purple_transparent"
+                    android:padding="12dp">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/stickylistheaders"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </FrameLayout>
             </FrameLayout>
         </LinearLayout>
 

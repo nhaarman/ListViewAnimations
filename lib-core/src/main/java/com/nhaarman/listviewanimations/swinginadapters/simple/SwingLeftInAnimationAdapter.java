@@ -16,6 +16,7 @@
 package com.nhaarman.listviewanimations.swinginadapters.simple;
 
 import android.support.annotation.NonNull;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -26,7 +27,7 @@ import com.nhaarman.listviewanimations.swinginadapters.simple.generic.SwingLeftI
  * swing-in-from-the-left-animation to views.
  */
 @SuppressWarnings("UnusedDeclaration")
-public class SwingLeftInAnimationAdapter extends SwingLeftInAnimationAdapterGen<ListView> {
+public class SwingLeftInAnimationAdapter extends SwingLeftInAnimationAdapterGen<AbsListView> {
 
     public SwingLeftInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
