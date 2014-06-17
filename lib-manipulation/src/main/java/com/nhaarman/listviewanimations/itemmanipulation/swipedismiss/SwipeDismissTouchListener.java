@@ -73,7 +73,7 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     /**
      * Constructs a new {@code SwipeDismissTouchListener} for the given {@link android.widget.AbsListView}.
      *
-     * @param absListView The {@code AbsListView} whose items should be dismissable.
+     * @param listViewWrapper The {@code ListViewWrapper} containing the ListView whose items should be dismissable.
      * @param callback    The callback to trigger when the user has indicated that he
      */
     @SuppressWarnings("UnnecessaryFullyQualifiedName")

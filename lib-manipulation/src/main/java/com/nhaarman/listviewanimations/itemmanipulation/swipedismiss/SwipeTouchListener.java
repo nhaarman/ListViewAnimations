@@ -38,7 +38,7 @@ import com.nineoldandroids.view.ViewHelper;
  * An {@link android.view.View.OnTouchListener} that makes the list items in a {@link android.widget.AbsListView} swipeable.
  * Implementations of this class should implement {@link #afterViewFling(android.view.View, int)} to specify what to do after an item has been swiped.
  */
-public abstract class SwipeTouchListener<T extends ViewGroup> implements View.OnTouchListener {
+public abstract class SwipeTouchListener implements View.OnTouchListener {
 
     private static final int MIN_FLING_VELOCITY_FACTOR = 16;
 
