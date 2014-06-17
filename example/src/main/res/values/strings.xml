@@ -27,7 +27,7 @@
     <string name="card_number">This is card %d</string>
     <string name="thanks">Thank you!</string>
     <string name="exception">Oops! Something went wrong!</string>
-    <string name="moved">%d moved to position %d</string>
+    <string name="moved">%1$d moved to position %2$d</string>
     <string name="long_press_to_drag">Long press an item to start dragging</string>
     <string name="removed_positions">Removed positions: %s</string>
 
