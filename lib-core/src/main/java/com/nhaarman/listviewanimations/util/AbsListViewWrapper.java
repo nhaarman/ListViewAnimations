@@ -4,20 +4,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
-public class AbsListViewWrapper<T extends AbsListView> implements ListViewWrapper<T> {
+public class AbsListViewWrapper implements ListViewWrapper {
 
     @NonNull
-    private final T mAbsListView;
+    private final AbsListView mAbsListView;
 
-    public AbsListViewWrapper(@NonNull final T absListView) {
+    public AbsListViewWrapper(@NonNull final AbsListView absListView) {
         mAbsListView = absListView;
     }
 
     @Override
     @NonNull
-    public T getListView() {
+    public AbsListView getListView() {
         return mAbsListView;
     }
 
@@ -59,5 +60,16 @@ public class AbsListViewWrapper<T extends AbsListView> implements ListViewWrappe
     @Override
     public int getPositionForView(@NonNull final View view) {
         return mAbsListView.getPositionForView(view);
+    }
+
+    @NonNull
+    @Override
+    public ListAdapter getAdapter() {
+        return mAbsListView.getAdapter();
+    }
+
+    @Override
+    public void smoothScrollBy(final int distance, final int duration) {
+        mAbsListView.smoothScrollBy(distance, duration);
     }
 }

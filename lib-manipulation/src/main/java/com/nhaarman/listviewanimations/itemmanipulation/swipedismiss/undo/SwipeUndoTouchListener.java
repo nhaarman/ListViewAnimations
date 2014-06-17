@@ -18,10 +18,10 @@ package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissTouchListener;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
+import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -66,8 +66,8 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
      * @param absListView The {@code AbsListView} whose items should be dismissable.
      */
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
-    public SwipeUndoTouchListener(@NonNull final AbsListView absListView, @NonNull final UndoCallback callback) {
-        super(absListView, callback);
+    public SwipeUndoTouchListener(@NonNull final ListViewWrapper listViewWrapper, @NonNull final UndoCallback callback) {
+        super(listViewWrapper, callback);
         mCallback = callback;
     }
 
@@ -165,7 +165,7 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
      * @param view the parent {@code View} which contains both primary and undo {@code View}s.
      */
     public void undo(@NonNull final View view) {
-        int position = AdapterViewUtil.getPositionForView(getAbsListView(), view);
+        int position = AdapterViewUtil.getPositionForView(getListViewWrapper(), view);
         mUndoPositions.remove(position);
 
         View primaryView = mCallback.getPrimaryView(view);

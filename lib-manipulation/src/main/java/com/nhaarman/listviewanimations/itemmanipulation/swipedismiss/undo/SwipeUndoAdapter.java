@@ -19,15 +19,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.util.ListViewWrapper;
 
 /**
  * Adds swipe-undo behaviour to the {@link android.widget.AbsListView}, using a {@link SwipeUndoTouchListener}.
  */
-public abstract class SwipeUndoAdapter<T extends ViewGroup> extends BaseAdapterDecorator<T> {
+public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
 
     /**
      * The {@link SwipeUndoTouchListener} that is set to the {@link android.widget.AbsListView}.
@@ -53,11 +53,12 @@ public abstract class SwipeUndoAdapter<T extends ViewGroup> extends BaseAdapterD
     }
 
     @Override
-    public void setAbsListView(@NonNull final AbsListView absListView) {
-        super.setAbsListView(absListView);
-        mSwipeUndoTouchListener = new SwipeUndoTouchListener(absListView, mUndoCallback);
-        absListView.setOnTouchListener(mSwipeUndoTouchListener);
+    public void setListViewWrapper(@NonNull final ListViewWrapper listViewWrapper) {
+        super.setListViewWrapper(listViewWrapper);
+        mSwipeUndoTouchListener = new SwipeUndoTouchListener(listViewWrapper, mUndoCallback);
+        listViewWrapper.getListView().setOnTouchListener(mSwipeUndoTouchListener);
     }
+
 
     @NonNull
     @Override

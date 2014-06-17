@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.widget;
+package com.nhaarman.listviewanimations.itemmanipulation.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -79,7 +79,7 @@ public class DynamicListView extends ListView {
     }
 
     /**
-     * Implement this interface to be notified of ordering changes. Call {@link #setOnItemMovedListener(com.nhaarman.listviewanimations.widget.DynamicListView
+     * Implement this interface to be notified of ordering changes. Call {@link #setOnItemMovedListener(com.nhaarman.listviewanimations.itemmanipulation.widget.DynamicListView
      * .OnItemMovedListener)}.
      */
     public interface OnItemMovedListener {

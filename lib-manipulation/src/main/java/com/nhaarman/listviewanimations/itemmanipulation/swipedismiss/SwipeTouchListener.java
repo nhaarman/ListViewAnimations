@@ -24,10 +24,10 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
+import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -38,7 +38,7 @@ import com.nineoldandroids.view.ViewHelper;
  * An {@link android.view.View.OnTouchListener} that makes the list items in a {@link android.widget.AbsListView} swipeable.
  * Implementations of this class should implement {@link #afterViewFling(android.view.View, int)} to specify what to do after an item has been swiped.
  */
-public abstract class SwipeTouchListener implements View.OnTouchListener {
+public abstract class SwipeTouchListener<T extends ViewGroup> implements View.OnTouchListener {
 
     private static final int MIN_FLING_VELOCITY_FACTOR = 16;
 
@@ -62,11 +62,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      */
     private final long mAnimationTime;
 
-    /**
-     * The {@link android.widget.AbsListView} that is controlled.
-     */
     @NonNull
-    private final AbsListView mAbsListView;
+    private ListViewWrapper mListViewWrapper;
 
     /**
      * The width of the {@link android.widget.AbsListView} in pixels.
@@ -148,17 +145,15 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
     /**
      * Constructs a new {@code SwipeTouchListener} for the given {@link android.widget.AbsListView}.
-     *
-     * @param absListView The {@code AbsListView} whose items should be dismissable.
      */
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
-    protected SwipeTouchListener(@NonNull final AbsListView absListView) {
-        ViewConfiguration vc = ViewConfiguration.get(absListView.getContext());
+    protected SwipeTouchListener(@NonNull final ListViewWrapper listViewWrapper) {
+        ViewConfiguration vc = ViewConfiguration.get(listViewWrapper.getListView().getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * MIN_FLING_VELOCITY_FACTOR;
         mMaxFlingVelocity = vc.getScaledMaximumFlingVelocity();
-        mAnimationTime = absListView.getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
-        mAbsListView = absListView;
+        mAnimationTime = listViewWrapper.getListView().getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
+        mListViewWrapper = listViewWrapper;
     }
 
     /**
@@ -201,7 +196,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * Notifies this {@code SwipeTouchListener} that the adapter contents have changed.
      */
     public void notifyDataSetChanged() {
-        mVirtualListCount = mAbsListView.getAdapter().getCount();
+        mVirtualListCount = mListViewWrapper.getAdapter().getCount();
     }
 
     /**
@@ -213,12 +208,9 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         return mSwiping;
     }
 
-    /**
-     * Returns the {@link android.widget.AbsListView} this class is controlling.
-     */
     @NonNull
-    public AbsListView getAbsListView() {
-        return mAbsListView;
+    public ListViewWrapper getListViewWrapper() {
+        return mListViewWrapper;
     }
 
     /**
@@ -242,13 +234,13 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * @param position the position of the item in the {@link android.widget.ListAdapter}. Must be visible.
      */
     public void fling(final int position) {
-        int firstVisiblePosition = mAbsListView.getFirstVisiblePosition();
-        int lastVisiblePosition = mAbsListView.getLastVisiblePosition();
+        int firstVisiblePosition = mListViewWrapper.getFirstVisiblePosition();
+        int lastVisiblePosition = mListViewWrapper.getLastVisiblePosition();
         if (position < firstVisiblePosition || position > lastVisiblePosition) {
             throw new IllegalArgumentException("View for position " + position + " not visible!");
         }
 
-        View downView = AdapterViewUtil.getViewForPosition(mAbsListView, position);
+        View downView = AdapterViewUtil.getViewForPosition(mListViewWrapper, position);
         if (downView == null) {
             throw new IllegalStateException("No view found for position " + position);
         }
@@ -261,11 +253,11 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     @Override
     public boolean onTouch(@NonNull final View view, @NonNull final MotionEvent event) {
         if (mVirtualListCount == -1) {
-            mVirtualListCount = mAbsListView.getAdapter().getCount();
+            mVirtualListCount = mListViewWrapper.getAdapter().getCount();
         }
 
         if (mViewWidth < 2) {
-            mViewWidth = mAbsListView.getWidth();
+            mViewWidth = mListViewWrapper.getListView().getWidth();
         }
 
         boolean result;
@@ -299,7 +291,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
             return false;
         }
 
-        int downPosition = AdapterViewUtil.getPositionForView(mAbsListView, downView);
+        int downPosition = AdapterViewUtil.getPositionForView(mListViewWrapper, downView);
         if (!isDismissable(downPosition)) {
             return false;
         }
@@ -333,14 +325,14 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     @Nullable
     private View findDownView(@NonNull final MotionEvent motionEvent) {
         Rect rect = new Rect();
-        int childCount = mAbsListView.getChildCount();
+        int childCount = mListViewWrapper.getChildCount();
         int[] listViewCoords = new int[2];
-        mAbsListView.getLocationOnScreen(listViewCoords);
+        mListViewWrapper.getListView().getLocationOnScreen(listViewCoords);
         int x = (int) motionEvent.getRawX() - listViewCoords[0];
         int y = (int) motionEvent.getRawY() - listViewCoords[1];
         View downView = null;
         for (int i = 0; i < childCount && downView == null; i++) {
-            View child = mAbsListView.getChildAt(i);
+            View child = mListViewWrapper.getChildAt(i);
             child.getHitRect(rect);
             if (rect.contains(x, y)) {
                 downView = child;
@@ -358,7 +350,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      */
     private boolean isDismissable(final int position) {
         if (mDismissableManager != null) {
-            long downId = mAbsListView.getAdapter().getItemId(position);
+            long downId = mListViewWrapper.getAdapter().getItemId(position);
             if (!mDismissableManager.isDismissable(downId, position)) {
                 return false;
             }
@@ -368,15 +360,15 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
     private void disableHorizontalScrollContainerIfNecessary(@NonNull final MotionEvent motionEvent, @NonNull final View view) {
         if (mParentIsHorizontalScrollContainer) {
-            mAbsListView.requestDisallowInterceptTouchEvent(true);
+            mListViewWrapper.getListView().requestDisallowInterceptTouchEvent(true);
         } else if (mTouchChildResId != 0) {
             mParentIsHorizontalScrollContainer = false;
 
             final View childView = view.findViewById(mTouchChildResId);
             if (childView != null) {
-                final Rect childRect = getChildViewRect(mAbsListView, childView);
+                final Rect childRect = getChildViewRect(mListViewWrapper.getListView(), childView);
                 if (childRect.contains((int) motionEvent.getX(), (int) motionEvent.getY())) {
-                    mAbsListView.requestDisallowInterceptTouchEvent(true);
+                    mListViewWrapper.getListView().requestDisallowInterceptTouchEvent(true);
                 }
             }
         }
@@ -398,12 +390,12 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
                 onStartSwipe(mCurrentView, mCurrentPosition);
             }
             mSwiping = true;
-            mAbsListView.requestDisallowInterceptTouchEvent(true);
+            mListViewWrapper.getListView().requestDisallowInterceptTouchEvent(true);
 
             /* Cancel ListView's touch (un-highlighting the item) */
             MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
             cancelEvent.setAction(MotionEvent.ACTION_CANCEL | motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT);
-            mAbsListView.onTouchEvent(cancelEvent);
+            mListViewWrapper.getListView().onTouchEvent(cancelEvent);
             cancelEvent.recycle();
         }
 
@@ -489,7 +481,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      */
     private void flingView(@NonNull final View view, final int position, final boolean flingToRight) {
         if (mViewWidth < 2) {
-            mViewWidth = mAbsListView.getWidth();
+            mViewWidth = mListViewWrapper.getListView().getWidth();
         }
 
         View swipeView = getSwipeView(view);

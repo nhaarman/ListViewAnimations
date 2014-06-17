@@ -20,10 +20,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
-import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 
 import java.util.ArrayList;
@@ -33,19 +32,19 @@ import java.util.Collection;
  * An implementation of {@link SwipeUndoAdapter} which puts the primary and undo {@link android.view.View} in a {@link android.widget.FrameLayout},
  * and handles the undo click event.
  */
-public class SimpleSwipeUndoAdapter<T extends ViewGroup> extends SwipeUndoAdapter<T> implements UndoCallback<T> {
+public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCallback {
 
     @NonNull
     private final Context mContext;
 
     /**
-     * The {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} that is notified of dismissed items.
+     * The {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback} that is notified of dismissed items.
      */
     @NonNull
-    private final OnDismissCallback<T> mOnDismissCallback;
+    private final OnDismissCallback mOnDismissCallback;
 
     /**
-     * The {@link UndoAdapter} that provides the undo {@link android.view.View}s.
+     * The {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter} that provides the undo {@link android.view.View}s.
      */
     @NonNull
     private final UndoAdapter mUndoAdapter;
@@ -56,15 +55,15 @@ public class SimpleSwipeUndoAdapter<T extends ViewGroup> extends SwipeUndoAdapte
     private final Collection<Integer> mUndoPositions = new ArrayList<>();
 
     /**
-     * Create a new {@code SimpleSwipeUndoAdapter}, decorating given {@link android.widget.BaseAdapter}.
+     * Create a new {@code SimpleSwipeUndoAdapterGen}, decorating given {@link android.widget.BaseAdapter}.
      *
      * @param undoAdapter     the {@link android.widget.BaseAdapter} that is decorated. Must implement
      *                        {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter}.
      * @param context         the {@link android.content.Context}.
-     * @param dismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} that is notified of dismissed items.
+     * @param dismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback} that is notified of dismissed items.
      */
     public <V extends BaseAdapter & UndoAdapter> SimpleSwipeUndoAdapter(@NonNull final V undoAdapter, @NonNull final Context context,
-                                                                        @NonNull final OnDismissCallback<T> dismissCallback) {
+                                                                        @NonNull final OnDismissCallback dismissCallback) {
         // We fix this right away
         // noinspection ConstantConditions
         super(undoAdapter, null);
@@ -99,13 +98,21 @@ public class SimpleSwipeUndoAdapter<T extends ViewGroup> extends SwipeUndoAdapte
     @Override
     @NonNull
     public View getPrimaryView(@NonNull final View view) {
-        return ((SwipeUndoView) view).getPrimaryView();
+        View primaryView = ((SwipeUndoView) view).getPrimaryView();
+        if (primaryView == null) {
+            throw new IllegalStateException("primaryView == null");
+        }
+        return primaryView;
     }
 
     @Override
     @NonNull
     public View getUndoView(@NonNull final View view) {
-        return ((SwipeUndoView) view).getUndoView();
+        View undoView = ((SwipeUndoView) view).getUndoView();
+        if (undoView == null) {
+            throw new IllegalStateException("undoView == null");
+        }
+        return undoView;
     }
 
     @Override
@@ -119,7 +126,7 @@ public class SimpleSwipeUndoAdapter<T extends ViewGroup> extends SwipeUndoAdapte
     }
 
     @Override
-    public void onDismiss(@NonNull final T listView, @NonNull final int[] reverseSortedPositions) {
+    public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
         mOnDismissCallback.onDismiss(listView, reverseSortedPositions);
 
         Collection<Integer> newUndoPositions = Util.processDeletions(mUndoPositions, reverseSortedPositions);

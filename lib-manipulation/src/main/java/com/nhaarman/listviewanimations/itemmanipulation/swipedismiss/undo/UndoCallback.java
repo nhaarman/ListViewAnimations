@@ -17,14 +17,13 @@ package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo;
 
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 /**
  * A callback interface used to inform its client about a successful dismissal of one or more list item positions.
  */
-public interface UndoCallback<T extends ViewGroup> extends OnDismissCallback<T> {
+public interface UndoCallback extends OnDismissCallback {
 
     /**
      * Returns the primary {@link android.view.View} contained in given {@code View}.

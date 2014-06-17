@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
@@ -34,7 +33,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
  * A {@link BaseAdapterDecorator} class which applies multiple {@link Animator}s at once to views when they are first shown. The Animators applied include the animations specified
  * in {@link #getAnimators(ViewGroup, View)}, plus an alpha transition.
  */
-public abstract class AnimationAdapter<T extends ViewGroup> extends BaseAdapterDecorator<T> {
+public abstract class AnimationAdapter extends BaseAdapterDecorator {
 
     /**
      * Saved instance state key for the ViewAniamt
@@ -50,7 +49,7 @@ public abstract class AnimationAdapter<T extends ViewGroup> extends BaseAdapterD
      * The ViewAnimator responsible for animating the Views.
      */
     @Nullable
-    private ViewAnimator<T> mViewAnimator;
+    private ViewAnimator mViewAnimator;
 
     /**
      * Whether this instance is the root AnimationAdapter. When this is set to false, animation is not applied to the views, since the wrapper AnimationAdapter will take care of
@@ -81,21 +80,14 @@ public abstract class AnimationAdapter<T extends ViewGroup> extends BaseAdapterD
         mIsRootAdapter = true;
 
         if (baseAdapter instanceof AnimationAdapter) {
-            ((AnimationAdapter<T>) baseAdapter).setIsWrapped();
+            ((AnimationAdapter) baseAdapter).setIsWrapped();
         }
     }
 
     @Override
-    public void setAbsListView(@NonNull final AbsListView absListView) {
-        super.setAbsListView(absListView);
-        assert getListViewWrapper() != null;
-        mViewAnimator = new ViewAnimator<>(getListViewWrapper());
-    }
-
-    @Override
-    public void setListViewWrapper(@NonNull final ListViewWrapper<T> listViewWrapper) {
+    public void setListViewWrapper(@NonNull final ListViewWrapper listViewWrapper) {
         super.setListViewWrapper(listViewWrapper);
-        mViewAnimator = new ViewAnimator<>(listViewWrapper);
+        mViewAnimator = new ViewAnimator(listViewWrapper);
     }
 
     /**
@@ -121,7 +113,7 @@ public abstract class AnimationAdapter<T extends ViewGroup> extends BaseAdapterD
         mGridViewMeasuringPosition = -1;
 
         if (getDecoratedBaseAdapter() instanceof AnimationAdapter) {
-            ((AnimationAdapter<T>) getDecoratedBaseAdapter()).reset();
+            ((AnimationAdapter) getDecoratedBaseAdapter()).reset();
         }
     }
 
@@ -129,7 +121,7 @@ public abstract class AnimationAdapter<T extends ViewGroup> extends BaseAdapterD
      * Returns the {@link com.nhaarman.listviewanimations.swinginadapters.ViewAnimator} responsible for animating the Views in this adapter.
      */
     @Nullable
-    public ViewAnimator<T> getViewAnimator() {
+    public ViewAnimator getViewAnimator() {
         return mViewAnimator;
     }
 
@@ -177,7 +169,7 @@ public abstract class AnimationAdapter<T extends ViewGroup> extends BaseAdapterD
 
         Animator[] childAnimators;
         if (getDecoratedBaseAdapter() instanceof AnimationAdapter) {
-            childAnimators = ((AnimationAdapter<T>) getDecoratedBaseAdapter()).getAnimators(parent, view);
+            childAnimators = ((AnimationAdapter) getDecoratedBaseAdapter()).getAnimators(parent, view);
         } else {
             childAnimators = new Animator[0];
         }

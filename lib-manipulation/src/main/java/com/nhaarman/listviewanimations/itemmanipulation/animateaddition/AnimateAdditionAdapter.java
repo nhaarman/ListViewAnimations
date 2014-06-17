@@ -28,6 +28,7 @@ import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.itemmanipulation.InsertQueue;
+import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 import com.nhaarman.listviewanimations.util.Insertable;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
@@ -51,7 +52,7 @@ import java.util.Collection;
  * Extend this class and override {@link AnimateAdditionAdapter#getAdditionalAnimators(android.view.View,
  * android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
  */
-public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
+public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
     private static final long DEFAULT_SCROLLDOWN_ANIMATION_MS = 300;
     private static final long DEFAULT_INSERTION_ANIMATION_MS = 300;
@@ -90,23 +91,24 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
         mInsertQueue = new InsertQueue<>(mInsertable);
     }
 
+    /**
+     * @deprecated use {@link #setListView(android.widget.ListView)} instead.
+     */
     @Override
     @Deprecated
-    /**
-     * @deprecated AnimateAdditionAdapter requires a ListView instance. Use {@link #setListView(android.widget.ListView)} instead.
-     */
     public void setAbsListView(@NonNull final AbsListView absListView) {
-        if (!(absListView instanceof ListView)) {
-            throw new IllegalArgumentException("AnimateAdditionAdapter requires a ListView instance!");
+        if (absListView instanceof ListView) {
+            setListView((ListView) absListView);
+        } else {
+            throw new IllegalArgumentException("AnimateAdditionAdapter requires a ListView!");
         }
-        super.setAbsListView(absListView);
     }
 
     /**
      * Sets the {@link android.widget.ListView} that is used for this {@code AnimateAdditionAdapter}.
      */
     public void setListView(@NonNull final ListView listView) {
-        super.setAbsListView(listView);
+        setListViewWrapper(new AbsListViewWrapper(listView));
     }
 
     /**
@@ -236,7 +238,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
         }
 
         if (mShouldAnimateDown) {
-            getListViewWrapper().getListView().smoothScrollBy(scrollDistance, (int) (mScrolldownAnimationDurationMs * numInsertedAbove));
+            ((AbsListView) getListViewWrapper().getListView()).smoothScrollBy(scrollDistance, (int) (mScrolldownAnimationDurationMs * numInsertedAbove));
         }
 
         mInsertQueue.insert(visibleViews);
@@ -244,7 +246,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator<ListView> {
         int firstVisiblePosition = getListViewWrapper().getFirstVisiblePosition();
         View firstChild = getListViewWrapper().getChildAt(0);
         int childTop = firstChild == null ? 0 : firstChild.getTop();
-        getListViewWrapper().getListView().setSelectionFromTop(firstVisiblePosition + numInsertedAbove, childTop);
+        ((ListView) getListViewWrapper().getListView()).setSelectionFromTop(firstVisiblePosition + numInsertedAbove, childTop);
     }
 
     /**

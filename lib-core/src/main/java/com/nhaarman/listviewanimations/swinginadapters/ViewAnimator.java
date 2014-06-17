@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.SparseArray;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
@@ -21,9 +20,9 @@ import com.nineoldandroids.view.ViewHelper;
  * A class which decides whether given Views should be animated based on their position: each View should only be animated once.
  * It also calculates proper animation delays for the views.
  *
- * @param <T> the implementation of the ListView being used.
+ * @param  the implementation of the ListView being used.
  */
-public class ViewAnimator<T extends ViewGroup> {
+public class ViewAnimator {
 
     /* Saved instance state keys */
     private static final String SAVEDINSTANCESTATE_FIRSTANIMATEDPOSITION = "savedinstancestate_firstanimatedposition";
@@ -53,7 +52,7 @@ public class ViewAnimator<T extends ViewGroup> {
      * The ListViewWrapper containing the ListView implementation.
      */
     @NonNull
-    private final ListViewWrapper<T> mListViewWrapper;
+    private final ListViewWrapper mListViewWrapper;
 
     /**
      * The active Animators. Keys are hashcodes of the Views that are animated.
@@ -101,7 +100,7 @@ public class ViewAnimator<T extends ViewGroup> {
      *
      * @param listViewWrapper the {@code ListViewWrapper} which wraps the implementation of the ListView used.
      */
-    public ViewAnimator(@NonNull final ListViewWrapper<T> listViewWrapper) {
+    public ViewAnimator(@NonNull final ListViewWrapper listViewWrapper) {
         mListViewWrapper = listViewWrapper;
         mAnimationStartMillis = -1;
         mFirstAnimatedPosition = -1;

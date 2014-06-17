@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.AbsListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,14 +29,14 @@ import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.MyListAdapter;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedUndoAdapter;
 
 import java.util.Arrays;
 
-public class SwipeDismissActivity extends MyListActivity implements ActionBar.OnNavigationListener, OnDismissCallback<ListView> {
+public class SwipeDismissActivity extends MyListActivity implements ActionBar.OnNavigationListener, OnDismissCallback {
 
     private MyListAdapter mAdapter;
 
@@ -53,25 +53,25 @@ public class SwipeDismissActivity extends MyListActivity implements ActionBar.On
     }
 
     private void setSwipeDismissAdapter() {
-        SwipeDismissAdapter<ListView> adapter = new SwipeDismissAdapter(mAdapter, this);
+        SwipeDismissAdapter adapter = new SwipeDismissAdapter(mAdapter, this);
         adapter.setAbsListView(getListView());
         getListView().setAdapter(adapter);
     }
 
     private void setContextualUndoAdapter() {
-        SimpleSwipeUndoAdapter<ListView> adapter = new SimpleSwipeUndoAdapter(mAdapter, this, this);
+        SimpleSwipeUndoAdapter adapter = new SimpleSwipeUndoAdapter(mAdapter, this, this);
         adapter.setAbsListView(getListView());
         getListView().setAdapter(adapter);
     }
 
     private void setContextualUndoWithTimedDeleteAdapter() {
-        TimedUndoAdapter<ListView> adapter = new TimedUndoAdapter(mAdapter, this, this);
+        TimedUndoAdapter adapter = new TimedUndoAdapter(mAdapter, this, this);
         adapter.setAbsListView(getListView());
         getListView().setAdapter(adapter);
     }
 
     @Override
-    public void onDismiss(@NonNull final ListView listView, @NonNull final int[] reverseSortedPositions) {
+    public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
         for (int position : reverseSortedPositions) {
             mAdapter.remove(position);
         }

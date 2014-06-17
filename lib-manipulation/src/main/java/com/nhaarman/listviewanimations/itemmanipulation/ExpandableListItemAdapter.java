@@ -27,8 +27,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.util.ListViewSetter;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
+import com.nhaarman.listviewanimations.util.ListViewWrapper;
+import com.nhaarman.listviewanimations.util.ListViewWrapperSetter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -42,7 +43,7 @@ import java.util.List;
  * An {@link ArrayAdapter} which allows items to be expanded using an animation.
  */
 @SuppressWarnings("UnusedDeclaration")
-public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> implements ListViewSetter {
+public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> implements ListViewWrapperSetter {
 
     private static final int DEFAULTTITLEPARENTRESID = 10000;
     private static final int DEFAULTCONTENTPARENTRESID = 10001;
@@ -59,7 +60,8 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     private int mLimit;
 
     @Nullable
-    private AbsListView mAbsListView;
+    private ListViewWrapper mListViewWrapper;
+
     @Nullable
     private ExpandCollapseListener mExpandCollapseListener;
 
@@ -110,8 +112,8 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     }
 
     @Override
-    public void setAbsListView(@NonNull final AbsListView absListView) {
-        mAbsListView = absListView;
+    public void setListViewWrapper(@NonNull final ListViewWrapper listViewWrapper) {
+        mListViewWrapper = listViewWrapper;
     }
 
     /**
@@ -356,7 +358,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 
         if (contentParent == null && isExpanded) {
             mExpandedIds.remove(itemId);
-        } else if (contentParent == null && !isExpanded) {
+        } else if (contentParent == null) {
             mExpandedIds.add(itemId);
         }
     }
@@ -398,14 +400,14 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 
     @Nullable
     private View findViewForPosition(final int position) {
-        if (mAbsListView == null) {
+        if (mListViewWrapper == null) {
             throw new IllegalStateException("Call setAbsListView on this ExpanableListItemAdapter!");
         }
 
         View result = null;
-        for (int i = 0; i < mAbsListView.getChildCount() && result == null; i++) {
-            View childView = mAbsListView.getChildAt(i);
-            if (AdapterViewUtil.getPositionForView(mAbsListView, childView) == position) {
+        for (int i = 0; i < mListViewWrapper.getChildCount() && result == null; i++) {
+            View childView = mListViewWrapper.getChildAt(i);
+            if (AdapterViewUtil.getPositionForView(mListViewWrapper, childView) == position) {
                 result = childView;
             }
         }
@@ -450,7 +452,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
             }
 
         } else {
-            ExpandCollapseHelper.animateExpanding(contentParent, mAbsListView);
+            ExpandCollapseHelper.animateExpanding(contentParent, mListViewWrapper);
             mExpandedIds.add(id);
 
             if (mExpandCollapseListener != null) {
@@ -514,7 +516,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
             animator.start();
         }
 
-        public static void animateExpanding(@NonNull final View view, @NonNull final AbsListView listView) {
+        public static void animateExpanding(@NonNull final View view, @NonNull final ListViewWrapper listViewWrapper) {
             view.setVisibility(View.VISIBLE);
 
             View parent = (View) view.getParent();
@@ -525,9 +527,9 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
             ValueAnimator animator = createHeightAnimator(view, 0, view.getMeasuredHeight());
             animator.addUpdateListener(
                     new ValueAnimator.AnimatorUpdateListener() {
-                        final int listViewHeight = listView.getHeight();
-                        final int listViewBottomPadding = listView.getPaddingBottom();
-                        final View v = findDirectChild(view, listView);
+                        final int listViewHeight = listViewWrapper.getListView().getHeight();
+                        final int listViewBottomPadding = listViewWrapper.getListView().getPaddingBottom();
+                        final View v = findDirectChild(view, listViewWrapper.getListView());
 
                         @Override
                         public void onAnimationUpdate(final ValueAnimator animation) {
@@ -535,7 +537,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
                             if (bottom > listViewHeight) {
                                 final int top = v.getTop();
                                 if (top > 0) {
-                                    listView.smoothScrollBy(Math.min(bottom - listViewHeight + listViewBottomPadding, top), 0);
+                                    listViewWrapper.smoothScrollBy(Math.min(bottom - listViewHeight + listViewBottomPadding, top), 0);
                                 }
                             }
                         }
@@ -563,7 +565,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
         }
 
         @NonNull
-        private static View findDirectChild(@NonNull final View view, @NonNull final AbsListView listView) {
+        private static View findDirectChild(@NonNull final View view, @NonNull final ViewGroup listView) {
             View result = view;
             View parent = (View) result.getParent();
             while (parent != listView) {

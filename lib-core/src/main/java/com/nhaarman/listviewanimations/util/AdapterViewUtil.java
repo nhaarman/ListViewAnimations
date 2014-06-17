@@ -39,7 +39,7 @@ public class AdapterViewUtil {
      * @return the position of the item in the AdapterView represented by given view, or {@link AdapterView#INVALID_POSITION} if the view does not
      * correspond to a list item (or it is not visible).
      */
-    public static int getPositionForView(@NonNull final ListViewWrapper<?> listViewWrapper, @NonNull final View view) {
+    public static int getPositionForView(@NonNull final ListViewWrapper listViewWrapper, @NonNull final View view) {
         return listViewWrapper.getPositionForView(view) - listViewWrapper.getHeaderViewsCount();
     }
 
@@ -71,7 +71,7 @@ public class AdapterViewUtil {
      * @return the {@code View}, or {@code null} if the position is not currently visible.
      */
     @Nullable
-    public static View getViewForPosition(@NonNull final ListViewWrapper<?> listViewWrapper, final int position) {
+    public static View getViewForPosition(@NonNull final ListViewWrapper listViewWrapper, final int position) {
         int childCount = listViewWrapper.getChildCount();
         View downView = null;
         for (int i = 0; i < childCount && downView == null; i++) {

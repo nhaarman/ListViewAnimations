@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.itemmanipulation;
+package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 /**
  * A callback interface used to inform its client about a successful dismissal of one or more list item positions.
  */
-public interface OnDismissCallback<T extends ViewGroup> {
+public interface OnDismissCallback {
 
     /**
      * Called when the user has indicated they she would like to dismiss one or
@@ -33,5 +34,5 @@ public interface OnDismissCallback<T extends ViewGroup> {
      * @param reverseSortedPositions An array of positions to dismiss, sorted in descending order
      *                               for convenience.
      */
-    void onDismiss(@NonNull T listView, @NonNull int[] reverseSortedPositions);
+    void onDismiss(@NonNull ViewGroup listView, @NonNull int[] reverseSortedPositions);
 }

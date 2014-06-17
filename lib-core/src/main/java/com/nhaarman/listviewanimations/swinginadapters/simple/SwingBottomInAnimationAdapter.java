@@ -16,19 +16,30 @@
 package com.nhaarman.listviewanimations.swinginadapters.simple;
 
 import android.support.annotation.NonNull;
-import android.widget.AbsListView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
-import com.nhaarman.listviewanimations.swinginadapters.simple.generic.SwingBottomInAnimationAdapterGen;
+import com.nhaarman.listviewanimations.swinginadapters.SingleAnimationAdapter;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
  * An implementation of the AnimationAdapter class which applies a
  * swing-in-from-bottom-animation to views.
  */
-public class SwingBottomInAnimationAdapter extends SwingBottomInAnimationAdapterGen<AbsListView> {
+public class SwingBottomInAnimationAdapter extends SingleAnimationAdapter {
+
+    private static final String TRANSLATION_Y = "translationY";
 
     public SwingBottomInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
     }
+
+    @Override
+    @NonNull
+    protected Animator getAnimator(@NonNull final ViewGroup parent, @NonNull final View view) {
+        return ObjectAnimator.ofFloat(view, TRANSLATION_Y, parent.getMeasuredHeight() >> 1, 0);
+    }
+
 }

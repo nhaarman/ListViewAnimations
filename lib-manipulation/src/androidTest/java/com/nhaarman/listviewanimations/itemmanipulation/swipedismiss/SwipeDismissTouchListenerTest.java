@@ -3,8 +3,6 @@ package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.AbsListView;
 
-import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
-
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 

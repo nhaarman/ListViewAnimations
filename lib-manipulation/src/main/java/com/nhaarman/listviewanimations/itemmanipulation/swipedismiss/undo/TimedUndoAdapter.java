@@ -20,18 +20,17 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
-import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter} which automatically dismisses items after a timeout.
+ * A {@link SimpleSwipeUndoAdapter} which automatically dismisses items after a timeout.
  */
-public class TimedUndoAdapter<T extends ViewGroup> extends SimpleSwipeUndoAdapter<T> {
+public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
 
     /**
      * The default time in milliseconds before an item in the undo state should automatically dismiss.
@@ -57,14 +56,15 @@ public class TimedUndoAdapter<T extends ViewGroup> extends SimpleSwipeUndoAdapte
     private final Map<Integer, TimeoutRunnable> mRunnables = new HashMap<>();
 
     /**
-     * Creates a new {@code TimedUndoAdapter}, decorating given {@link android.widget.BaseAdapter}.
+     * Creates a new {@code TimedUndoAdapterGen}, decorating given {@link android.widget.BaseAdapter}.
      *
-     * @param undoAdapter     the {@link android.widget.BaseAdapter} that is decorated. Must implement {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo
-     *                        .UndoAdapter}.
+     * @param undoAdapter     the {@link android.widget.BaseAdapter} that is decorated. Must implement
+     *                        {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter}.
      * @param context         the {@link android.content.Context}.
-     * @param dismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} that is notified of dismissed items.
+     * @param dismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback} that is notified of dismissed items.
      */
-    public <T extends BaseAdapter & UndoAdapter> TimedUndoAdapter(@NonNull final T undoAdapter, @NonNull final Context context, @NonNull final OnDismissCallback dismissCallback) {
+    public <V extends BaseAdapter & UndoAdapter> TimedUndoAdapter(@NonNull final V undoAdapter, @NonNull final Context context, @NonNull final OnDismissCallback
+            dismissCallback) {
         super(undoAdapter, context, dismissCallback);
     }
 
@@ -111,7 +111,7 @@ public class TimedUndoAdapter<T extends ViewGroup> extends SimpleSwipeUndoAdapte
     }
 
     @Override
-    public void onDismiss(@NonNull final T listView, @NonNull final int[] reverseSortedPositions) {
+    public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
         super.onDismiss(listView, reverseSortedPositions);
 
         /* Adjust the pending timeout positions accordingly wrt the given dismissed positions */

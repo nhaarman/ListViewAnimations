@@ -69,18 +69,18 @@ class SwipeUndoView extends FrameLayout {
     }
 
     /**
-     * Returns the undo {@link android.view.View}.
-     */
-    @Nullable
-    View getUndoView() {
-        return mUndoView;
-    }
-
-    /**
      * Returns the primary {@link android.view.View}.
      */
     @Nullable
     View getPrimaryView() {
         return mPrimaryView;
+    }
+
+    /**
+     * Returns the undo {@link android.view.View}.
+     */
+    @Nullable
+    View getUndoView() {
+        return mUndoView;
     }
 }

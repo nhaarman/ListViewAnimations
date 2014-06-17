@@ -44,7 +44,7 @@ public class AppearanceExamplesActivity extends MyListActivity implements Action
     private static final String SAVEDINSTANCESTATE_ANIMATIONADAPTER = "savedinstancestate_animationadapter";
 
     private BaseAdapter mAdapter;
-    private AnimationAdapter<AbsListView> mAnimAdapter;
+    private AnimationAdapter mAnimAdapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

@@ -16,20 +16,30 @@
 package com.nhaarman.listviewanimations.swinginadapters.simple;
 
 import android.support.annotation.NonNull;
-import android.widget.AbsListView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
-import com.nhaarman.listviewanimations.swinginadapters.simple.generic.SwingLeftInAnimationAdapterGen;
+import com.nhaarman.listviewanimations.swinginadapters.SingleAnimationAdapter;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
  * An implementation of the AnimationAdapter class which applies a
  * swing-in-from-the-left-animation to views.
  */
 @SuppressWarnings("UnusedDeclaration")
-public class SwingLeftInAnimationAdapter extends SwingLeftInAnimationAdapterGen<AbsListView> {
+public class SwingLeftInAnimationAdapter extends SingleAnimationAdapter {
+
+    private static final String TRANSLATION_X = "translationX";
 
     public SwingLeftInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
+    }
+
+    @NonNull
+    @Override
+    protected Animator getAnimator(@NonNull final ViewGroup parent, @NonNull final View view) {
+        return ObjectAnimator.ofFloat(view, TRANSLATION_X, 0 - parent.getWidth(), 0);
     }
 }

@@ -19,10 +19,9 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
-import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
+import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -78,10 +77,10 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
      * @param callback    The callback to trigger when the user has indicated that he
      */
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
-    public SwipeDismissTouchListener(@NonNull final AbsListView absListView, @NonNull final OnDismissCallback callback) {
-        super(absListView);
+    public SwipeDismissTouchListener(@NonNull final ListViewWrapper listViewWrapper, @NonNull final OnDismissCallback callback) {
+        super(listViewWrapper);
         mCallback = callback;
-        mDismissAnimationTime = absListView.getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
+        mDismissAnimationTime = listViewWrapper.getListView().getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
     }
 
     /**
@@ -96,8 +95,8 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
 
     @Override
     public void fling(final int position) {
-        int firstVisiblePosition = getAbsListView().getFirstVisiblePosition();
-        int lastVisiblePosition = getAbsListView().getLastVisiblePosition();
+        int firstVisiblePosition = getListViewWrapper().getFirstVisiblePosition();
+        int lastVisiblePosition = getListViewWrapper().getLastVisiblePosition();
 
         if (firstVisiblePosition <= position && position <= lastVisiblePosition) {
             super.fling(position);
@@ -114,13 +113,13 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     }
 
     private void dismissAbove(final int position) {
-        View view = AdapterViewUtil.getViewForPosition(getAbsListView(), getAbsListView().getFirstVisiblePosition());
+        View view = AdapterViewUtil.getViewForPosition(getListViewWrapper(), getListViewWrapper().getFirstVisiblePosition());
 
         if (view != null) {
             view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
             int scrollDistance = view.getMeasuredHeight();
 
-            getAbsListView().smoothScrollBy(scrollDistance, (int) mDismissAnimationTime);
+            getListViewWrapper().smoothScrollBy(scrollDistance, (int) mDismissAnimationTime);
             mHandler.postDelayed(new RestoreScrollRunnable(scrollDistance, position), mDismissAnimationTime);
         }
     }
@@ -153,7 +152,7 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     }
 
     /**
-     * If necessary, notifies the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} to remove dismissed object from the adapter,
+     * If necessary, notifies the {@link OnDismissCallback} to remove dismissed object from the adapter,
      * and restores the {@link android.view.View} presentations.
      */
     protected void finalizeDismiss() {
@@ -167,7 +166,7 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     }
 
     /**
-     * Notifies the {@link com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback} of dismissed items.
+     * Notifies the {@link OnDismissCallback} of dismissed items.
      *
      * @param dismissedPositions the positions that have been dismissed.
      */
@@ -181,7 +180,7 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
                 dismissPositions[i] = dismissedPosition;
                 i++;
             }
-            mCallback.onDismiss(getAbsListView(), dismissPositions);
+            mCallback.onDismiss(getListViewWrapper().getListView(), dismissPositions);
         }
     }
 
@@ -260,7 +259,7 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
 
         @Override
         public void run() {
-            getAbsListView().smoothScrollBy(-mScrollDistance, 1);
+            getListViewWrapper().smoothScrollBy(-mScrollDistance, 1);
             directDismiss(mPosition);
         }
     }

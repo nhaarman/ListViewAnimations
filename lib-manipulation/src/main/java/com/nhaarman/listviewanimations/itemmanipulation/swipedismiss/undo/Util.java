@@ -30,7 +30,7 @@ class Util {
 
     @NonNull
     static Collection<Integer> processDeletions(@NonNull final Collection<Integer> positions, @NonNull final int[] dismissedPositions) {
-        List<Integer> dismissedList = new ArrayList<Integer>();
+        List<Integer> dismissedList = new ArrayList<>();
         for (int position : dismissedPositions) {
             dismissedList.add(position);
         }
@@ -47,9 +47,9 @@ class Util {
      */
     @NonNull
     static Collection<Integer> processDeletions(@NonNull final Collection<Integer> positions, @NonNull final List<Integer> dismissedPositions) {
-        Collection<Integer> result = new ArrayList<Integer>(positions);
+        Collection<Integer> result = new ArrayList<>(positions);
         Collections.sort(dismissedPositions, Collections.reverseOrder());
-        Collection<Integer> newUndoPositions = new ArrayList<Integer>();
+        Collection<Integer> newUndoPositions = new ArrayList<>();
         for (int position : dismissedPositions) {
             for (Iterator<Integer> iterator = result.iterator(); iterator.hasNext(); ) {
                 int undoPosition = iterator.next();

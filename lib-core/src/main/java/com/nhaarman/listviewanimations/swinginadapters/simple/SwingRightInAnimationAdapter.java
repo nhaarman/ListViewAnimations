@@ -16,19 +16,29 @@
 package com.nhaarman.listviewanimations.swinginadapters.simple;
 
 import android.support.annotation.NonNull;
-import android.widget.AbsListView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
-import com.nhaarman.listviewanimations.swinginadapters.simple.generic.SwingRightInAnimationAdapterGen;
+import com.nhaarman.listviewanimations.swinginadapters.SingleAnimationAdapter;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
  * An implementation of the AnimationAdapter class which applies a
  * swing-in-from-the-right-animation to views.
  */
-public class SwingRightInAnimationAdapter extends SwingRightInAnimationAdapterGen<AbsListView> {
+public class SwingRightInAnimationAdapter extends SingleAnimationAdapter {
+
+    private static final String TRANSLATION_X = "translationX";
 
     public SwingRightInAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
         super(baseAdapter);
+    }
+
+    @NonNull
+    @Override
+    protected Animator getAnimator(@NonNull final ViewGroup parent, @NonNull final View view) {
+        return ObjectAnimator.ofFloat(view, TRANSLATION_X, parent.getWidth(), 0);
     }
 }

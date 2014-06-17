@@ -59,7 +59,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether retrieving the AbsListView yields the original AbsListView that was set.
      */
     public void testAbsListViewSet() {
-        assertThat(mSwipeTouchListener.getAbsListView(), is(mAbsListView));
+        assertThat(mSwipeTouchListener.getListView(), is(mAbsListView));
     }
 
     /**

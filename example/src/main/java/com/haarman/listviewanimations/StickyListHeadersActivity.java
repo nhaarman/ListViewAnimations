@@ -3,7 +3,7 @@ package com.haarman.listviewanimations;
 import android.os.Bundle;
 
 import com.nhaarman.listviewanimations.swinginadapters.StickyListHeadersAdapterDecorator;
-import com.nhaarman.listviewanimations.swinginadapters.simple.SLHAlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.util.StickyListHeadersListViewWrapper;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -19,7 +19,7 @@ public class StickyListHeadersActivity extends BaseActivity {
         listView.setFitsSystemWindows(true);
 
         MyListAdapter adapter = new MyListAdapter(this);
-        SLHAlphaInAnimationAdapter animationAdapter = new SLHAlphaInAnimationAdapter(adapter);
+        AlphaInAnimationAdapter animationAdapter = new AlphaInAnimationAdapter(adapter);
         StickyListHeadersAdapterDecorator stickyListHeadersAdapterDecorator = new StickyListHeadersAdapterDecorator(animationAdapter);
         stickyListHeadersAdapterDecorator.setListViewWrapper(new StickyListHeadersListViewWrapper(listView));
 

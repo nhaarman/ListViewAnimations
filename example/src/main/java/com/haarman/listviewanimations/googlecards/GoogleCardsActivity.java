@@ -17,15 +17,16 @@ package com.haarman.listviewanimations.googlecards;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.haarman.listviewanimations.BaseActivity;
 import com.haarman.listviewanimations.R;
-import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.simple.SwingBottomInAnimationAdapter;
 
-public class GoogleCardsActivity extends BaseActivity implements OnDismissCallback<ListView> {
+public class GoogleCardsActivity extends BaseActivity implements OnDismissCallback {
 
     private static final int INITIAL_DELAY_MILLIS = 300;
 
@@ -53,7 +54,7 @@ public class GoogleCardsActivity extends BaseActivity implements OnDismissCallba
     }
 
     @Override
-    public void onDismiss(@NonNull final ListView listView, @NonNull final int[] reverseSortedPositions) {
+    public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
         for (int position : reverseSortedPositions) {
             mGoogleCardsAdapter.remove(position);
         }
