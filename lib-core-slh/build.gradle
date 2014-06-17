@@ -16,7 +16,7 @@ android.libraryVariants.all {
 dependencies {
     provided project(':lib-core')
 
-    provided 'se.emilsjolander:stickylistheaders:2.4.0'
+    compile 'se.emilsjolander:stickylistheaders:2.4.0'
 
     /* Test libraries */
     androidTestCompile ('org.mockito:mockito-core:1.9.5')  { exclude group: 'org.hamcrest' }
