@@ -2,6 +2,10 @@
     package="com.haarman.listviewanimations">
 
     <uses-permission android:name="com.android.vending.BILLING" />
+    
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
