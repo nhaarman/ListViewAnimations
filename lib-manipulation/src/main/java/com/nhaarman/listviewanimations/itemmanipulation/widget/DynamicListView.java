@@ -174,6 +174,20 @@ public class DynamicListView extends ListView {
     }
 
     /**
+     * Enables the drag and drop functionality.
+     */
+    public void enableDrag() {
+        setOnItemLongClickListener(mOnItemLongClickListener);
+    }
+
+    /**
+     * Disables the drag and drop functionality.
+     */
+    public void disableDrag() {
+        setOnItemLongClickListener(null);
+    }
+
+    /**
      * Listens for long clicks on any items in the listview. When a cell has
      * been selected, the hover cell is created and set up.
      */
