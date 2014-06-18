@@ -40,6 +40,16 @@ import com.nineoldandroids.view.ViewHelper;
  */
 public abstract class SwipeTouchListener implements View.OnTouchListener {
 
+    /**
+     * TranslationX View property.
+     */
+    private static final String TRANSLATION_X = "translationX";
+
+    /**
+     * Alpha View property.
+     */
+    private static final String ALPHA = "alpha";
+
     private static final int MIN_FLING_VELOCITY_FACTOR = 16;
 
     /**
@@ -62,8 +72,13 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      */
     private final long mAnimationTime;
 
+    /**
+     * The minimum alpha value of swiped Views.
+     */
+    private float mMinimumAlpha;
+
     @NonNull
-    private ListViewWrapper mListViewWrapper;
+    private final ListViewWrapper mListViewWrapper;
 
     /**
      * The width of the {@link android.widget.AbsListView} in pixels.
@@ -163,6 +178,15 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      */
     public void setDismissableManager(@Nullable final DismissableManager dismissableManager) {
         mDismissableManager = dismissableManager;
+    }
+
+    /**
+     * Set the minimum value of the alpha property swiping Views should have.
+     *
+     * @param minimumAlpha the alpha value between 0.0f and 1.0f.
+     */
+    public void setMinimumAlpha(final float minimumAlpha) {
+        mMinimumAlpha = minimumAlpha;
     }
 
     /**
@@ -401,7 +425,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
         if (mSwiping) {
             ViewHelper.setTranslationX(mSwipingView, deltaX);
-            ViewHelper.setAlpha(mSwipingView, Math.max(0, Math.min(1, 1 - 2 * Math.abs(deltaX) / mViewWidth)));
+            ViewHelper.setAlpha(mSwipingView, Math.max(mMinimumAlpha, Math.min(1, 1 - 2 * Math.abs(deltaX) / mViewWidth)));
             return true;
         }
         return false;
@@ -485,8 +509,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         }
 
         View swipeView = getSwipeView(view);
-        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(swipeView, "translationX", flingToRight ? mViewWidth : -mViewWidth);
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(swipeView, "alpha", 0);
+        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(swipeView, TRANSLATION_X, flingToRight ? mViewWidth : -mViewWidth);
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(swipeView, ALPHA, 0);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(xAnimator, alphaAnimator);
@@ -503,8 +527,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
             return;
         }
 
-        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(mSwipingView, "translationX", 0);
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mSwipingView, "alpha", 1);
+        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(mSwipingView, TRANSLATION_X, 0);
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mSwipingView, ALPHA, 1);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(xAnimator, alphaAnimator);
