@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.AbsListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeTouchListenerTestActivity;
+import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -51,7 +52,7 @@ public class SwipeUndoTouchListenerTest extends ActivityInstrumentationTestCase2
         mActivity = getActivity();
         mAbsListView = mActivity.getAbsListView();
 
-        View.OnTouchListener swipeUndoTouchListener = new SwipeUndoTouchListener(mAbsListView, mUndoCallback);
+        View.OnTouchListener swipeUndoTouchListener = new SwipeUndoTouchListener(new AbsListViewWrapper(mAbsListView), mUndoCallback);
         mAbsListView.setOnTouchListener(swipeUndoTouchListener);
 
         getInstrumentation().waitForIdleSync();

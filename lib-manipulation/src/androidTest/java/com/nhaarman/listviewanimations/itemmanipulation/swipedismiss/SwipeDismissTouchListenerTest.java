@@ -3,6 +3,8 @@ package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.AbsListView;
 
+import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -46,7 +48,7 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
         mActivity = getActivity();
         mAbsListView = mActivity.getAbsListView();
 
-        mSwipeTouchListener = new SwipeDismissTouchListener(mAbsListView, mOnDismissCallback);
+        mSwipeTouchListener = new SwipeDismissTouchListener(new AbsListViewWrapper(mAbsListView), mOnDismissCallback);
         mAbsListView.setOnTouchListener(mSwipeTouchListener);
 
         getInstrumentation().waitForIdleSync();

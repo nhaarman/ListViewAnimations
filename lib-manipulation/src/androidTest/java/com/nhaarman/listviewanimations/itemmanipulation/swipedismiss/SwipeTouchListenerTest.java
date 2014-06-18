@@ -4,7 +4,10 @@ import android.support.annotation.NonNull;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
+
+import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 
 import java.util.List;
 
@@ -48,7 +51,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
         mAbsListView = mActivity.getAbsListView();
         mViewWidth = mAbsListView.getWidth();
 
-        mSwipeTouchListener = new TestSwipeTouchListener(mAbsListView);
+        mSwipeTouchListener = new TestSwipeTouchListener(new AbsListViewWrapper(mAbsListView));
         mAbsListView.setOnTouchListener(mSwipeTouchListener);
 
         getInstrumentation().waitForIdleSync();
@@ -59,7 +62,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether retrieving the AbsListView yields the original AbsListView that was set.
      */
     public void testAbsListViewSet() {
-        assertThat(mSwipeTouchListener.getListView(), is(mAbsListView));
+        assertThat(mSwipeTouchListener.getListViewWrapper().getListView(), is((ViewGroup) mAbsListView));
     }
 
     /**
@@ -116,13 +119,15 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether calling SwipeTouchListener#fling(int) triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testFling() throws InterruptedException {
-        mActivity.runOnUiThread(new Runnable() {
+        mActivity.runOnUiThread(
+                new Runnable() {
 
-            @Override
-            public void run() {
-                mSwipeTouchListener.fling(0);
-            }
-        });
+                    @Override
+                    public void run() {
+                        mSwipeTouchListener.fling(0);
+                    }
+                }
+        );
 
         Thread.sleep(1000);
 
@@ -134,13 +139,15 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether trying to dismiss an item that is specified not to be dismissable doesn't trigger a call to SwipeTouchListener#afterViewFling.
      */
     public void testDismissableManager() throws InterruptedException {
-        mSwipeTouchListener.setDismissableManager(new DismissableManager() {
+        mSwipeTouchListener.setDismissableManager(
+                new DismissableManager() {
 
-            @Override
-            public boolean isDismissable(final long id, final int position) {
-                return false;
-            }
-        });
+                    @Override
+                    public boolean isDismissable(final long id, final int position) {
+                        return false;
+                    }
+                }
+        );
 
         List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, 10, mViewWidth - 10);
         MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents);
@@ -189,8 +196,8 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
         boolean afterViewFlingCalled;
         int position;
 
-        TestSwipeTouchListener(final AbsListView absListView) {
-            super(absListView);
+        TestSwipeTouchListener(final AbsListViewWrapper absListViewWrapper) {
+            super(absListViewWrapper);
         }
 
         @Override
