@@ -93,18 +93,6 @@
 				<version>${android-support.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>android.support</groupId>
-				<artifactId>compatibility-v7-appcompat</artifactId>
-				<version>${android-support.version}</version>
-				<type>apklib</type>
-			</dependency>
-			<dependency>
-				<groupId>android.support</groupId>
-				<artifactId>compatibility-v7-appcompat</artifactId>
-				<version>${android-support.version}</version>
-				<type>jar</type>
-			</dependency>
-			<dependency>
 				<groupId>com.android.support</groupId>
 				<artifactId>support-annotations</artifactId>
 				<version>${android-support.version}</version>

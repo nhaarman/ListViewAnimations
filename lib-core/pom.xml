@@ -21,9 +21,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-				<groupId>com.android.support</groupId>
-				<artifactId>support-annotations</artifactId>
-				<type>jar</type>
+			<groupId>com.android.support</groupId>
+			<artifactId>support-annotations</artifactId>
+			<type>jar</type>
 		</dependency>
 
 		<!-- NineOldAndroids -->
@@ -147,7 +147,6 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
 
 	<profiles>
 		<profile>
