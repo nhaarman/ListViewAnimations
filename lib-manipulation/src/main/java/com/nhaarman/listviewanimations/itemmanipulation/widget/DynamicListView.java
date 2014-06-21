@@ -23,6 +23,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -37,6 +38,7 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nhaarman.listviewanimations.util.Swappable;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
@@ -121,7 +123,7 @@ public class DynamicListView extends ListView {
     private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
 
     private OnTouchListener mOnTouchListener;
-    private boolean mParentIsHOrizontalScrollContainer;
+    private boolean mParentIsHorizontalScrollContainer;
     private int mResIdOfDynamicTouchChild;
     private boolean mDynamicTouchChildTouched;
     private int mSlop;
@@ -206,15 +208,15 @@ public class DynamicListView extends ListView {
         int position = pointToPosition(mDownX, mDownY);
         int itemNum = position - getFirstVisiblePosition();
         View selectedView = getChildAt(itemNum);
-        if (selectedView == null || position < getHeaderViewsCount() || position >= getAdapter().getCount() - getHeaderViewsCount() - getFooterViewsCount()) {
+        if (selectedView == null || position < getHeaderViewsCount() || position >= getAdapter().getCount() - getFooterViewsCount()) {
             return;
         }
 
         mOriginalTranscriptMode = getTranscriptMode();
         setTranscriptMode(TRANSCRIPT_MODE_NORMAL);
 
-
         mTotalOffset = 0;
+        mLastMovedToIndex = AdapterViewUtil.getPositionForView(this, selectedView) + getHeaderViewsCount();
 
         mMobileItemId = getAdapter().getItemId(position);
         mHoverCell = getAndAddHoverView(selectedView);
@@ -282,7 +284,12 @@ public class DynamicListView extends ListView {
     /**
      * Retrieves the view in the list corresponding to itemId
      */
+    @Nullable
     private View getViewForId(final long itemId) {
+        if (itemId == -1) {
+            return null;
+        }
+
         int firstVisiblePosition = getFirstVisiblePosition();
         ListAdapter adapter = getAdapter();
         if (!adapter.hasStableIds()) {
@@ -372,7 +379,7 @@ public class DynamicListView extends ListView {
 
                 mDynamicTouchChildTouched = false;
                 if (mResIdOfDynamicTouchChild != 0) {
-                    mParentIsHOrizontalScrollContainer = false;
+                    mParentIsHorizontalScrollContainer = false;
 
                     int position = pointToPosition(mDownX, mDownY);
                     int childNum = (position != INVALID_POSITION) ? position - getFirstVisiblePosition() : -1;
@@ -387,7 +394,7 @@ public class DynamicListView extends ListView {
                     }
                 }
 
-                if (mParentIsHOrizontalScrollContainer) {
+                if (mParentIsHorizontalScrollContainer) {
                     // Do it now and don't wait until the user moves more than the
                     // slop factor.
                     getParent().requestDisallowInterceptTouchEvent(true);
@@ -484,11 +491,10 @@ public class DynamicListView extends ListView {
         View mobileView = getViewForId(mMobileItemId);
         View aboveView = getViewForId(mAboveItemId);
 
-        boolean isBelow = (belowView != null) && (deltaYTotal > belowView.getTop());
-        boolean isAbove = (aboveView != null) && (deltaYTotal < aboveView.getTop());
+        boolean isBelow = belowView != null && deltaYTotal > belowView.getTop();
+        boolean isAbove = aboveView != null && deltaYTotal < aboveView.getTop();
 
         if (isBelow || isAbove) {
-
             final long switchItemId = isBelow ? mBelowItemId : mAboveItemId;
             View switchView = isBelow ? belowView : aboveView;
             final int originalItem = getPositionForView(mobileView);
@@ -498,8 +504,7 @@ public class DynamicListView extends ListView {
                 return;
             }
 
-            if (getPositionForView(switchView) < getHeaderViewsCount() || getPositionForView(switchView) >= (getAdapter().getCount() - getHeaderViewsCount() -
-                    getFooterViewsCount())) {
+            if (getPositionForView(switchView) < getHeaderViewsCount() || getPositionForView(switchView) >= getAdapter().getCount() - getFooterViewsCount()) {
                 return;
             }
             swapElements(originalItem, getPositionForView(switchView));
@@ -702,7 +707,7 @@ public class DynamicListView extends ListView {
      * @Deprecated use {@link #setParentIsHorizontalScrollContainer()} instead.
      */
     public void setIsParentHorizontalScrollContainer(boolean isParentHorizontalScrollContainer) {
-        mParentIsHOrizontalScrollContainer = (mResIdOfDynamicTouchChild == 0) && isParentHorizontalScrollContainer;
+        mParentIsHorizontalScrollContainer = (mResIdOfDynamicTouchChild == 0) && isParentHorizontalScrollContainer;
     }
 
     /**
@@ -714,12 +719,12 @@ public class DynamicListView extends ListView {
      * Will also reset the dynamic touch child, if set.
      */
     public void setParentIsHorizontalScrollContainer() {
-        mParentIsHOrizontalScrollContainer = true;
+        mParentIsHorizontalScrollContainer = true;
         mResIdOfDynamicTouchChild = 0;
     }
 
     public boolean isParentHorizontalScrollContainer() {
-        return mParentIsHOrizontalScrollContainer;
+        return mParentIsHorizontalScrollContainer;
     }
 
     /**
@@ -735,7 +740,7 @@ public class DynamicListView extends ListView {
     public void setDynamicTouchChild(final int childResId) {
         mResIdOfDynamicTouchChild = childResId;
         if (childResId != 0) {
-            mParentIsHOrizontalScrollContainer = false;
+            mParentIsHorizontalScrollContainer = false;
         }
     }
 
