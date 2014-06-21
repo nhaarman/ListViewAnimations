@@ -112,9 +112,19 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
      */
     public void dismiss(final int position) {
         if (mDismissTouchListener == null) {
-            throw new IllegalStateException("Call setAbsListView on this SwipeDismissAdapter!");
+            throw new IllegalStateException("Call setListViewWrapper on this SwipeDismissAdapter!");
         }
         mDismissTouchListener.dismiss(position);
+    }
+
+    /**
+     * Returns the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissTouchListener} that is used by this {@code SwipeDismissAdapter}.
+     *
+     * @return null if {@link #setListViewWrapper} has not been called yet.
+     */
+    @Nullable
+    public SwipeDismissTouchListener getDismissTouchListener() {
+        return mDismissTouchListener;
     }
 
     @Override
