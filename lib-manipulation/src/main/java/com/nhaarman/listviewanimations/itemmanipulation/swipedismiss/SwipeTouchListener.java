@@ -287,8 +287,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         boolean result;
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                view.onTouchEvent(event);
-                result = handleDownEvent(event);
+                result = handleDownEvent(view, event);
                 break;
             case MotionEvent.ACTION_MOVE:
                 result = handleMoveEvent(event);
@@ -305,7 +304,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         return result;
     }
 
-    private boolean handleDownEvent(@NonNull final MotionEvent motionEvent) {
+    private boolean handleDownEvent(@NonNull final View view, @NonNull final MotionEvent motionEvent) {
         if (!mSwipeEnabled) {
             return false;
         }
@@ -324,6 +323,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         if (mCurrentPosition == downPosition || downPosition >= mVirtualListCount) {
             return false;
         }
+
+        view.onTouchEvent(motionEvent);
 
         disableHorizontalScrollContainerIfNecessary(motionEvent, downView);
 
