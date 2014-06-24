@@ -19,6 +19,7 @@ package com.nhaarman.listviewanimations.itemmanipulation.dragdrop;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -76,6 +77,10 @@ public class DynamicListView extends ListView {
     private long mBelowItemId = INVALID_ID;
     private static final int INVALID_POINTER_ID = -1;
     private int mActivePointerId = INVALID_POINTER_ID;
+    @NonNull
+    private final ScrollProperties mScrollProperties = new ScrollProperties();
+    @NonNull
+    private final TouchProperties mTouchProperties = new TouchProperties();
     /**
      * This scroll listener is added to the listview in order to handle cell swapping
      * when the cell is either at the top or bottom edge of the listview. If the hover
@@ -94,24 +99,14 @@ public class DynamicListView extends ListView {
     @Nullable
     private HoverCellHandler mHoverCellHandler;
     private int mOriginalTranscriptMode;
-    private int mLastEventY = -1;
-    private int mLastEventX = -1;
-    private int mDownY = -1;
-    private int mDownX = -1;
     private int mTotalOffset;
-    private boolean mCellIsMobile;
-    private boolean mIsMobileScrolling;
-    private int mSmoothScrollAmountAtEdge;
-    private boolean mIsWaitingForScrollFinish;
     private int mScrollState;
     @Nullable
     private OnTouchListener mOnTouchListener;
-    private boolean mParentIsHorizontalScrollContainer;
     private int mResIdOfDynamicTouchChild;
     private boolean mDynamicTouchChildTouched;
     private int mSlop;
     private boolean mSkipCallingOnTouchListener;
-
     @Nullable
     private OnItemMovedListener mOnItemMovedListener;
     private int mLastMovedToIndex;
@@ -136,7 +131,7 @@ public class DynamicListView extends ListView {
         setOnItemLongClickListener(mOnItemLongClickListener);
         setOnScrollListener(mScrollListener);
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        mSmoothScrollAmountAtEdge = (int) (SMOOTH_SCROLL_AMOUNT_AT_EDGE / metrics.density);
+        mScrollProperties.mSmoothScrollAmountAtEdge = (int) (SMOOTH_SCROLL_AMOUNT_AT_EDGE / metrics.density);
         ViewConfiguration vc = ViewConfiguration.get(getContext());
         mSlop = vc.getScaledTouchSlop();
     }
@@ -189,7 +184,6 @@ public class DynamicListView extends ListView {
         mMobileItemId = getAdapter().getItemId(position);
 
         mHoverCellHandler = new HoverCellHandler(selectedView, mOnHoverCellListener);
-        mCellIsMobile = true;
 
         selectedView.setVisibility(INVISIBLE);
         getParent().requestDisallowInterceptTouchEvent(true);
@@ -274,31 +268,24 @@ public class DynamicListView extends ListView {
     }
 
     private void handleDownEvent(@NonNull final MotionEvent ev) {
-        mDownX = (int) ev.getX();
-        mDownY = (int) ev.getY();
+        mTouchProperties.mDownX = (int) ev.getX();
+        mTouchProperties.mDownY = (int) ev.getY();
         mActivePointerId = ev.getPointerId(0);
 
         mDynamicTouchChildTouched = false;
         if (mResIdOfDynamicTouchChild != 0) {
-            mParentIsHorizontalScrollContainer = false;
 
-            int position = pointToPosition(mDownX, mDownY);
+            int position = pointToPosition(mTouchProperties.mDownX, mTouchProperties.mDownY);
             int childNum = position == INVALID_POSITION ? -1 : position - getFirstVisiblePosition();
             View itemView = childNum >= 0 ? getChildAt(childNum) : null;
             View childView = itemView == null ? null : itemView.findViewById(mResIdOfDynamicTouchChild);
             if (childView != null) {
                 final Rect childRect = ViewUtils.getChildViewRect(this, childView);
-                if (childRect.contains(mDownX, mDownY)) {
+                if (childRect.contains(mTouchProperties.mDownX, mTouchProperties.mDownY)) {
                     mDynamicTouchChildTouched = true;
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
             }
-        }
-
-        if (mParentIsHorizontalScrollContainer) {
-            // Do it now and don't wait until the user moves more than the
-            // slop factor.
-            getParent().requestDisallowInterceptTouchEvent(true);
         }
     }
 
@@ -309,14 +296,14 @@ public class DynamicListView extends ListView {
 
         int pointerIndex = ev.findPointerIndex(mActivePointerId);
 
-        mLastEventY = (int) ev.getY(pointerIndex);
-        mLastEventX = (int) ev.getX(pointerIndex);
-        int deltaY = mLastEventY - mDownY;
-        int deltaX = mLastEventX - mDownX;
+        mTouchProperties.mLastEventY = (int) ev.getY(pointerIndex);
+        mTouchProperties.mLastEventX = (int) ev.getX(pointerIndex);
+        int deltaY = mTouchProperties.mLastEventY - mTouchProperties.mDownY;
+        int deltaX = mTouchProperties.mLastEventX - mTouchProperties.mDownX;
 
-        if (!mCellIsMobile && mDynamicTouchChildTouched) {
+        if (mHoverCellHandler == null && mDynamicTouchChildTouched) {
             if (Math.abs(deltaY) > mSlop && Math.abs(deltaY) > Math.abs(deltaX)) {
-                makeCellMobile(mDownX, mDownY);
+                makeCellMobile(mTouchProperties.mDownX, mTouchProperties.mDownY);
 
                 // Cancel ListView's touch (un-highlighting the item)
                 MotionEvent cancelEvent = MotionEvent.obtain(ev);
@@ -326,7 +313,7 @@ public class DynamicListView extends ListView {
             }
         }
 
-        if (mCellIsMobile) {
+        if (mHoverCellHandler != null) {
             assert mHoverCellHandler != null;
             mHoverCellHandler.offset(deltaY + mTotalOffset);
 
@@ -334,7 +321,7 @@ public class DynamicListView extends ListView {
 
             handleCellSwitch();
 
-            mIsMobileScrolling = false;
+            mScrollProperties.mIsMobileScrolling = false;
             handleMobileCellScroll();
         }
     }
@@ -359,8 +346,7 @@ public class DynamicListView extends ListView {
         int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
         final int pointerId = ev.getPointerId(pointerIndex);
         if (pointerId == mActivePointerId) {
-            mDynamicTouchChildTouched = false;
-            touchEventsEnded();
+            handleUpEvent();
         }
     }
 
@@ -400,7 +386,7 @@ public class DynamicListView extends ListView {
         }
 
         boolean result;
-        if (mCellIsMobile) {
+        if (mHoverCellHandler != null) {
             result = false;
         } else if (mOnTouchListener != null) {
             mSkipCallingOnTouchListener = true;
@@ -422,11 +408,15 @@ public class DynamicListView extends ListView {
      * its new position.
      */
     private void handleCellSwitch() {
-        final int deltaY = mLastEventY - mDownY;
+        assert mHoverCellHandler != null;
+
+        final int deltaY = mTouchProperties.mLastEventY - mTouchProperties.mDownY;
         int deltaYTotal = mHoverCellHandler.getTop() + mTotalOffset + deltaY;
 
-        View belowView = getViewForId(mBelowItemId);
         View mobileView = getViewForId(mMobileItemId);
+        assert mobileView != null;
+
+        View belowView = getViewForId(mBelowItemId);
         View aboveView = getViewForId(mAboveItemId);
 
         boolean hasViewBelow = belowView != null && deltaYTotal > belowView.getTop();
@@ -450,8 +440,8 @@ public class DynamicListView extends ListView {
             }
             adapter.notifyDataSetChanged();
 
-            mDownY = mLastEventY;
-            mDownX = mLastEventX;
+            mTouchProperties.mDownY = mTouchProperties.mLastEventY;
+            mTouchProperties.mDownX = mTouchProperties.mLastEventX;
 
             final int switchViewStartTop = switchView.getTop();
 
@@ -486,11 +476,15 @@ public class DynamicListView extends ListView {
      */
     private void touchEventsEnded() {
         final View mobileView = getViewForId(mMobileItemId);
-        if (mCellIsMobile || mIsWaitingForScrollFinish) {
-            mCellIsMobile = false;
-            mIsWaitingForScrollFinish = false;
-            mIsMobileScrolling = false;
+        assert mobileView != null;
+
+        if (mHoverCellHandler != null || mScrollProperties.mIsWaitingForScrollFinish) {
+            mScrollProperties.mIsWaitingForScrollFinish = false;
+            mScrollProperties.mIsMobileScrolling = false;
             mActivePointerId = INVALID_POINTER_ID;
+            mAboveItemId = INVALID_ID;
+            mMobileItemId = INVALID_ID;
+            mBelowItemId = INVALID_ID;
 
             /* Restore the transcript mode */
             setTranscriptMode(mOriginalTranscriptMode);
@@ -499,7 +493,7 @@ public class DynamicListView extends ListView {
             // for it to finish in order to determine the final location of where the
             // hover cell should be animated to.
             if (mScrollState != OnScrollListener.SCROLL_STATE_IDLE) {
-                mIsWaitingForScrollFinish = true;
+                mScrollProperties.mIsWaitingForScrollFinish = true;
                 return;
             }
 
@@ -523,11 +517,7 @@ public class DynamicListView extends ListView {
 
                             @Override
                             public void onAnimationEnd(final Animator animation) {
-                                mAboveItemId = INVALID_ID;
-                                mMobileItemId = INVALID_ID;
-                                mBelowItemId = INVALID_ID;
                                 mobileView.setVisibility(VISIBLE);
-                                mHoverCellHandler = null;
                                 setEnabled(true);
                                 invalidate();
                                 if (mOnItemMovedListener != null) {
@@ -537,6 +527,7 @@ public class DynamicListView extends ListView {
                         }
                 );
                 hoverViewAnimator.start();
+                mHoverCellHandler = null;
             }
         } else {
             touchEventsCancelled();
@@ -547,19 +538,20 @@ public class DynamicListView extends ListView {
      * Resets all the appropriate fields to a default state.
      */
     private void touchEventsCancelled() {
-        if (mCellIsMobile) {
+        if (mHoverCellHandler != null) {
+            View mobileView = getViewForId(mMobileItemId);
+            assert mobileView != null;
+            mobileView.setVisibility(VISIBLE);
+
             mAboveItemId = INVALID_ID;
             mMobileItemId = INVALID_ID;
             mBelowItemId = INVALID_ID;
-            getViewForId(mMobileItemId).setVisibility(VISIBLE);
             mHoverCellHandler = null;
             invalidate();
         }
-        mCellIsMobile = false;
-        mIsMobileScrolling = false;
+        mScrollProperties.mIsMobileScrolling = false;
         mActivePointerId = INVALID_POINTER_ID;
     }
-
 
     /**
      * This method is in charge of determining if the hover cell is above
@@ -567,6 +559,7 @@ public class DynamicListView extends ListView {
      * upward or downward smooth scroll so as to reveal new items.
      */
     private void handleMobileCellScroll() {
+        assert mHoverCellHandler != null;
         Rect r = mHoverCellHandler.getHoverCellCurrentBounds();
 
         int offset = computeVerticalScrollOffset();
@@ -578,30 +571,13 @@ public class DynamicListView extends ListView {
 
         boolean result = false;
         if (hoverViewTop <= 0 && offset > 0) {
-            smoothScrollBy(-mSmoothScrollAmountAtEdge, 0);
+            smoothScrollBy(-mScrollProperties.mSmoothScrollAmountAtEdge, 0);
             result = true;
         } else if (hoverViewTop + hoverHeight >= height && offset + extent < range) {
-            smoothScrollBy(mSmoothScrollAmountAtEdge, 0);
+            smoothScrollBy(mScrollProperties.mSmoothScrollAmountAtEdge, 0);
             result = true;
         }
-        mIsMobileScrolling = result;
-    }
-
-    /**
-     * If this {@code DynamicListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
-     * work, because the parent will prevent touch-events from reaching the {@code DynamicListView}.
-     * <p/>
-     * Call this method to fix this behavior.
-     * Note that this will prevent the parent from scrolling horizontally when the user touches anywhere in a list item.
-     * Will also reset the dynamic touch child, if set.
-     */
-    public void setParentIsHorizontalScrollContainer() {
-        mParentIsHorizontalScrollContainer = true;
-        mResIdOfDynamicTouchChild = 0;
-    }
-
-    public boolean isParentHorizontalScrollContainer() {
-        return mParentIsHorizontalScrollContainer;
+        mScrollProperties.mIsMobileScrolling = result;
     }
 
     /**
@@ -614,11 +590,8 @@ public class DynamicListView extends ListView {
      *
      * @param childResId The resource id of the list items' child that the user should touch to be able to swipe the list items.
      */
-    public void setDynamicTouchChild(final int childResId) {
+    public void setDynamicTouchChild(@IdRes final int childResId) {
         mResIdOfDynamicTouchChild = childResId;
-        if (childResId != 0) {
-            mParentIsHorizontalScrollContainer = false;
-        }
     }
 
     /**
@@ -626,6 +599,19 @@ public class DynamicListView extends ListView {
      */
     public void setOnItemMovedListener(@Nullable final OnItemMovedListener onItemMovedListener) {
         mOnItemMovedListener = onItemMovedListener;
+    }
+
+    private static class TouchProperties {
+        int mLastEventY = -1;
+        int mLastEventX = -1;
+        int mDownY = -1;
+        int mDownX = -1;
+    }
+
+    private static class ScrollProperties {
+        boolean mIsMobileScrolling;
+        int mSmoothScrollAmountAtEdge;
+        boolean mIsWaitingForScrollFinish;
     }
 
     private class MyOnScrollListener implements OnScrollListener {
@@ -668,9 +654,9 @@ public class DynamicListView extends ListView {
          */
         private void isScrollCompleted() {
             if (mCurrentVisibleItemCount > 0 && mCurrentScrollState == SCROLL_STATE_IDLE) {
-                if (mCellIsMobile && mIsMobileScrolling) {
+                if (mHoverCellHandler != null && mScrollProperties.mIsMobileScrolling) {
                     handleMobileCellScroll();
-                } else if (mIsWaitingForScrollFinish) {
+                } else if (mScrollProperties.mIsWaitingForScrollFinish) {
                     touchEventsEnded();
                 }
             }
@@ -682,7 +668,7 @@ public class DynamicListView extends ListView {
          */
         private void checkAndHandleFirstVisibleCellChange() {
             if (mCurrentFirstVisibleItem != mPreviousFirstVisibleItem) {
-                if (mCellIsMobile && mMobileItemId != INVALID_ID) {
+                if (mHoverCellHandler != null && mMobileItemId != INVALID_ID) {
                     updateNeighborViewsForId(mMobileItemId);
                     handleCellSwitch();
                 }
@@ -697,7 +683,7 @@ public class DynamicListView extends ListView {
             int currentLastVisibleItem = mCurrentFirstVisibleItem + mCurrentVisibleItemCount;
             int previousLastVisibleItem = mPreviousFirstVisibleItem + mPreviousVisibleItemCount;
             if (currentLastVisibleItem != previousLastVisibleItem) {
-                if (mCellIsMobile && mMobileItemId != INVALID_ID) {
+                if (mHoverCellHandler != null && mMobileItemId != INVALID_ID) {
                     updateNeighborViewsForId(mMobileItemId);
                     handleCellSwitch();
                 }
@@ -711,7 +697,7 @@ public class DynamicListView extends ListView {
         public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int position, final long id) {
             if (mResIdOfDynamicTouchChild == 0) {
                 mDynamicTouchChildTouched = true;
-                makeCellMobile(mDownX, mDownY);
+                makeCellMobile(mTouchProperties.mDownX, mTouchProperties.mDownY);
                 return true;
             }
             return false;
@@ -739,14 +725,16 @@ public class DynamicListView extends ListView {
             mTotalOffset += mDeltaY;
 
             View switchView = getViewForId(mSwitchItemId);
-            int switchViewNewTop = switchView.getTop();
-            int delta = mSwitchViewStartTop - switchViewNewTop;
+            if (switchView != null) {
+                int switchViewNewTop = switchView.getTop();
+                int delta = mSwitchViewStartTop - switchViewNewTop;
 
-            ViewHelper.setTranslationY(switchView, delta);
+                ViewHelper.setTranslationY(switchView, delta);
 
-            ObjectAnimator animator = ObjectAnimator.ofFloat(switchView, "translationY", 0);
-            animator.setDuration(MOVE_DURATION);
-            animator.start();
+                ObjectAnimator animator = ObjectAnimator.ofFloat(switchView, "translationY", 0);
+                animator.setDuration(MOVE_DURATION);
+                animator.start();
+            }
 
             return true;
         }
