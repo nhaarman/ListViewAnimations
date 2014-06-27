@@ -21,7 +21,8 @@ import android.widget.Toast;
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.widget.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.dragdrop.rewrite.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.dragdrop.OnItemMovedListener;
 import com.nhaarman.listviewanimations.swinginadapters.simple.AlphaInAnimationAdapter;
 
 public class DragAndDropActivity extends MyListActivity {
@@ -42,12 +43,12 @@ public class DragAndDropActivity extends MyListActivity {
         animAdapter.getViewAnimator().setInitialDelayMillis(300);
 
         listView.setAdapter(animAdapter);
-        listView.setOnItemMovedListener(new MyOnItemMovedListener(adapter));
+//        listView.setOnItemMovedListener(new MyOnItemMovedListener(adapter));
 
         Toast.makeText(this, getString(R.string.long_press_to_drag), Toast.LENGTH_LONG).show();
     }
 
-    private class MyOnItemMovedListener implements DynamicListView.OnItemMovedListener {
+    private class MyOnItemMovedListener implements OnItemMovedListener {
         private final ArrayAdapter<String> mAdapter;
 
         MyOnItemMovedListener(final ArrayAdapter<String> adapter) {

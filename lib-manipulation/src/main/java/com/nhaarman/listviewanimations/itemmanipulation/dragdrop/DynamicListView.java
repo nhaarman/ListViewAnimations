@@ -110,6 +110,7 @@ public class DynamicListView extends ListView {
     @Nullable
     private OnItemMovedListener mOnItemMovedListener;
     private int mLastMovedToIndex;
+    @Nullable
     private OnHoverCellListener mOnHoverCellListener;
 
     public DynamicListView(@NonNull final Context context) {
@@ -425,11 +426,11 @@ public class DynamicListView extends ListView {
         if (hasViewBelow || hasViewAbove) {
             final long switchItemId = hasViewBelow ? mBelowItemId : mAboveItemId;
             View switchView = hasViewBelow ? belowView : aboveView;
-            final int originalItem = getPositionForView(mobileView);
 
             if (getPositionForView(switchView) < getHeaderViewsCount() || getPositionForView(switchView) >= getAdapter().getCount() - getFooterViewsCount()) {
                 return;
             }
+            final int originalItem = getPositionForView(mobileView);
             swapElements(originalItem, getPositionForView(switchView));
 
             BaseAdapter adapter;
