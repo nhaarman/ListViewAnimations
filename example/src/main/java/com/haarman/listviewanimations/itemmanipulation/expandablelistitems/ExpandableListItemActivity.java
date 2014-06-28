@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
-import com.nhaarman.listviewanimations.swinginadapters.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
 public class ExpandableListItemActivity extends MyListActivity {
 

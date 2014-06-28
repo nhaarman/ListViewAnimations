@@ -16,9 +16,7 @@
 package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
 import android.support.annotation.NonNull;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 /**
  * A callback interface used to inform its client about a successful dismissal of one or more list item positions.

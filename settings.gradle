@@ -1,1 +1,1 @@
-include ':example', 'lib-core', 'lib-manipulation', 'lib-core-slh'
+include ':example', ':example-recyclerview', 'lib-core', 'lib-manipulation', 'lib-core-slh', 'lib-recyclerview'

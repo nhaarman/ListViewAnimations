@@ -220,7 +220,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * Notifies this {@code SwipeTouchListener} that the adapter contents have changed.
      */
     public void notifyDataSetChanged() {
-        mVirtualListCount = mListViewWrapper.getAdapter().getCount();
+        mVirtualListCount = mListViewWrapper.getAdapterWrapper().getCount();
     }
 
     /**
@@ -277,7 +277,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     @Override
     public boolean onTouch(@NonNull final View view, @NonNull final MotionEvent event) {
         if (mVirtualListCount == -1) {
-            mVirtualListCount = mListViewWrapper.getAdapter().getCount();
+            mVirtualListCount = mListViewWrapper.getAdapterWrapper().getCount();
         }
 
         if (mViewWidth < 2) {
@@ -375,7 +375,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      */
     private boolean isDismissable(final int position) {
         if (mDismissableManager != null) {
-            long downId = mListViewWrapper.getAdapter().getItemId(position);
+            long downId = mListViewWrapper.getAdapterWrapper().getItemId(position);
             if (!mDismissableManager.isDismissable(downId, position)) {
                 return false;
             }

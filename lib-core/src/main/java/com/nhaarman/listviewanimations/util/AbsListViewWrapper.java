@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class AbsListViewWrapper implements ListViewWrapper {
@@ -64,8 +63,8 @@ public class AbsListViewWrapper implements ListViewWrapper {
 
     @NonNull
     @Override
-    public ListAdapter getAdapter() {
-        return mAbsListView.getAdapter();
+    public AdapterWrapper getAdapterWrapper() {
+        return new ListAdapterWrapper(mAbsListView.getAdapter());
     }
 
     @Override

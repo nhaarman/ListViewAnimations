@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 
 public interface ListViewWrapper {
 
@@ -27,7 +26,7 @@ public interface ListViewWrapper {
     int getPositionForView(@NonNull View view);
 
     @NonNull
-    ListAdapter getAdapter();
+    AdapterWrapper getAdapterWrapper();
 
     void smoothScrollBy(int distance, int duration);
 }
