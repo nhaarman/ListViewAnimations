@@ -30,6 +30,8 @@ public class MainActivity extends Activity {
 
         AnimationRecyclerViewAdapter<MyViewHolder> animAdapter = new AlphaAnimationRecyclerViewAdapter<>(adapter);
         animAdapter.setRecyclerView(recyclerView);
+        assert animAdapter.getViewAnimator() != null;
+        animAdapter.getViewAnimator().setInitialDelayMillis(500);
 
         recyclerView.setAdapter(animAdapter);
         final LinearLayoutManager layout = new LinearLayoutManager(this);
@@ -56,14 +58,12 @@ public class MainActivity extends Activity {
 
         @Override
         public MyViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int i) {
-            System.out.println("Create: " + i);
             CardView cardView = (CardView) LayoutInflater.from(MainActivity.this).inflate(R.layout.view_cardrow, viewGroup, false);
             return new MyViewHolder(cardView);
         }
 
         @Override
         public void onBindViewHolder(final MyViewHolder myViewHolder, final int i) {
-            System.out.println("Bind: " + i);
             myViewHolder.tv.setText("This is row number: " + i);
         }
 

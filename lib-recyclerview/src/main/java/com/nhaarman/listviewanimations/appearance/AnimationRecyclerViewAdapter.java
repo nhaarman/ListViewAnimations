@@ -31,6 +31,11 @@ public abstract class AnimationRecyclerViewAdapter<T extends RecyclerView.ViewHo
         mViewAnimator = new ViewAnimator(new RecyclerViewWrapper(recyclerView));
     }
 
+    @Nullable
+    public ViewAnimator getViewAnimator() {
+        return mViewAnimator;
+    }
+
     @Override
     public void onBindViewHolder(final T viewHolder, final int position) {
         if (mViewAnimator == null) {
@@ -67,4 +72,5 @@ public abstract class AnimationRecyclerViewAdapter<T extends RecyclerView.ViewHo
      */
     @NonNull
     public abstract Animator[] getAnimators(@NonNull ViewGroup parent, @NonNull View view);
+
 }

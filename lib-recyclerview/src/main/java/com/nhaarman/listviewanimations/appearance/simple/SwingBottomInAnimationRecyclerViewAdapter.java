@@ -16,6 +16,7 @@
 package com.nhaarman.listviewanimations.appearance.simple;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -28,12 +29,12 @@ import com.nineoldandroids.animation.ObjectAnimator;
  * An implementation of the AnimationAdapter class which applies a
  * swing-in-from-bottom-animation to views.
  */
-public class SwingBottomInAnimationRecyclerViewAdapter extends SingleAnimationRecyclerViewAdapter {
+public class SwingBottomInAnimationRecyclerViewAdapter<T extends RecyclerView.ViewHolder> extends SingleAnimationRecyclerViewAdapter<T> {
 
     private static final String TRANSLATION_Y = "translationY";
 
-    public SwingBottomInAnimationRecyclerViewAdapter(@NonNull final BaseAdapter baseAdapter) {
-        super(baseAdapter);
+    public SwingBottomInAnimationRecyclerViewAdapter(@NonNull final RecyclerView.Adapter<T> adapter) {
+        super(adapter);
     }
 
     @Override
