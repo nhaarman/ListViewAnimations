@@ -452,9 +452,7 @@ public class DynamicListView extends ListView {
             updateNeighborViewsForId(mMobileItemId);
 
             final ViewTreeObserver observer = getViewTreeObserver();
-            observer.addOnPreDrawListener(
-                    new MyOnPreDrawListener(switchItemId, deltaY, switchViewStartTop)
-            );
+            observer.addOnPreDrawListener(new MyOnPreDrawListener(switchItemId, deltaY, switchViewStartTop));
         }
     }
 

@@ -10,12 +10,12 @@ class HoverDrawable extends BitmapDrawable {
     /**
      * The original y coordinate of the top of given {@code View}.
      */
-    private final float mOriginalY;
+    private float mOriginalY;
 
     /**
      * The original y coordinate of the position that was touched.
      */
-    private final float mDownY;
+    private float mDownY;
 
     HoverDrawable(@NonNull final View view, @NonNull final MotionEvent ev) {
         super(view.getResources(), BitmapUtils.getBitmapFromView(view));
@@ -36,6 +36,12 @@ class HoverDrawable extends BitmapDrawable {
 
     int getDeltaY() {
         return (int) (mOriginalY - getBounds().top);
+    }
+
+    void reset() {
+        int deltaY = getDeltaY();
+        mOriginalY -= deltaY;
+        mDownY -= deltaY;
     }
 
 }

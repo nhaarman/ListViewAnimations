@@ -11,7 +11,6 @@ import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.util.Swappable;
 
@@ -57,8 +56,8 @@ public class DynamicListView extends ListView {
                 break;
         }
 
-//        return super.onTouchEvent(ev);
         return true;
+//        return super.onTouchEvent(ev);
     }
 
     private void handleDownEvent(@NonNull final MotionEvent ev) {
@@ -118,25 +117,40 @@ public class DynamicListView extends ListView {
             long aboveItemId = position - 1 >= 0 ? getAdapter().getItemId(position - 1) : INVALID_ROW_ID;
             long belowItemId = position + 1 < getAdapter().getCount() ? getAdapter().getItemId(position + 1) : INVALID_ROW_ID;
 
-            long switchId = mHoverDrawable.isMovingUpward() ? aboveItemId : belowItemId;
+            final long switchId = mHoverDrawable.isMovingUpward() ? aboveItemId : belowItemId;
             View switchView = getViewForId(switchId);
-            if (switchView != null && Math.abs(mHoverDrawable.getDeltaY()) > mHoverDrawable.getIntrinsicHeight()) {
-                Toast.makeText(getContext(), "1", Toast.LENGTH_SHORT).show();
 
-                ((Swappable) getAdapter()).swapItems(getPositionForView(switchView), getPositionForView(mMobileView));
+            final int deltaY = mHoverDrawable.getDeltaY();
+            if (switchView != null && Math.abs(deltaY) > mHoverDrawable.getIntrinsicHeight()) {
+
+                final int switchViewPosition = getPositionForView(switchView);
+                int mobileViewPosition = getPositionForView(mMobileView);
+
+                ((Swappable) getAdapter()).swapItems(switchViewPosition, mobileViewPosition);
                 ((BaseAdapter) getAdapter()).notifyDataSetChanged();
+
+                mHoverDrawable.reset();
+                mMobileView.setVisibility(VISIBLE);
+                switchView.setVisibility(INVISIBLE);
+
+                getViewTreeObserver().addOnPreDrawListener(
+                        new ViewTreeObserver.OnPreDrawListener() {
+                            @Override
+                            public boolean onPreDraw() {
+                                getViewTreeObserver().removeOnPreDrawListener(this);
+
+                                View switchView = getViewForId(switchId);
+                                switchView.setTranslationY(-deltaY);
+                                switchView.animate().translationY(0).start();
+
+
+                                mMobileView = getViewForId(mMobileItemId);
+                                return true;
+                            }
+                        }
+                );
             }
 
-            getViewTreeObserver().addOnPreDrawListener(
-                    new ViewTreeObserver.OnPreDrawListener() {
-                        @Override
-                        public boolean onPreDraw() {
-                            getViewTreeObserver().removeOnPreDrawListener(this);
-
-                            return false;
-                        }
-                    }
-            );
 
             invalidate();
         }
