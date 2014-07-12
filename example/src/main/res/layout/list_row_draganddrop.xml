@@ -9,6 +9,7 @@
         android:id="@+id/list_row_draganddrop_touchview"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:color="#333"
         android:paddingBottom="4dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"

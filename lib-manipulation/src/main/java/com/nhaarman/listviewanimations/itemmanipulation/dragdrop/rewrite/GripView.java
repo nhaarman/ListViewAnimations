@@ -2,6 +2,7 @@ package com.nhaarman.listviewanimations.itemmanipulation.dragdrop.rewrite;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.ColorRes;
@@ -14,12 +15,14 @@ import android.view.View;
 /**
  * A {@code View} which shows a number of colored dots in a grid.
  */
+@SuppressWarnings("UnnecessaryFullyQualifiedName")
 public class GripView extends View {
 
-    @SuppressWarnings("UnnecessaryFullyQualifiedName")
     public static final int DEFAULT_DOT_COLOR = android.R.color.darker_gray;
     public static final float DEFAULT_DOT_SIZE_RADIUS_DP = 2;
     public static final int DEFAULT_COLUMN_COUNT = 2;
+
+    private static final int[] ATTRS = {android.R.attr.color};
 
     /**
      * The {@code Paint} that is used to draw the dots.
@@ -58,7 +61,13 @@ public class GripView extends View {
         super(context, attrs, defStyleAttr);
 
         mDotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mDotPaint.setColor(getResources().getColor(DEFAULT_DOT_COLOR));
+        int color = getResources().getColor(DEFAULT_DOT_COLOR);
+        if (attrs != null) {
+            final TypedArray a = context.obtainStyledAttributes(attrs, ATTRS);
+            color = a.getColor(0, color);
+            a.recycle();
+        }
+        mDotPaint.setColor(color);
 
         Resources r = context.getResources();
         mDotSizeRadiusPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_DOT_SIZE_RADIUS_DP, r.getDisplayMetrics());
