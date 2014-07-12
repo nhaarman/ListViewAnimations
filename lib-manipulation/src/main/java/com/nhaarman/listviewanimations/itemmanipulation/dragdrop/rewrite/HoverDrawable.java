@@ -18,6 +18,11 @@ class HoverDrawable extends BitmapDrawable {
     private float mDownY;
 
     /**
+     * The distance the {@code ListView} has been scrolling while this {@code HoverDrawable} is alive.
+     */
+    private float mScrollDistance;
+
+    /**
      * Creates a new {@code HoverDrawable} for given {@link View}, using given {@link MotionEvent}.
      *
      * @param view the {@code View} to represent
@@ -38,8 +43,18 @@ class HoverDrawable extends BitmapDrawable {
      *           {@code ev.getActionMasked()} should typically equal {@link MotionEvent#ACTION_MOVE}.
      */
     void handleMoveEvent(@NonNull final MotionEvent ev) {
-        int top = (int) (mOriginalY - mDownY + ev.getY());
+        int top = (int) (mOriginalY - mDownY + ev.getY() + mScrollDistance);
         setBounds(getBounds().left, top, getBounds().left + getIntrinsicWidth(), top + getIntrinsicHeight());
+    }
+
+    /**
+     * Updates the original y position of the view, and calculates the scroll distance.
+     *
+     * @param mobileViewTopY the top y coordinate of the mobile view this {@code HoverDrawable} represents.
+     */
+    void onScroll(final float mobileViewTopY) {
+        mScrollDistance += mOriginalY - mobileViewTopY;
+        mOriginalY = mobileViewTopY;
     }
 
     /**
