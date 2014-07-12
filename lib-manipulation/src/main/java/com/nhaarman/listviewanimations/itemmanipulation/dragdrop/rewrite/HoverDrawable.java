@@ -25,13 +25,23 @@ class HoverDrawable extends BitmapDrawable {
     /**
      * Creates a new {@code HoverDrawable} for given {@link View}, using given {@link MotionEvent}.
      *
-     * @param view the {@code View} to represent
+     * @param view the {@code View} to represent.
      * @param ev   the {@code MotionEvent} to use as down position.
      */
     HoverDrawable(@NonNull final View view, @NonNull final MotionEvent ev) {
+        this(view, ev.getY());
+    }
+
+    /**
+     * Creates a new {@code HoverDrawable} for given {@link View}, using given {@link MotionEvent}.
+     *
+     * @param view  the {@code View} to represent.
+     * @param downY the y coordinate of the down event.
+     */
+    HoverDrawable(@NonNull final View view, final float downY) {
         super(view.getResources(), BitmapUtils.getBitmapFromView(view));
         mOriginalY = view.getTop();
-        mDownY = ev.getY();
+        mDownY = downY;
 
         setBounds(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
     }

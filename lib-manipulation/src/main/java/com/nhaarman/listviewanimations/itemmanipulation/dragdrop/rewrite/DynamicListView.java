@@ -39,10 +39,18 @@ public class DynamicListView extends ListView {
     private View mMobileView;
 
     /**
+     * The y coordinate of the last non-final {@code MotionEvent}.
+     */
+    private float mLastMotionEventY = -1;
+
+    /**
      * The id of the item view that is being dragged.
      * This value is {@value #INVALID_ID} if and only if the user is not dragging.
      */
     private long mMobileItemId;
+
+    @NonNull
+    private DraggableManager mDraggableManager;
 
     @NonNull
     private ScrollHandler mScrollHandler;
@@ -65,6 +73,8 @@ public class DynamicListView extends ListView {
     private void init() {
         mScrollHandler = new ScrollHandler();
         setOnScrollListener(mScrollHandler);
+
+        mDraggableManager = new DefaultDraggableManager();
     }
 
     /**
@@ -76,37 +86,76 @@ public class DynamicListView extends ListView {
         mScrollHandler.setScrollSpeed(speed);
     }
 
-    @Override
-    public boolean onTouchEvent(@NonNull final MotionEvent ev) {
-        switch (ev.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-                handleDownEvent(ev);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                handleMoveEvent(ev);
-                break;
-            case MotionEvent.ACTION_UP:
-                handleUpEvent();
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                handleCancelEvent();
-                break;
-            default:
-                break;
+    /**
+     * Starts dragging the item at given position. User must be touching this {@code DynamicListView}.
+     *
+     * @param position the position of the item start dragging.
+     *
+     * @throws java.lang.IllegalStateException if the user is not touching this {@code DynamicListView}.
+     */
+    public void startDragging(final int position) {
+        if (mLastMotionEventY < 0) {
+            throw new IllegalStateException("User must be touching the DynamicListView!");
         }
-
-        return true;
-//        return super.onTouchEvent(ev);
+        mMobileItemId = getAdapter().getItemId(position);
+        mMobileView = getChildAt(position - getFirstVisiblePosition());
+        mHoverDrawable = new HoverDrawable(mMobileView, mLastMotionEventY);
+        mMobileView.setVisibility(INVISIBLE);
     }
 
-    private void handleDownEvent(@NonNull final MotionEvent ev) {
+    /**
+     * Sets the {@link DraggableManager} to be used for determining whether an item should be dragged when the user issues a down {@code MotionEvent}.
+     */
+    public void setDraggableManager(@NonNull final DraggableManager draggableManager) {
+        mDraggableManager = draggableManager;
+    }
+
+    @Override
+    public boolean onTouchEvent(@NonNull final MotionEvent ev) {
+        boolean handled;
+
+        switch (ev.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                handled = handleDownEvent(ev);
+                mLastMotionEventY = ev.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                handled = handleMoveEvent(ev);
+                mLastMotionEventY = ev.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                handled = handleUpEvent();
+                mLastMotionEventY = -1;
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                handled = handleCancelEvent();
+                mLastMotionEventY = -1;
+                break;
+            default:
+                handled = false;
+                break;
+        }
+
+        return handled || super.onTouchEvent(ev);
+    }
+
+    private boolean handleDownEvent(@NonNull final MotionEvent ev) {
+        boolean handled = false;
+
         int position = pointToPosition((int) ev.getX(), (int) ev.getY());
         if (position != INVALID_POSITION) {
-            mMobileItemId = getAdapter().getItemId(position);
-            mMobileView = getChildAt(position - getFirstVisiblePosition());
-            mHoverDrawable = new HoverDrawable(mMobileView, ev);
-            mMobileView.setVisibility(INVISIBLE);
+            View downView = getChildAt(position - getFirstVisiblePosition());
+            assert downView != null;
+            if (mDraggableManager.isDraggable(downView, position, ev.getX() - downView.getX(), ev.getY() - downView.getY())) {
+                mMobileItemId = getAdapter().getItemId(position);
+                mMobileView = getChildAt(position - getFirstVisiblePosition());
+                mHoverDrawable = new HoverDrawable(mMobileView, ev);
+                mMobileView.setVisibility(INVISIBLE);
+                handled = true;
+            }
         }
+
+        return handled;
     }
 
     /**
@@ -147,14 +196,16 @@ public class DynamicListView extends ListView {
         return result;
     }
 
-    private void handleMoveEvent(@NonNull final MotionEvent ev) {
+    private boolean handleMoveEvent(@NonNull final MotionEvent ev) {
         if (mHoverDrawable == null) {
-            return;
+            return false;
         }
         mHoverDrawable.handleMoveEvent(ev);
 
         switchIfNecessary();
         invalidate();
+
+        return true;
     }
 
     private void switchIfNecessary() {
@@ -196,9 +247,9 @@ public class DynamicListView extends ListView {
         getViewTreeObserver().addOnPreDrawListener(new AnimateSwitchViewOnPreDrawListener(switchId, translationY));
     }
 
-    private void handleUpEvent() {
+    private boolean handleUpEvent() {
         if (mMobileView == null) {
-            return;
+            return false;
         }
         assert mHoverDrawable != null;
 
@@ -209,10 +260,12 @@ public class DynamicListView extends ListView {
         mHoverDrawable = null;
         mMobileView = null;
         mMobileItemId = INVALID_ID;
+
+        return true;
     }
 
-    private void handleCancelEvent() {
-        handleUpEvent();
+    private boolean handleCancelEvent() {
+        return handleUpEvent();
     }
 
     @Override
@@ -221,6 +274,14 @@ public class DynamicListView extends ListView {
 
         if (mHoverDrawable != null) {
             mHoverDrawable.draw(canvas);
+        }
+    }
+
+    private static class DefaultDraggableManager implements DraggableManager {
+
+        @Override
+        public boolean isDraggable(@NonNull final View view, final int position, final float x, final float y) {
+            return false;
         }
     }
 
@@ -334,7 +395,7 @@ public class DynamicListView extends ListView {
         }
 
         @Override
-        public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
+        public void onScroll(@NonNull final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
             mCurrentFirstVisibleItem = firstVisibleItem;
             mCurrentLastVisibleItem = firstVisibleItem + visibleItemCount;
 
@@ -354,7 +415,7 @@ public class DynamicListView extends ListView {
         }
 
         @Override
-        public void onScrollStateChanged(final AbsListView view, final int scrollState) {
+        public void onScrollStateChanged(@NonNull final AbsListView view, final int scrollState) {
             if (scrollState == SCROLL_STATE_IDLE && mHoverDrawable != null) {
                 handleMobileCellScroll();
             }
