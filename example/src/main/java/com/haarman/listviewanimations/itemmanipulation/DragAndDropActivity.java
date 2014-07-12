@@ -15,9 +15,13 @@
  */
 package com.haarman.listviewanimations.itemmanipulation;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.haarman.listviewanimations.MyListActivity;
@@ -38,7 +42,7 @@ public class DragAndDropActivity extends MyListActivity {
         final DynamicListView listView = (DynamicListView) findViewById(R.id.activity_draganddrop_listview);
         listView.setDivider(null);
 
-        final ArrayAdapter<String> adapter = createListAdapter();
+        final ArrayAdapter<String> adapter = new DragAndDropListAdapter(this);
         AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(adapter);
         animAdapter.setAbsListView(listView);
 
@@ -47,17 +51,50 @@ public class DragAndDropActivity extends MyListActivity {
 
         listView.setAdapter(animAdapter);
         listView.setOnItemLongClickListener(new MyOnItemLongClickListener(listView));
-        listView.setDraggableManager(new TouchViewDraggableManager(R.id.touchview));
+        listView.setDraggableManager(new TouchViewDraggableManager(R.id.list_row_draganddrop_touchview));
 
 //        listView.setOnItemMovedListener(new MyOnItemMovedListener(adapter));
 
         Toast.makeText(this, getString(R.string.long_press_to_drag), Toast.LENGTH_LONG).show();
     }
 
+    private static class DragAndDropListAdapter extends ArrayAdapter<String> {
+        private final Context mContext;
+
+        DragAndDropListAdapter(final Context context) {
+            mContext = context;
+            for (int i = 0; i < 1000; i++) {
+                add(mContext.getString(R.string.row_number, i));
+            }
+        }
+
+        @Override
+        public long getItemId(final int position) {
+            return getItem(position).hashCode();
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
+            View view = convertView;
+            if (view == null) {
+                view = LayoutInflater.from(mContext).inflate(R.layout.list_row_draganddrop, parent, false);
+            }
+
+            ((TextView) view.findViewById(R.id.list_row_draganddrop_textview)).setText(getItem(position));
+
+            return view;
+        }
+    }
+
     private static class MyOnItemLongClickListener implements AdapterView.OnItemLongClickListener {
         private final DynamicListView mListView;
 
-        public MyOnItemLongClickListener(final DynamicListView listView) {
+        MyOnItemLongClickListener(final DynamicListView listView) {
             mListView = listView;
         }
 

@@ -2,12 +2,13 @@ package com.nhaarman.listviewanimations.itemmanipulation.dragdrop.rewrite;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -49,9 +50,15 @@ public class DynamicListView extends ListView {
      */
     private long mMobileItemId;
 
+    /**
+     * The {@link com.nhaarman.listviewanimations.itemmanipulation.dragdrop.rewrite.DraggableManager} responsible for deciding if an item can be dragged.
+     */
     @NonNull
     private DraggableManager mDraggableManager;
 
+    /**
+     * The {@link ScrollHandler} that handles scrolling when dragging an item.
+     */
     @NonNull
     private ScrollHandler mScrollHandler;
 
@@ -357,8 +364,9 @@ public class DynamicListView extends ListView {
         private int mCurrentLastVisibleItem;
 
         ScrollHandler() {
-            DisplayMetrics metrics = getResources().getDisplayMetrics();
-            mSmoothScrollPx = (int) (SMOOTH_SCROLL_DP / metrics.density);
+            Resources r = getResources();
+            mSmoothScrollPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SMOOTH_SCROLL_DP, r.getDisplayMetrics());
+
         }
 
         /**

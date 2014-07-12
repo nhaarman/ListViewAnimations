@@ -16,8 +16,12 @@ public class TouchViewDraggableManager implements DraggableManager {
     @Override
     public boolean isDraggable(@NonNull final View view, final int position, final float x, final float y) {
         View touchView = view.findViewById(mTouchViewResId);
-        boolean xHit = touchView.getLeft() <= x && touchView.getRight() >= x;
-        boolean yHit = touchView.getTop() <= y && touchView.getBottom() >= y;
-        return xHit && yHit;
+        if (touchView != null) {
+            boolean xHit = touchView.getLeft() <= x && touchView.getRight() >= x;
+            boolean yHit = touchView.getTop() <= y && touchView.getBottom() >= y;
+            return xHit && yHit;
+        } else {
+            return false;
+        }
     }
 }
