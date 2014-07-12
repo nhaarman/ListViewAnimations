@@ -17,6 +17,12 @@ class HoverDrawable extends BitmapDrawable {
      */
     private float mDownY;
 
+    /**
+     * Creates a new {@code HoverDrawable} for given {@link View}, using given {@link MotionEvent}.
+     *
+     * @param view the {@code View} to represent
+     * @param ev   the {@code MotionEvent} to use as down position.
+     */
     HoverDrawable(@NonNull final View view, @NonNull final MotionEvent ev) {
         super(view.getResources(), BitmapUtils.getBitmapFromView(view));
         mOriginalY = view.getTop();
@@ -25,23 +31,45 @@ class HoverDrawable extends BitmapDrawable {
         setBounds(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
     }
 
+    /**
+     * Calculates the new position for this {@code HoverDrawable} using given {@link MotionEvent}.
+     *
+     * @param ev the {@code MotionEvent}.
+     *           {@code ev.getActionMasked()} should typically equal {@link MotionEvent#ACTION_MOVE}.
+     */
     void handleMoveEvent(@NonNull final MotionEvent ev) {
         int top = (int) (mOriginalY - mDownY + ev.getY());
         setBounds(getBounds().left, top, getBounds().left + getIntrinsicWidth(), top + getIntrinsicHeight());
     }
 
-    boolean isMovingUpward() {
+    /**
+     * Returns whether the user is currently dragging this {@code HoverDrawable} upwards.
+     *
+     * @return true if dragging upwards.
+     */
+    boolean isMovingUpwards() {
         return mOriginalY > getBounds().top;
     }
 
+    /**
+     * Returns the number of pixels between the original y coordinate of the view, and the current y coordinate.
+     * A negative value means this {@code HoverDrawable} is moving upwards.
+     *
+     * @return the number of pixels.
+     */
     int getDeltaY() {
-        return (int) (mOriginalY - getBounds().top);
+        return (int) (getBounds().top - mOriginalY);
     }
 
-    void reset() {
-        int deltaY = getDeltaY();
-        mOriginalY -= deltaY;
-        mDownY -= deltaY;
+    /**
+     * Shifts the original y coordinates of this {@code HoverDrawable} {code height} pixels upwards or downwards,
+     * depending on the move direction.
+     *
+     * @param height the number of pixels this {@code HoverDrawable} should be moved. Should be positive.
+     */
+    void shift(final int height) {
+        int shiftSize = isMovingUpwards() ? -height : height;
+        mOriginalY += shiftSize;
+        mDownY += shiftSize;
     }
-
 }
