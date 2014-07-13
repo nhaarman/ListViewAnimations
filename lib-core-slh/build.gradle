@@ -51,7 +51,7 @@ android {
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 20
+        targetSdkVersion 19
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(new Date().format('yyyyMMddHH'))
     }

@@ -8,7 +8,7 @@ android:
 
 env:
   matrix:
-    - ANDROID_SDKS=sysimg-19 ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a SKIN=WXGA800 LINT=true MAVEN=true
+    - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a SKIN=WXGA800 LINT=true MAVEN=true
   global:
     - TERM=dumb
     - secure: Fo/btrr+HpwmQL6TNxZuh/TWRMouz9Z1RCo77tf3crNP4OHq9EAkduLc/b4i6HCGFM3fyfJ7AM5XMa3OQvXfF84FQnew7NGE6zB/CKFfKBIZyzntvrDg4VqWEAHzunT6+eBnGtxtrAE0bBo4MmUCklXWP8j5UAyjfFpSeJdOywY=
