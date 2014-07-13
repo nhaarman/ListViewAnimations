@@ -39,14 +39,17 @@ import com.nhaarman.listviewanimations.util.Swappable;
 public class DynamicListView extends ListView {
 
     private static final int INVALID_ID = -1;
-
+    /**
+     * The id of the item view that is being dragged.
+     * This value is {@value #INVALID_ID} if and only if the user is not dragging.
+     */
+    private long mMobileItemId = INVALID_ID;
     /**
      * The Drawable that is drawn when the user is dragging an item.
      * This value is null if and only if the user is not dragging.
      */
     @Nullable
     private HoverDrawable mHoverDrawable;
-
     /**
      * The View that is represented by {@link #mHoverDrawable}.
      * When this value is not null, the View should be invisible.
@@ -54,18 +57,15 @@ public class DynamicListView extends ListView {
      */
     @Nullable
     private View mMobileView;
-
     /**
      * The y coordinate of the last non-final {@code MotionEvent}.
      */
     private float mLastMotionEventY = -1;
-
     /**
-     * The id of the item view that is being dragged.
-     * This value is {@value #INVALID_ID} if and only if the user is not dragging.
+     * The original position of the view that is being dragged.
+     * This value is {@value #INVALID_POSITION} if and only if the user is not dragging.
      */
-    private long mMobileItemId;
-
+    private int mOriginalMobileItemPosition = INVALID_POSITION;
     /**
      * The {@link ScrollHandler} that handles scrolling when dragging an item.
      */
@@ -127,6 +127,8 @@ public class DynamicListView extends ListView {
         if (mLastMotionEventY < 0) {
             throw new IllegalStateException("User must be touching the DynamicListView!");
         }
+
+        mOriginalMobileItemPosition = position;
         mMobileItemId = getAdapter().getItemId(position);
         mMobileView = getChildAt(position - getFirstVisiblePosition());
         mHoverDrawable = new HoverDrawable(mMobileView, mLastMotionEventY);
@@ -140,6 +142,9 @@ public class DynamicListView extends ListView {
         mDraggableManager = draggableManager;
     }
 
+    /**
+     * Sets the {@link com.nhaarman.listviewanimations.itemmanipulation.dragdrop.OnItemMovedListener} that is notified when user has dropped a dragging item.
+     */
     public void setOnItemMovedListener(@Nullable final OnItemMovedListener onItemMovedListener) {
         mOnItemMovedListener = onItemMovedListener;
     }
@@ -181,10 +186,7 @@ public class DynamicListView extends ListView {
             View downView = getChildAt(position - getFirstVisiblePosition());
             assert downView != null;
             if (mDraggableManager.isDraggable(downView, position, ev.getX() - downView.getX(), ev.getY() - downView.getY())) {
-                mMobileItemId = getAdapter().getItemId(position);
-                mMobileView = getChildAt(position - getFirstVisiblePosition());
-                mHoverDrawable = new HoverDrawable(mMobileView, ev);
-                mMobileView.setVisibility(INVISIBLE);
+                startDragging(position);
                 handled = true;
             }
         }
@@ -291,13 +293,15 @@ public class DynamicListView extends ListView {
         mMobileView.setTranslationY(mHoverDrawable.getDeltaY());
         mMobileView.animate().translationY(0).start();
 
-        if (mOnItemMovedListener != null) {
-            mOnItemMovedListener.onItemMoved(getPositionForId(mMobileItemId));
+        int newPosition = getPositionForId(mMobileItemId);
+        if (mOriginalMobileItemPosition != newPosition && mOnItemMovedListener != null) {
+            mOnItemMovedListener.onItemMoved(newPosition);
         }
 
         mHoverDrawable = null;
         mMobileView = null;
         mMobileItemId = INVALID_ID;
+        mOriginalMobileItemPosition = INVALID_POSITION;
 
         return true;
     }
