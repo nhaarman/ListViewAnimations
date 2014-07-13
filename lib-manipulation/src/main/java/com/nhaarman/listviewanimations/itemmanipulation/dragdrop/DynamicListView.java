@@ -155,12 +155,12 @@ public class DynamicListView extends ListView {
 
         switch (ev.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                handled = handleDownEvent(ev);
                 mLastMotionEventY = ev.getY();
+                handled = handleDownEvent(ev);
                 break;
             case MotionEvent.ACTION_MOVE:
-                handled = handleMoveEvent(ev);
                 mLastMotionEventY = ev.getY();
+                handled = handleMoveEvent(ev);
                 break;
             case MotionEvent.ACTION_UP:
                 handled = handleUpEvent();
