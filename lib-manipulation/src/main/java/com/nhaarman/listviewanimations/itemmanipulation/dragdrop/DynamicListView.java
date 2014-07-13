@@ -16,7 +16,6 @@
 
 package com.nhaarman.listviewanimations.itemmanipulation.dragdrop;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -34,22 +33,29 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.util.Swappable;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.view.ViewHelper;
 
-@TargetApi(14)
+/**
+ * A {@link android.widget.ListView} implementation which allows for dragging and reordering items.
+ */
 public class DynamicListView extends ListView {
 
     private static final int INVALID_ID = -1;
+
     /**
      * The id of the item view that is being dragged.
      * This value is {@value #INVALID_ID} if and only if the user is not dragging.
      */
     private long mMobileItemId = INVALID_ID;
+
     /**
      * The Drawable that is drawn when the user is dragging an item.
      * This value is null if and only if the user is not dragging.
      */
     @Nullable
     private HoverDrawable mHoverDrawable;
+
     /**
      * The View that is represented by {@link #mHoverDrawable}.
      * When this value is not null, the View should be invisible.
@@ -57,15 +63,18 @@ public class DynamicListView extends ListView {
      */
     @Nullable
     private View mMobileView;
+
     /**
      * The y coordinate of the last non-final {@code MotionEvent}.
      */
     private float mLastMotionEventY = -1;
+
     /**
      * The original position of the view that is being dragged.
      * This value is {@value #INVALID_POSITION} if and only if the user is not dragging.
      */
     private int mOriginalMobileItemPosition = INVALID_POSITION;
+
     /**
      * The {@link ScrollHandler} that handles scrolling when dragging an item.
      */
@@ -185,7 +194,7 @@ public class DynamicListView extends ListView {
         if (position != INVALID_POSITION) {
             View downView = getChildAt(position - getFirstVisiblePosition());
             assert downView != null;
-            if (mDraggableManager.isDraggable(downView, position, ev.getX() - downView.getX(), ev.getY() - downView.getY())) {
+            if (mDraggableManager.isDraggable(downView, position, ev.getX() - ViewHelper.getX(downView), ev.getY() - ViewHelper.getY(downView))) {
                 startDragging(position);
                 handled = true;
             }
@@ -290,8 +299,8 @@ public class DynamicListView extends ListView {
         assert mHoverDrawable != null;
 
         mMobileView.setVisibility(VISIBLE);
-        mMobileView.setTranslationY(mHoverDrawable.getDeltaY());
-        mMobileView.animate().translationY(0).start();
+        ViewHelper.setTranslationY(mMobileView, mHoverDrawable.getDeltaY());
+        ObjectAnimator.ofFloat(mMobileView, AnimateSwitchViewOnPreDrawListener.TRANSLATION_Y, 0).start();
 
         int newPosition = getPositionForId(mMobileItemId);
         if (mOriginalMobileItemPosition != newPosition && mOnItemMovedListener != null) {
@@ -328,6 +337,8 @@ public class DynamicListView extends ListView {
     }
 
     private class AnimateSwitchViewOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
+        private static final String TRANSLATION_Y = "translationY";
+
         private final long mSwitchId;
         private final float mTranslationY;
 
@@ -342,8 +353,8 @@ public class DynamicListView extends ListView {
 
             View switchView = getViewForId(mSwitchId);
             if (switchView != null) {
-                switchView.setTranslationY(mTranslationY);
-                switchView.animate().translationY(0).start();
+                ViewHelper.setTranslationY(switchView, mTranslationY);
+                ObjectAnimator.ofFloat(switchView, TRANSLATION_Y, 0).start();
             }
 
             if (mMobileView != null) {
@@ -446,7 +457,7 @@ public class DynamicListView extends ListView {
 
             if (mHoverDrawable != null) {
                 assert mMobileView != null;
-                mHoverDrawable.onScroll(mMobileView.getY());
+                mHoverDrawable.onScroll(ViewHelper.getY(mMobileView));
             }
 
             checkAndHandleFirstVisibleCellChange();
