@@ -17,14 +17,14 @@
 package com.nhaarman.listviewanimations.itemmanipulation.dragdrop;
 
 /**
- * Implement this interface to be notified of ordering changes.
+ * An interface which provides a callback that is called when an item has moved using the {@link com.nhaarman.listviewanimations.itemmanipulation.dragdrop.rewrite.DynamicListView}.
  */
 public interface OnItemMovedListener {
 
     /**
-     * Called after an item is dropped and moved.
+     * Called when an item that was dragged has been dropped.
      *
-     * @param newPosition the new position of the item.
+     * @param newPosition the new position of the item that was dragged.
      */
     void onItemMoved(int newPosition);
 }

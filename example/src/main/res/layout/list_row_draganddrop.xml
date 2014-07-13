@@ -20,7 +20,7 @@
     android:layout_height="wrap_content"
     tools:ignore="UseCompoundDrawables">
 
-    <com.nhaarman.listviewanimations.itemmanipulation.dragdrop.rewrite.GripView
+    <com.nhaarman.listviewanimations.itemmanipulation.dragdrop.GripView
         android:id="@+id/list_row_draganddrop_touchview"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

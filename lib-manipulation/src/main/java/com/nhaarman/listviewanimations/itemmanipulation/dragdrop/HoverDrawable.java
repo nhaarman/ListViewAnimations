@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nhaarman.listviewanimations.itemmanipulation.dragdrop.rewrite;
+package com.nhaarman.listviewanimations.itemmanipulation.dragdrop;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;

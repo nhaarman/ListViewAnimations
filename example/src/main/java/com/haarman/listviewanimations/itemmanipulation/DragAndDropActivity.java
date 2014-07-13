@@ -27,9 +27,9 @@ import android.widget.Toast;
 import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.dragdrop.OnItemMovedListener;
 import com.nhaarman.listviewanimations.itemmanipulation.dragdrop.rewrite.DynamicListView;
-import com.nhaarman.listviewanimations.itemmanipulation.dragdrop.rewrite.TouchViewDraggableManager;
+import com.nhaarman.listviewanimations.itemmanipulation.dragdrop.OnItemMovedListener;
+import com.nhaarman.listviewanimations.itemmanipulation.dragdrop.TouchViewDraggableManager;
 import com.nhaarman.listviewanimations.swinginadapters.simple.AlphaInAnimationAdapter;
 
 public class DragAndDropActivity extends MyListActivity {
@@ -53,7 +53,7 @@ public class DragAndDropActivity extends MyListActivity {
         listView.setOnItemLongClickListener(new MyOnItemLongClickListener(listView));
         listView.setDraggableManager(new TouchViewDraggableManager(R.id.list_row_draganddrop_touchview));
 
-//        listView.setOnItemMovedListener(new MyOnItemMovedListener(adapter));
+        listView.setOnItemMovedListener(new MyOnItemMovedListener(adapter));
 
         Toast.makeText(this, getString(R.string.long_press_to_drag), Toast.LENGTH_LONG).show();
     }
@@ -107,6 +107,7 @@ public class DragAndDropActivity extends MyListActivity {
 
     private class MyOnItemMovedListener implements OnItemMovedListener {
         private final ArrayAdapter<String> mAdapter;
+        private Toast mToast;
 
         MyOnItemMovedListener(final ArrayAdapter<String> adapter) {
             mAdapter = adapter;
@@ -114,7 +115,12 @@ public class DragAndDropActivity extends MyListActivity {
 
         @Override
         public void onItemMoved(final int newPosition) {
-            Toast.makeText(getApplicationContext(), getString(R.string.moved, mAdapter.getItem(newPosition), newPosition), Toast.LENGTH_SHORT).show();
+            if (mToast != null) {
+                mToast.cancel();
+            }
+
+            mToast = Toast.makeText(getApplicationContext(), getString(R.string.moved, mAdapter.getItem(newPosition), newPosition), Toast.LENGTH_SHORT);
+            mToast.show();
         }
     }
 }
