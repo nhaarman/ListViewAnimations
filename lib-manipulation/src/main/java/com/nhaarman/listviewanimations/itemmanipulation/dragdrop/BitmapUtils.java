@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-package com.nhaarman.listviewanimations.util;
+package com.nhaarman.listviewanimations.itemmanipulation.dragdrop;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.support.annotation.NonNull;
+import android.view.View;
 
-/**
- * An interface for inserting items at a certain index.
- */
-public interface Insertable<T> {
+class BitmapUtils {
+
+    private BitmapUtils() {
+    }
 
     /**
-     * Will be called to insert given {@code item} at given {@code index} in the list.
-     *
-     * @param index the index the new item should be inserted at
-     * @param item  the item to insert
+     * Returns a bitmap showing a screenshot of the view passed in.
      */
-    void add(int index, @NonNull T item);
+    @NonNull
+    static Bitmap getBitmapFromView(@NonNull final View v) {
+        Bitmap bitmap = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        v.draw(canvas);
+        return bitmap;
+    }
+
 }

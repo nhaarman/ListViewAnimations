@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package com.nhaarman.listviewanimations.util;
-
-import android.support.annotation.NonNull;
+package com.nhaarman.listviewanimations.itemmanipulation.dragdrop;
 
 /**
- * An interface for inserting items at a certain index.
+ * An interface which provides a callback that is called when an item has moved using the {@link com.nhaarman.listviewanimations.itemmanipulation.dragdrop.rewrite.DynamicListView}.
  */
-public interface Insertable<T> {
+public interface OnItemMovedListener {
 
     /**
-     * Will be called to insert given {@code item} at given {@code index} in the list.
+     * Called when an item that was dragged has been dropped.
      *
-     * @param index the index the new item should be inserted at
-     * @param item  the item to insert
+     * @param newPosition the new position of the item that was dragged.
      */
-    void add(int index, @NonNull T item);
+    void onItemMoved(int newPosition);
 }
