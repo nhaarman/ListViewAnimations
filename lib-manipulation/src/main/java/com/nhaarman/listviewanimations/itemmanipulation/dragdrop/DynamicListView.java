@@ -16,6 +16,7 @@
 
 package com.nhaarman.listviewanimations.itemmanipulation.dragdrop;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -33,12 +34,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.util.Swappable;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.view.ViewHelper;
 
 /**
  * A {@link android.widget.ListView} implementation which allows for dragging and reordering items.
  */
+@TargetApi(14)
 public class DynamicListView extends ListView {
 
     private static final int INVALID_ID = -1;
@@ -193,7 +193,7 @@ public class DynamicListView extends ListView {
         if (position != INVALID_POSITION) {
             View downView = getChildAt(position - getFirstVisiblePosition());
             assert downView != null;
-            if (mDraggableManager.isDraggable(downView, position, ev.getX() - ViewHelper.getX(downView), ev.getY() - ViewHelper.getY(downView))) {
+            if (mDraggableManager.isDraggable(downView, position, ev.getX() - downView.getX(), ev.getY() - downView.getY())) {
                 startDragging(position);
                 handled = true;
             }
@@ -298,8 +298,8 @@ public class DynamicListView extends ListView {
         assert mHoverDrawable != null;
 
         mMobileView.setVisibility(VISIBLE);
-        ViewHelper.setTranslationY(mMobileView, mHoverDrawable.getDeltaY());
-        ObjectAnimator.ofFloat(mMobileView, AnimateSwitchViewOnPreDrawListener.TRANSLATION_Y, 0).start();
+        mMobileView.setTranslationY(mHoverDrawable.getDeltaY());
+        mMobileView.animate().translationY(0).start();
 
         int newPosition = getPositionForId(mMobileItemId);
         if (mOriginalMobileItemPosition != newPosition && mOnItemMovedListener != null) {
@@ -336,8 +336,6 @@ public class DynamicListView extends ListView {
     }
 
     private class AnimateSwitchViewOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
-        private static final String TRANSLATION_Y = "translationY";
-
         private final long mSwitchId;
         private final float mTranslationY;
 
@@ -352,8 +350,8 @@ public class DynamicListView extends ListView {
 
             View switchView = getViewForId(mSwitchId);
             if (switchView != null) {
-                ViewHelper.setTranslationY(switchView, mTranslationY);
-                ObjectAnimator.ofFloat(switchView, TRANSLATION_Y, 0).start();
+                switchView.setTranslationY(mTranslationY);
+                switchView.animate().translationY(0).start();
             }
 
             if (mMobileView != null) {
@@ -456,7 +454,7 @@ public class DynamicListView extends ListView {
 
             if (mHoverDrawable != null) {
                 assert mMobileView != null;
-                mHoverDrawable.onScroll(ViewHelper.getY(mMobileView));
+                mHoverDrawable.onScroll(mMobileView.getY());
             }
 
             checkAndHandleFirstVisibleCellChange();
