@@ -1,21 +1,20 @@
 language: android
 jdk: oraclejdk7
 
-android:
-  components:
-    - build-tools-20.0.0
-    - doc-19
-
 env:
   matrix:
-    - ANDROID_SDKS=sysimg-19 ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a SKIN=WXGA800 LINT=true MAVEN=true
+    - 
   global:
     - TERM=dumb
+    - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a SKIN=WXGA800 LINT=true MAVEN=true
+    - COMPONENTS=build-tools-20.0.0,android-20,android-19,sys-img-armeabi-v7a-android-19,extra-android-m2repository,extra-android-support,extra-google-m2repository
+    - LICENSES="android-sdk-license-5be876d5|android-sdk-preview-license-52d11cd2"
     - secure: Fo/btrr+HpwmQL6TNxZuh/TWRMouz9Z1RCo77tf3crNP4OHq9EAkduLc/b4i6HCGFM3fyfJ7AM5XMa3OQvXfF84FQnew7NGE6zB/CKFfKBIZyzntvrDg4VqWEAHzunT6+eBnGtxtrAE0bBo4MmUCklXWP8j5UAyjfFpSeJdOywY=
     - secure: s56rqSiiwX40CQWeHTcbyVLRtwLP/pcHWqaVCKuXtZ/m9SgRI/SHp9o8ITI2dzr3syEeAkHjkJOkHQSpH0bHi1xKY4M9ODcCugwv+yDEELw1qmI6Cvwjvj1cKsG7ebt39OnCkz+TqhtI/iOEkxq7mTizFjNIxIImMkKxeQwcFgE=
     - secure: UOQ9keLBuJw5Ed/eYtXarwoGuJSSvgGTob+D9aU8hVRoTUXpSDuHtk9TdS4MNXQ33jgFZEsmkpwRmV54XVEGe6xcri1uys1JDzjc+SqTEgbEh1QktfIWGvOx49YZtI2Zei0324S2qXRtemKMw4N+1XRRMP/IXEogr26Xi5JLVcI=
 
 before_install:
+  - curl -3L https://raw.github.com/embarkmobile/android-sdk-installer/version-2/android-sdk-installer | bash /dev/stdin --install=$COMPONENTS --accept=$LICENSES && source ~/.android-sdk-installer/env
   - curl -3L -o wait_for_emulator https://github.com/embarkmobile/android-sdk-installer/raw/version-2/wait_for_emulator
   - sudo chmod +x wait_for_emulator
 

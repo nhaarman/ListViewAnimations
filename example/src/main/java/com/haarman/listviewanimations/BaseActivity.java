@@ -16,6 +16,7 @@
 
 package com.haarman.listviewanimations;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.view.WindowManager;
 
 public class BaseActivity extends Activity {
 
+    @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright 2014 Niek Haarman
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +16,5 @@
 
 <lint>
     <issue id="IconLocation" severity="ignore" />
-    <issue id="Overdraw" severity="ignore" />
-    <issue id="SelectableText" severity="ignore" />
+    <issue id="ContentDescription" severity="ignore" />
 </lint>

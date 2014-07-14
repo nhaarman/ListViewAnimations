@@ -38,5 +38,6 @@
         android:gravity="center_vertical"
         android:minHeight="48dp"
         android:textColor="?android:attr/textColorSecondary"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        tools:ignore="UnusedAttribute" />
 </LinearLayout>

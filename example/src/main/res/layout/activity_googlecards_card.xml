@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2014 Niek Haarman
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,16 +20,18 @@
     android:layout_height="wrap_content"
     android:background="@drawable/card_background_white"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:ignore="overdraw">
 
     <TextView
         android:id="@+id/activity_googlecards_card_textview"
+        style="@android:style/TextAppearance.DeviceDefault.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
-        android:textColor="?android:attr/textColorSecondary"
         android:paddingBottom="8dp"
-        style="@android:style/TextAppearance.DeviceDefault.Large" />
+        android:textColor="?android:attr/textColorSecondary"
+        tools:ignore="UnusedAttribute" />
 
     <ImageView
         android:id="@+id/activity_googlecards_card_imageview"

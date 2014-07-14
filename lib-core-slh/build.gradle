@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 apply plugin: 'github-pages'
 
 apply from: '../pushMaven.gradle'
@@ -46,7 +46,7 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 20
     buildToolsVersion '20.0.0'
 
     defaultConfig {

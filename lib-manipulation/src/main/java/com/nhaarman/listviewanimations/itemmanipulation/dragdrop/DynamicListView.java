@@ -183,7 +183,6 @@ public class DynamicListView extends ListView {
                 handled = false;
                 break;
         }
-
         return handled || super.onTouchEvent(ev);
     }
 

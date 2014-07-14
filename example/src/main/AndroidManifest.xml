@@ -14,14 +14,17 @@
   ~ limitations under the License.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.haarman.listviewanimations">
+<manifest
+    package="com.haarman.listviewanimations"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="com.android.vending.BILLING" />
-    
+
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="20"
+        tools:ignore="GradleOverrides" />
 
     <application
         android:allowBackup="true"

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright 2014 Niek Haarman
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +21,8 @@
     android:background="#88888888"
     android:gravity="center"
     android:orientation="horizontal"
-    android:paddingRight="8dp">
+    android:paddingRight="8dp"
+    tools:ignore="overdraw">
 
     <TextView
         android:id="@+id/undo_row_texttv"

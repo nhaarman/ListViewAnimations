@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
+    //noinspection GradleDependency
     compile 'com.android.support:support-v4:19.1.+'
     compile 'se.emilsjolander:stickylistheaders:2.4.0'
 
