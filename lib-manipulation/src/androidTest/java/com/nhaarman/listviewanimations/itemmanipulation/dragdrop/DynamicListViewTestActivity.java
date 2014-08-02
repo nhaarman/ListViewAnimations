@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
+package com.nhaarman.listviewanimations.itemmanipulation.dragdrop;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
@@ -33,9 +33,9 @@ import com.nhaarman.listviewanimations.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SwipeTouchListenerTestActivity extends Activity {
+public class DynamicListViewTestActivity extends Activity {
 
-    private ListView mListView;
+    private DynamicListView mListView;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class SwipeTouchListenerTestActivity extends Activity {
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
-        mListView = new ListView(this);
+        mListView = new DynamicListView(this);
         List<Integer> integers = new ArrayList<Integer>();
         for (int i = 0; i < 20; i++) {
             integers.add(i);
@@ -56,7 +56,23 @@ public class SwipeTouchListenerTestActivity extends Activity {
         setContentView(mListView);
     }
 
-    public AbsListView getAbsListView() {
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int[] location = new int[2];
+        mListView.getLocationOnScreen(location);
+
+        ev = MotionEvent.obtain(ev.getDownTime(), ev.getEventTime(), ev.getAction(), ev.getX() - location[0], ev.getY() - location[1], ev.getMetaState());
+        boolean handled = mListView.onInterceptTouchEvent(ev);
+        if (!handled) {
+            handled = mListView.dispatchTouchEvent(ev);
+        }
+        if (!handled) {
+            handled = onTouchEvent(ev);
+        }
+        return handled;
+    }
+
+    public DynamicListView getDynamicListView() {
         return mListView;
     }
 
@@ -70,8 +86,8 @@ public class SwipeTouchListenerTestActivity extends Activity {
         }
 
         @Override
-        public long getItemId(final int location) {
-            return getItem(location).hashCode();
+        public long getItemId(final int position) {
+            return getItem(position).hashCode();
         }
 
         @Override
