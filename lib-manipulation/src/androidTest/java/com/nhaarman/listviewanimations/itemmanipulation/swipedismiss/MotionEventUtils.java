@@ -1,3 +1,19 @@
+/*
+ * Copyright 2014 Niek Haarman
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 
 import android.app.Activity;
@@ -58,8 +74,10 @@ public class MotionEventUtils {
 
         List<MotionEvent> results = new ArrayList<>();
         results.add(MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, fromX, y, 0));
-        for (int i = 0; i < 10; i++) {
-            float x = fromX < toX ? toX / 10 * i : fromX - fromX / 10 * i;
+
+        float diff = fromX - toX;
+        for (int i = 1; i < 10; i++) {
+            float x = fromX + diff / 10 * i;
             results.add(MotionEvent.obtain(0, 0, MotionEvent.ACTION_MOVE, x, y, 0));
         }
         results.add(MotionEvent.obtain(0, 0, MotionEvent.ACTION_UP, toX, y, 0));
