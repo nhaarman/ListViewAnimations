@@ -1,137 +1,137 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="ListViewAnimations : Easily add animations to your ListView items!" />
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>ListViewAnimations by nhaarman</title>
+    <title>ListViewAnimations</title>
   </head>
 
   <body>
-    <header>
-      <div class="inner">
-        <h1>ListViewAnimations</h1>
-        <h2>Easily add animations to your ListView items!</h2>
-        <a href="https://github.com/nhaarman/ListViewAnimations" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/nhaarman/ListViewAnimations">View on GitHub</a>
+
+          <h1 id="project_title">ListViewAnimations</h1>
+          <h2 id="project_tagline">Easily add animations to your ListView items!</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/nhaarman/ListViewAnimations/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/nhaarman/ListViewAnimations/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
 <a name="listviewanimations-play-store-demo" class="anchor" href="#listviewanimations-play-store-demo"><span class="octicon octicon-link"></span></a>ListViewAnimations (<a href="https://play.google.com/store/apps/details?id=com.haarman.listviewanimations">Play Store Demo</a>)</h1>
 
 <p>ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
-Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.</p>
-
-<p>ListViewAnimations uses the <a href="http://nineoldandroids.com/">NineOldAndroids</a> library to support devices &lt;3.0.<br>
-It also uses Roman Nurik's BETA <a href="https://gist.github.com/romannurik/2980593">SwipeDismissListViewTouchListener</a> to support swipe to dismiss.</p>
-
-<p><strong>Version 2.0 now supports GridViews! (And other implementations of AbsListView)</strong><br><strong>It also contains an ExpandableListItemAdapter for smoothly expanding your Views!</strong></p>
+Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
+A mention to haarman.niek [at] gmail.com about your app using this library is very welcome! Start your message's title with <code>[LVA]</code>.</p>
 
 <h2>
 <a name="known-applications-using-listviewanimations" class="anchor" href="#known-applications-using-listviewanimations"><span class="octicon octicon-link"></span></a>Known applications using ListViewAnimations</h2>
 
 <ul>
+<li>Ultimate Tic-Tac-Toe (<a href="https://play.google.com/store/apps/details?id=com.haarman.ultimatettt">Play Store</a>)</li>
+<li>Light Flow Lite - LED Control (<a href="https://play.google.com/store/apps/details?id=com.rageconsulting.android.lightflowlite">Play Store</a>)</li>
 <li>TreinVerkeer (<a href="https://play.google.com/store/apps/details?id=com.haarman.treinverkeer">Play Store</a>)</li>
 <li>Running Coach (<a href="https://play.google.com/store/apps/details?id=com.niek.runningapp">Play Store</a>)</li>
+<li>Pearl Jam Lyrics (<a href="https://play.google.com/store/apps/details?id=com.juannale.pearljamlyricsapp">Play Store</a>)</li>
+<li>Calorie Chart (<a href="https://play.google.com/store/apps/details?id=com.cafetaso.foodinfo">Play Store</a>)</li>
 <li>Car Hire (<a href="https://play.google.com/store/apps/details?id=com.rentalcars.handset">Play Store</a>)</li>
-<li>Voorlees Verhaaltjes (<a href="https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes">Play Store</a>)</li>
-</ul><p>If you want your app to be listed as well please contact me via <a href="https://plus.google.com/106017817931984343451">Google Plus</a>!</p>
+<li>Super BART (<a href="https://play.google.com/store/apps/details?id=com.getgoodcode.bart">Play Store</a>)</li>
+<li>DK FlashCards (<a href="https://play.google.com/store/apps/details?id=com.ducky.flashcards">Play Store</a>)</li>
+<li>Counter Plus (Tally Counter) (<a href="https://play.google.com/store/apps/details?id=com.seedform.counter">Play Store</a>)</li>
+<li>Voorlees Verhaaltjes 2.0 (<a href="https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes">Play Store</a>)</li>
+</ul><p>If you want your app to be listed as well please contact me via <a href="https://plus.google.com/106017817931984343451">Google Plus</a>, or send me an email at haarman.niek [at] gmail.com, starting the title with <code>[LVA]</code>.</p>
 
 <h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<p>ListViewAnimations provides the following features:</p>
+
+<ul>
+<li>Appearance animations for items in ListViews, GridViews, and other AbsListViews;
+
+<ul>
+<li>Built in animations include Alpha, SwingRightIn, SwingLeftIn, SwingBottomIn, SwingRightIn and ScaleIn.</li>
+<li>Other animations can easily be added</li>
+</ul>
+</li>
+<li>Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo (and optionally count down);</li>
+<li>Drag-and-Drop reordering;</li>
+<li>Animate dismissal of items;</li>
+<li>Smoothly expand your items to reveal more content;</li>
+</ul><h2>
 <a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
 
 <ul>
 <li>In Eclipse, just import the library as an Android library project.</li>
 <li>Project &gt; Clean to generate the binaries you need, like R.java, etc.</li>
 <li>Then, just add ListViewAnimations as a dependency to your existing project and you're good to go!</li>
-</ul><p>Or:</p>
+</ul><p><strong>Or</strong>:</p>
 
 <ul>
-<li><a href="https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.0.jar?raw=true">Download the .jar file</a></li>
-<li>Add the .jar to your project's <code>libs</code> folder.</li>
-</ul><h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+<li><a href="https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.6.0.jar?raw=true">Download the .jar file</a></li>
+<li><a href="https://github.com/JakeWharton/NineOldAndroids/downloads">Download the latest NineOldAndroids .jar file</a></li>
+<li>Add the .jar files to your project's <code>libs</code> folder, or add them as external jars to your project's build path.</li>
+</ul><p><strong>Or</strong>:</p>
 
-<p>This library uses the <a href="http://en.wikipedia.org/wiki/Decorator_pattern">Decorator Pattern</a> to stack multiple <code>BaseAdapterDecorator</code>s on each other:</p>
+<p>Add the following to your <code>build.gradle</code>:</p>
 
-<ul>
-<li>Implement your own <code>BaseAdapter</code>, or reuse an existing one.</li>
-<li>Stack multiple <code>BaseAdapterDecorator</code>s on each other, with your <code>BaseAdapter</code> as a base.</li>
-<li>Set the <code>ListView</code> to your last <code>BaseAdapterDecorator</code>.</li>
-<li>Set your last <code>BaseAdapterDecorator</code> to the <code>ListView</code>.</li>
-</ul><h2>
-<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example:</h2>
-
-<pre><code>/* This example will stack two animations on top of eachother */
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    MyListAdapter mAdapter = new MyListAdapter(this, getItems());
-    SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
-    SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(swingBottomInAnimationAdapter);
-
-    // Or in short notation:
-    swingRightInAnimationAdapter = 
-        new SwingRightInAnimationAdapter(
-            new SwingBottomInAnimationAdapter(
-                    new MyListAdapter(this, getItems())));
-
-    // Assign the ListView to the AnimationAdapter and vice versa
-    swingRightInAnimationAdapter.setAbsListView(getListView());
-    getListView().setAdapter(swingRightInAnimationAdapter);
+<pre><code>repositories {
+    mavenCentral()
 }
 
-private class MyListAdapter extends com.haarman.listviewanimations.ArrayAdapter&lt;String&gt; {
-
-    private Context mContext;
-
-    public MyListAdapter(Context context, ArrayList&lt;String&gt; items) {
-        super(items);
-        mContext = context;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        TextView tv = (TextView) convertView;
-        if (tv == null) {
-            tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.list_row, parent, false);
-        }
-        tv.setText(getItem(position));
-        return tv;
-    }
+dependencies{
+    compile 'com.nhaarman.listviewanimations:library:2.6.0'
 }
 </code></pre>
 
+<p><strong>Or</strong>:</p>
+
+<p>Add the following to your <code>pom.xml</code>:</p>
+
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.nhaarman.listviewanimations&lt;/groupId&gt;
+    &lt;artifactId&gt;library&lt;/artifactId&gt;
+    &lt;version&gt;2.6.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
 <h2>
-<a name="custom-animationadapters" class="anchor" href="#custom-animationadapters"><span class="octicon octicon-link"></span></a>Custom AnimationAdapters</h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<p>Instead of using the ready-made adapters in the <code>.swinginadapters.prepared</code> package, you can also implement your own <code>AnimationAdapter</code>.
-Implement one of the following classes:</p>
+<p>Please refer to the <a href="https://github.com/nhaarman/ListViewAnimations/wiki">Wiki</a> pages to learn more about how to use this library.</p>
 
-<ul>
-<li><code>ResourceAnimationAdapter</code></li>
-<li><code>SingleAnimationAdapter</code></li>
-<li><code>AnimationAdapter</code></li>
-</ul><p>See the examples.</p>
+<h2>
+<a name="contribute" class="anchor" href="#contribute"><span class="octicon octicon-link"></span></a>Contribute</h2>
+
+<p>Please do! I'm happy to review and accept pull requests.
+Also if you've created an awesome appearance animation that you'd like to share, let 'em come!</p>
 
 <h2>
 <a name="developed-by" class="anchor" href="#developed-by"><span class="octicon octicon-link"></span></a>Developed By</h2>
 
 <ul>
 <li>Niek Haarman</li>
+</ul><h2>
+<a name="special-thanks" class="anchor" href="#special-thanks"><span class="octicon octicon-link"></span></a>Special Thanks</h2>
+
+<ul>
+<li>Roman Nurik - The ListViewAnimations library uses a modified version of his <a href="https://gist.github.com/romannurik/2980593">SwipeDismissListViewTouchListener</a> to support swipe-to-dismiss.</li>
+<li>DevBytes - Drag-and-Drop reordering is done by a modified version of their <a href="http://youtu.be/_BZIvjMgH-Q">DynamicListView</a>.</li>
+<li>Jake Warthon - To support devices pre-HC (&lt;3.0), a jar file of <a href="http://nineoldandroids.com/">NineOldAndroids</a> is included.</li>
 </ul><h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
@@ -149,26 +149,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 </code></pre>
-        </section>
-
-        <aside id="sidebar">
-          <a href="https://github.com/nhaarman/ListViewAnimations/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/nhaarman/ListViewAnimations/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/nhaarman/ListViewAnimations"></a> is maintained by <a href="https://github.com/nhaarman">nhaarman</a>.</p>
-
-          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+      </section>
     </div>
 
-            <script type="text/javascript">
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">ListViewAnimations maintained by <a href="https://github.com/nhaarman">nhaarman</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -178,6 +170,7 @@ limitations under the License.
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
+
 
   </body>
 </html>
