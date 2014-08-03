@@ -48,10 +48,10 @@ public class DynamicListView extends ListView {
     private static final int INVALID_ID = -1;
 
     /**
-     * The id of the item view that is being dragged.
-     * This value is {@value #INVALID_ID} if and only if the user is not dragging.
+     * The {@link android.widget.ListAdapter} that is assigned. Also implements {@link Swappable}.
      */
-    private long mMobileItemId = INVALID_ID;
+    @Nullable
+    private ListAdapter mAdapter;
 
     /**
      * The Drawable that is drawn when the user is dragging an item.
@@ -67,6 +67,12 @@ public class DynamicListView extends ListView {
      */
     @Nullable
     private View mMobileView;
+
+    /**
+     * The id of the item view that is being dragged.
+     * This value is {@value #INVALID_ID} if and only if the user is not dragging.
+     */
+    private long mMobileItemId;
 
     /**
      * The y coordinate of the last non-final {@code MotionEvent}.
@@ -134,17 +140,26 @@ public class DynamicListView extends ListView {
         } else {
             mSwitchViewAnimator = new LSwitchViewAnimator();
         }
+
+        mMobileItemId = INVALID_ID;
     }
 
     /**
-     * @throws java.lang.IllegalStateException if the adapter does not have stable ids.
+     * @throws java.lang.IllegalStateException    if the adapter does not have stable ids.
+     * @throws java.lang.IllegalArgumentException if the adapter does not implement {@link com.nhaarman.listviewanimations.util.Swappable}.
      */
     @Override
-    public void setAdapter(final ListAdapter adapter) {
+    public void setAdapter(@NonNull final ListAdapter adapter) {
         super.setAdapter(adapter);
         if (!adapter.hasStableIds()) {
             throw new IllegalStateException("Adapter doesn't have stable ids! Make sure your adapter has stable ids, and override hasStableIds() to return true.");
         }
+
+        if (!(adapter instanceof Swappable)) {
+            throw new IllegalArgumentException("Adapter should implement Swappable!");
+        }
+
+        mAdapter = adapter;
     }
 
     /**
@@ -159,9 +174,10 @@ public class DynamicListView extends ListView {
     /**
      * Starts dragging the item at given position. User must be touching this {@code DynamicListView}.
      *
-     * @param position the position of the item start dragging.
+     * @param position the position of the item in the adapter to start dragging. Be sure to subtract any header views.
      *
-     * @throws java.lang.IllegalStateException if the user is not touching this {@code DynamicListView}.
+     * @throws java.lang.IllegalStateException if the user is not touching this {@code DynamicListView},
+     *                                         or if there is no adapter set.
      */
     public void startDragging(final int position) {
         if (mMobileItemId != INVALID_ID) {
@@ -173,9 +189,18 @@ public class DynamicListView extends ListView {
             throw new IllegalStateException("User must be touching the DynamicListView!");
         }
 
+        if (mAdapter == null) {
+            throw new IllegalStateException("This DynamicListView has no adapter set!");
+        }
+
+        if (position < 0 || position >= mAdapter.getCount()) {
+            /* Out of bounds */
+            return;
+        }
+
         mOriginalMobileItemPosition = position;
-        mMobileItemId = getAdapter().getItemId(position);
-        mMobileView = getChildAt(position - getFirstVisiblePosition());
+        mMobileItemId = mAdapter.getItemId(position);
+        mMobileView = getChildAt(position - getFirstVisiblePosition() + getHeaderViewsCount());
         mHoverDrawable = new HoverDrawable(mMobileView, mLastMotionEventY);
         mMobileView.setVisibility(INVISIBLE);
     }
@@ -249,8 +274,8 @@ public class DynamicListView extends ListView {
         if (position != INVALID_POSITION) {
             View downView = getChildAt(position - getFirstVisiblePosition());
             assert downView != null;
-            if (mDraggableManager.isDraggable(downView, position, ev.getX() - downView.getX(), ev.getY() - downView.getY())) {
-                startDragging(position);
+            if (mDraggableManager.isDraggable(downView, position - getHeaderViewsCount(), ev.getX() - downView.getX(), ev.getY() - downView.getY())) {
+                startDragging(position - getHeaderViewsCount());
                 handled = true;
             }
         }
@@ -279,7 +304,7 @@ public class DynamicListView extends ListView {
      */
     @Nullable
     private View getViewForId(final long itemId) {
-        ListAdapter adapter = getAdapter();
+        ListAdapter adapter = mAdapter;
         if (itemId == INVALID_ID || adapter == null) {
             return null;
         }
@@ -289,9 +314,11 @@ public class DynamicListView extends ListView {
         View result = null;
         for (int i = 0; i < getChildCount() && result == null; i++) {
             int position = firstVisiblePosition + i;
-            long id = adapter.getItemId(position);
-            if (id == itemId) {
-                result = getChildAt(i);
+            if (position - getHeaderViewsCount() >= 0) {
+                long id = adapter.getItemId(position - getHeaderViewsCount());
+                if (id == itemId) {
+                    result = getChildAt(i);
+                }
             }
         }
         return result;
@@ -322,13 +349,13 @@ public class DynamicListView extends ListView {
      * Finds the {@code View} that is a candidate for switching, and executes the switch if necessary.
      */
     private void switchIfNecessary() {
-        if (mHoverDrawable == null || getAdapter() == null) {
+        if (mHoverDrawable == null || mAdapter == null) {
             return;
         }
 
         int position = getPositionForId(mMobileItemId);
-        long aboveItemId = position - 1 >= 0 ? getAdapter().getItemId(position - 1) : INVALID_ROW_ID;
-        long belowItemId = position + 1 < getAdapter().getCount() ? getAdapter().getItemId(position + 1) : INVALID_ROW_ID;
+        long aboveItemId = position - 1 - getHeaderViewsCount() >= 0 ? mAdapter.getItemId(position - 1 - getHeaderViewsCount()) : INVALID_ID;
+        long belowItemId = position + 1 - getHeaderViewsCount() < mAdapter.getCount() ? mAdapter.getItemId(position + 1 - getHeaderViewsCount()) : INVALID_ID;
 
         final long switchId = mHoverDrawable.isMovingUpwards() ? aboveItemId : belowItemId;
         View switchView = getViewForId(switchId);
@@ -354,12 +381,13 @@ public class DynamicListView extends ListView {
      */
     private void switchViews(final View switchView, final long switchId, final float translationY) {
         assert mHoverDrawable != null;
+        assert mAdapter != null;
 
         final int switchViewPosition = getPositionForView(switchView);
         int mobileViewPosition = getPositionForView(mMobileView);
 
-        ((Swappable) getAdapter()).swapItems(switchViewPosition, mobileViewPosition);
-        ((BaseAdapter) getAdapter()).notifyDataSetChanged();
+        ((Swappable) mAdapter).swapItems(switchViewPosition - getHeaderViewsCount(), mobileViewPosition - getHeaderViewsCount());
+        ((BaseAdapter) mAdapter).notifyDataSetChanged();
 
         mHoverDrawable.shift(switchView.getHeight());
         mSwitchViewAnimator.animateSwitchView(switchId, translationY);
@@ -385,7 +413,7 @@ public class DynamicListView extends ListView {
         valueAnimator.addListener(listener);
         valueAnimator.start();
 
-        int newPosition = getPositionForId(mMobileItemId);
+        int newPosition = getPositionForId(mMobileItemId) - getHeaderViewsCount();
         if (mOriginalMobileItemPosition != newPosition && mOnItemMovedListener != null) {
             mOnItemMovedListener.onItemMoved(mOriginalMobileItemPosition, newPosition);
         }
@@ -637,7 +665,7 @@ public class DynamicListView extends ListView {
          * top of the list. If so, switches the newly shown view with the mobile view.
          */
         private void checkAndHandleFirstVisibleCellChange() {
-            if (mHoverDrawable == null || mCurrentFirstVisibleItem >= mPreviousFirstVisibleItem) {
+            if (mHoverDrawable == null || mAdapter == null || mCurrentFirstVisibleItem >= mPreviousFirstVisibleItem) {
                 return;
             }
 
@@ -646,7 +674,7 @@ public class DynamicListView extends ListView {
                 return;
             }
 
-            long switchItemId = position - 1 >= 0 ? getAdapter().getItemId(position - 1) : INVALID_ROW_ID;
+            long switchItemId = position - 1 - getHeaderViewsCount() >= 0 ? mAdapter.getItemId(position - 1 - getHeaderViewsCount()) : INVALID_ID;
             View switchView = getViewForId(switchItemId);
             if (switchView != null) {
                 switchViews(switchView, switchItemId, -switchView.getHeight());
@@ -658,7 +686,7 @@ public class DynamicListView extends ListView {
          * bottom of the list. If so, switches the newly shown view with the mobile view.
          */
         private void checkAndHandleLastVisibleCellChange() {
-            if (mHoverDrawable == null || mCurrentLastVisibleItem <= mPreviousLastVisibleItem) {
+            if (mHoverDrawable == null || mAdapter == null || mCurrentLastVisibleItem <= mPreviousLastVisibleItem) {
                 return;
             }
 
@@ -667,7 +695,7 @@ public class DynamicListView extends ListView {
                 return;
             }
 
-            long switchItemId = position + 1 < getAdapter().getCount() ? getAdapter().getItemId(position + 1) : INVALID_ROW_ID;
+            long switchItemId = position + 1 - getHeaderViewsCount() < mAdapter.getCount() ? mAdapter.getItemId(position + 1 - getHeaderViewsCount()) : INVALID_ID;
             View switchView = getViewForId(switchItemId);
             if (switchView != null) {
                 switchViews(switchView, switchItemId, switchView.getHeight());
