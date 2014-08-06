@@ -75,21 +75,20 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
-
                 android:foreground="?android:attr/selectableItemBackground"
-                android:onClick="onGridViewExampleClicked">
+                android:onClick="onItemManipulationClicked">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|bottom"
                     android:scaleType="center"
-                    android:src="@drawable/img_main_gridview" />
+                    android:src="@drawable/img_main_itemmanipulation" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/green_transparent"
+                    android:background="@color/red_transparent"
                     android:padding="12dp">
 
                     <TextView
@@ -97,7 +96,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:fontFamily="sans-serif-condensed"
-                        android:text="@string/gridview"
+                        android:text="@string/itemmanipulation"
                         android:textColor="@android:color/white"
                         android:textSize="20sp" />
                 </FrameLayout>
@@ -152,19 +151,19 @@
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:onClick="onItemManipulationClicked">
+                android:onClick="onGridViewExampleClicked">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|bottom"
                     android:scaleType="center"
-                    android:src="@drawable/img_main_itemmanipulation" />
+                    android:src="@drawable/img_main_gridview" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/red_transparent"
+                    android:background="@color/green_transparent"
                     android:padding="12dp">
 
                     <TextView
@@ -172,12 +171,14 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:fontFamily="sans-serif-condensed"
-                        android:text="@string/itemmanipulation"
+                        android:text="@string/gridview"
                         android:textColor="@android:color/white"
                         android:textSize="20sp" />
                 </FrameLayout>
 
             </FrameLayout>
+
+
 
             <FrameLayout
                 android:layout_width="0dp"

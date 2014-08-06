@@ -33,13 +33,8 @@ public class ItemManipulationsExamplesActivity extends BaseActivity {
         setContentView(R.layout.activity_examples_itemmanipulations);
     }
 
-    public void onDragAndDropClicked(final View view) {
+    public void onDynamicListViewClicked(final View view) {
         Intent intent = new Intent(this, DynamicListViewActivity.class);
-        startActivity(intent);
-    }
-
-    public void onSwipeDismissClicked(final View view) {
-        Intent intent = new Intent(this, SwipeDismissActivity.class);
         startActivity(intent);
     }
 

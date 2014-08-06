@@ -24,7 +24,7 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="20"
-        tools:ignore="GradleOverrides" />
+        tools:ignore="GradleOverrides,OldTargetApi" />
 
     <application
         android:allowBackup="true"
@@ -49,13 +49,7 @@
             android:label="@string/itemmanipulation" />
         <activity
             android:name=".itemmanipulation.DynamicListViewActivity"
-            android:label="@string/draganddrop" />
-        <activity
-            android:name="com.haarman.listviewanimations.itemmanipulation.SwipeDismissActivity"
-            android:label="@string/swipedismiss" />
-        <activity
-            android:name="com.haarman.listviewanimations.itemmanipulation.AnimateAdditionActivity"
-            android:label="@string/animateaddition" />
+            android:label="@string/dynamiclistview" />
         <activity
             android:name=".gridview.GridViewActivity"
             android:label="@string/gridviewexample" />

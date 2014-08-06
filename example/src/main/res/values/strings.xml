@@ -31,7 +31,7 @@
     <string name="itemmanipulation">Item Manipulation</string>
     <string name="gridviewexample">GridView</string>
     <string name="draganddrop">Drag and Drop</string>
-    <string name="swipedismiss">Swipe to dismiss</string>
+    <string name="dynamiclistview">DynamicListView</string>
     <string name="animateaddition">Animate addition</string>
     <string name="expandablelistitemadapter">Expand list items</string>
     <string name="itemdeleted">Item deleted</string>
