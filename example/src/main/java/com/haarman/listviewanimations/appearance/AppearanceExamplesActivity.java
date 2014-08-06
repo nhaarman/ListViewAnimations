@@ -38,11 +38,14 @@ import com.nhaarman.listviewanimations.swinginadapters.simple.SwingBottomInAnima
 import com.nhaarman.listviewanimations.swinginadapters.simple.SwingLeftInAnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.simple.SwingRightInAnimationAdapter;
 
+import java.util.Arrays;
+
 public class AppearanceExamplesActivity extends MyListActivity implements ActionBar.OnNavigationListener {
 
     private static final String SAVEDINSTANCESTATE_ANIMATIONADAPTER = "savedinstancestate_animationadapter";
 
     private BaseAdapter mAdapter;
+
     private AnimationAdapter mAnimAdapter;
 
     @Override
@@ -151,7 +154,7 @@ public class AppearanceExamplesActivity extends MyListActivity implements Action
         AnimSelectionAdapter(@NonNull final Context context) {
             mContext = context;
             String[] items = context.getResources().getStringArray(R.array.appearance_examples);
-            addAll(items);
+            addAll(Arrays.asList(items));
         }
 
         @Override

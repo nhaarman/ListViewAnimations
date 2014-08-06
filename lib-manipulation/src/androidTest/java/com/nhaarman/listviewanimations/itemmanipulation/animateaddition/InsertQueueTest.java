@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.nhaarman.listviewanimations.itemmanipulation;
+package com.nhaarman.listviewanimations.itemmanipulation.animateaddition;
 
 import android.util.Pair;
 
+import com.nhaarman.listviewanimations.itemmanipulation.animateaddition.InsertQueue;
 import com.nhaarman.listviewanimations.util.Insertable;
 
 import junit.framework.TestCase;
@@ -69,9 +70,9 @@ public class InsertQueueTest extends TestCase {
 
     /**
      * Test whether a second insert while the first insert is still active:
-     *  - doesn't insert the item
-     *  - doesn't activate the item
-     *  - queues the item.
+     * - doesn't insert the item
+     * - doesn't activate the item
+     * - queues the item.
      */
     public void testSecondInsert() {
         mInsertQueue.insert(0, 0);
@@ -96,8 +97,8 @@ public class InsertQueueTest extends TestCase {
 
     /**
      * Test whether inserting two items and then clearing the active items will
-     *  - activate the second inserted item,
-     *  - insert the second item
+     * - activate the second inserted item,
+     * - insert the second item
      */
     public void testDequeueOneElement() {
         mInsertQueue.insert(0, 0);

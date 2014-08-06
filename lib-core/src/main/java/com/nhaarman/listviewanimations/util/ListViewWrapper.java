@@ -42,7 +42,7 @@ public interface ListViewWrapper {
 
     int getPositionForView(@NonNull View view);
 
-    @NonNull
+    @Nullable
     ListAdapter getAdapter();
 
     void smoothScrollBy(int distance, int duration);

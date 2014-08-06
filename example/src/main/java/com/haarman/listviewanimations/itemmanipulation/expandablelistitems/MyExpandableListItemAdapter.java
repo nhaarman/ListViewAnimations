@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.haarman.listviewanimations.R;
 import com.haarman.listviewanimations.util.BitmapCache;
-import com.nhaarman.listviewanimations.itemmanipulation.ExpandableListItemAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.expandablelistitem.ExpandableListItemAdapter;
 
 public class MyExpandableListItemAdapter extends ExpandableListItemAdapter<Integer> {
 

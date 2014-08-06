@@ -27,7 +27,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
-import com.nhaarman.listviewanimations.itemmanipulation.InsertQueue;
 import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 import com.nhaarman.listviewanimations.util.Insertable;
 import com.nineoldandroids.animation.Animator;
@@ -35,6 +34,7 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
+import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,12 +55,14 @@ import java.util.Collection;
 public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
     private static final long DEFAULT_SCROLLDOWN_ANIMATION_MS = 300;
-    private static final long DEFAULT_INSERTION_ANIMATION_MS = 300;
-
-    private static final String ALPHA = "alpha";
 
     private long mScrolldownAnimationDurationMs = DEFAULT_SCROLLDOWN_ANIMATION_MS;
+
+    private static final long DEFAULT_INSERTION_ANIMATION_MS = 300;
+
     private long mInsertionAnimationDurationMs = DEFAULT_INSERTION_ANIMATION_MS;
+
+    private static final String ALPHA = "alpha";
 
     @NonNull
     private final Insertable<T> mInsertable;
@@ -142,18 +144,33 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     }
 
     /**
-     * Insert an item at given index. Will show an entrance animation for the new item if the newly added item is visible.
+     * Inserts an item at given index. Will show an entrance animation for the new item if the newly added item is visible.
      * Will also call {@link Insertable#add(int, Object)} of the root {@link android.widget.BaseAdapter}.
      *
-     * @param index the index the new item should be inserted at
-     * @param item  the item to insert
+     * @param index the index the new item should be inserted at.
+     * @param item  the item to insert.
      */
     public void insert(final int index, @NonNull final T item) {
         insert(new Pair<>(index, item));
     }
 
     /**
-     * Insert items at given indexes. Will show an entrance animation for the new items if the newly added item is visible.
+     * Inserts items, starting at given index. Will show an entrance animation for the new items if the newly added items are visible.
+     * Will also call {@link Insertable#add(int, Object)} of the root {@link android.widget.BaseAdapter}.
+     *
+     * @param index the starting index the new items should be inserted at.
+     * @param items the items to insert.
+     */
+    public void insert(final int index, @NonNull final T... items) {
+        Pair<Integer, T>[] pairs = new Pair[items.length];
+        for (int i = 0; i < items.length; i++) {
+            pairs[i] = new Pair<>(index + i, items[i]);
+        }
+        insert(pairs);
+    }
+
+    /**
+     * Inserts items at given indexes. Will show an entrance animation for the new items if the newly added item is visible.
      * Will also call {@link Insertable#add(int, Object)} of the root {@link android.widget.BaseAdapter}.
      *
      * @param indexItemPairs the index-item pairs to insert. The first argument of the {@code Pair} is the index, the second argument is the item.
@@ -163,7 +180,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     }
 
     /**
-     * Insert items at given indexes. Will show an entrance animation for the new items if the newly added item is visible.
+     * Inserts items at given indexes. Will show an entrance animation for the new items if the newly added item is visible.
      * Will also call {@link Insertable#add(int, Object)} of the root {@link android.widget.BaseAdapter}.
      *
      * @param indexItemPairs the index-item pairs to insert. The first argument of the {@code Pair} is the index, the second argument is the item.
@@ -282,18 +299,23 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             ValueAnimator heightAnimator = ValueAnimator.ofInt(1, originalHeight);
             heightAnimator.addUpdateListener(new HeightUpdater(view));
 
-            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, ALPHA, 0, 1);
+            Animator[] customAnimators = getAdditionalAnimators(view, parent);
+            Animator[] animators = new Animator[customAnimators.length + 1];
+            animators[0] = heightAnimator;
+            System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
 
             AnimatorSet animatorSet = new AnimatorSet();
-            Animator[] customAnimators = getAdditionalAnimators(view, parent);
-            Animator[] animators = new Animator[customAnimators.length + 2];
-            animators[0] = heightAnimator;
-            animators[1] = alphaAnimator;
-            System.arraycopy(customAnimators, 0, animators, 2, customAnimators.length);
             animatorSet.playTogether(animators);
-            animatorSet.setDuration(mInsertionAnimationDurationMs);
-            animatorSet.addListener(new ExpandAnimationListener(position));
-            animatorSet.start();
+
+            ViewHelper.setAlpha(view, 0);
+            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, ALPHA, 0, 1);
+
+            AnimatorSet allAnimatorsSet = new AnimatorSet();
+            allAnimatorsSet.playSequentially(animatorSet, alphaAnimator);
+
+            allAnimatorsSet.setDuration(mInsertionAnimationDurationMs);
+            allAnimatorsSet.addListener(new ExpandAnimationListener(position));
+            allAnimatorsSet.start();
         }
 
         return view;
@@ -317,6 +339,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * A class which applies the animated height value to a {@code View}.
      */
     private static class HeightUpdater implements ValueAnimator.AnimatorUpdateListener {
+
         private final View mView;
 
         HeightUpdater(final View view) {
@@ -335,6 +358,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * A class which removes the active index from the {@code InsertQueue} when the animation has finished.
      */
     private class ExpandAnimationListener extends AnimatorListenerAdapter {
+
         private final int mPosition;
 
         ExpandAnimationListener(final int position) {

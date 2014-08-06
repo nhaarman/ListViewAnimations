@@ -34,7 +34,7 @@ install:
  - true
 
 script:
-  - gradle connectedCheck
+  - gradle connectedCheck --info
   - if [[ $LINT == 'true' ]]; then gradle lint ; fi
 
 after_success:

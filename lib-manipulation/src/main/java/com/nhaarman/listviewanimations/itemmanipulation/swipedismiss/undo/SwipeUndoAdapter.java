@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
 
 /**
@@ -56,9 +57,15 @@ public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
     public void setListViewWrapper(@NonNull final ListViewWrapper listViewWrapper) {
         super.setListViewWrapper(listViewWrapper);
         mSwipeUndoTouchListener = new SwipeUndoTouchListener(listViewWrapper, mUndoCallback);
-        listViewWrapper.getListView().setOnTouchListener(mSwipeUndoTouchListener);
+
+        if (!(listViewWrapper.getListView() instanceof DynamicListView)) {
+            listViewWrapper.getListView().setOnTouchListener(mSwipeUndoTouchListener);
+        }
     }
 
+    public void setSwipeUndoTouchListener(@NonNull final SwipeUndoTouchListener swipeUndoTouchListener) {
+        mSwipeUndoTouchListener = swipeUndoTouchListener;
+    }
 
     @NonNull
     @Override
@@ -70,10 +77,15 @@ public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Set the {@link UndoCallback} to use.
+     * Sets the {@link UndoCallback} to use.
      */
     public void setUndoCallback(@NonNull final UndoCallback undoCallback) {
         mUndoCallback = undoCallback;
+    }
+
+    @NonNull
+    public UndoCallback getUndoCallback() {
+        return mUndoCallback;
     }
 
     /**

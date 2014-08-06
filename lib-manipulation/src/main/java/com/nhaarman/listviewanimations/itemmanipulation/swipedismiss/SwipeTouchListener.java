@@ -26,6 +26,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.nhaarman.listviewanimations.itemmanipulation.TouchEventHandler;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nineoldandroids.animation.Animator;
@@ -38,7 +39,7 @@ import com.nineoldandroids.view.ViewHelper;
  * An {@link android.view.View.OnTouchListener} that makes the list items in a {@link android.widget.AbsListView} swipeable.
  * Implementations of this class should implement {@link #afterViewFling(android.view.View, int)} to specify what to do after an item has been swiped.
  */
-public abstract class SwipeTouchListener implements View.OnTouchListener {
+public abstract class SwipeTouchListener implements View.OnTouchListener, TouchEventHandler {
 
     /**
      * TranslationX View property.
@@ -72,13 +73,13 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      */
     private final long mAnimationTime;
 
+    @NonNull
+    private final ListViewWrapper mListViewWrapper;
+
     /**
      * The minimum alpha value of swiped Views.
      */
     private float mMinimumAlpha;
-
-    @NonNull
-    private final ListViewWrapper mListViewWrapper;
 
     /**
      * The width of the {@link android.widget.AbsListView} in pixels.
@@ -202,12 +203,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     }
 
     /**
-     * If the {@link android.widget.AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
-     * work, because the parent will prevent touch events from reaching the {@code AbsListView}.
-     * <p/>
-     * If a {@code AbsListView} view has a child with the given resource id, the user can still swipe the list item by touching that child.
-     * If the user touches an area outside that child (but inside the list item view), then the swipe will not happen and the parent
-     * will do its job instead (scrolling horizontally).
+     * Sets the resource id of a child view that should be touched to engage swipe.
+     * When the user touches a region outside of that view, no swiping will occur.
      *
      * @param childResId The resource id of the list items' child that the user should touch to be able to swipe the list items.
      */
@@ -220,7 +217,9 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * Notifies this {@code SwipeTouchListener} that the adapter contents have changed.
      */
     public void notifyDataSetChanged() {
-        mVirtualListCount = mListViewWrapper.getAdapter().getCount();
+        if (mListViewWrapper.getAdapter() != null) {
+            mVirtualListCount = mListViewWrapper.getAdapter().getCount();
+        }
     }
 
     /**
@@ -275,7 +274,21 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
     }
 
     @Override
-    public boolean onTouch(@NonNull final View view, @NonNull final MotionEvent event) {
+    public boolean isInteracting() {
+        return mSwiping;
+    }
+
+    @Override
+    public boolean onTouchEvent(@NonNull final MotionEvent event) {
+        return onTouch(null, event);
+    }
+
+    @Override
+    public boolean onTouch(@Nullable final View view, @NonNull final MotionEvent event) {
+        if (mListViewWrapper.getAdapter() == null) {
+            return false;
+        }
+
         if (mVirtualListCount == -1) {
             mVirtualListCount = mListViewWrapper.getAdapter().getCount();
         }
@@ -290,7 +303,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
                 result = handleDownEvent(view, event);
                 break;
             case MotionEvent.ACTION_MOVE:
-                result = handleMoveEvent(event);
+                result = handleMoveEvent(view, event);
                 break;
             case MotionEvent.ACTION_CANCEL:
                 result = handleCancelEvent();
@@ -301,10 +314,11 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
             default:
                 result = false;
         }
+
         return result;
     }
 
-    private boolean handleDownEvent(@NonNull final View view, @NonNull final MotionEvent motionEvent) {
+    private boolean handleDownEvent(@Nullable final View view, @NonNull final MotionEvent motionEvent) {
         if (!mSwipeEnabled) {
             return false;
         }
@@ -324,7 +338,9 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
             return false;
         }
 
-        view.onTouchEvent(motionEvent);
+        if (view != null) {
+            view.onTouchEvent(motionEvent);
+        }
 
         disableHorizontalScrollContainerIfNecessary(motionEvent, downView);
 
@@ -358,9 +374,11 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         View downView = null;
         for (int i = 0; i < childCount && downView == null; i++) {
             View child = mListViewWrapper.getChildAt(i);
-            child.getHitRect(rect);
-            if (rect.contains(x, y)) {
-                downView = child;
+            if (child != null) {
+                child.getHitRect(rect);
+                if (rect.contains(x, y)) {
+                    downView = child;
+                }
             }
         }
         return downView;
@@ -374,11 +392,13 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
      * @return {@code true} if the item is dismissable, false otherwise.
      */
     private boolean isDismissable(final int position) {
+        if (mListViewWrapper.getAdapter() == null) {
+            return false;
+        }
+
         if (mDismissableManager != null) {
             long downId = mListViewWrapper.getAdapter().getItemId(position);
-            if (!mDismissableManager.isDismissable(downId, position)) {
-                return false;
-            }
+            return mDismissableManager.isDismissable(downId, position);
         }
         return true;
     }
@@ -399,7 +419,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
         }
     }
 
-    private boolean handleMoveEvent(@NonNull final MotionEvent motionEvent) {
+    private boolean handleMoveEvent(@Nullable final View view, @NonNull final MotionEvent motionEvent) {
         if (mVelocityTracker == null || mCurrentView == null) {
             return false;
         }
@@ -418,10 +438,12 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
             mListViewWrapper.getListView().requestDisallowInterceptTouchEvent(true);
 
             /* Cancel ListView's touch (un-highlighting the item) */
-            MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
-            cancelEvent.setAction(MotionEvent.ACTION_CANCEL | motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT);
-            mListViewWrapper.getListView().onTouchEvent(cancelEvent);
-            cancelEvent.recycle();
+            if (view != null) {
+                MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
+                cancelEvent.setAction(MotionEvent.ACTION_CANCEL | motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT);
+                view.onTouchEvent(cancelEvent);
+                cancelEvent.recycle();
+            }
         }
 
         if (mSwiping) {
@@ -649,6 +671,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
         @NonNull
         private final View mView;
+
         private final int mPosition;
 
         private FlingAnimatorListener(@NonNull final View view, final int position) {
@@ -670,6 +693,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener {
 
         @NonNull
         private final View mView;
+
         private final int mPosition;
 
         private RestoreAnimatorListener(@NonNull final View view, final int position) {

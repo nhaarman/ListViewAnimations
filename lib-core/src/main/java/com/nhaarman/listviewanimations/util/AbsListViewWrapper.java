@@ -23,6 +23,8 @@ import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.net.UnknownServiceException;
+
 public class AbsListViewWrapper implements ListViewWrapper {
 
     @NonNull
@@ -78,7 +80,6 @@ public class AbsListViewWrapper implements ListViewWrapper {
         return mAbsListView.getPositionForView(view);
     }
 
-    @NonNull
     @Override
     public ListAdapter getAdapter() {
         return mAbsListView.getAdapter();
@@ -88,4 +89,5 @@ public class AbsListViewWrapper implements ListViewWrapper {
     public void smoothScrollBy(final int distance, final int duration) {
         mAbsListView.smoothScrollBy(distance, duration);
     }
+
 }

@@ -34,17 +34,12 @@ public class ItemManipulationsExamplesActivity extends BaseActivity {
     }
 
     public void onDragAndDropClicked(final View view) {
-        Intent intent = new Intent(this, DragAndDropActivity.class);
+        Intent intent = new Intent(this, DynamicListViewActivity.class);
         startActivity(intent);
     }
 
     public void onSwipeDismissClicked(final View view) {
         Intent intent = new Intent(this, SwipeDismissActivity.class);
-        startActivity(intent);
-    }
-
-    public void onAnimateAdditionClicked(final View view) {
-        Intent intent = new Intent(this, AnimateAdditionActivity.class);
         startActivity(intent);
     }
 

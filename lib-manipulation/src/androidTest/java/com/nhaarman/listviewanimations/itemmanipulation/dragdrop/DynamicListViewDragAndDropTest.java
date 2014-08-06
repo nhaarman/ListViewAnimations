@@ -20,11 +20,13 @@ import android.support.annotation.NonNull;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+
 import org.mockito.*;
 
 import static org.mockito.Mockito.*;
 
-public class DynamicListViewTest extends ActivityInstrumentationTestCase2<DynamicListViewTestActivity> {
+public class DynamicListViewDragAndDropTest extends ActivityInstrumentationTestCase2<DynamicListViewTestActivity> {
 
     private DynamicListView mDynamicListView;
 
@@ -32,17 +34,18 @@ public class DynamicListViewTest extends ActivityInstrumentationTestCase2<Dynami
     private OnItemMovedListener mOnItemMovedListener;
 
 
-    public DynamicListViewTest() {
+    public DynamicListViewDragAndDropTest() {
         super(DynamicListViewTestActivity.class);
     }
 
     @Override
-    public void setUp() throws Exception {
+    public void setUp() throws Exception, InterruptedException {
         super.setUp();
 
         MockitoAnnotations.initMocks(this);
 
         mDynamicListView = getActivity().getDynamicListView();
+        mDynamicListView.enableDragAndDrop();
         mDynamicListView.setDraggableManager(new MyDraggableManager());
         mDynamicListView.setOnItemMovedListener(mOnItemMovedListener);
 

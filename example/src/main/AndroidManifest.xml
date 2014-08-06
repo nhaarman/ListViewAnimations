@@ -48,7 +48,7 @@
             android:name="com.haarman.listviewanimations.itemmanipulation.ItemManipulationsExamplesActivity"
             android:label="@string/itemmanipulation" />
         <activity
-            android:name="com.haarman.listviewanimations.itemmanipulation.DragAndDropActivity"
+            android:name=".itemmanipulation.DynamicListViewActivity"
             android:label="@string/draganddrop" />
         <activity
             android:name="com.haarman.listviewanimations.itemmanipulation.SwipeDismissActivity"

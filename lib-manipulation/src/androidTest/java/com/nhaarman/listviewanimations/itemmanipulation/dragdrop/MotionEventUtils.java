@@ -24,6 +24,8 @@ import android.view.View;
 import android.widget.AbsListView;
 
 
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,9 +45,9 @@ public class MotionEventUtils {
         float fromY = (int) (view.getY() + view.getHeight() / 2) + location[1];
 
         View toView = dynamicListView.getChildAt(toPosition);
-        float toY = (int) (toView.getY() + toView.getHeight() / 2) + location[1];
+        float toY = (int) toView.getY() + location[1];
 
-        toY += fromPosition < toPosition ? 2 : -2;
+        toY += fromPosition < toPosition ? toView.getHeight() : 0;
 
         List<MotionEvent> motionEvents = createMotionEvents(dynamicListView, fromY, toY);
         dispatchMotionEvents(instrumentation, motionEvents, true);
@@ -57,7 +59,7 @@ public class MotionEventUtils {
         dynamicListView.getLocationOnScreen(location);
 
         View view = dynamicListView.getChildAt(fromPosition);
-        float fromY = (int) (view.getY() + view.getHeight() / 2) + location[1];
+        float fromY = (int) (view.getY() ) + location[1];
 
         View toView = dynamicListView.getChildAt(dynamicListView.getLastVisiblePosition());
         float toY = (int) (toView.getY() + toView.getHeight()) + location[1] + 2;

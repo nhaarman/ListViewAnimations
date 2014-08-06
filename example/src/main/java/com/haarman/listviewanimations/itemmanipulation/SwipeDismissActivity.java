@@ -97,7 +97,7 @@ public class SwipeDismissActivity extends MyListActivity implements ActionBar.On
     private class AnimSelectionAdapter extends ArrayAdapter<String> {
 
         AnimSelectionAdapter() {
-            addAll(getResources().getStringArray(R.array.swipedismiss));
+            addAll(Arrays.asList(getResources().getStringArray(R.array.swipedismiss)));
         }
 
         @Override

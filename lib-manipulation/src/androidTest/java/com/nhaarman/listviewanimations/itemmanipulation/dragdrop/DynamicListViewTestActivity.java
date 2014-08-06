@@ -24,11 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 
 import java.util.ArrayList;
 import java.util.List;

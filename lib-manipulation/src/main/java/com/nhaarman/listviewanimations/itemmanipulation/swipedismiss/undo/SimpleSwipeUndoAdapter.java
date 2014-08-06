@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 
@@ -62,13 +63,23 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
      * @param context         the {@link android.content.Context}.
      * @param dismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback} that is notified of dismissed items.
      */
-    public <V extends BaseAdapter & UndoAdapter> SimpleSwipeUndoAdapter(@NonNull final V undoAdapter, @NonNull final Context context,
-                                                                        @NonNull final OnDismissCallback dismissCallback) {
+    public SimpleSwipeUndoAdapter(@NonNull final BaseAdapter adapter, @NonNull final Context context,
+                                  @NonNull final OnDismissCallback dismissCallback) {
         // We fix this right away
         // noinspection ConstantConditions
-        super(undoAdapter, null);
+        super(adapter, null);
         setUndoCallback(this);
-        mUndoAdapter = undoAdapter;
+
+        BaseAdapter undoAdapter = adapter;
+        while (undoAdapter instanceof BaseAdapterDecorator) {
+            undoAdapter = ((BaseAdapterDecorator) undoAdapter).getDecoratedBaseAdapter();
+        }
+
+        if (!(undoAdapter instanceof UndoAdapter)) {
+            throw new IllegalStateException("BaseAdapter must implement UndoAdapter!");
+        }
+
+        mUndoAdapter = (UndoAdapter) undoAdapter;
         mContext = context;
         mOnDismissCallback = dismissCallback;
     }
@@ -159,6 +170,7 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
 
         @NonNull
         private final SwipeUndoView mView;
+
         private final int mPosition;
 
         UndoClickListener(@NonNull final SwipeUndoView view, final int position) {

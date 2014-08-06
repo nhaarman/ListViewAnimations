@@ -26,6 +26,7 @@ import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
 import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
+import com.nhaarman.listviewanimations.util.Insertable;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nhaarman.listviewanimations.util.ListViewWrapperSetter;
 import com.nhaarman.listviewanimations.util.Swappable;
@@ -35,7 +36,7 @@ import com.nhaarman.listviewanimations.util.Swappable;
  * <p/>
  * Classes extending this class can override methods and provide extra functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, ListViewWrapperSetter {
+public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, Insertable, ListViewWrapperSetter {
 
     /**
      * The {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
@@ -83,6 +84,14 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     }
 
     /**
+     * Returns the {@link com.nhaarman.listviewanimations.util.ListViewWrapper} containing the ListView this {@code BaseAdapterDecorator} is bound to.
+     */
+    @Nullable
+    public ListViewWrapper getListViewWrapper() {
+        return mListViewWrapper;
+    }
+
+    /**
      * Alternative to {@link #setAbsListView(android.widget.AbsListView)}. Sets the {@link com.nhaarman.listviewanimations.util.ListViewWrapper} which contains the ListView
      * this adapter will be bound to. Call this method before setting this adapter to the ListView. Also propagates to the decorated {@code BaseAdapter} if applicable.
      */
@@ -93,14 +102,6 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
         if (mDecoratedBaseAdapter instanceof ListViewWrapperSetter) {
             ((ListViewWrapperSetter) mDecoratedBaseAdapter).setListViewWrapper(listViewWrapper);
         }
-    }
-
-    /**
-     * Returns the {@link com.nhaarman.listviewanimations.util.ListViewWrapper} containing the ListView this {@code BaseAdapterDecorator} is bound to.
-     */
-    @Nullable
-    public ListViewWrapper getListViewWrapper() {
-        return mListViewWrapper;
     }
 
     @Override
@@ -230,7 +231,17 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
         if (mDecoratedBaseAdapter instanceof Swappable) {
             ((Swappable) mDecoratedBaseAdapter).swapItems(positionOne, positionTwo);
         } else {
-            Log.w("ListViewAnimations", "Warning: swapItems called on an adapter that does not implements Swappable!");
+            Log.w("ListViewAnimations", "Warning: swapItems called on an adapter that does not implement Swappable!");
+        }
+    }
+
+    @Override
+    public void add(final int index, @NonNull final Object item) {
+        if (mDecoratedBaseAdapter instanceof Insertable) {
+            //noinspection rawtypes
+            ((Insertable) mDecoratedBaseAdapter).add(index, item);
+        } else {
+            Log.w("ListViewAnimations", "Warning: add called on an adapter that does not implement Insertable!");
         }
     }
 }
