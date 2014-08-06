@@ -21,26 +21,15 @@ apply from: '../pushMaven.gradle'
 apply from: '../generateJavadoc.gradle'
 apply from: '../publishGhPages.gradle'
 
-configurations {
-    provided
-}
-
-android.libraryVariants.all {
-    variant -> variant.javaCompile.classpath += configurations.provided
-}
-
 dependencies {
-    provided project(':lib-core')
+    compile project(':lib-core')
 
     compile 'se.emilsjolander:stickylistheaders:2.4.0'
 
     /* Test libraries */
-    androidTestCompile ('org.mockito:mockito-core:1.9.5')  { exclude group: 'org.hamcrest' }
-//    androidTestCompile ('com.google.dexmaker:dexmaker-mockito:1.0')  { exclude group: 'org.hamcrest' }
     androidTestCompile ('junit:junit:4.11')  { exclude group: 'org.hamcrest' }
+    androidTestCompile('org.mockito:mockito-core:1.9.5') { exclude group: 'org.hamcrest' }
     androidTestCompile 'org.hamcrest:hamcrest-all:1.3'
-
-    /* Custom compiled dexmaker. Switch back to the original one once fix https://code.google.com/p/dexmaker/issues/detail?id=28 has been applied */
     androidTestCompile files('libs/dexmaker-1.1.jar')
     androidTestCompile files('libs/dexmaker-mockito-1.1-custom.jar')
 }
@@ -51,6 +40,7 @@ android {
 
     defaultConfig {
         minSdkVersion 8
+        //noinspection OldTargetApi
         targetSdkVersion 20
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(new Date().format('yyyyMMddHH'))
