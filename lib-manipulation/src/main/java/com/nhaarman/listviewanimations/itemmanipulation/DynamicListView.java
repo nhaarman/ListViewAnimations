@@ -17,6 +17,7 @@
 package com.nhaarman.listviewanimations.itemmanipulation;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -25,10 +26,10 @@ import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.WrapperListAdapter;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.itemmanipulation.animateaddition.AnimateAdditionAdapter;
@@ -45,15 +46,22 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SwipeU
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoCallback;
 import com.nhaarman.listviewanimations.util.Insertable;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 /**
  * A {@link android.widget.ListView} implementation which provides the following functionality:
  * <ul>
  * <li>Drag and drop</li>
  * <li>Swipe to dismiss</li>
  * <li>Swipe to dismiss with contextual undo</li>
+ * <li>Animate addition</li>
  * </ul>
  */
 public class DynamicListView extends ListView {
+
+    @NonNull
+    private final MyOnScrollListener mMyOnScrollListener;
 
     /**
      * The {@link com.nhaarman.listviewanimations.itemmanipulation.dragdrop.DragAndDropHandler}
@@ -76,19 +84,30 @@ public class DynamicListView extends ListView {
     @Nullable
     private TouchEventHandler mCurrentHandlingTouchEventHandler;
 
+    /**
+     * The {@link com.nhaarman.listviewanimations.itemmanipulation.animateaddition.AnimateAdditionAdapter}
+     * that is possibly set to animate insertions.
+     */
     @Nullable
     private AnimateAdditionAdapter<?> mAnimateAdditionAdapter;
 
+    @Nullable
+    private SwipeUndoAdapter mSwipeUndoAdapter;
+
     public DynamicListView(@NonNull final Context context) {
-        super(context);
+        this(context, null);
     }
 
-    public DynamicListView(@NonNull final Context context, @NonNull final AttributeSet attrs) {
-        super(context, attrs);
+    public DynamicListView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
+        //noinspection HardCodedStringLiteral
+        this(context, attrs, Resources.getSystem().getIdentifier("listViewStyle", "attr", "android"));
     }
 
-    public DynamicListView(@NonNull final Context context, @NonNull final AttributeSet attrs, final int defStyle) {
+    public DynamicListView(@NonNull final Context context, @Nullable final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
+
+        mMyOnScrollListener = new MyOnScrollListener();
+        super.setOnScrollListener(mMyOnScrollListener);
     }
 
     @Override
@@ -98,6 +117,11 @@ public class DynamicListView extends ListView {
         }
 
         super.setOnTouchListener(onTouchListener);
+    }
+
+    @Override
+    public void setOnScrollListener(final OnScrollListener onScrollListener) {
+        mMyOnScrollListener.addOnScrollListener(onScrollListener);
     }
 
     /**
@@ -150,26 +174,12 @@ public class DynamicListView extends ListView {
      * @throws java.lang.IllegalStateException if the adapter that was set does not extend {@code SwipeUndoAdapter}.
      */
     public void enableSimpleSwipeUndo() {
-        ListAdapter adapter = getAdapter();
-
-        if (adapter instanceof WrapperListAdapter) {
-            adapter = ((WrapperListAdapter) adapter).getWrappedAdapter();
-        }
-
-        SwipeUndoAdapter swipeUndoAdapter = null;
-        while (adapter instanceof BaseAdapterDecorator) {
-            if (adapter instanceof SwipeUndoAdapter) {
-                swipeUndoAdapter = (SwipeUndoAdapter) adapter;
-            }
-            adapter = ((BaseAdapterDecorator) adapter).getDecoratedBaseAdapter();
-        }
-
-        if (swipeUndoAdapter == null) {
+        if (mSwipeUndoAdapter == null) {
             throw new IllegalStateException("enableSimpleSwipeUndo requires a SwipeUndoAdapter to be set as an adapter");
         }
 
-        mSwipeTouchListener = new SwipeUndoTouchListener(new DynamicListViewWrapper(this), swipeUndoAdapter.getUndoCallback());
-        swipeUndoAdapter.setSwipeUndoTouchListener((SwipeUndoTouchListener) mSwipeTouchListener);
+        mSwipeTouchListener = new SwipeUndoTouchListener(new DynamicListViewWrapper(this), mSwipeUndoAdapter.getUndoCallback());
+        mSwipeUndoAdapter.setSwipeUndoTouchListener((SwipeUndoTouchListener) mSwipeTouchListener);
     }
 
     /**
@@ -195,10 +205,14 @@ public class DynamicListView extends ListView {
     @Override
     public void setAdapter(final ListAdapter adapter) {
         ListAdapter wrappedAdapter = adapter;
+        mSwipeUndoAdapter = null;
 
         if (adapter instanceof BaseAdapter) {
             BaseAdapter rootAdapter = (BaseAdapter) wrappedAdapter;
             while (rootAdapter instanceof BaseAdapterDecorator) {
+                if (rootAdapter instanceof SwipeUndoAdapter) {
+                    mSwipeUndoAdapter = (SwipeUndoAdapter) rootAdapter;
+                }
                 rootAdapter = ((BaseAdapterDecorator) rootAdapter).getDecoratedBaseAdapter();
             }
 
@@ -216,24 +230,22 @@ public class DynamicListView extends ListView {
         }
     }
 
-    public void setAdapter(final SwipeUndoAdapter adapter) {
-        mSwipeTouchListener = new SwipeUndoTouchListener(new DynamicListViewWrapper(this), adapter.getUndoCallback());
-        setAdapter((BaseAdapter) adapter);
-    }
-
     @Override
     public boolean dispatchTouchEvent(@NonNull final MotionEvent ev) {
         if (mCurrentHandlingTouchEventHandler == null) {
             /* None of the TouchEventHandlers are actively consuming events yet. */
             boolean firstTimeInteracting = false;
 
-            /* Offer the event to the DragAndDropHandler */
-            if (mDragAndDropHandler != null) {
-                mDragAndDropHandler.onTouchEvent(ev);
-                firstTimeInteracting = mDragAndDropHandler.isInteracting();
-                if (firstTimeInteracting) {
-                    mCurrentHandlingTouchEventHandler = mDragAndDropHandler;
-                    sendCancelEvent(mSwipeTouchListener, ev);
+            /* We don't support dragging items when there are items in the undo state. */
+            if (!(mSwipeTouchListener instanceof SwipeUndoTouchListener) || !((SwipeUndoTouchListener) mSwipeTouchListener).hasPendingItems()) {
+                /* Offer the event to the DragAndDropHandler */
+                if (mDragAndDropHandler != null) {
+                    mDragAndDropHandler.onTouchEvent(ev);
+                    firstTimeInteracting = mDragAndDropHandler.isInteracting();
+                    if (firstTimeInteracting) {
+                        mCurrentHandlingTouchEventHandler = mDragAndDropHandler;
+                        sendCancelEvent(mSwipeTouchListener, ev);
+                    }
                 }
             }
 
@@ -411,6 +423,11 @@ public class DynamicListView extends ListView {
      *                                         or if there is no adapter set.
      */
     public void startDragging(final int position) {
+        /* We don't support dragging items when items are in the undo state. */
+        if (mSwipeTouchListener instanceof SwipeUndoTouchListener && ((SwipeUndoTouchListener) mSwipeTouchListener).hasPendingItems()) {
+            return;
+        }
+
         if (mDragAndDropHandler != null) {
             mDragAndDropHandler.startDragging(position);
         }
@@ -523,6 +540,35 @@ public class DynamicListView extends ListView {
             } else {
                 throw new IllegalStateException("Enabled swipe functionality does not support undo");
             }
+        }
+    }
+
+    private class MyOnScrollListener implements OnScrollListener {
+
+        private final Collection<OnScrollListener> mOnScrollListeners = new HashSet<>();
+
+        @Override
+        public void onScrollStateChanged(final AbsListView view, final int scrollState) {
+            for (OnScrollListener onScrollListener : mOnScrollListeners) {
+                onScrollListener.onScrollStateChanged(view, scrollState);
+            }
+
+            if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                if (mSwipeTouchListener instanceof SwipeUndoTouchListener) {
+                    ((SwipeUndoTouchListener) mSwipeTouchListener).dimissPending();
+                }
+            }
+        }
+
+        @Override
+        public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
+            for (OnScrollListener onScrollListener : mOnScrollListeners) {
+                onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+            }
+        }
+
+        public void addOnScrollListener(final OnScrollListener onScrollListener) {
+            mOnScrollListeners.add(onScrollListener);
         }
     }
 }

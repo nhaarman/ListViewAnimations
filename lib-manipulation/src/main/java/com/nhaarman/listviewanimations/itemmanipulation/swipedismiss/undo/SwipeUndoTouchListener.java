@@ -28,13 +28,19 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissTouchListener} that adds an undo stage to the item swiping.
  */
 public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
+
+    private static final String ALPHA = "alpha";
+
+    private static final String TRANSLATION_X = "translationX";
 
     /**
      * The callback which gets notified of events.
@@ -49,6 +55,12 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     private final Collection<Integer> mUndoPositions = new LinkedList<>();
 
     /**
+     * The {@link android.view.View}s that are in the undo state.
+     */
+    @NonNull
+    private final Map<Integer, View> mUndoViews = new HashMap<>();
+
+    /**
      * The positions that have been dismissed.
      */
     @NonNull
@@ -60,12 +72,6 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     @NonNull
     private final Collection<View> mDismissedViews = new LinkedList<>();
 
-    /**
-     * Constructs a new {@code SwipeDismissTouchListener} for the given {@link android.widget.AbsListView}.
-     *
-     * @param absListView The {@code AbsListView} whose items should be dismissable.
-     */
-    @SuppressWarnings("UnnecessaryFullyQualifiedName")
     public SwipeUndoTouchListener(@NonNull final ListViewWrapper listViewWrapper, @NonNull final UndoCallback callback) {
         super(listViewWrapper, callback);
         mCallback = callback;
@@ -75,10 +81,12 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     protected void afterViewFling(@NonNull final View view, final int position) {
         if (mUndoPositions.contains(position)) {
             mUndoPositions.remove(position);
+            mUndoViews.remove(position);
             performDismiss(view, position);
             hideUndoView(view);
         } else {
             mUndoPositions.add(position);
+            mUndoViews.put(position, view);
             mCallback.onUndoShown(view, position);
             showUndoView(view);
             restoreViewPresentation(view);
@@ -105,6 +113,19 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
         mCallback.onDismiss(view, position);
     }
 
+    public boolean hasPendingItems() {
+        return !mUndoPositions.isEmpty();
+    }
+
+    /**
+     * Dismisses all items that are in the undo state.
+     */
+    public void dimissPending() {
+        for (int position : mUndoPositions) {
+            performDismiss(mUndoViews.get(position), position);
+        }
+    }
+
     /**
      * Sets the visibility of the primary {@link android.view.View} to {@link android.view.View#GONE}, and animates the undo {@code View} in to view.
      *
@@ -115,7 +136,7 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
 
         View undoView = mCallback.getUndoView(view);
         undoView.setVisibility(View.VISIBLE);
-        ObjectAnimator.ofFloat(undoView, "alpha", 0f, 1f).start();
+        ObjectAnimator.ofFloat(undoView, ALPHA, 0f, 1f).start();
     }
 
     /**
@@ -127,6 +148,7 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
         mCallback.getPrimaryView(view).setVisibility(View.VISIBLE);
         mCallback.getUndoView(view).setVisibility(View.GONE);
     }
+
 
     /**
      * If necessary, notifies the {@link UndoCallback} to remove dismissed object from the adapter,
@@ -173,9 +195,9 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
 
         primaryView.setVisibility(View.VISIBLE);
 
-        ObjectAnimator undoAlphaAnimator = ObjectAnimator.ofFloat(undoView, "alpha", 1f, 0f);
-        ObjectAnimator primaryAlphaAnimator = ObjectAnimator.ofFloat(primaryView, "alpha", 0f, 1f);
-        ObjectAnimator primaryXAnimator = ObjectAnimator.ofFloat(primaryView, "translationX", primaryView.getWidth(), 0f);
+        ObjectAnimator undoAlphaAnimator = ObjectAnimator.ofFloat(undoView, ALPHA, 1f, 0f);
+        ObjectAnimator primaryAlphaAnimator = ObjectAnimator.ofFloat(primaryView, ALPHA, 0f, 1f);
+        ObjectAnimator primaryXAnimator = ObjectAnimator.ofFloat(primaryView, TRANSLATION_X, primaryView.getWidth(), 0f);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(undoAlphaAnimator, primaryAlphaAnimator, primaryXAnimator);
