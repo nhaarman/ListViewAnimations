@@ -24,7 +24,6 @@ import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
-import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -132,6 +131,11 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     }
 
     @Override
+    public void onUndo(@NonNull final View view, final int position) {
+        mUndoPositions.remove(position);
+    }
+
+    @Override
     public void onDismiss(@NonNull final View view, final int position) {
         mUndoPositions.remove(position);
     }
@@ -145,26 +149,6 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
         mUndoPositions.addAll(newUndoPositions);
     }
 
-    @Override
-    public void undo(@NonNull final View view) {
-        if (getListViewWrapper() == null) {
-            throw new IllegalStateException("Call setAbsListView() on this SimpleSwipeUndoAdapter!");
-        }
-
-        int position = AdapterViewUtil.getPositionForView(getListViewWrapper(), view);
-        undo(view, position);
-    }
-
-    /**
-     * Performs the undo animation and restores the original state for given {@link android.view.View}.
-     *
-     * @param view     the parent {@code View} which contains both primary and undo {@code View}s.
-     * @param position the position of the item in the {@link android.widget.BaseAdapter} corresponding to the {@code View}.
-     */
-    protected void undo(@NonNull final View view, final int position) {
-        super.undo(view);
-        mUndoPositions.remove(position);
-    }
 
     private class UndoClickListener implements View.OnClickListener {
 
@@ -180,7 +164,7 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
 
         @Override
         public void onClick(@NonNull final View v) {
-            undo(mView, mPosition);
+            undo(mView);
         }
     }
 }

@@ -50,8 +50,16 @@ public interface UndoCallback extends OnDismissCallback {
     void onUndoShown(@NonNull View view, int position);
 
     /**
+     * Called when the undo button is clicked for given position, and the primary {@link View} is shown.
+     *
+     * @param view     the parent {@code View}, which contains both the primary and the undo {@link android.view.View}s.
+     * @param position the position for which the button has been clicked.
+     */
+    void onUndo(@NonNull View view, int position);
+
+    /**
      * Called when the user has definitively dismissed an item.<br>
-     * Do <i><b>NOT</b></i> remove the item from the adapter here! Instead do this in {@link #onDismiss(android.widget.AbsListView, int[])}.
+     * Do <i><b>NOT</b></i> remove the item from the adapter here! Instead, do this in {@link #onDismiss(android.view.ViewGroup, int[])}.
      *
      * @param view     the parent {@code View}, which contains both the primary and the undo {@link android.view.View}s.
      * @param position the position of the item that is dismissed.

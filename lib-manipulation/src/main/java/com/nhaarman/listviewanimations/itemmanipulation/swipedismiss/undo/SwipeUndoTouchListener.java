@@ -203,6 +203,8 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
         animatorSet.playTogether(undoAlphaAnimator, primaryAlphaAnimator, primaryXAnimator);
         animatorSet.addListener(new UndoAnimatorListener(undoView));
         animatorSet.start();
+
+        mCallback.onUndo(view, position);
     }
 
     @Override

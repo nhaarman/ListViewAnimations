@@ -85,14 +85,14 @@ public class TimedUndoAdapter extends SimpleSwipeUndoAdapter {
     }
 
     @Override
-    public void onDismiss(@NonNull final View view, final int position) {
-        super.onDismiss(view, position);
+    public void onUndo(@NonNull final View view, final int position) {
+        super.onUndo(view, position);
         cancelCallback(position);
     }
 
     @Override
-    protected void undo(@NonNull final View view, final int position) {
-        super.undo(view, position);
+    public void onDismiss(@NonNull final View view, final int position) {
+        super.onDismiss(view, position);
         cancelCallback(position);
     }
 
