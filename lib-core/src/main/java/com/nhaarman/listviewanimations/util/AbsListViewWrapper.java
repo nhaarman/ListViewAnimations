@@ -23,8 +23,6 @@ import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import java.net.UnknownServiceException;
-
 public class AbsListViewWrapper implements ListViewWrapper {
 
     @NonNull
