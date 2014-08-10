@@ -21,7 +21,7 @@ import android.widget.GridView;
 
 import com.haarman.listviewanimations.BaseActivity;
 import com.haarman.listviewanimations.R;
-import com.nhaarman.listviewanimations.swinginadapters.simple.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 
 public class GridViewActivity extends BaseActivity {
 

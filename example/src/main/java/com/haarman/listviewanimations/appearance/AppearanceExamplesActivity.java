@@ -31,12 +31,12 @@ import com.haarman.listviewanimations.MyListActivity;
 import com.haarman.listviewanimations.MyListAdapter;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.simple.AlphaInAnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.simple.ScaleInAnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.simple.SwingBottomInAnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.simple.SwingLeftInAnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.simple.SwingRightInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.ScaleInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingLeftInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingRightInAnimationAdapter;
 
 import java.util.Arrays;
 

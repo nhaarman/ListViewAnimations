@@ -13,41 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.swinginadapters;
+package com.nhaarman.listviewanimations.appearance;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorInflater;
 
 import android.support.annotation.NonNull;
 
 /**
- * An implementation of AnimationAdapter which applies a single Animator to
- * views.
+ * An implementation of AnimationAdapter which bases the animations on
+ * resources.
  */
-public abstract class SingleAnimationAdapter extends AnimationAdapter {
+public abstract class ResourceAnimationAdapter extends AnimationAdapter {
 
-    protected SingleAnimationAdapter(@NonNull final BaseAdapter baseAdapter) {
+    @NonNull
+    private final Context mContext;
+
+    @SuppressWarnings("UnusedDeclaration")
+    protected ResourceAnimationAdapter(@NonNull final BaseAdapter baseAdapter, @NonNull final Context context) {
         super(baseAdapter);
+        mContext = context;
     }
 
     @NonNull
     @Override
     public Animator[] getAnimators(@NonNull final ViewGroup parent, @NonNull final View view) {
-        Animator animator = getAnimator(parent, view);
-        return new Animator[]{animator};
+        return new Animator[]{AnimatorInflater.loadAnimator(mContext, getAnimationResourceId())};
     }
 
     /**
-     * Get the {@link Animator} to apply to the {@link View}.
-     *
-     * @param parent the {@link ViewGroup} which is the parent of the View.
-     * @param view   the View that will be animated, as retrieved by
-     *               {@link #getView(int, View, ViewGroup)}.
+     * Get the resource id of the animation to apply to the views.
      */
-    @NonNull
-    protected abstract Animator getAnimator(@NonNull ViewGroup parent, @NonNull View view);
+    protected abstract int getAnimationResourceId();
 
 }
