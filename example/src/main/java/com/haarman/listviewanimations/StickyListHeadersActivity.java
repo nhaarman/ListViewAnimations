@@ -18,8 +18,8 @@ package com.haarman.listviewanimations;
 
 import android.os.Bundle;
 
-import com.nhaarman.listviewanimations.swinginadapters.StickyListHeadersAdapterDecorator;
-import com.nhaarman.listviewanimations.swinginadapters.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.StickyListHeadersAdapterDecorator;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.util.StickyListHeadersListViewWrapper;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;

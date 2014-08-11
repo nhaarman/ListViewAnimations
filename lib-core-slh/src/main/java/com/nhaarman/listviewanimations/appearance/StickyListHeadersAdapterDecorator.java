@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nhaarman.listviewanimations.swinginadapters;
+package com.nhaarman.listviewanimations.appearance;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -50,7 +50,7 @@ public class StickyListHeadersAdapterDecorator extends BaseAdapterDecorator impl
     private final StickyListHeadersAdapter mStickyListHeadersAdapter;
 
     /**
-     * The {@link com.nhaarman.listviewanimations.swinginadapters.ViewAnimator} responsible for animating the Views.
+     * The {@link com.nhaarman.listviewanimations.appearance.ViewAnimator} responsible for animating the Views.
      */
     @Nullable
     private ViewAnimator mViewAnimator;
@@ -85,7 +85,7 @@ public class StickyListHeadersAdapterDecorator extends BaseAdapterDecorator impl
     }
 
     /**
-     * Returns the {@link com.nhaarman.listviewanimations.swinginadapters.ViewAnimator} responsible for animating the header Views in this adapter.
+     * Returns the {@link com.nhaarman.listviewanimations.appearance.ViewAnimator} responsible for animating the header Views in this adapter.
      */
     @Nullable
     public ViewAnimator getViewAnimator() {

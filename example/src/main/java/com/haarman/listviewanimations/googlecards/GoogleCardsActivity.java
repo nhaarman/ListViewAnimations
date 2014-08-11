@@ -24,7 +24,7 @@ import com.haarman.listviewanimations.BaseActivity;
 import com.haarman.listviewanimations.R;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.simple.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 
 public class GoogleCardsActivity extends BaseActivity implements OnDismissCallback {
 

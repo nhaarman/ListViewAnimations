@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nhaarman.listviewanimations.swinginadapters;
+package com.nhaarman.listviewanimations.appearance;
 
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -118,7 +118,7 @@ public abstract class AnimationAdapter extends BaseAdapterDecorator {
     }
 
     /**
-     * Returns the {@link com.nhaarman.listviewanimations.swinginadapters.ViewAnimator} responsible for animating the Views in this adapter.
+     * Returns the {@link com.nhaarman.listviewanimations.appearance.ViewAnimator} responsible for animating the Views in this adapter.
      */
     @Nullable
     public ViewAnimator getViewAnimator() {

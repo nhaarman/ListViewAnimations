@@ -19,7 +19,7 @@ apply plugin: 'com.android.application'
 dependencies {
     //noinspection GradleDependency
     compile 'com.android.support:support-v4:19.1.+'
-    compile 'se.emilsjolander:stickylistheaders:2.4.0'
+    compile 'se.emilsjolander:stickylistheaders:2.5.0'
 
     compile project(':lib-core')
     compile project(':lib-core-slh')

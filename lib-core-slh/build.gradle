@@ -24,7 +24,7 @@ apply from: '../publishGhPages.gradle'
 dependencies {
     compile project(':lib-core')
 
-    compile 'se.emilsjolander:stickylistheaders:2.4.0'
+    compile 'se.emilsjolander:stickylistheaders:2.5.0'
 
     /* Test libraries */
     androidTestCompile ('junit:junit:4.11')  { exclude group: 'org.hamcrest' }

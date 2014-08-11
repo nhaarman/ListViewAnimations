@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nhaarman.listviewanimations.swinginadapters;
+package com.nhaarman.listviewanimations.appearance;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
