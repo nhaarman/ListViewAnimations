@@ -1,0 +1,62 @@
+/*
+ * Copyright 2014 Niek Haarman
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'github-pages'
+
+apply from: '../pushMaven.gradle'
+apply from: '../generateJavadoc.gradle'
+apply from: '../publishGhPages.gradle'
+
+dependencies {
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.android.support:support-annotations:+'
+
+    /* Test libraries */
+    androidTestCompile ('org.mockito:mockito-core:1.9.5')  { exclude group: 'org.hamcrest' }
+    androidTestCompile ('junit:junit:4.11')  { exclude group: 'org.hamcrest' }
+    androidTestCompile 'org.hamcrest:hamcrest-all:1.3'
+    androidTestCompile files('libs/dexmaker-1.1.jar')
+    androidTestCompile files('libs/dexmaker-mockito-1.1-custom.jar')
+}
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion '20.0.0'
+
+    defaultConfig {
+        minSdkVersion 8
+        //noinspection OldTargetApi
+        targetSdkVersion 20
+        versionName project.VERSION_NAME
+        versionCode Integer.parseInt(new Date().format('yyyyMMddHH'))
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+    }
+
+    lintOptions {
+        textReport true
+        textOutput 'stdout'
+        warningsAsErrors true
+    }
+}

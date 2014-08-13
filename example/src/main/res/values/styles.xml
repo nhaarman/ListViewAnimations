@@ -1,0 +1,37 @@
+<!--
+  ~ Copyright 2014 Niek Haarman
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Example</item>
+    </style>
+
+    <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.ActionBar.Solid">
+        <item name="android:background">@color/bg_actionbar</item>
+        <item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="DropDownNav.Example" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:popupBackground">@drawable/ab_dropdown</item>
+    </style>
+
+</resources>

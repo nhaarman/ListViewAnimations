@@ -1,38 +1,33 @@
-ListViewAnimations ([Play Store Demo][1])
+ListViewAnimations ([Play Store Demo][1]) [![Build Status](https://travis-ci.org/nhaarman/ListViewAnimations.svg)](https://travis-ci.org/nhaarman/ListViewAnimations)
 ===========
 
 ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
 Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
 
-Known applications using ListViewAnimations
------
-[Ultimate Tic-Tac-Toe][12] | [Light Flow Lite - LED Control][18] | [TreinVerkeer][6] | [Pearl Jam Lyrics][19] | [Calorie Chart][20] | [Car Hire][10] | [Super BART][11] | [DK FlashCards][15] | [Counter Plus][22] | [SimpleNews - RSS Reader][23] | [Voorlees Verhaaltjes 2.0][21] | [Per-App Modes][26] | [SimpleNews][27]
-
 Features
 -----
 ListViewAnimations provides the following features:
-* Appearance animations for items in ListViews, GridViews, and other AbsListViews;
-    * Built in animations include Alpha, SwingRightIn, SwingLeftIn, SwingBottomIn, SwingRightIn and ScaleIn.
+* Appearance animations for items in `ListViews`, `GridViews`, other `AbsListViews`;
+    * Built in animations include `Alpha`, `SwingRightIn`, `SwingLeftIn`, `SwingBottomIn`, `SwingRightIn` and `ScaleIn`.
 	* Other animations can easily be added
-* Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo (and optionally count down);
+    * StickyListHeaders is supported, other implementations can easily be added.
+* Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo;
 * Drag-and-Drop reordering;
-* Animate dismissal of items;
 * Animate addition of items;
 * Smoothly expand your items to reveal more content;
 
+![](https://raw.githubusercontent.com/nhaarman/ListViewAnimations/gh-pages/images/dynamiclistview.gif "DynamicListView")
+
 Setup
 -----
-* In Eclipse, just import the library as an Android library project.
-* Project > Clean to generate the binaries you need, like R.java, etc.
-* Then, just add ListViewAnimations as a dependency to your existing project and you're good to go!
 
-**Or**:
+The library consists of separate modules:
 
-* [Download the .jar file][4]
-* [Download the latest NineOldAndroids .jar file][17]
-* Add the .jar files to your project's `libs` folder, or add them as external jars to your project's build path.
+* `lib-core`: The core of the library, and contains appearance animations.
+* `lib-manipulation`: Contains the item manipulation options, such as Swipe-to-Dismiss, and Drag-and-Drop.
+* `lib-core-slh`: An extension of `lib-core` to support `StickyListHeaders`.
 
-**Or**:
+When using `lib-manipulation` or `lib-core-slh`, `lib-core` is included as well.
 
 Add the following to your `build.gradle`:
 
@@ -40,9 +35,20 @@ Add the following to your `build.gradle`:
 		mavenCentral()
 	}
 	
-	dependencies{
-		compile 'com.nhaarman.listviewanimations:library:2.6.0'
+	dependencies {
+		compile 'com.nhaarman.listviewanimations:lib-core:3.0.+'
+		compile 'com.nhaarman.listviewanimations:lib-manipulation:3.0.+'
+		compile 'com.nhaarman.listviewanimations:lib-core-slh:3.0.+'
 	}
+
+**Or**:
+
+* Download the jar files you need:
+    * [`lib-core`][8]
+    * [`lib-manipulation`][9]
+    * [`lib-core-slh`][10]
+* [Download the latest NineOldAndroids .jar file][6]
+* Add the .jar files to your project's `libs` folder, or add them as external jars to your project's build path.
 
 **Or**:
 
@@ -50,34 +56,51 @@ Add the following to your `pom.xml`:
 
 	<dependency>
 		<groupId>com.nhaarman.listviewanimations</groupId>
-		<artifactId>library</artifactId>
-		<version>2.6.0</version>
+		<artifactId>lib-core</artifactId>
+		<version>3.0.0</version>
 	</dependency>
-	
-Usage
+	<dependency>
+		<groupId>com.nhaarman.listviewanimations</groupId>
+		<artifactId>lib-manipulation</artifactId>
+		<version>3.0.0</version>
+	</dependency>
+	<dependency>
+		<groupId>com.nhaarman.listviewanimations</groupId>
+		<artifactId>lib-core-slh</artifactId>
+		<version>3.0.0</version>
+	</dependency>
+
+
+Getting Started
 -----
-Please refer to the [Wiki][13] pages to learn more about how to use this library.
+
+* [Wiki][11]: Tutorials and examples
+* Docs:
+    * `lib-core` - [Javadoc][12]
+    * `lib-manipulation` - [Javadoc][13]
+    * `lib-core-slh` - [Javadoc][14]
 
 Contribute
 -----
 Please do! I'm happy to review and accept pull requests.  
-Please read the [Contributing wiki](https://github.com/nhaarman/ListViewAnimations/wiki/Contributing) before you do.
+Please read [Contributing](https://github.com/nhaarman/ListViewAnimations/blob/master/CONTRIBUTING.md) before you do.
 
 Developed By
 -----
 * Niek Haarman
 
+***
+
 Special Thanks
 -----
-* Roman Nurik - The ListViewAnimations library uses a modified version of his [SwipeDismissListViewTouchListener][5] to support swipe-to-dismiss.
-* DevBytes - Drag-and-Drop reordering is done by a modified version of their [DynamicListView][16].
+* DevBytes - Drag-and-Drop reordering is done by a rewritten version of their [DynamicListView][5].
 * Jake Warthon - To support devices pre-HC (<3.0), a copy of [NineOldAndroids][2] is included.
-* [Contributors][25]
+* [Contributors][7]
 
 License
 -----
 
-	Copyright 2013 Niek Haarman
+	Copyright 2014 Niek Haarman
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
@@ -94,26 +117,13 @@ License
  [1]: https://play.google.com/store/apps/details?id=com.haarman.listviewanimations
  [2]: http://nineoldandroids.com/
  [3]: http://en.wikipedia.org/wiki/Decorator_pattern
- [4]: https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.6.0.jar?raw=true
- [5]: https://gist.github.com/romannurik/2980593
- [6]: https://play.google.com/store/apps/details?id=com.haarman.treinverkeer
- [7]: https://www.twitter.com/niekfct
- [8]: https://plus.google.com/106017817931984343451
- [9]: https://play.google.com/store/apps/details?id=com.niek.runningapp
- [10]: https://play.google.com/store/apps/details?id=com.rentalcars.handset
- [11]: https://play.google.com/store/apps/details?id=com.getgoodcode.bart
- [12]: https://play.google.com/store/apps/details?id=com.haarman.ultimatettt
- [13]: https://github.com/nhaarman/ListViewAnimations/wiki
- [15]: https://play.google.com/store/apps/details?id=com.ducky.flashcards
- [16]: http://youtu.be/_BZIvjMgH-Q
- [17]: https://github.com/JakeWharton/NineOldAndroids/downloads
- [18]: https://play.google.com/store/apps/details?id=com.rageconsulting.android.lightflowlite
- [19]: https://play.google.com/store/apps/details?id=com.juannale.pearljamlyricsapp
- [20]: https://play.google.com/store/apps/details?id=com.cafetaso.foodinfo
- [21]: https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes
- [22]: https://play.google.com/store/apps/details?id=com.seedform.counter
- [23]: https://play.google.com/store/apps/details?id=de.dala.simplenews
- [24]: https://github.com/Dalanie/SimpleNews
- [25]: https://github.com/nhaarman/ListViewAnimations/graphs/contributors
- [26]: https://play.google.com/store/apps/details?id=com.franco.perappmodes
- [27]: https://play.google.com/store/apps/details?id=de.dala.simplenews
+ [5]: http://youtu.be/_BZIvjMgH-Q
+ [6]: https://github.com/JakeWharton/NineOldAndroids/downloads
+ [7]: https://github.com/nhaarman/ListViewAnimations/graphs/contributors
+ [8]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.0.0/listviewanimations_lib-core_3.0.0.jar
+ [9]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.0.0/listviewanimations_lib-manipulation_3.0.0.jar
+ [10]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.0.0/listviewanimations_lib-core-slh_3.0.0.jar
+ [11]: https://github.com/nhaarman/ListViewAnimations/wiki
+ [12]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.0.0/lib-core
+ [13]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.0.0/lib-manipulation
+ [14]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.0.0/lib-core-slh

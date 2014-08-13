@@ -1,0 +1,53 @@
+<!--
+  ~ Copyright 2014 Niek Haarman
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+    <string name="app_name">ListViewAnimations</string>
+    <string name="menu_donate">Buy me a beer!</string>
+    <string name="menu_beer">Buy me a beer!</string>
+    <string name="menu_beer2">Buy me 2 beers!</string>
+    <string name="menu_beer3">Buy me 5 beers!</string>
+    <string name="menu_beer4">Buy me 10 beers!</string>
+    <string name="menu_github">Github</string>
+    <string name="googlecards">Google cards</string>
+    <string name="gridview">GridView</string>
+    <string name="appearance">Appearance Animation</string>
+    <string name="stickylistheaders">StickyListHeaders</string>
+    <string name="limit">Limit to 2</string>
+    <string name="itemmanipulation">Item Manipulation</string>
+    <string name="gridviewexample">GridView</string>
+    <string name="draganddrop">Drag and Drop</string>
+    <string name="dynamiclistview">DynamicListView</string>
+    <string name="animateaddition">Animate addition</string>
+    <string name="expandablelistitemadapter">Expand list items</string>
+    <string name="itemdeleted">Item deleted</string>
+    <string name="taptoundo">Tap to undo</string>
+    <string name="explainexpand">Tap on cards to expand or collapse them</string>
+    <string name="expandorcollapsecard">This is card number %d</string>
+    <string name="row_number">This is row number %d</string>
+    <string name="header">Header %d</string>
+    <string name="card_number">This is card %d</string>
+    <string name="thanks">Thank you!</string>
+    <string name="exception">Oops! Something went wrong!</string>
+    <string name="moved">\'%1$s\' moved to position %2$s</string>
+    <string name="removed_positions">Removed positions: %s</string>
+    <string name="tap_to_insert">Tap on an item to insert a new item</string>
+    <string name="newly_added_item">This is newly added item %d</string>
+
+    <string name="activity_dynamiclistview_header">Touch the grip or long press an item to drag.\nSwipe to dismiss.\nTap an item to insert a new item.</string>
+
+</resources>

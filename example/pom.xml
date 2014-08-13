@@ -1,147 +1,222 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<!--
+  ~ Copyright 2014 Niek Haarman
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 
-    <parent>
-        <groupId>com.haarman.listviewanimations</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>example</artifactId>
-    <packaging>apk</packaging>
+	<parent>
+		<groupId>com.nhaarman.listviewanimations</groupId>
+		<artifactId>parent</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
 
-    <name>ListViewAnimations (Example)</name>
+	<artifactId>example</artifactId>
+	<packaging>apk</packaging>
 
-    <dependencies>
-        <!-- Android -->
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>support-v4</artifactId>
-        </dependency>
+	<name>ListViewAnimations (Example)</name>
 
-        <!-- Library -->
-        <dependency>
-            <groupId>com.haarman.listviewanimations</groupId>
-            <artifactId>listviewanimations</artifactId>
-            <version>${project.version}</version>
-            <type>apklib</type>
-        </dependency>
+	<dependencies>
+		<!-- Android -->
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>support-v4</artifactId>
+		</dependency>
 
-        <!-- Testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+		<!-- Library -->
+		<dependency>
+			<groupId>com.nhaarman.listviewanimations</groupId>
+			<artifactId>lib-core-slh</artifactId>
+			<version>${project.version}</version>
+			<type>apklib</type>
+		</dependency>
+		<dependency>
+			<groupId>com.nhaarman.listviewanimations</groupId>
+			<artifactId>lib-manipulation</artifactId>
+			<version>${project.version}</version>
+			<type>apklib</type>
+		</dependency>
+	</dependencies>
 
-    <build>
-        <sourceDirectory>src</sourceDirectory>
-        <plugins>
-            <plugin>
-                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                <artifactId>android-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <id>runLint</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>lint</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<androidManifestFile>${project.basedir}/src/main/AndroidManifest.xml</androidManifestFile>
+					<resourceDirectory>${project.basedir}/src/main/res</resourceDirectory>
+					<aidlSourceDirectory>${project.basedir}/src/main/aidl</aidlSourceDirectory>
+				</configuration>
+			</plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <type>jar</type>
-                                    <file>${project.build.directory}/${project.build.finalName}.jar</file>
-                                </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<id>attach-artifact</id>
+						<goals>
+							<goal>attach-artifact</goal>
+						</goals>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<type>jar</type>
+									<file>${project.build.directory}/${project.build.finalName}.jar</file>
+								</artifact>
+							</artifacts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <quiet>true</quiet>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on 
+					the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.jayway.maven.plugins.android.generation2
+										</groupId>
+										<artifactId>android-maven-plugin</artifactId>
+										<versionRange>[3.8.2,)</versionRange>
+										<goals>
+											<goal>consume-aar</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
-    <profiles>
-        <profile>
-            <id>release</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<id>release</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>signing</id>
+								<goals>
+									<goal>sign</goal>
+									<goal>verify</goal>
+								</goals>
+								<phase>package</phase>
+								<inherited>true</inherited>
+								<configuration>
+									<includes>
+										<include>${project.build.directory}/${project.artifactId}.apk</include>
+									</includes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+						<artifactId>android-maven-plugin</artifactId>
+						<inherited>true</inherited>
+						<configuration>
+							<release>true</release>
+							<sign>
+								<debug>false</debug>
+							</sign>
+							<zipalign>
+								<skip>false</skip>
+								<verbose>true</verbose>
+								<outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk</outputApk>
+							</zipalign>
+							<manifest>
+								<debuggable>false</debuggable>
+							</manifest>
+						</configuration>
+						<executions>
+							<execution>
+								<id>alignApk</id>
+								<phase>package</phase>
+								<goals>
+									<goal>zipalign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright 2014 Niek Haarman
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    tools:ignore="UnusedAttribute">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="4dp"
+        android:scrollbarStyle="outsideOverlay">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="4dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:onClick="onGoogleCardsExampleClicked">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:scaleType="center"
+                android:src="@drawable/img_main_googlecards" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/pink_transparent"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="@string/googlecards"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+
+            </FrameLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:layout_marginBottom="4dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="onItemManipulationClicked">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:scaleType="center"
+                    android:src="@drawable/img_main_itemmanipulation" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/red_transparent"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/itemmanipulation"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </FrameLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="1"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="onAppearanceClicked">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:scaleType="center"
+                    android:src="@drawable/img_main_appearance" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/blue_transparent"
+                    android:padding="12dp">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/appearance"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </FrameLayout>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="onGridViewExampleClicked">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:scaleType="center"
+                    android:src="@drawable/img_main_gridview" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/green_transparent"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/gridview"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </FrameLayout>
+
+            </FrameLayout>
+
+
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="1"
+                android:background="@color/purple_transparent"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="onSLHClicked">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:scaleType="center"
+                    android:src="@drawable/img_main_stickylistheaders" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/purple_transparent"
+                    android:padding="12dp">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/stickylistheaders"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </FrameLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp" />
+
+    </LinearLayout>
+</ScrollView>
