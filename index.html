@@ -1,59 +1,39 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="ListViewAnimations : Easily add animations to your ListView items!" />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-    <title>ListViewAnimations</title>
+    <title>ListViewAnimations by nhaarman</title>
   </head>
 
   <body>
+    <header>
+      <div class="inner">
+        <h1>ListViewAnimations</h1>
+        <h2>Easily add animations to your ListView items!</h2>
+        <a href="https://github.com/nhaarman/ListViewAnimations" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/nhaarman/ListViewAnimations">View on GitHub</a>
-
-          <h1 id="project_title">ListViewAnimations</h1>
-          <h2 id="project_tagline">Easily add animations to your ListView items!</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/nhaarman/ListViewAnimations/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/nhaarman/ListViewAnimations/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a name="listviewanimations-play-store-demo" class="anchor" href="#listviewanimations-play-store-demo"><span class="octicon octicon-link"></span></a>ListViewAnimations (<a href="https://play.google.com/store/apps/details?id=com.haarman.listviewanimations">Play Store Demo</a>)</h1>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="listviewanimations-play-store-demo-" class="anchor" href="#listviewanimations-play-store-demo-"><span class="octicon octicon-link"></span></a>ListViewAnimations (<a href="https://play.google.com/store/apps/details?id=com.haarman.listviewanimations">Play Store Demo</a>) <a href="https://travis-ci.org/nhaarman/ListViewAnimations"><img src="https://travis-ci.org/nhaarman/ListViewAnimations.svg" alt="Build Status"></a>
+</h1>
 
 <p>ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
-Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
-A mention to haarman.niek [at] gmail.com about your app using this library is very welcome! Start your message's title with <code>[LVA]</code>.</p>
-
-<h2>
-<a name="known-applications-using-listviewanimations" class="anchor" href="#known-applications-using-listviewanimations"><span class="octicon octicon-link"></span></a>Known applications using ListViewAnimations</h2>
-
-<ul>
-<li>Ultimate Tic-Tac-Toe (<a href="https://play.google.com/store/apps/details?id=com.haarman.ultimatettt">Play Store</a>)</li>
-<li>Light Flow Lite - LED Control (<a href="https://play.google.com/store/apps/details?id=com.rageconsulting.android.lightflowlite">Play Store</a>)</li>
-<li>TreinVerkeer (<a href="https://play.google.com/store/apps/details?id=com.haarman.treinverkeer">Play Store</a>)</li>
-<li>Running Coach (<a href="https://play.google.com/store/apps/details?id=com.niek.runningapp">Play Store</a>)</li>
-<li>Pearl Jam Lyrics (<a href="https://play.google.com/store/apps/details?id=com.juannale.pearljamlyricsapp">Play Store</a>)</li>
-<li>Calorie Chart (<a href="https://play.google.com/store/apps/details?id=com.cafetaso.foodinfo">Play Store</a>)</li>
-<li>Car Hire (<a href="https://play.google.com/store/apps/details?id=com.rentalcars.handset">Play Store</a>)</li>
-<li>Super BART (<a href="https://play.google.com/store/apps/details?id=com.getgoodcode.bart">Play Store</a>)</li>
-<li>DK FlashCards (<a href="https://play.google.com/store/apps/details?id=com.ducky.flashcards">Play Store</a>)</li>
-<li>Counter Plus (Tally Counter) (<a href="https://play.google.com/store/apps/details?id=com.seedform.counter">Play Store</a>)</li>
-<li>Voorlees Verhaaltjes 2.0 (<a href="https://play.google.com/store/apps/details?id=sa.voorleesVerhaaltjes">Play Store</a>)</li>
-</ul><p>If you want your app to be listed as well please contact me via <a href="https://plus.google.com/106017817931984343451">Google Plus</a>, or send me an email at haarman.niek [at] gmail.com, starting the title with <code>[LVA]</code>.</p>
+Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.</p>
 
 <h2>
 <a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
@@ -61,31 +41,34 @@ A mention to haarman.niek [at] gmail.com about your app using this library is ve
 <p>ListViewAnimations provides the following features:</p>
 
 <ul>
-<li>Appearance animations for items in ListViews, GridViews, and other AbsListViews;
+<li>Appearance animations for items in <code>ListViews</code>, <code>GridViews</code>, other <code>AbsListViews</code>;
 
 <ul>
-<li>Built in animations include Alpha, SwingRightIn, SwingLeftIn, SwingBottomIn, SwingRightIn and ScaleIn.</li>
+<li>Built in animations include <code>Alpha</code>, <code>SwingRightIn</code>, <code>SwingLeftIn</code>, <code>SwingBottomIn</code>, <code>SwingRightIn</code> and <code>ScaleIn</code>.</li>
 <li>Other animations can easily be added</li>
+<li>StickyListHeaders is supported, other implementations can easily be added.</li>
 </ul>
 </li>
-<li>Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo (and optionally count down);</li>
+<li>Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo;</li>
 <li>Drag-and-Drop reordering;</li>
 <li>Animate dismissal of items;</li>
+<li>Animate addition of items;</li>
 <li>Smoothly expand your items to reveal more content;</li>
-</ul><h2>
+</ul><p><img src="https://github.com/nhaarman/ListViewAnimations/raw/master/demo.gif" alt="" title="Demo gif"></p>
+
+<h2>
 <a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
 
-<ul>
-<li>In Eclipse, just import the library as an Android library project.</li>
-<li>Project &gt; Clean to generate the binaries you need, like R.java, etc.</li>
-<li>Then, just add ListViewAnimations as a dependency to your existing project and you're good to go!</li>
-</ul><p><strong>Or</strong>:</p>
+<p>The library consists of separate modules:</p>
 
 <ul>
-<li><a href="https://github.com/nhaarman/ListViewAnimations/blob/master/com.haarman.listviewanimations-2.6.0.jar?raw=true">Download the .jar file</a></li>
-<li><a href="https://github.com/JakeWharton/NineOldAndroids/downloads">Download the latest NineOldAndroids .jar file</a></li>
-<li>Add the .jar files to your project's <code>libs</code> folder, or add them as external jars to your project's build path.</li>
-</ul><p><strong>Or</strong>:</p>
+<li>
+<code>lib-core</code>: The core of the library, and contains appearance animations.</li>
+<li>
+<code>lib-manipulation</code>: Contains the item manipulation options, such as Swipe-to-Dismiss, and Drag-and-Drop.</li>
+<li>
+<code>lib-core-slh</code>: An extension of <code>lib-core</code> to support <code>StickyListHeaders</code>.</li>
+</ul><p>When using <code>lib-manipulation</code> or <code>lib-core-slh</code>, <code>lib-core</code> is included as well.</p>
 
 <p>Add the following to your <code>build.gradle</code>:</p>
 
@@ -93,49 +76,212 @@ A mention to haarman.niek [at] gmail.com about your app using this library is ve
     mavenCentral()
 }
 
-dependencies{
-    compile 'com.nhaarman.listviewanimations:library:2.6.0'
+dependencies {
+    compile 'com.nhaarman.listviewanimations:lib-core:3.0.+'
+    compile 'com.nhaarman.listviewanimations:lib-manipulation:3.0.+'
+    compile 'com.nhaarman.listviewanimations:lib-core-slh:3.0.+'
 }
 </code></pre>
 
 <p><strong>Or</strong>:</p>
 
+<ul>
+<li>Download the jar files you need:
+
+<ul>
+<li><a href="https://github.com/nhaarman/ListViewAnimations/releases/download/3.0.0/listviewanimations_lib-core_3.0.0.jar"><code>lib-core</code></a></li>
+<li><a href="https://github.com/nhaarman/ListViewAnimations/releases/download/3.0.0/listviewanimations_lib-manipulation_3.0.0.jar"><code>lib-manipulation</code></a></li>
+<li><a href="https://github.com/nhaarman/ListViewAnimations/releases/download/3.0.0/listviewanimations_lib-core-slh_3.0.0.jar"><code>lib-core-slh</code></a></li>
+</ul>
+</li>
+<li><a href="https://github.com/JakeWharton/NineOldAndroids/downloads">Download the latest NineOldAndroids .jar file</a></li>
+<li>Add the .jar files to your project's <code>libs</code> folder, or add them as external jars to your project's build path.</li>
+</ul><p><strong>Or</strong>:</p>
+
 <p>Add the following to your <code>pom.xml</code>:</p>
 
 <pre><code>&lt;dependency&gt;
     &lt;groupId&gt;com.nhaarman.listviewanimations&lt;/groupId&gt;
-    &lt;artifactId&gt;library&lt;/artifactId&gt;
-    &lt;version&gt;2.6.0&lt;/version&gt;
+    &lt;artifactId&gt;lib-core&lt;/artifactId&gt;
+    &lt;version&gt;3.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.nhaarman.listviewanimations&lt;/groupId&gt;
+    &lt;artifactId&gt;lib-manipulation&lt;/artifactId&gt;
+    &lt;version&gt;3.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.nhaarman.listviewanimations&lt;/groupId&gt;
+    &lt;artifactId&gt;lib-core-slh&lt;/artifactId&gt;
+    &lt;version&gt;3.0.0&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 
 <h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
-
-<p>Please refer to the <a href="https://github.com/nhaarman/ListViewAnimations/wiki">Wiki</a> pages to learn more about how to use this library.</p>
-
-<h2>
 <a name="contribute" class="anchor" href="#contribute"><span class="octicon octicon-link"></span></a>Contribute</h2>
 
-<p>Please do! I'm happy to review and accept pull requests.
-Also if you've created an awesome appearance animation that you'd like to share, let 'em come!</p>
+<p>Please do! I'm happy to review and accept pull requests.<br>
+Please read <a href="https://github.com/nhaarman/ListViewAnimations/blob/master/CONTRIBUTING.md">Contributing</a> before you do.</p>
 
 <h2>
 <a name="developed-by" class="anchor" href="#developed-by"><span class="octicon octicon-link"></span></a>Developed By</h2>
 
 <ul>
 <li>Niek Haarman</li>
-</ul><h2>
+</ul><hr><h1>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting started</h1>
+
+<p>Assuming you have included the library as described above, the next section describes how you can get started with adding animations to your ListViews.</p>
+
+<ul>
+<li><a href="http://nhaarman.github.io/ListViewAnimations#appearance-animations">Appearance animations</a></li>
+<li>
+<a href="http://nhaarman.github.io/ListViewAnimations#dynamiclistview">DynamicListView</a>
+
+<ul>
+<li><a href="http://nhaarman.github.io/ListViewAnimations#draganddrop">Drag and drop</a></li>
+<li><a href="http://nhaarman.github.io/ListViewAnimations#swipetodismiss">Swipe to dismiss</a></li>
+<li><a href="http://nhaarman.github.io/ListViewAnimations#Swipetodismisswithcontextualundo">Swipe to dismiss with contextual undo</a></li>
+</ul>
+</li>
+<li><a href="http://nhaarman.github.io/ListViewAnimations#stickylistheaders">StickyListHeaders</a></li>
+</ul><hr><h2>
+<a name="appearance-animations" class="anchor" href="#appearance-animations"><span class="octicon octicon-link"></span></a>Appearance animations</h2>
+
+<p>The classes in the <code>com.nhaarman.listviewanimations.appearance</code> package provide a way for you to add more fancyness to your ListViews when showing data for the first time. Instead of snapping the items into view, the <code>AnimationAdapter</code> class lets you gradually present your items to the user:</p>
+
+<p><img src="https://raw.githubusercontent.com/nhaarman/ListViewAnimations/gh-pages/images/demo_appearance.gif" alt="Default behaviour on the left, animated behaviour on the right"><sub><em>Default behavior on the left, animated behaviour on the right.</em></sub></p>
+
+<p>To implement this behaviour, you need to wrap your original adapter in an <code>AlphaInAnimationAdapter</code>:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">MyAdapter</span> <span class="n">myAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">MyAdapter</span><span class="o">();</span>
+<span class="n">AlphaInAnimationAdapter</span> <span class="n">animationAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">AlphaInAnimationAdapter</span><span class="o">(</span><span class="n">myAdapter</span><span class="o">);</span>
+<span class="n">animationAdapter</span><span class="o">.</span><span class="na">setAbsListView</span><span class="o">(</span><span class="n">mListView</span><span class="o">);</span>
+<span class="n">mListView</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="n">animationAdapter</span><span class="o">);</span>
+</pre></div>
+
+<p>You can create your own <code>AnimationAdapter</code> implementation, or use one of the predefined ones:</p>
+
+<ul>
+<li><code>AlphaAnimationAdapter</code></li>
+<li><code>ScaleInAnimationAdapter</code></li>
+<li><code>SwingBottomInAnimationAdapter</code></li>
+<li><code>SwingLeftInAnimationAdapter</code></li>
+<li><code>SwingRightInAnimationAdapter</code></li>
+</ul><hr><h2>
+<a name="dynamiclistview" class="anchor" href="#dynamiclistview"><span class="octicon octicon-link"></span></a>DynamicListView</h2>
+
+<p>The <code>DynamicListView</code> is a convenience class which provides drag and drop, swipe to dismiss and insertion animation functionality. It has been designed to combine these features in a most optimal way:</p>
+
+<p><img src="https://raw.githubusercontent.com/nhaarman/ListViewAnimations/gh-pages/images/dynamiclistview.gif" alt="The DynamicListView in action"><sub><em>The DynamicListView in action.</em></sub></p>
+
+<p>To use the <code>DynamicListView</code>, include the following in your xml layout:</p>
+
+<div class="highlight highlight-xml"><pre><span class="nt">&lt;com.nhaarman.listviewanimations.itemmanipulation.DynamicListView</span>
+        <span class="na">android:id=</span><span class="s">"@+id/dynamiclistview"</span>
+        <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+        <span class="na">android:layout_height=</span><span class="s">"match_parent"</span> <span class="nt">/&gt;</span>
+</pre></div>
+
+<h3>
+<a name="drag-and-drop" class="anchor" href="#drag-and-drop"><span class="octicon octicon-link"></span></a>Drag and drop</h3>
+
+<p>To enable drag and drop, simply call <code>enableDragAndDrop()</code> on your <code>DynamicListView</code>, and specify when items are draggable. To specify a child view which can be touched to initiate a drag, you can use a <code>TouchViewDraggableManager</code>:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">mDynamicListView</span><span class="o">.</span><span class="na">enableDragAndDrop</span><span class="o">();</span>
+<span class="n">mDynamicListView</span><span class="o">.</span><span class="na">setDraggableManager</span><span class="o">(</span><span class="k">new</span> <span class="nf">TouchViewDraggableManager</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">itemrow_gripview</span><span class="o">));</span>
+</pre></div>
+
+<p>You can also initiate a drag by calling <code>startDragging(int)</code>, for example in an <code>OnItemLongClickListener</code>:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">mDynamicListView</span><span class="o">.</span><span class="na">enableDragAndDrop</span><span class="o">();</span>
+<span class="n">mDynamicListView</span><span class="o">.</span><span class="na">setOnItemLongClickListener</span><span class="o">(</span>
+    <span class="k">new</span> <span class="nf">OnItemLongClickListener</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onItemLongClick</span><span class="o">(</span><span class="kd">final</span> <span class="n">AdapterView</span><span class="o">&lt;?&gt;</span> <span class="n">parent</span><span class="o">,</span> <span class="kd">final</span> <span class="n">View</span> <span class="n">view</span><span class="o">,</span>
+                                       <span class="kd">final</span> <span class="kt">int</span> <span class="n">position</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">mDynamicListView</span><span class="o">.</span><span class="na">startDragging</span><span class="o">(</span><span class="n">position</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">);</span>
+</pre></div>
+
+<p><sub>Note that drag and drop functionality is only available on devices running ICS (API 14) and above.</sub></p>
+
+<h3>
+<a name="swipe-to-dismiss" class="anchor" href="#swipe-to-dismiss"><span class="octicon octicon-link"></span></a>Swipe to dismiss</h3>
+
+<p>To enable swipe to dismiss, call <code>enableSwipeToDismiss(OnDismissCallback)</code> on your <code>DynamicListView</code>. The <code>OnDismissCallback</code> you must supply is notified of dismissed items, and is responsible for deleting those items from the dataset:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">mDynamicListView</span><span class="o">.</span><span class="na">enableSwipeToDismiss</span><span class="o">(</span>
+    <span class="k">new</span> <span class="nf">OnDismissCallback</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onDismiss</span><span class="o">(</span><span class="nd">@NonNull</span> <span class="kd">final</span> <span class="n">ViewGroup</span> <span class="n">listView</span><span class="o">,</span> <span class="nd">@NonNull</span> <span class="kd">final</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">reverseSortedPositions</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">position</span> <span class="o">:</span> <span class="n">reverseSortedPositions</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">mAdapter</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">position</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">);</span>
+</pre></div>
+
+<h3>
+<a name="swipe-to-dismiss-with-contextual-undo" class="anchor" href="#swipe-to-dismiss-with-contextual-undo"><span class="octicon octicon-link"></span></a>Swipe to dismiss with contextual undo</h3>
+
+<p>To enable swipe to dismiss with contextual undo, you can wrap your adapter in either a <code>SimpleSwipeUndoAdapter</code>, or a <code>TimedUndoAdapter</code>. The latter will automatically dismiss an item after a while when it has been brought into the undo state.</p>
+
+<div class="highlight highlight-java"><pre><span class="n">MyAdapter</span> <span class="n">myAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">MyAdapter</span><span class="o">();</span>
+<span class="n">SimpleSwipeUndoAdapter</span> <span class="n">swipeUndoAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">SimpleSwipeUndoAdapter</span><span class="o">(</span><span class="n">myAdapter</span><span class="o">,</span> <span class="n">MyActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span>
+    <span class="k">new</span> <span class="nf">OnDismissCallback</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onDismiss</span><span class="o">(</span><span class="nd">@NonNull</span> <span class="kd">final</span> <span class="n">ViewGroup</span> <span class="n">listView</span><span class="o">,</span> <span class="nd">@NonNull</span> <span class="kd">final</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">reverseSortedPositions</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">position</span> <span class="o">:</span> <span class="n">reverseSortedPositions</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">mAdapter</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">position</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">);</span>
+<span class="n">swipeUndoAdapter</span><span class="o">.</span><span class="na">setAbsListView</span><span class="o">(</span><span class="n">mDynamicListView</span><span class="o">);</span>
+<span class="n">mDynamicListView</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="n">swipeUndoAdapter</span><span class="o">);</span>
+<span class="n">mDynamicListView</span><span class="o">.</span><span class="na">enableSimpleSwipeUndo</span><span class="o">();</span>
+</pre></div>
+
+<h3>
+<a name="animate-addition" class="anchor" href="#animate-addition"><span class="octicon octicon-link"></span></a>Animate addition</h3>
+
+<p>The <code>DynamicListView</code> can also animate the addition of items in your dataset. To use this functionality, simply let your adapter implement <code>Insertable</code>, and call one of the <code>insert</code> methods on the <code>DynamicListView</code>:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">MyInsertableAdapter</span> <span class="n">myAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">MyInsertableAdapter</span><span class="o">();</span> <span class="c1">// MyInsertableAdapter implements Insertable</span>
+<span class="n">mDynamicListView</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="n">myAdapter</span><span class="o">);</span>
+<span class="n">mDynamicListView</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">myItem</span><span class="o">);</span> <span class="c1">// myItem is of the type the adapter represents.</span>
+</pre></div>
+
+<hr><h2>
+<a name="stickylistheaders" class="anchor" href="#stickylistheaders"><span class="octicon octicon-link"></span></a>StickyListHeaders</h2>
+
+<p>ListViewAnimations also supports appearance animations on <code>StickyListHeaderListView</code>s. You must wrap your <code>AnimationAdapter</code> in a <code>StickyListHeadersAdapterDecorator</code>:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">StickyListHeadersListView</span> <span class="n">listView</span> <span class="o">=</span> <span class="o">(...);</span>
+<span class="n">AlphaInAnimationAdapter</span> <span class="n">animationAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">AlphaInAnimationAdapter</span><span class="o">(</span><span class="n">adapter</span><span class="o">);</span>
+<span class="n">StickyListHeadersAdapterDecorator</span> <span class="n">stickyListHeadersAdapterDecorator</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">StickyListHeadersAdapterDecorator</span><span class="o">(</span><span class="n">animationAdapter</span><span class="o">);</span>
+<span class="n">stickyListHeadersAdapterDecorator</span><span class="o">.</span><span class="na">setStickyListHeadersListView</span><span class="o">(</span><span class="n">listView</span><span class="o">);</span>
+<span class="n">listView</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="n">stickyListHeadersAdapterDecorator</span><span class="o">);</span>
+</pre></div>
+
+<p>Just like with the normal <code>ListView</code>, you can use any implementation of the <code>AnimationAdapter</code> class.</p>
+
+<hr><h2>
 <a name="special-thanks" class="anchor" href="#special-thanks"><span class="octicon octicon-link"></span></a>Special Thanks</h2>
 
 <ul>
-<li>Roman Nurik - The ListViewAnimations library uses a modified version of his <a href="https://gist.github.com/romannurik/2980593">SwipeDismissListViewTouchListener</a> to support swipe-to-dismiss.</li>
-<li>DevBytes - Drag-and-Drop reordering is done by a modified version of their <a href="http://youtu.be/_BZIvjMgH-Q">DynamicListView</a>.</li>
-<li>Jake Warthon - To support devices pre-HC (&lt;3.0), a jar file of <a href="http://nineoldandroids.com/">NineOldAndroids</a> is included.</li>
+<li>DevBytes - Drag-and-Drop reordering is done by a rewritten version of their <a href="http://youtu.be/_BZIvjMgH-Q">DynamicListView</a>.</li>
+<li>Jake Warthon - To support devices pre-HC (&lt;3.0), a copy of <a href="http://nineoldandroids.com/">NineOldAndroids</a> is included.</li>
+<li><a href="https://github.com/nhaarman/ListViewAnimations/graphs/contributors">Contributors</a></li>
 </ul><h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
-<pre><code>Copyright 2013 Niek Haarman
+<pre><code>Copyright 2014 Niek Haarman
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -149,18 +295,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 </code></pre>
-      </section>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/nhaarman/ListViewAnimations/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/nhaarman/ListViewAnimations/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/nhaarman/ListViewAnimations"></a> is maintained by <a href="https://github.com/nhaarman">nhaarman</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">ListViewAnimations maintained by <a href="https://github.com/nhaarman">nhaarman</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-              <script type="text/javascript">
+            <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -170,7 +324,6 @@ limitations under the License.
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
-
 
   </body>
 </html>
