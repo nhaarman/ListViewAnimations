@@ -11,13 +11,12 @@ ListViewAnimations provides the following features:
     * Built in animations include `Alpha`, `SwingRightIn`, `SwingLeftIn`, `SwingBottomIn`, `SwingRightIn` and `ScaleIn`.
 	* Other animations can easily be added
     * StickyListHeaders is supported, other implementations can easily be added.
-* Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo (and optionally count down);
+* Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo;
 * Drag-and-Drop reordering;
-* Animate dismissal of items;
 * Animate addition of items;
 * Smoothly expand your items to reveal more content;
 
-![alt text](https://github.com/nhaarman/ListViewAnimations/raw/master/demo.gif "Demo gif")
+![](https://raw.githubusercontent.com/nhaarman/ListViewAnimations/gh-pages/images/dynamiclistview.gif "DynamicListView")
 
 Setup
 -----
@@ -28,7 +27,7 @@ The library consists of separate modules:
 * `lib-manipulation`: Contains the item manipulation options, such as Swipe-to-Dismiss, and Drag-and-Drop.
 * `lib-core-slh`: An extension of `lib-core` to support `StickyListHeaders`.
 
-For `lib-manipulation` and `lib-core-slh`, `lib-core` is required to be present as well.
+When using `lib-manipulation` or `lib-core-slh`, `lib-core` is included as well.
 
 Add the following to your `build.gradle`:
 
@@ -70,7 +69,8 @@ Add the following to your `pom.xml`:
 		<artifactId>lib-core-slh</artifactId>
 		<version>3.0.0</version>
 	</dependency>
-	
+
+
 Getting Started
 -----
 
@@ -79,19 +79,21 @@ Getting Started
     * `lib-core` - [Javadoc][12]
     * `lib-manipulation` - [Javadoc][13]
     * `lib-core-slh` - [Javadoc][14]
-	
+
 Contribute
 -----
 Please do! I'm happy to review and accept pull requests.  
-Please read the [Contributing wiki](https://github.com/nhaarman/ListViewAnimations/wiki/Contributing) before you do.
+Please read [Contributing](https://github.com/nhaarman/ListViewAnimations/blob/master/CONTRIBUTING.md) before you do.
 
 Developed By
 -----
 * Niek Haarman
 
+***
+
 Special Thanks
 -----
-* DevBytes - Drag-and-Drop reordering is done by a modified version of their [DynamicListView][5].
+* DevBytes - Drag-and-Drop reordering is done by a rewritten version of their [DynamicListView][5].
 * Jake Warthon - To support devices pre-HC (<3.0), a copy of [NineOldAndroids][2] is included.
 * [Contributors][7]
 
