@@ -1,5 +1,7 @@
-ListViewAnimations ([Play Store Demo][1]) [![Build Status](https://travis-ci.org/nhaarman/ListViewAnimations.svg)](https://travis-ci.org/nhaarman/ListViewAnimations)
+ListViewAnimations [![Build Status](https://travis-ci.org/nhaarman/ListViewAnimations.svg)](https://travis-ci.org/nhaarman/ListViewAnimations)  
 ===========
+[Play Store Demo][1]
+
 
 ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
 Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
@@ -13,11 +15,10 @@ ListViewAnimations provides the following features:
     * StickyListHeaders is supported, other implementations can easily be added.
 * Swipe-to-Dismiss, Swipe-To-Dismiss with contextual undo;
 * Drag-and-Drop reordering;
-* Animate dismissal of items;
 * Animate addition of items;
 * Smoothly expand your items to reveal more content;
 
-![](https://github.com/nhaarman/ListViewAnimations/raw/master/demo.gif "Demo gif")
+![](https://raw.githubusercontent.com/nhaarman/ListViewAnimations/gh-pages/images/dynamiclistview.gif "DynamicListView")
 
 Setup
 -----
