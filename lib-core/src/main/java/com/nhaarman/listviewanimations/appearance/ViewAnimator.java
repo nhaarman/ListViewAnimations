@@ -35,8 +35,6 @@ import com.nineoldandroids.view.ViewHelper;
 /**
  * A class which decides whether given Views should be animated based on their position: each View should only be animated once.
  * It also calculates proper animation delays for the views.
- *
- * @param  the implementation of the ListView being used.
  */
 public class ViewAnimator {
 

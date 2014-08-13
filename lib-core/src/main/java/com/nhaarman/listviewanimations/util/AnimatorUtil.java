@@ -33,12 +33,12 @@ public class AnimatorUtil {
         Animator[] allAnimators = new Animator[childAnimators.length + animators.length + 1];
         int i;
 
-        for (i = 0; i < animators.length; ++i) {
-            allAnimators[i] = animators[i];
+        for (i = 0; i < childAnimators.length; ++i) {
+            allAnimators[i] = childAnimators[i];
         }
 
-        for (Animator childAnimator : childAnimators) {
-            allAnimators[i] = childAnimator;
+        for (Animator animator : animators) {
+            allAnimators[i] = animator;
             ++i;
         }
 

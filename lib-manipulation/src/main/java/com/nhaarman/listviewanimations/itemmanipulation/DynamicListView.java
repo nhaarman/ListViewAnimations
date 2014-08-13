@@ -89,7 +89,7 @@ public class DynamicListView extends ListView {
      * that is possibly set to animate insertions.
      */
     @Nullable
-    private AnimateAdditionAdapter<?> mAnimateAdditionAdapter;
+    private AnimateAdditionAdapter<Object> mAnimateAdditionAdapter;
 
     @Nullable
     private SwipeUndoAdapter mSwipeUndoAdapter;
