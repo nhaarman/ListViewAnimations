@@ -22,6 +22,8 @@ apply from: '../generateJavadoc.gradle'
 apply from: '../publishGhPages.gradle'
 
 dependencies {
+    provided 'com.android.support:support-annotations:20.0.0'
+
     compile project(':lib-core')
 
     compile 'se.emilsjolander:stickylistheaders:2.5.0'

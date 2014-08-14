@@ -22,8 +22,9 @@ apply from: '../generateJavadoc.gradle'
 apply from: '../publishGhPages.gradle'
 
 dependencies {
+    provided 'com.android.support:support-annotations:20.0.0'
+
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.android.support:support-annotations:+'
 
     /* Test libraries */
     androidTestCompile ('org.mockito:mockito-core:1.9.5')  { exclude group: 'org.hamcrest' }
