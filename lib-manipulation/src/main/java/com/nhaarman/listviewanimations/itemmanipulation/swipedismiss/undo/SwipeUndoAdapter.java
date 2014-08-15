@@ -23,6 +23,7 @@ import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.DismissableManager;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
 
 /**
@@ -33,7 +34,7 @@ public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
     /**
      * The {@link SwipeUndoTouchListener} that is set to the {@link android.widget.AbsListView}.
      */
-    @NonNull
+    @Nullable
     private SwipeUndoTouchListener mSwipeUndoTouchListener;
 
     /**
@@ -61,6 +62,18 @@ public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
         if (!(listViewWrapper.getListView() instanceof DynamicListView)) {
             listViewWrapper.getListView().setOnTouchListener(mSwipeUndoTouchListener);
         }
+    }
+
+    /**
+     * Sets the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.DismissableManager} to specify which views can or cannot be swiped.
+     *
+     * @param dismissableManager {@code null} for no restrictions.
+     */
+    public void setDismissableManager(@Nullable final DismissableManager dismissableManager) {
+        if (mSwipeUndoTouchListener == null) {
+            throw new IllegalStateException("You must call setAbsListView() first.");
+        }
+        mSwipeUndoTouchListener.setDismissableManager(dismissableManager);
     }
 
     public void setSwipeUndoTouchListener(@NonNull final SwipeUndoTouchListener swipeUndoTouchListener) {
