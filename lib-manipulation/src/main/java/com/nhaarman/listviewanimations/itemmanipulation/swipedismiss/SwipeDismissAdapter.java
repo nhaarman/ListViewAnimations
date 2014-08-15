@@ -73,6 +73,18 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     }
 
     /**
+     * Sets the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.DismissableManager} to specify which views can or cannot be swiped.
+     *
+     * @param dismissableManager {@code null} for no restrictions.
+     */
+    public void setDismissableManager(@Nullable final DismissableManager dismissableManager) {
+        if (mDismissTouchListener == null) {
+            throw new IllegalStateException("You must call setAbsListView() first.");
+        }
+        mDismissTouchListener.setDismissableManager(dismissableManager);
+    }
+
+    /**
      * If the adapter's {@link android.widget.AbsListView} is hosted inside a parent(/grand-parent/etc) that can scroll horizontally, horizontal swipes won't
      * work, because the parent will prevent touch-events from reaching the {@code AbsListView}.
      * <p/>
