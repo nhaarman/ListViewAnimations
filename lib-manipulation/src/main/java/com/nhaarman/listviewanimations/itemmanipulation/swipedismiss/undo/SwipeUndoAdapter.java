@@ -33,7 +33,7 @@ public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
     /**
      * The {@link SwipeUndoTouchListener} that is set to the {@link android.widget.AbsListView}.
      */
-    @NonNull
+    @Nullable
     private SwipeUndoTouchListener mSwipeUndoTouchListener;
 
     /**
