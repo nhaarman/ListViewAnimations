@@ -102,6 +102,11 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
     private boolean mSwiping;
 
     /**
+     * Indicates whether the user can dismiss the current item.
+     */
+    private boolean mCanDismissCurrent;
+
+    /**
      * The {@code VelocityTracker} used in the swipe movement.
      */
     @Nullable
@@ -329,9 +334,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
         }
 
         int downPosition = AdapterViewUtil.getPositionForView(mListViewWrapper, downView);
-        if (!isDismissable(downPosition)) {
-            return false;
-        }
+        mCanDismissCurrent = isDismissable(downPosition);
 
         /* Check if we are processing the item at this position */
         if (mCurrentPosition == downPosition || downPosition >= mVirtualListCount) {
@@ -447,8 +450,12 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
         }
 
         if (mSwiping) {
-            ViewHelper.setTranslationX(mSwipingView, deltaX);
-            ViewHelper.setAlpha(mSwipingView, Math.max(mMinimumAlpha, Math.min(1, 1 - 2 * Math.abs(deltaX) / mViewWidth)));
+            if (mCanDismissCurrent) {
+                ViewHelper.setTranslationX(mSwipingView, deltaX);
+                ViewHelper.setAlpha(mSwipingView, Math.max(mMinimumAlpha, Math.min(1, 1 - 2 * Math.abs(deltaX) / mViewWidth)));
+            } else {
+                ViewHelper.setTranslationX(mSwipingView, deltaX * 0.1f);
+            }
             return true;
         }
         return false;
@@ -474,23 +481,25 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
         }
 
         if (mSwiping) {
-            float deltaX = motionEvent.getRawX() - mDownX;
-
-            mVelocityTracker.addMovement(motionEvent);
-            mVelocityTracker.computeCurrentVelocity(1000);
-
-            float velocityX = Math.abs(mVelocityTracker.getXVelocity());
-            float velocityY = Math.abs(mVelocityTracker.getYVelocity());
-
             boolean shouldDismiss = false;
             boolean dismissToRight = false;
 
-            if (Math.abs(deltaX) > mViewWidth / 2) {
-                shouldDismiss = true;
-                dismissToRight = deltaX > 0;
-            } else if (mMinFlingVelocity <= velocityX && velocityX <= mMaxFlingVelocity && velocityY < velocityX) {
-                shouldDismiss = true;
-                dismissToRight = mVelocityTracker.getXVelocity() > 0;
+            if (mCanDismissCurrent) {
+                float deltaX = motionEvent.getRawX() - mDownX;
+
+                mVelocityTracker.addMovement(motionEvent);
+                mVelocityTracker.computeCurrentVelocity(1000);
+
+                float velocityX = Math.abs(mVelocityTracker.getXVelocity());
+                float velocityY = Math.abs(mVelocityTracker.getYVelocity());
+
+                if (Math.abs(deltaX) > mViewWidth / 2) {
+                    shouldDismiss = true;
+                    dismissToRight = deltaX > 0;
+                } else if (mMinFlingVelocity <= velocityX && velocityX <= mMaxFlingVelocity && velocityY < velocityX) {
+                    shouldDismiss = true;
+                    dismissToRight = mVelocityTracker.getXVelocity() > 0;
+                }
             }
 
 
@@ -575,6 +584,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
         mSwipingView = null;
         mCurrentPosition = AdapterView.INVALID_POSITION;
         mSwiping = false;
+        mCanDismissCurrent = false;
     }
 
     /**
