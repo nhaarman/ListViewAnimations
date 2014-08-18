@@ -223,7 +223,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
      */
     public void notifyDataSetChanged() {
         if (mListViewWrapper.getAdapter() != null) {
-            mVirtualListCount = mListViewWrapper.getAdapter().getCount();
+            mVirtualListCount = mListViewWrapper.getCount() - mListViewWrapper.getHeaderViewsCount();
         }
     }
 
@@ -294,8 +294,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
             return false;
         }
 
-        if (mVirtualListCount == -1) {
-            mVirtualListCount = mListViewWrapper.getAdapter().getCount();
+        if (mVirtualListCount == -1 || mActiveSwipeCount == 0) {
+            mVirtualListCount = mListViewWrapper.getCount() - mListViewWrapper.getHeaderViewsCount();
         }
 
         if (mViewWidth < 2) {
@@ -505,8 +505,10 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
 
             if (shouldDismiss) {
                 beforeViewFling(mCurrentView, mCurrentPosition);
+                if (willLeaveDataSetOnFling(mCurrentView, mCurrentPosition)) {
+                    mVirtualListCount--;
+                }
                 flingCurrentView(dismissToRight);
-                mVirtualListCount--;
             } else {
                 onCancelSwipe(mCurrentView, mCurrentPosition);
                 restoreCurrentViewTranslation();
@@ -533,7 +535,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
      *
      * @param view         the parent {@link android.view.View}.
      * @param position     the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
-     * @param flingToRight {@code true} {@code true} if the {@code View} should be flinged to the right, {@code false} if it should be flinged to the left.
+     * @param flingToRight {@code true} if the {@code View} should be flinged to the right, {@code false} if it should be flinged to the left.
      */
     private void flingView(@NonNull final View view, final int position, final boolean flingToRight) {
         if (mViewWidth < 2) {
@@ -622,6 +624,17 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
      */
     protected void beforeViewFling(@NonNull final View view, final int position) {
     }
+
+    /**
+     * Returns whether flinging the item at given position in the current state
+     * would cause it to be removed from the data set.
+     *
+     * @param view the {@code View} that would be flinged.
+     * @param position the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
+     *
+     * @return {@code true} if the item would leave the data set, {@code false} otherwise.
+     */
+    protected abstract boolean willLeaveDataSetOnFling(@NonNull View view, int position);
 
     /**
      * Called after the fling animation of a succesful swipe ends.

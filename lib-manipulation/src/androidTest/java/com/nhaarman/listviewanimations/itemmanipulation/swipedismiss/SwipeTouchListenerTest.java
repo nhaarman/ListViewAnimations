@@ -217,6 +217,11 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
         }
 
         @Override
+        protected boolean willLeaveDataSetOnFling(@NonNull final View view, final int position) {
+            return true;
+        }
+
+        @Override
         protected void afterViewFling(@NonNull final View view, final int position) {
             afterViewFlingCalled = true;
             this.position = position;

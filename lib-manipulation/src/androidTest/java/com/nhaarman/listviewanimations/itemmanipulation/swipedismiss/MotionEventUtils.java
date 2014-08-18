@@ -69,7 +69,7 @@ public class MotionEventUtils {
         int[] listViewCoords = new int[2];
         absListView.getLocationOnScreen(listViewCoords);
 
-        View view = absListView.getChildAt(position);
+        View view = absListView.getChildAt(position - absListView.getFirstVisiblePosition());
         int y = (int) (ViewHelper.getY(view) + view.getHeight() / 2) + listViewCoords[1];
 
         List<MotionEvent> results = new ArrayList<>();
@@ -100,6 +100,7 @@ public class MotionEventUtils {
     private static class DispatchTouchEventRunnable implements Runnable {
 
         private final MotionEvent mEvent;
+
         private final View mView;
 
         private DispatchTouchEventRunnable(final MotionEvent event, final View view) {
