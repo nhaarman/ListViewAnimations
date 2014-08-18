@@ -146,7 +146,7 @@ public class SwipeUndoTouchListenerTest extends ActivityInstrumentationTestCase2
         int lastPosition = mAbsListView.getAdapter().getCount() - 1;
         mAbsListView.smoothScrollToPosition(lastPosition);
 
-        Thread.sleep(5000); // Wait for the smooth scroll to settle;
+        Thread.sleep(15000); // Wait for the smooth scroll to settle;
 
         dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, lastPosition); // Swipe to show undo
         dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, lastPosition); // Swipe to dismiss
@@ -167,7 +167,7 @@ public class SwipeUndoTouchListenerTest extends ActivityInstrumentationTestCase2
         int lastPosition = mAbsListView.getAdapter().getCount() - 1;
         mAbsListView.smoothScrollToPosition(lastPosition);
 
-        Thread.sleep(5000); // Wait for the smooth scroll to settle;
+        Thread.sleep(15000); // Wait for the smooth scroll to settle;
 
         dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, lastPosition); // Swipe to show undo
         dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, lastPosition); // Swipe to dismiss
