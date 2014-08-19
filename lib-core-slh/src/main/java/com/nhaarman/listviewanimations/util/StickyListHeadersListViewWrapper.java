@@ -41,7 +41,7 @@ public class StickyListHeadersListViewWrapper implements ListViewWrapper {
     @Nullable
     @Override
     public View getChildAt(final int index) {
-        return mListView.getChildAt(index);
+        return mListView.getListChildAt(index);
     }
 
     @Override
