@@ -74,7 +74,7 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
      * Tests whether dismissing an item triggers a call to OnDismissCallback#onDismiss.
      */
     public void testSimpleDismiss() throws InterruptedException {
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 0);
 
         verify(mOnDismissCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{0}));
     }
@@ -83,8 +83,8 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
      * Tests whether dismissing the first and second items triggers a correct call to OnDismissCallback#onDismiss.
      */
     public void testDoubleDismiss() throws InterruptedException {
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 1);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 0);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 1);
 
         verify(mOnDismissCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{1, 0}));
     }
@@ -93,9 +93,9 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
      * Tests whether dismissing mixed positions triggers a correct call to OnDismissCallback#onDismiss.
      */
     public void testComplexDismiss() throws InterruptedException {
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 3);
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 2);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 0);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 3);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 2);
 
         verify(mOnDismissCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{3, 2, 0}));
     }

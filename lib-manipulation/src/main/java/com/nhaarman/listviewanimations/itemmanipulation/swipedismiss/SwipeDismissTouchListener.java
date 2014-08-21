@@ -130,6 +130,11 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     }
 
     @Override
+    protected boolean willLeaveDataSetOnFling(@NonNull final View view, final int position) {
+        return true;
+    }
+
+    @Override
     protected void afterViewFling(@NonNull final View view, final int position) {
         performDismiss(view, position);
     }

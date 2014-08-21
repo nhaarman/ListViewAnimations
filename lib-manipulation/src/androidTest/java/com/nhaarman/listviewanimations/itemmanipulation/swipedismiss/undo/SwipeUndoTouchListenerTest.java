@@ -23,19 +23,12 @@ import android.widget.AbsListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeTouchListenerTestActivity;
 import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 
 import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.dispatchSwipeMotionEvents;
 import static com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.MotionEventUtils.dispatchSwipeMotionEventsAndWait;
-import static org.mockito.AdditionalMatchers.aryEq;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.AdditionalMatchers.*;
+import static org.mockito.Mockito.*;
 
 public class SwipeUndoTouchListenerTest extends ActivityInstrumentationTestCase2<SwipeTouchListenerTestActivity> {
 
@@ -51,6 +44,8 @@ public class SwipeUndoTouchListenerTest extends ActivityInstrumentationTestCase2
 
     @Mock
     private UndoCallback mUndoCallback;
+
+    private SwipeUndoTouchListener mSwipeUndoTouchListener;
 
 
     public SwipeUndoTouchListenerTest() {
@@ -68,8 +63,8 @@ public class SwipeUndoTouchListenerTest extends ActivityInstrumentationTestCase2
         mActivity = getActivity();
         mAbsListView = mActivity.getAbsListView();
 
-        View.OnTouchListener swipeUndoTouchListener = new SwipeUndoTouchListener(new AbsListViewWrapper(mAbsListView), mUndoCallback);
-        mAbsListView.setOnTouchListener(swipeUndoTouchListener);
+        mSwipeUndoTouchListener = new SwipeUndoTouchListener(new AbsListViewWrapper(mAbsListView), mUndoCallback);
+        mAbsListView.setOnTouchListener(mSwipeUndoTouchListener);
 
         getInstrumentation().waitForIdleSync();
     }
@@ -78,7 +73,7 @@ public class SwipeUndoTouchListenerTest extends ActivityInstrumentationTestCase2
      * Tests whether swiping an item once triggers UndoCallback#onUndoShown.
      */
     public void testUndoShown() throws InterruptedException {
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 0);
 
         verify(mUndoCallback).onUndoShown(any(View.class), eq(0));
     }
@@ -87,12 +82,12 @@ public class SwipeUndoTouchListenerTest extends ActivityInstrumentationTestCase2
      * Tests whether swiping an item twice triggers UndoCallback#onDismiss.
      */
     public void testDismiss() throws InterruptedException {
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 0);
 
         verify(mUndoCallback).onUndoShown(any(View.class), eq(0));
         verify(mUndoCallback, never()).onDismiss(any(View.class), anyInt());
 
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 0);
 
         verify(mUndoCallback).onDismiss(any(View.class), eq(0));
     }
@@ -101,15 +96,15 @@ public class SwipeUndoTouchListenerTest extends ActivityInstrumentationTestCase2
      * Tests whether swiping multiple items triggers onUndoShown, but not onDismiss.
      */
     public void testMultipleUndo() throws InterruptedException {
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 0);
 
         verify(mUndoCallback).onUndoShown(any(View.class), eq(0));
 
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 1);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 1);
 
         verify(mUndoCallback).onUndoShown(any(View.class), eq(1));
 
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 2);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 2);
 
         verify(mUndoCallback).onUndoShown(any(View.class), eq(2));
 
@@ -120,18 +115,66 @@ public class SwipeUndoTouchListenerTest extends ActivityInstrumentationTestCase2
      * Tests whether multiple dismisses are correctly handled.
      */
     public void testMultipleDismisses() throws InterruptedException {
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 1);
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 2);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 0);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 1);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 2);
 
         verify(mUndoCallback, times(3)).onUndoShown(any(View.class), anyInt());
         verify(mUndoCallback, never()).onDismiss(any(View.class), anyInt());
 
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 0);
-        dispatchSwipeMotionEvents(mActivity, mAbsListView, 1);
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 2);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 0);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 1);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 2);
 
         verify(mUndoCallback, times(3)).onDismiss(any(View.class), anyInt());
         verify(mUndoCallback).onDismiss(eq(mAbsListView), aryEq(new int[]{2, 1, 0}));
+    }
+
+    /**
+     * Tests whether the last item is dismissable after some other items have been dismissed.
+     */
+    public void testLastItemDismissable_itemsDismissed() throws InterruptedException {
+        /* Given some items are dismissed */
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 0);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 1);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 2);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 0);
+        dispatchSwipeMotionEvents(getInstrumentation(), mAbsListView, 1);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 2);
+
+        /* When trying to dismiss the last item */
+        int lastPosition = mAbsListView.getAdapter().getCount() - 1;
+        mAbsListView.smoothScrollToPosition(lastPosition);
+
+        Thread.sleep(15000); // Wait for the smooth scroll to settle;
+
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, lastPosition); // Swipe to show undo
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, lastPosition); // Swipe to dismiss
+
+        /* Then I should be notified of dismissing the last item. */
+        verify(mUndoCallback).onDismiss(any(View.class), eq(lastPosition));
+    }
+
+    /**
+     * Tests whether the last item is dismissable after some an item has been dismissed and undone.
+     */
+    public void testLastItemDismissable_itemUndone() throws InterruptedException {
+        /* Given an item is dismissed and undone */
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 0);
+        mSwipeUndoTouchListener.undo(mAbsListView.getChildAt(0));
+
+        /* When trying to dismiss the last item */
+        int lastPosition = mAbsListView.getAdapter().getCount() - 1;
+        mAbsListView.smoothScrollToPosition(lastPosition);
+
+        Thread.sleep(5000); // Wait for the smooth scroll to settle;
+
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, lastPosition); // Swipe to show undo
+        mAbsListView.smoothScrollToPosition(lastPosition);
+        Thread.sleep(5000);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, lastPosition); // Swipe to dismiss
+
+        /* Then I should be notified of dismissing the last item. */
+        verify(mUndoCallback).onDismiss(any(View.class), eq(lastPosition));
     }
 }

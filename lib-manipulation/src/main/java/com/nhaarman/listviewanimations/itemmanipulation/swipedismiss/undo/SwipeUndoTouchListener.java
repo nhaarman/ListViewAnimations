@@ -78,6 +78,11 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     }
 
     @Override
+    protected boolean willLeaveDataSetOnFling(@NonNull final View view, final int position) {
+        return mUndoPositions.contains(position);
+    }
+
+    @Override
     protected void afterViewFling(@NonNull final View view, final int position) {
         if (mUndoPositions.contains(position)) {
             mUndoPositions.remove(position);

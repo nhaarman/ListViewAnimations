@@ -59,7 +59,7 @@ public class MotionEventUtils {
         dynamicListView.getLocationOnScreen(location);
 
         View view = dynamicListView.getChildAt(fromPosition);
-        float fromY = (int) (view.getY() ) + location[1];
+        float fromY = (int) (view.getY()) + location[1];
 
         View toView = dynamicListView.getChildAt(dynamicListView.getLastVisiblePosition());
         float toY = (int) (toView.getY() + toView.getHeight()) + location[1] + 2;
@@ -90,7 +90,19 @@ public class MotionEventUtils {
 
     public static void dispatchMotionEvents(final Instrumentation instrumentation, final Iterable<MotionEvent> motionEvents, final boolean wait) throws InterruptedException {
         for (final MotionEvent event : motionEvents) {
-            instrumentation.sendPointerSync(event);
+            int i = 0;
+            boolean success = false;
+            do {
+                try {
+                    instrumentation.sendPointerSync(event);
+                    success = true;
+                } catch (SecurityException e) {
+                    i++;
+                    if (i > 3) {
+                        throw e;
+                    }
+                }
+            } while (i < 3 && !success);
             Thread.sleep(100);
         }
 
