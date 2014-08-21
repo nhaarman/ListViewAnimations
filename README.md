@@ -36,9 +36,9 @@ Add the following to your `build.gradle`:
 	}
 	
 	dependencies {
-		compile 'com.nhaarman.listviewanimations:lib-core:3.0.+'
-		compile 'com.nhaarman.listviewanimations:lib-manipulation:3.0.+'
-		compile 'com.nhaarman.listviewanimations:lib-core-slh:3.0.+'
+		compile 'com.nhaarman.listviewanimations:lib-core:3.0.0@aar'
+		compile 'com.nhaarman.listviewanimations:lib-manipulation:3.0.0@aar'
+		compile 'com.nhaarman.listviewanimations:lib-core-slh:3.0.0@aar'
 	}
 
 **Or**:
