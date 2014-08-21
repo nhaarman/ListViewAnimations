@@ -19,6 +19,8 @@ package com.nhaarman.listviewanimations.itemmanipulation.swipedismiss;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Debug;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -54,6 +56,22 @@ public class SwipeTouchListenerTestActivity extends Activity {
         mListView.setAdapter(myListAdapter);
 
         setContentView(mListView);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int[] location = new int[2];
+        mListView.getLocationOnScreen(location);
+
+        ev = MotionEvent.obtain(ev.getDownTime(), ev.getEventTime(), ev.getAction(), ev.getX() - location[0], ev.getY() - location[1], ev.getMetaState());
+        boolean handled = mListView.onInterceptTouchEvent(ev);
+        if (!handled) {
+            handled = mListView.dispatchTouchEvent(ev);
+        }
+        if (!handled) {
+            handled = onTouchEvent(ev);
+        }
+        return handled;
     }
 
     public AbsListView getAbsListView() {
