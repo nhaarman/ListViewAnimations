@@ -38,7 +38,7 @@ script:
   - if [[ $LINT == 'true' ]]; then gradle lint ; fi
 
 after_success:
-  - if [[ $MAVEN == 'true' && $TRAVIS_BRANCH == 'dev' && $TRAVIS_PULL_REQUEST == 'false' ]]; then gradle :lib-core:uploadArchives :lib-manipulation:uploadArchives :lib-manipulation-slh:uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
+  - if [[ $MAVEN == 'true' && $TRAVIS_BRANCH == 'dev' && $TRAVIS_PULL_REQUEST == 'false' ]]; then gradle :lib-core:uploadArchives :lib-manipulation:uploadArchives :lib-core-slh:uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
 
 notifications:
   email: false
