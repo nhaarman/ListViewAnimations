@@ -36,9 +36,9 @@ Add the following to your `build.gradle`:
 	}
 	
 	dependencies {
-		compile 'com.nhaarman.listviewanimations:lib-core:3.0.0@aar'
-		compile 'com.nhaarman.listviewanimations:lib-manipulation:3.0.0@aar'
-		compile 'com.nhaarman.listviewanimations:lib-core-slh:3.0.0@aar'
+		compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
+		compile 'com.nhaarman.listviewanimations:lib-manipulation:3.1.0@aar'
+		compile 'com.nhaarman.listviewanimations:lib-core-slh:3.1.0@aar'
 	}
 
 **Or**:
@@ -57,17 +57,17 @@ Add the following to your `pom.xml`:
 	<dependency>
 		<groupId>com.nhaarman.listviewanimations</groupId>
 		<artifactId>lib-core</artifactId>
-		<version>3.0.0</version>
+		<version>3.1.0</version>
 	</dependency>
 	<dependency>
 		<groupId>com.nhaarman.listviewanimations</groupId>
 		<artifactId>lib-manipulation</artifactId>
-		<version>3.0.0</version>
+		<version>3.1.0</version>
 	</dependency>
 	<dependency>
 		<groupId>com.nhaarman.listviewanimations</groupId>
 		<artifactId>lib-core-slh</artifactId>
-		<version>3.0.0</version>
+		<version>3.1.0</version>
 	</dependency>
 
 
@@ -120,10 +120,10 @@ License
  [5]: http://youtu.be/_BZIvjMgH-Q
  [6]: https://github.com/JakeWharton/NineOldAndroids/downloads
  [7]: https://github.com/nhaarman/ListViewAnimations/graphs/contributors
- [8]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.0.0/listviewanimations_lib-core_3.0.0.jar
- [9]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.0.0/listviewanimations_lib-manipulation_3.0.0.jar
- [10]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.0.0/listviewanimations_lib-core-slh_3.0.0.jar
+ [8]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.1.0/listviewanimations_lib-core_3.1.0.jar
+ [9]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.1.0/listviewanimations_lib-manipulation_3.1.0.jar
+ [10]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.1.0/listviewanimations_lib-core-slh_3.1.0.jar
  [11]: https://github.com/nhaarman/ListViewAnimations/wiki
- [12]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.0.0/lib-core
- [13]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.0.0/lib-manipulation
- [14]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.0.0/lib-core-slh
+ [12]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.1.0/lib-core
+ [13]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.1.0/lib-manipulation
+ [14]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.1.0/lib-core-slh
