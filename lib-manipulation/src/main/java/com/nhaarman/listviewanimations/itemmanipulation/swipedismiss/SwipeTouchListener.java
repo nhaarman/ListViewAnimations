@@ -347,8 +347,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
 
         disableHorizontalScrollContainerIfNecessary(motionEvent, downView);
 
-        mDownX = motionEvent.getRawX();
-        mDownY = motionEvent.getRawY();
+        mDownX = motionEvent.getX();
+        mDownY = motionEvent.getY();
 
         mCurrentView = downView;
         mSwipingView = getSwipeView(downView);
@@ -370,10 +370,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
     private View findDownView(@NonNull final MotionEvent motionEvent) {
         Rect rect = new Rect();
         int childCount = mListViewWrapper.getChildCount();
-        int[] listViewCoords = new int[2];
-        mListViewWrapper.getListView().getLocationOnScreen(listViewCoords);
-        int x = (int) motionEvent.getRawX() - listViewCoords[0];
-        int y = (int) motionEvent.getRawY() - listViewCoords[1];
+        int x = (int) motionEvent.getX();
+        int y = (int) motionEvent.getY();
         View downView = null;
         for (int i = 0; i < childCount && downView == null; i++) {
             View child = mListViewWrapper.getChildAt(i);
@@ -429,8 +427,8 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
 
         mVelocityTracker.addMovement(motionEvent);
 
-        float deltaX = motionEvent.getRawX() - mDownX;
-        float deltaY = motionEvent.getRawY() - mDownY;
+        float deltaX = motionEvent.getX() - mDownX;
+        float deltaY = motionEvent.getY() - mDownY;
 
         if (Math.abs(deltaX) > mSlop && Math.abs(deltaX) > Math.abs(deltaY)) {
             if (!mSwiping) {
@@ -485,7 +483,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
             boolean dismissToRight = false;
 
             if (mCanDismissCurrent) {
-                float deltaX = motionEvent.getRawX() - mDownX;
+                float deltaX = motionEvent.getX() - mDownX;
 
                 mVelocityTracker.addMovement(motionEvent);
                 mVelocityTracker.computeCurrentVelocity(1000);
