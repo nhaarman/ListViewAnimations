@@ -18,6 +18,7 @@ package com.haarman.listviewanimations.itemmanipulation;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,8 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCa
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+
+import java.util.Arrays;
 
 public class DynamicListViewActivity extends MyListActivity {
 
@@ -78,7 +81,7 @@ public class DynamicListViewActivity extends MyListActivity {
 
         MyListAdapter(final Context context) {
             mContext = context;
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 20; i++) {
                 add(mContext.getString(R.string.row_number, i));
             }
         }
@@ -139,9 +142,12 @@ public class DynamicListViewActivity extends MyListActivity {
         }
     }
 
-    private static class MyOnDismissCallback implements OnDismissCallback {
+    private class MyOnDismissCallback implements OnDismissCallback {
 
         private final ArrayAdapter<String> mAdapter;
+
+        @Nullable
+        private Toast mToast;
 
         MyOnDismissCallback(final ArrayAdapter<String> adapter) {
             mAdapter = adapter;
@@ -152,6 +158,16 @@ public class DynamicListViewActivity extends MyListActivity {
             for (int position : reverseSortedPositions) {
                 mAdapter.remove(position);
             }
+
+            if (mToast != null) {
+                mToast.cancel();
+            }
+            mToast = Toast.makeText(
+                    DynamicListViewActivity.this,
+                    getString(R.string.removed_positions, Arrays.toString(reverseSortedPositions)),
+                    Toast.LENGTH_LONG
+            );
+            mToast.show();
         }
     }
 

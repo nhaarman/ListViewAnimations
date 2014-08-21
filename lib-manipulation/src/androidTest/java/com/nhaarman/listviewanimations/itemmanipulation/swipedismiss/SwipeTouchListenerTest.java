@@ -85,7 +85,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether swiping the first View triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testSwipeFirstViewCallback() throws InterruptedException {
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 0);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(true));
         assertThat(mSwipeTouchListener.position, is(0));
@@ -95,7 +95,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether swiping the first View from right to left triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testReverseSwipeFirstViewCallback() throws InterruptedException {
-        MotionEventUtils.dispatchReverseSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
+        MotionEventUtils.dispatchReverseSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 0);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(true));
         assertThat(mSwipeTouchListener.position, is(0));
@@ -105,10 +105,10 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      * Tests whether swiping the last View triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testSwipeLastViewCallback() throws InterruptedException {
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, mAbsListView.getLastVisiblePosition());
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, mAbsListView.getLastVisiblePosition() - 1);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(true));
-        assertThat(mSwipeTouchListener.position, is(mAbsListView.getLastVisiblePosition()));
+        assertThat(mSwipeTouchListener.position, is(mAbsListView.getLastVisiblePosition() - 1));
     }
 
     /**
@@ -116,7 +116,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      */
     public void testShortSwipe() throws InterruptedException {
         List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, 10, mViewWidth / 2 - mViewWidth / 10);
-        MotionEventUtils.dispatchMotionEventsAndWait(mActivity, mAbsListView, motionEvents);
+        MotionEventUtils.dispatchMotionEventsAndWait(getInstrumentation(), motionEvents);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(false));
     }
@@ -126,7 +126,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
      */
     public void testReverseShortSwipe() throws InterruptedException {
         List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, mViewWidth - 10, mViewWidth / 2 + mViewWidth / 10);
-        MotionEventUtils.dispatchMotionEventsAndWait(mActivity, mAbsListView, motionEvents);
+        MotionEventUtils.dispatchMotionEventsAndWait(getInstrumentation(), motionEvents);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(false));
     }
@@ -166,7 +166,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
         );
 
         List<MotionEvent> motionEvents = MotionEventUtils.createMotionEvents(mAbsListView, 0, 10, mViewWidth - 10);
-        MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents);
+        MotionEventUtils.dispatchMotionEvents(getInstrumentation(), motionEvents);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(false));
     }
@@ -180,12 +180,12 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
         assertThat(mSwipeTouchListener.isSwiping(), is(false));
 
         /* Send first half of the MotionEvents */
-        MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents.subList(0, motionEvents.size() / 2));
+        MotionEventUtils.dispatchMotionEvents(getInstrumentation(), motionEvents.subList(0, motionEvents.size() / 2));
 
         assertThat(mSwipeTouchListener.isSwiping(), is(true));
 
         /* Send second half of the MotionEvents */
-        MotionEventUtils.dispatchMotionEvents(mActivity, mAbsListView, motionEvents.subList(motionEvents.size() / 2, motionEvents.size()));
+        MotionEventUtils.dispatchMotionEvents(getInstrumentation(), motionEvents.subList(motionEvents.size() / 2, motionEvents.size()));
 
         assertThat(mSwipeTouchListener.isSwiping(), is(false));
     }
@@ -196,13 +196,13 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
     public void testEnableDisableSwipe() throws InterruptedException {
         mSwipeTouchListener.disableSwipe();
 
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 0);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(false));
 
         mSwipeTouchListener.enableSwipe();
 
-        dispatchSwipeMotionEventsAndWait(mActivity, mAbsListView, 0);
+        dispatchSwipeMotionEventsAndWait(getInstrumentation(), mAbsListView, 0);
 
         assertThat(mSwipeTouchListener.afterViewFlingCalled, is(true));
     }
@@ -210,10 +210,16 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
     private static class TestSwipeTouchListener extends SwipeTouchListener {
 
         boolean afterViewFlingCalled;
+
         int position;
 
         TestSwipeTouchListener(final AbsListViewWrapper absListViewWrapper) {
             super(absListViewWrapper);
+        }
+
+        @Override
+        protected boolean willLeaveDataSetOnFling(@NonNull final View view, final int position) {
+            return true;
         }
 
         @Override
