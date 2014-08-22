@@ -61,7 +61,7 @@ public class StickyListHeadersListViewWrapper implements ListViewWrapper {
 
     @Override
     public int getChildCount() {
-        return mListView.getChildCount();
+        return mListView.getWrappedList().getChildCount();
     }
 
     @Override
