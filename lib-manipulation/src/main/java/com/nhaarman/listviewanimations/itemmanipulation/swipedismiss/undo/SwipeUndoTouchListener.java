@@ -125,7 +125,7 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     /**
      * Dismisses all items that are in the undo state.
      */
-    public void dimissPending() {
+    public void dismissPending() {
         for (int position : mUndoPositions) {
             performDismiss(mUndoViews.get(position), position);
         }

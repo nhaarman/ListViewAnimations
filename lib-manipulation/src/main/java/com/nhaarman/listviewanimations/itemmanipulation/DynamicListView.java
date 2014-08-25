@@ -555,7 +555,7 @@ public class DynamicListView extends ListView {
 
             if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
                 if (mSwipeTouchListener instanceof SwipeUndoTouchListener) {
-                    ((SwipeUndoTouchListener) mSwipeTouchListener).dimissPending();
+                    ((SwipeUndoTouchListener) mSwipeTouchListener).dismissPending();
                 }
             }
         }
