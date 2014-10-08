@@ -28,6 +28,7 @@ import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
+import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nhaarman.listviewanimations.util.Insertable;
 import com.nhaarman.listviewanimations.util.Removable;
 import com.nineoldandroids.animation.Animator;
@@ -38,6 +39,11 @@ import com.nineoldandroids.animation.ValueAnimator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * An adapter for inserting rows into the {@link android.widget.ListView} with an animation. The root {@link android.widget.BaseAdapter} should implement {@link Insertable},
@@ -69,6 +75,23 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
     @NonNull
     private final Removable<T> mRemovable;
+
+    /**
+     * The {@link android.view.View}s that have been removed.
+     */
+    @NonNull
+    private final Collection<View> mRemovedViews = new LinkedList<>();
+
+    /**
+     * The removed positions.
+     */
+    @NonNull
+    private final List<Integer> mRemovedPositions = new LinkedList<>();
+
+    /**
+     * The number of active remove animations.
+     */
+    private int mActiveRemoveCount;
 
     @NonNull
     private final InsertQueue<T> mInsertQueue;
@@ -271,34 +294,58 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     }
 
     public void removeItem(final int position) {
+        removeItem(position, 1);
+    }
+
+    /**
+     * Remove items, starting at given index. Will show an leaving animation for the item.
+     * Will also call {@link Removable#remove(int)} of the root {@link android.widget.BaseAdapter}.
+     *
+     * @param position first item to remove.
+     * @param number number of items to remve
+     */
+    public void removeItem(final int position, final int number) {
         int headerViewsCount = getListViewWrapper().getHeaderViewsCount();
-        int realPos = position - headerViewsCount;
+        int  posRemovable;
         int firstVisiblePosition = getListViewWrapper().getFirstVisiblePosition();
         int lastVisiblePosition = getListViewWrapper().getLastVisiblePosition();
-        if (position < firstVisiblePosition || position > lastVisiblePosition) {
-            handleRemoveItem(position);
+
+        List<Animator> allAnimators = new ArrayList<Animator>();
+        for (int i = position; i < position + number; i++) {
+            if (i < firstVisiblePosition || i > lastVisiblePosition) {
+                mRemovedPositions.add(position);
+            } else {
+
+                View view = getListViewWrapper().getChildAt(i - firstVisiblePosition + headerViewsCount);
+                int originalHeight = view.getMeasuredHeight();
+
+                ValueAnimator heightAnimator = ValueAnimator.ofInt(originalHeight, 1);
+                heightAnimator.addUpdateListener(new HeightUpdater(view));
+
+                ValueAnimator[] customAnimators = getAdditionalAnimators(view, i, (ViewGroup) view.getParent());
+                ValueAnimator[] animators = new ValueAnimator[customAnimators.length + 1];
+                animators[0] = heightAnimator;
+                System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
+
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.playTogether(animators);
+
+                allAnimators.add(animatorSet);
+                animatorSet.addListener(new ShrinkToRemoveAnimationListener(i));
+
+                mRemovedViews.add(view);
+                mRemovedPositions.add(i);
+                mActiveRemoveCount++;
+            }
+        }
+        if (allAnimators.size() > 0) {
+            AnimatorSet allAnimatorSet = new AnimatorSet();
+            allAnimatorSet.playTogether(allAnimators);
+            allAnimatorSet.setDuration(mRemovalAnimationDurationMs);
+            allAnimatorSet.start();
         }
         else {
-            View view = getListViewWrapper().getChildAt(position - firstVisiblePosition + headerViewsCount);
-            int originalHeight = view.getMeasuredHeight();
-
-            ValueAnimator heightAnimator = ValueAnimator.ofInt(originalHeight, 1);
-            heightAnimator.addUpdateListener(new HeightUpdater(view));
-
-            ValueAnimator[] customAnimators = getAdditionalAnimators(view, position, (ViewGroup) view.getParent());
-            ValueAnimator[] animators = new ValueAnimator[customAnimators.length + 1];
-            animators[0] = heightAnimator;
-            System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
-            for (int i = 0; i < animators.length; i++) {
-                animators[i].setRepeatMode(ValueAnimator.REVERSE);
-            }
-
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(animators);
-
-            animatorSet.setDuration(mRemovalAnimationDurationMs);
-            animatorSet.addListener(new ShrinkToRemoveAnimationListener(position, view));
-            animatorSet.start();
+            finalizeRemove();
         }
     }
 
@@ -391,8 +438,60 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         }
     }
 
+    /**
+     *
+     * @param removedPositions the positions that have been dismissed.
+     */
+    protected void handleRemoval(@NonNull final List<Integer> removedPositions) {
+        if (!removedPositions.isEmpty()) {
+            Collections.sort(removedPositions, Collections.reverseOrder());
+
+            int[] removePositions = new int[removedPositions.size()];
+            int i = 0;
+            for (Integer removedPosition : removedPositions) {
+                removePositions[i] = removedPosition;
+                mRemovable.remove(removedPosition);
+                i++;
+            }
+        }
+    }
+
+    /**
+     * If necessary, remove removed object from the adapter,
+     * and restores the {@link android.view.View} presentations.
+     */
+    protected void finalizeRemove() {
+        if (mActiveRemoveCount == 0) {
+            restoreViewPresentations(mRemovedViews);
+            handleRemoval(mRemovedPositions);
+
+            mRemovedViews.clear();
+            mRemovedPositions.clear();
+        }
+    }
+
+    /**
+     * Restores the presentation of given {@link android.view.View}s by calling {@link #restoreViewPresentation(android.view.View)}.
+     */
+    protected void restoreViewPresentations(@NonNull final Iterable<View> views) {
+        for (View view : views) {
+            restoreViewPresentation(view);
+        }
+    }
+
+    protected void restoreViewPresentation(@NonNull final View view) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.height = 0;
+        view.setLayoutParams(layoutParams);
+    }
+
     private void handleRemoveItem(final int position) {
         mRemovable.remove(position);
+    }
+
+    protected void directRemove(final int position) {
+        mRemovedPositions.add(position);
+        finalizeRemove();
     }
 
     /**
@@ -413,24 +512,16 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     }
 
     private class ShrinkToRemoveAnimationListener extends ExpandAnimationListener {
-        protected final View mView;
-        private final int mOriginalHeight;
 
-        ShrinkToRemoveAnimationListener(final int position, final View view) {
+        ShrinkToRemoveAnimationListener(final int position) {
             super(position);
-            mView = view;
-            ViewGroup.LayoutParams layoutParams = mView.getLayoutParams();
-            mOriginalHeight = layoutParams.height;
-
         }
 
         @Override
         public void onAnimationEnd(final Animator animation) {
-            handleRemoveItem(mPosition);
             super.onAnimationEnd(animation);
-            ViewGroup.LayoutParams layoutParams = mView.getLayoutParams();
-            layoutParams.height = mOriginalHeight;
-            mView.setLayoutParams(layoutParams);
+            mActiveRemoveCount--;
+            finalizeRemove();
         }
     }
 }
