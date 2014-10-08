@@ -29,4 +29,6 @@ public interface Removable<T> {
      * @param index the index of the item which should be removed
      */
     T remove(int index);
+
+    int getCount();
 }

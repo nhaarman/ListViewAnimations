@@ -302,21 +302,25 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * Will also call {@link Removable#remove(int)} of the root {@link android.widget.BaseAdapter}.
      *
      * @param position first item to remove.
-     * @param number number of items to remve
+     * @param count number of items to remove
      */
-    public void removeItem(final int position, final int number) {
+    public void removeItem(final int position, final int count) {
         int headerViewsCount = getListViewWrapper().getHeaderViewsCount();
         int  posRemovable;
         int firstVisiblePosition = getListViewWrapper().getFirstVisiblePosition();
         int lastVisiblePosition = getListViewWrapper().getLastVisiblePosition();
 
         List<Animator> allAnimators = new ArrayList<Animator>();
-        for (int i = position; i < position + number; i++) {
+        for (int i = position; i < position + count; i++) {
             if (i < firstVisiblePosition || i > lastVisiblePosition) {
-                mRemovedPositions.add(position);
+                mRemovedPositions.add(i);
             } else {
 
                 View view = getListViewWrapper().getChildAt(i - firstVisiblePosition + headerViewsCount);
+                if (view == null) {
+                    mRemovedPositions.add(i);
+                    continue;
+                }
                 int originalHeight = view.getMeasuredHeight();
 
                 ValueAnimator heightAnimator = ValueAnimator.ofInt(originalHeight, 1);
@@ -399,6 +403,27 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             animatorSet.setDuration(mInsertionAnimationDurationMs);
             animatorSet.addListener(new ExpandAnimationListener(position));
             animatorSet.start();
+        } else if (mRemovedPositions.contains(position)) {
+            mRemovedViews.add(view);
+            mActiveRemoveCount++;
+            int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.AT_MOST);
+            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED);
+            view.measure(widthMeasureSpec, heightMeasureSpec);
+
+            int originalHeight = view.getMeasuredHeight();
+
+            ValueAnimator heightAnimator = ValueAnimator.ofInt(originalHeight, 1);
+            heightAnimator.addUpdateListener(new HeightUpdater(view));
+
+            ValueAnimator[] customAnimators = getAdditionalAnimators(view, position + getListViewWrapper().getHeaderViewsCount(), parent);
+            ValueAnimator[] animators = new ValueAnimator[customAnimators.length + 1];
+            animators[0] = heightAnimator;
+            System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
+
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(animators);
+            animatorSet.addListener(new ShrinkToRemoveAnimationListener(position));
+            animatorSet.start();
         }
 
         return view;
@@ -433,6 +458,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         @Override
         public void onAnimationUpdate(final ValueAnimator animation) {
             ViewGroup.LayoutParams layoutParams = mView.getLayoutParams();
+            if (layoutParams == null) return;
             layoutParams.height = (Integer) animation.getAnimatedValue();
             mView.setLayoutParams(layoutParams);
         }
@@ -449,9 +475,11 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             int[] removePositions = new int[removedPositions.size()];
             int i = 0;
             for (Integer removedPosition : removedPositions) {
-                removePositions[i] = removedPosition;
-                mRemovable.remove(removedPosition);
-                i++;
+                if (removedPosition < mRemovable.getCount()) {
+                    removePositions[i] = removedPosition;
+                    mRemovable.remove(removedPosition);
+                    i++;
+                }
             }
         }
     }

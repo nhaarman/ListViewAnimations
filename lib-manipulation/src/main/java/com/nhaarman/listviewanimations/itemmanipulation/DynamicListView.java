@@ -211,7 +211,7 @@ public class DynamicListView extends ListView {
             }
 
             if (rootAdapter instanceof Insertable) {
-                mAnimateAdditionAdapter = new AnimateAdditionAdapter((BaseAdapter) wrappedAdapter);
+                mAnimateAdditionAdapter = additionRemovalAnimatedAdapter((BaseAdapter) wrappedAdapter);
                 mAnimateAdditionAdapter.setListView(this);
                 wrappedAdapter = mAnimateAdditionAdapter;
             }
@@ -222,6 +222,10 @@ public class DynamicListView extends ListView {
         if (mDragAndDropHandler != null) {
             mDragAndDropHandler.setAdapter(adapter);
         }
+    }
+
+    public AnimateAdditionAdapter<Object> additionRemovalAnimatedAdapter(final BaseAdapter wrappedAdapter) {
+        return new AnimateAdditionAdapter( wrappedAdapter);
     }
 
     @Override
@@ -391,10 +395,23 @@ public class DynamicListView extends ListView {
      * @throws java.lang.IllegalStateException if the adapter that was set does not implement {@link com.nhaarman.listviewanimations.util.Insertable}.
      */
     public <T> void remove(@NonNull final int position) {
+        remove(position, 1);
+    }
+
+    /**
+     * Remove items starting at given index. Will show an leave animation for the item if item is visible.
+     * Will also call {@link com.nhaarman.listviewanimations.util.Removable#remove(int)} of the root {@link android.widget.BaseAdapter}.
+     *
+     * @param position the index of the item to remove
+     * @param count number of items to remove
+     *
+     * @throws java.lang.IllegalStateException if the adapter that was set does not implement {@link com.nhaarman.listviewanimations.util.Insertable}.
+     */
+    public <T> void remove(@NonNull final int position, final int count) {
         if (mAnimateAdditionAdapter == null) {
             throw new IllegalStateException("Adapter should implement Removable!");
         }
-        ((AnimateAdditionAdapter<T>) mAnimateAdditionAdapter).removeItem(position);
+        ((AnimateAdditionAdapter<T>) mAnimateAdditionAdapter).removeItem(position, count);
     }
 
 
