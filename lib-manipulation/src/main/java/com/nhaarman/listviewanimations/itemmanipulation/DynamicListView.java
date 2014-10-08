@@ -383,6 +383,22 @@ public class DynamicListView extends ListView {
     }
 
     /**
+     * Remove an item at given index. Will show an leave animation for the item if item is visible.
+     * Will also call {@link com.nhaarman.listviewanimations.util.Removable#remove(int)} of the root {@link android.widget.BaseAdapter}.
+     *
+     * @param position the index of the item to remove
+     *
+     * @throws java.lang.IllegalStateException if the adapter that was set does not implement {@link com.nhaarman.listviewanimations.util.Insertable}.
+     */
+    public <T> void remove(@NonNull final int position) {
+        if (mAnimateAdditionAdapter == null) {
+            throw new IllegalStateException("Adapter should implement Removable!");
+        }
+        ((AnimateAdditionAdapter<T>) mAnimateAdditionAdapter).removeItem(position);
+    }
+
+
+    /**
      * Sets the {@link com.nhaarman.listviewanimations.itemmanipulation.dragdrop.DraggableManager} to be used
      * for determining whether an item should be dragged when the user issues a down {@code MotionEvent}.
      * <p/>

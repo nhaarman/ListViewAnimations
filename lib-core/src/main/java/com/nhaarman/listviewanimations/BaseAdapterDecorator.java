@@ -29,6 +29,7 @@ import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 import com.nhaarman.listviewanimations.util.Insertable;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nhaarman.listviewanimations.util.ListViewWrapperSetter;
+import com.nhaarman.listviewanimations.util.Removable;
 import com.nhaarman.listviewanimations.util.Swappable;
 
 /**
@@ -36,7 +37,7 @@ import com.nhaarman.listviewanimations.util.Swappable;
  * <p/>
  * Classes extending this class can override methods and provide extra functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, Insertable, ListViewWrapperSetter {
+public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, Insertable, Removable, ListViewWrapperSetter {
 
     /**
      * The {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
@@ -242,6 +243,17 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
             ((Insertable) mDecoratedBaseAdapter).add(index, item);
         } else {
             Log.w("ListViewAnimations", "Warning: add called on an adapter that does not implement Insertable!");
+        }
+    }
+
+    @Override
+    public Object remove(final int index) {
+        if (mDecoratedBaseAdapter instanceof Removable) {
+            //noinspection rawtypes
+            return ((Removable) mDecoratedBaseAdapter).remove(index);
+        } else {
+            Log.w("ListViewAnimations", "Warning: remove called on an adapter that does not implement Removable!");
+            return null;
         }
     }
 }

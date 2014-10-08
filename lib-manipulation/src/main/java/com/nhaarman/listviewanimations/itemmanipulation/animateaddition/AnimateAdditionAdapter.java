@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -29,6 +30,7 @@ import android.widget.ListView;
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 import com.nhaarman.listviewanimations.util.Insertable;
+import com.nhaarman.listviewanimations.util.Removable;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -50,7 +52,7 @@ import java.util.Collection;
  * - Call {@link AnimateAdditionAdapter#insert(int, Object)} to animate the addition of an item.
  * <p/>
  * Extend this class and override {@link AnimateAdditionAdapter#getAdditionalAnimators(android.view.View,
- * android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
+ * int, android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
  */
 public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
@@ -61,11 +63,15 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     private static final long DEFAULT_INSERTION_ANIMATION_MS = 300;
 
     private long mInsertionAnimationDurationMs = DEFAULT_INSERTION_ANIMATION_MS;
+    private long mRemovalAnimationDurationMs = DEFAULT_INSERTION_ANIMATION_MS;
 
     private static final String ALPHA = "alpha";
 
     @NonNull
     private final Insertable<T> mInsertable;
+
+    @NonNull
+    private final Removable<T> mRemovable;
 
     @NonNull
     private final InsertQueue<T> mInsertQueue;
@@ -90,6 +96,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         }
 
         mInsertable = (Insertable<T>) rootAdapter;
+        mRemovable = (Removable<T>) rootAdapter;
         mInsertQueue = new InsertQueue<>(mInsertable);
     }
 
@@ -266,6 +273,38 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         ((ListView) getListViewWrapper().getListView()).setSelectionFromTop(firstVisiblePosition + numInsertedAbove, childTop);
     }
 
+    public void removeItem(final int position) {
+        int headerViewsCount = getListViewWrapper().getHeaderViewsCount();
+        int realPos = position - headerViewsCount;
+        int firstVisiblePosition = getListViewWrapper().getFirstVisiblePosition();
+        int lastVisiblePosition = getListViewWrapper().getLastVisiblePosition();
+        if (position < firstVisiblePosition || position > lastVisiblePosition) {
+            handleRemoveItem(position);
+        }
+        else {
+            View view = getListViewWrapper().getChildAt(position - firstVisiblePosition + headerViewsCount);
+            int originalHeight = view.getMeasuredHeight();
+
+            ValueAnimator heightAnimator = ValueAnimator.ofInt(originalHeight, 1);
+            heightAnimator.addUpdateListener(new HeightUpdater(view));
+
+            ValueAnimator[] customAnimators = getAdditionalAnimators(view, position, (ViewGroup) view.getParent());
+            ValueAnimator[] animators = new ValueAnimator[customAnimators.length + 1];
+            animators[0] = heightAnimator;
+            System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
+            for (int i = 0; i < animators.length; i++) {
+                animators[i].setRepeatMode(ValueAnimator.REVERSE);
+            }
+
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(animators);
+
+            animatorSet.setDuration(mRemovalAnimationDurationMs);
+            animatorSet.addListener(new ShrinkToRemoveAnimationListener(position, view));
+            animatorSet.start();
+        }
+    }
+
     /**
      * @return true if the children completely fill up the AbsListView.
      */
@@ -299,7 +338,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             ValueAnimator heightAnimator = ValueAnimator.ofInt(1, originalHeight);
             heightAnimator.addUpdateListener(new HeightUpdater(view));
 
-            Animator[] customAnimators = getAdditionalAnimators(view, parent);
+            Animator[] customAnimators = getAdditionalAnimators(view, position, parent);
             Animator[] animators = new Animator[customAnimators.length + 1];
             animators[0] = heightAnimator;
             System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
@@ -307,15 +346,15 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.playTogether(animators);
 
-            ViewHelper.setAlpha(view, 0);
-            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, ALPHA, 0, 1);
+//            ViewHelper.setAlpha(view, 0);
+//            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, ALPHA, 0, 1);
 
-            AnimatorSet allAnimatorsSet = new AnimatorSet();
-            allAnimatorsSet.playSequentially(animatorSet, alphaAnimator);
+//            AnimatorSet allAnimatorsSet = new AnimatorSet();
+//            allAnimatorsSet.playSequentially(animatorSet, alphaAnimator);
 
-            allAnimatorsSet.setDuration(mInsertionAnimationDurationMs);
-            allAnimatorsSet.addListener(new ExpandAnimationListener(position));
-            allAnimatorsSet.start();
+            animatorSet.setDuration(mInsertionAnimationDurationMs);
+            animatorSet.addListener(new ExpandAnimationListener(position));
+            animatorSet.start();
         }
 
         return view;
@@ -325,14 +364,15 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      * Override this method to provide additional animators on top of the default height and alpha animation.
      *
      * @param view   The {@link android.view.View} that will get animated.
+     * @param position position in adapter
      * @param parent The parent that this view will eventually be attached to.
      *
      * @return a non-null array of Animators.
      */
     @SuppressWarnings({"MethodMayBeStatic", "UnusedParameters"})
     @NonNull
-    protected Animator[] getAdditionalAnimators(@NonNull final View view, @NonNull final ViewGroup parent) {
-        return new Animator[]{};
+    protected ValueAnimator[] getAdditionalAnimators(@NonNull final View view, final int position, @NonNull final ViewGroup parent) {
+        return new ValueAnimator[]{};
     }
 
     /**
@@ -354,12 +394,16 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         }
     }
 
+    private void handleRemoveItem(final int position) {
+        mRemovable.remove(position);
+    }
+
     /**
      * A class which removes the active index from the {@code InsertQueue} when the animation has finished.
      */
     private class ExpandAnimationListener extends AnimatorListenerAdapter {
 
-        private final int mPosition;
+        protected final int mPosition;
 
         ExpandAnimationListener(final int position) {
             mPosition = position;
@@ -368,6 +412,28 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         @Override
         public void onAnimationEnd(final Animator animation) {
             mInsertQueue.removeActiveIndex(mPosition);
+        }
+    }
+
+    private class ShrinkToRemoveAnimationListener extends ExpandAnimationListener {
+        protected final View mView;
+        private final int mOriginalHeight;
+
+        ShrinkToRemoveAnimationListener(final int position, final View view) {
+            super(position);
+            mView = view;
+            ViewGroup.LayoutParams layoutParams = mView.getLayoutParams();
+            mOriginalHeight = layoutParams.height;
+
+        }
+
+        @Override
+        public void onAnimationEnd(final Animator animation) {
+            handleRemoveItem(mPosition);
+            super.onAnimationEnd(animation);
+            ViewGroup.LayoutParams layoutParams = mView.getLayoutParams();
+            layoutParams.height = mOriginalHeight;
+            mView.setLayoutParams(layoutParams);
         }
     }
 }

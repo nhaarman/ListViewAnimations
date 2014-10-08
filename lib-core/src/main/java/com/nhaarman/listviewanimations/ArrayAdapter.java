@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.util.Insertable;
+import com.nhaarman.listviewanimations.util.Removable;
 import com.nhaarman.listviewanimations.util.Swappable;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.List;
  * and {@link com.nhaarman.listviewanimations.util.Insertable} for inserting objects.
  */
 @SuppressWarnings("UnusedDeclaration")
-public abstract class ArrayAdapter<T> extends BaseAdapter implements Swappable, Insertable<T> {
+public abstract class ArrayAdapter<T> extends BaseAdapter implements Swappable, Insertable<T>, Removable<T> {
 
     @NonNull
     private final List<T> mItems;
