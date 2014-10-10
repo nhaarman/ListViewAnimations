@@ -138,6 +138,12 @@ public class DynamicListView extends ListView {
      */
     public void disableDragAndDrop() {
         mDragAndDropHandler = null;
+
+    }
+
+
+    public boolean isDragAndDropEnabled() {
+        return mDragAndDropHandler != null;
     }
 
     /**
