@@ -38,6 +38,7 @@ import com.android.vending.billing.IInAppBillingService;
 import com.haarman.listviewanimations.appearance.AppearanceExamplesActivity;
 import com.haarman.listviewanimations.googlecards.GoogleCardsActivity;
 import com.haarman.listviewanimations.gridview.GridViewActivity;
+import com.haarman.listviewanimations.itemmanipulation.DynamicListViewActivity;
 import com.haarman.listviewanimations.itemmanipulation.ItemManipulationsExamplesActivity;
 
 import org.json.JSONException;
@@ -61,6 +62,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"), mServiceConn, Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(this, DynamicListViewActivity.class);
+        startActivity(intent);
     }
 
     @Override

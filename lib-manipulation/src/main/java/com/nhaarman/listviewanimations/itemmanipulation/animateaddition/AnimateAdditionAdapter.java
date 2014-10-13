@@ -16,6 +16,7 @@
 
 package com.nhaarman.listviewanimations.itemmanipulation.animateaddition;
 
+import android.app.ActionBar;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Pair;
@@ -27,6 +28,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListItemView;
 import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nhaarman.listviewanimations.util.Insertable;
@@ -323,6 +325,13 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
                 }
                 int originalHeight = view.getMeasuredHeight();
 
+                if (view instanceof DynamicListItemView) {
+                    View containerView = ((DynamicListItemView) view).getContainerView();
+                    ViewGroup.LayoutParams params = containerView.getLayoutParams();
+                    params.height = originalHeight;
+                    containerView.setLayoutParams(params);
+                }
+
                 ValueAnimator heightAnimator = ValueAnimator.ofInt(originalHeight, 1);
                 heightAnimator.addUpdateListener(new HeightUpdater(view));
 
@@ -508,6 +517,12 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     }
 
     protected void restoreViewPresentation(@NonNull final View view) {
+        if (view instanceof DynamicListItemView) {
+            View containerView = ((DynamicListItemView) view).getContainerView();
+            ViewGroup.LayoutParams params = containerView.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            containerView.setLayoutParams(params);
+        }
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.height = 0;
         view.setLayoutParams(layoutParams);

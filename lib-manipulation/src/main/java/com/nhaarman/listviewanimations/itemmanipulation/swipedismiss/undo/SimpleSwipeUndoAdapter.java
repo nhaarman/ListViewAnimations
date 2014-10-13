@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListItemView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     /**
      * Create a new {@code SimpleSwipeUndoAdapterGen}, decorating given {@link android.widget.BaseAdapter}.
      *
-     * @param undoAdapter     the {@link android.widget.BaseAdapter} that is decorated. Must implement
+     * @param adapter     the {@link android.widget.BaseAdapter} that is decorated. Must implement
      *                        {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter}.
      * @param context         the {@link android.content.Context}.
      * @param dismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback} that is notified of dismissed items.
@@ -86,15 +87,15 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     @NonNull
     @Override
     public View getView(final int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
-        SwipeUndoView view = (SwipeUndoView) convertView;
+        DynamicListItemView view = (DynamicListItemView) convertView;
         if (view == null) {
-            view = new SwipeUndoView(mContext);
+            view = new DynamicListItemView(mContext);
         }
-        View primaryView = super.getView(position, view.getPrimaryView(), view);
-        view.setPrimaryView(primaryView);
+        View primaryView = super.getView(position, view.getContentView(), view);
+        view.setContentView(primaryView);
 
-        View undoView = mUndoAdapter.getUndoView(position, view.getUndoView(), view);
-        view.setUndoView(undoView);
+        View undoView = mUndoAdapter.getUndoView(position, view.getOverlayView(), view);
+        view.setOverlayView(undoView);
 
         mUndoAdapter.getUndoClickView(undoView).setOnClickListener(new UndoClickListener(view, position));
 
@@ -108,7 +109,7 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     @Override
     @NonNull
     public View getPrimaryView(@NonNull final View view) {
-        View primaryView = ((SwipeUndoView) view).getPrimaryView();
+        View primaryView = ((DynamicListItemView) view).getContentView();
         if (primaryView == null) {
             throw new IllegalStateException("primaryView == null");
         }
@@ -118,7 +119,7 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     @Override
     @NonNull
     public View getUndoView(@NonNull final View view) {
-        View undoView = ((SwipeUndoView) view).getUndoView();
+        View undoView = ((DynamicListItemView) view).getOverlayView();
         if (undoView == null) {
             throw new IllegalStateException("undoView == null");
         }
@@ -153,11 +154,11 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     private class UndoClickListener implements View.OnClickListener {
 
         @NonNull
-        private final SwipeUndoView mView;
+        private final DynamicListItemView mView;
 
         private final int mPosition;
 
-        UndoClickListener(@NonNull final SwipeUndoView view, final int position) {
+        UndoClickListener(@NonNull final DynamicListItemView view, final int position) {
             mView = view;
             mPosition = position;
         }

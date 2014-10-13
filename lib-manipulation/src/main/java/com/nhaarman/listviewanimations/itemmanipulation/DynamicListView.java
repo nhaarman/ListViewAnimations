@@ -44,6 +44,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeTouchL
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SwipeUndoAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SwipeUndoTouchListener;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipemenu.SwipeMenuTouchListener;
 import com.nhaarman.listviewanimations.util.Insertable;
 
 import java.util.Collection;
@@ -70,6 +71,8 @@ public class DynamicListView extends ListView {
     @Nullable
     private DragAndDropHandler mDragAndDropHandler;
 
+    private boolean dragAndDropEnabled = false;
+
     /**
      * The {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeTouchListener}
      * that will handle swipe movement functionality, if set.
@@ -77,6 +80,14 @@ public class DynamicListView extends ListView {
     @Nullable
     private SwipeTouchListener mSwipeTouchListener;
 
+    /**
+     * The {@link com.nhaarman.listviewanimations.itemmanipulation.swipemenu.SwipeMenuTouchListener}
+     * that will handle menu functionality, if set.
+     */
+    @Nullable
+    private SwipeMenuTouchListener mSwipeMenuTouchListener;
+
+    /**
     /**
      * The {@link com.nhaarman.listviewanimations.itemmanipulation.TouchEventHandler}
      * that is currently actively consuming {@code MotionEvent}s.
@@ -129,21 +140,23 @@ public class DynamicListView extends ListView {
      * <p/>
      */
     public void enableDragAndDrop() {
-
-        mDragAndDropHandler = new DragAndDropHandler(this);
+        dragAndDropEnabled = true;
+        if(mSwipeMenuTouchListener != null) {
+            mSwipeMenuTouchListener.closeMenus();
+        }
     }
 
     /**
      * Disables the drag and drop functionality.
      */
     public void disableDragAndDrop() {
-        mDragAndDropHandler = null;
+        dragAndDropEnabled = false;
 
     }
 
 
     public boolean isDragAndDropEnabled() {
-        return mDragAndDropHandler != null;
+        return dragAndDropEnabled;
     }
 
     /**
@@ -163,6 +176,9 @@ public class DynamicListView extends ListView {
      *                     that is used.
      */
     public void enableSwipeUndo(@NonNull final UndoCallback undoCallback) {
+        if(mSwipeMenuTouchListener != null) {
+            mSwipeMenuTouchListener.closeMenus();
+        }
         mSwipeTouchListener = new SwipeUndoTouchListener(new DynamicListViewWrapper(this), undoCallback);
     }
 
@@ -177,7 +193,9 @@ public class DynamicListView extends ListView {
         if (mSwipeUndoAdapter == null) {
             throw new IllegalStateException("enableSimpleSwipeUndo requires a SwipeUndoAdapter to be set as an adapter");
         }
-
+        if(mSwipeMenuTouchListener != null) {
+            mSwipeMenuTouchListener.closeMenus();
+        }
         mSwipeTouchListener = new SwipeUndoTouchListener(new DynamicListViewWrapper(this), mSwipeUndoAdapter.getUndoCallback());
         mSwipeUndoAdapter.setSwipeUndoTouchListener((SwipeUndoTouchListener) mSwipeTouchListener);
     }
@@ -188,7 +206,12 @@ public class DynamicListView extends ListView {
      */
     public void disableSwipeToDismiss() {
         mSwipeTouchListener = null;
+        if (mSwipeUndoAdapter != null) {
+            mSwipeUndoAdapter.setSwipeUndoTouchListener(null);
+        }
     }
+
+    public boolean isSwipeToDismissEnabled() {return mSwipeTouchListener != null;};
 
     /**
      * Sets the {@link ListAdapter} for this {@code DynamicListView}.
@@ -243,7 +266,7 @@ public class DynamicListView extends ListView {
             /* We don't support dragging items when there are items in the undo state. */
             if (!(mSwipeTouchListener instanceof SwipeUndoTouchListener) || !((SwipeUndoTouchListener) mSwipeTouchListener).hasPendingItems()) {
                 /* Offer the event to the DragAndDropHandler */
-                if (mDragAndDropHandler != null) {
+                if (dragAndDropEnabled && mDragAndDropHandler != null) {
                     mDragAndDropHandler.onTouchEvent(ev);
                     firstTimeInteracting = mDragAndDropHandler.isInteracting();
                     if (firstTimeInteracting) {
@@ -254,12 +277,23 @@ public class DynamicListView extends ListView {
             }
 
             /* If not handled, offer the event to the SwipeDismissTouchListener */
-            if (mCurrentHandlingTouchEventHandler == null && mSwipeTouchListener != null) {
-                mSwipeTouchListener.onTouchEvent(ev);
-                firstTimeInteracting = mSwipeTouchListener.isInteracting();
-                if (firstTimeInteracting) {
-                    mCurrentHandlingTouchEventHandler = mSwipeTouchListener;
-                    sendCancelEvent(mDragAndDropHandler, ev);
+            if (mCurrentHandlingTouchEventHandler == null) {
+                if (mSwipeTouchListener != null) {
+                    mSwipeTouchListener.onTouchEvent(ev);
+                    firstTimeInteracting = mSwipeTouchListener.isInteracting();
+                    if (firstTimeInteracting) {
+                        mCurrentHandlingTouchEventHandler = mSwipeTouchListener;
+                        sendCancelEvent(mDragAndDropHandler, ev);
+                    }
+                }
+                else if(!dragAndDropEnabled && mSwipeMenuTouchListener != null) {
+
+                    mSwipeMenuTouchListener.onTouchEvent(ev);
+                    firstTimeInteracting = mSwipeMenuTouchListener.isInteracting();
+                    if (firstTimeInteracting) {
+//                        mSwipeMenuTouchListener.closeMenus();
+                        mCurrentHandlingTouchEventHandler = mSwipeMenuTouchListener;
+                    }
                 }
             }
 
@@ -428,9 +462,10 @@ public class DynamicListView extends ListView {
      * This method does nothing if the drag and drop functionality is not enabled.
      */
     public void setDraggableManager(@NonNull final DraggableManager draggableManager) {
-        if (mDragAndDropHandler != null) {
-            mDragAndDropHandler.setDraggableManager(draggableManager);
+        if (mDragAndDropHandler == null) {
+            mDragAndDropHandler = new DragAndDropHandler(this);
         }
+        mDragAndDropHandler.setDraggableManager(draggableManager);
     }
 
     /**
@@ -443,6 +478,10 @@ public class DynamicListView extends ListView {
         if (mDragAndDropHandler != null) {
             mDragAndDropHandler.setOnItemMovedListener(onItemMovedListener);
         }
+    }
+
+    public void setSwipeMenuTouchListener(@Nullable final SwipeMenuTouchListener swipeMenuTouchListener) {
+        mSwipeMenuTouchListener = swipeMenuTouchListener;
     }
 
     /**
@@ -604,4 +643,5 @@ public class DynamicListView extends ListView {
             mOnScrollListeners.add(onScrollListener);
         }
     }
+
 }
