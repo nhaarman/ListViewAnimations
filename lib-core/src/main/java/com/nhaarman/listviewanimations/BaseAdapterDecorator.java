@@ -29,6 +29,7 @@ import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 import com.nhaarman.listviewanimations.util.Insertable;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nhaarman.listviewanimations.util.ListViewWrapperSetter;
+import com.nhaarman.listviewanimations.util.OnNotifyDataSetChanged;
 import com.nhaarman.listviewanimations.util.Removable;
 import com.nhaarman.listviewanimations.util.Swappable;
 
@@ -37,13 +38,19 @@ import com.nhaarman.listviewanimations.util.Swappable;
  * <p/>
  * Classes extending this class can override methods and provide extra functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, Insertable, Removable, ListViewWrapperSetter {
+public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, Insertable, Removable, OnNotifyDataSetChanged, ListViewWrapperSetter {
 
     /**
      * The {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
      */
     @NonNull
     private final BaseAdapter mDecoratedBaseAdapter;
+
+
+    /**
+     * The parent adapter {@link android.widget.BaseAdapter} if any.
+     */
+    private OnNotifyDataSetChanged mOnNotifyDataSetChanged;
 
     /**
      * The {@link com.nhaarman.listviewanimations.util.ListViewWrapper} containing the ListView this {@code BaseAdapterDecorator} will be bound to.
@@ -57,6 +64,11 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
      * @param baseAdapter the {@code} BaseAdapter to decorate.
      */
     protected BaseAdapterDecorator(@NonNull final BaseAdapter baseAdapter) {
+        if (baseAdapter instanceof ArrayAdapter<?>) {
+            ((ArrayAdapter<?>) baseAdapter).setOnNotifyDataSetChanged(this);
+        } else if (baseAdapter instanceof BaseAdapterDecorator) {
+            ((BaseAdapterDecorator) baseAdapter).setOnNotifyDataSetChanged(this);
+        }
         mDecoratedBaseAdapter = baseAdapter;
     }
 
@@ -66,6 +78,17 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     @NonNull
     public BaseAdapter getDecoratedBaseAdapter() {
         return mDecoratedBaseAdapter;
+    }
+
+    public void setOnNotifyDataSetChanged(final OnNotifyDataSetChanged onNotifyDataSetChanged) {
+        mOnNotifyDataSetChanged = onNotifyDataSetChanged;
+    }
+
+    public void onNotifyDataSetChanged() {
+        //propagate
+        if (mOnNotifyDataSetChanged != null) {
+            mOnNotifyDataSetChanged.onNotifyDataSetChanged();
+        }
     }
 
     /**

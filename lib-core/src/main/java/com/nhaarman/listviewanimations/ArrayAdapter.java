@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.util.Insertable;
+import com.nhaarman.listviewanimations.util.OnNotifyDataSetChanged;
 import com.nhaarman.listviewanimations.util.Removable;
 import com.nhaarman.listviewanimations.util.Swappable;
 
@@ -39,7 +40,7 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements Swappable, 
     @NonNull
     private final List<T> mItems;
 
-    private BaseAdapter mDataSetChangedSlavedAdapter;
+    private OnNotifyDataSetChanged mOnNotifyDataSetChanged;
 
     /**
      * Creates a new ArrayAdapter with an empty {@code List}.
@@ -144,15 +145,15 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements Swappable, 
         mItems.set(positionTwo, firstItem);
     }
 
-    public void propagateNotifyDataSetChanged(@NonNull final BaseAdapter slavedAdapter) {
-        mDataSetChangedSlavedAdapter = slavedAdapter;
+    public void setOnNotifyDataSetChanged(final OnNotifyDataSetChanged onNotifyDataSetChanged) {
+        mOnNotifyDataSetChanged = onNotifyDataSetChanged;
     }
 
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
-        if (mDataSetChangedSlavedAdapter != null) {
-            mDataSetChangedSlavedAdapter.notifyDataSetChanged();
+        if (mOnNotifyDataSetChanged != null) {
+            mOnNotifyDataSetChanged.onNotifyDataSetChanged();
         }
     }
 }
