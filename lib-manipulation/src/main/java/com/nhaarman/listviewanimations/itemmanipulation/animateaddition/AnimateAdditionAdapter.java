@@ -326,6 +326,8 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
                 int originalHeight = view.getMeasuredHeight();
 
                 if (view instanceof DynamicListItemView) {
+                    //this is to get a nice "closing" animation by make sure the contentView
+                    //height remain fix during the animation
                     View containerView = ((DynamicListItemView) view).getContainerView();
                     ViewGroup.LayoutParams params = containerView.getLayoutParams();
                     params.height = originalHeight;
