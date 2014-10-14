@@ -54,6 +54,8 @@ public class StickyListHeadersAdapterDecorator extends BaseAdapterDecorator impl
      */
     @Nullable
     private ViewAnimator mViewAnimator;
+    
+    private boolean mAnimateEntry = false;
 
     /**
      * Create a new {@code StickyListHeadersAdapterDecorator}, decorating given {@link android.widget.BaseAdapter}.
@@ -89,13 +91,15 @@ public class StickyListHeadersAdapterDecorator extends BaseAdapterDecorator impl
      */
     @Nullable
     public ViewAnimator getViewAnimator() {
+        if (mViewAnimator == null) {
+            mViewAnimator = new ViewAnimator(getListViewWrapper());
+        }
         return mViewAnimator;
     }
 
     @Override
     public void setListViewWrapper(@NonNull final ListViewWrapper listViewWrapper) {
         super.setListViewWrapper(listViewWrapper);
-        mViewAnimator = new ViewAnimator(listViewWrapper);
     }
 
     @Override
@@ -105,14 +109,20 @@ public class StickyListHeadersAdapterDecorator extends BaseAdapterDecorator impl
         }
 
         if (convertView != null) {
-            assert mViewAnimator != null;
-            mViewAnimator.cancelExistingAnimation(convertView);
+            if (mAnimateEntry) {
+                getViewAnimator().cancelExistingAnimation(convertView);
+            }
         }
 
         View itemView = mStickyListHeadersAdapter.getHeaderView(position, convertView, parent);
-
-        animateViewIfNecessary(position, itemView, parent);
+        if (mAnimateEntry) {
+            animateViewIfNecessary(position, itemView, parent);
+        }
         return itemView;
+    }
+    
+    public void setAnimateHeadersEntry(final boolean value) {
+        mAnimateEntry = value;
     }
 
     /**
