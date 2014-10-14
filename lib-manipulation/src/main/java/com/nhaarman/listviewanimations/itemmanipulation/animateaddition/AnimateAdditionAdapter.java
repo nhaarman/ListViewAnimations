@@ -16,7 +16,6 @@
 
 package com.nhaarman.listviewanimations.itemmanipulation.animateaddition;
 
-import android.app.ActionBar;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Pair;
@@ -30,7 +29,6 @@ import android.widget.ListView;
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListItemView;
 import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
-import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nhaarman.listviewanimations.util.Insertable;
 import com.nhaarman.listviewanimations.util.Removable;
 import com.nineoldandroids.animation.Animator;
@@ -42,10 +40,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * An adapter for inserting rows into the {@link android.widget.ListView} with an animation. The root {@link android.widget.BaseAdapter} should implement {@link Insertable},
@@ -69,8 +65,6 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
     private long mInsertionAnimationDurationMs = DEFAULT_INSERTION_ANIMATION_MS;
     private long mRemovalAnimationDurationMs = DEFAULT_INSERTION_ANIMATION_MS;
-
-    private static final String ALPHA = "alpha";
 
     @NonNull
     private final Insertable<T> mInsertable;
@@ -404,12 +398,6 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.playTogether(animators);
-
-//            ViewHelper.setAlpha(view, 0);
-//            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, ALPHA, 0, 1);
-
-//            AnimatorSet allAnimatorsSet = new AnimatorSet();
-//            allAnimatorsSet.playSequentially(animatorSet, alphaAnimator);
 
             animatorSet.setDuration(mInsertionAnimationDurationMs);
             animatorSet.addListener(new ExpandAnimationListener(position));
