@@ -311,6 +311,10 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
         List<Animator> allAnimators = new ArrayList<Animator>();
         for (int i = position; i < position + count; i++) {
+            if (mRemovedPositions.contains(i)) {
+                //already removing
+                continue;
+            }
             if (i < firstVisiblePosition || i > lastVisiblePosition) {
                 mRemovedPositions.add(i);
             } else {
@@ -549,6 +553,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
         @Override
         public void onAnimationEnd(final Animator animation) {
+            //restore view height to wrap_content
             restoreViewPresentation(mView);
             mInsertQueue.removeActiveIndex(mPosition);
         }
