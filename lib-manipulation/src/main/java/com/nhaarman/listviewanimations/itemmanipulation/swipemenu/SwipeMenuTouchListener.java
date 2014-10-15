@@ -1,6 +1,8 @@
 package com.nhaarman.listviewanimations.itemmanipulation.swipemenu;
 
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersListViewAbstract;
+import se.emilsjolander.stickylistheaders.WrapperView;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -301,7 +303,7 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
         }
 
 
-        mCanShowMenuCurrent = canShowMenu(downPosition);
+        mCanShowMenuCurrent = canShowMenu(downPosition, downView);
 
         if (!mCanShowMenuCurrent) {
             return false;
@@ -344,10 +346,18 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
         DynamicListItemView downView = null;
         for (int i = 0; i < childCount && downView == null; i++) {
             View child = mListViewWrapper.getChildAt(i);
-            if (child != null && child instanceof DynamicListItemView) {
+            if (child != null) {
                 child.getHitRect(rect);
                 if (rect.contains(x, y)) {
-                    downView = (DynamicListItemView) child;
+                    if (child instanceof DynamicListItemView) {
+                        downView = (DynamicListItemView) child;
+                    }
+                    else if (child instanceof WrapperView) {
+                        View item = ((WrapperView) child).getItem();
+                        if (item instanceof DynamicListItemView) {
+                            downView = (DynamicListItemView) item;
+                        }
+                    }
                 }
             }
         }
@@ -361,14 +371,23 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
      *
      * @return {@code true} if the item can show a menu, false otherwise.
      */
-    private boolean canShowMenu(final int position) {
-        return mSwipeMenuAdapter != null && (mSwipeMenuAdapter.canShowLeftMenu(position) ||
-                mSwipeMenuAdapter.canShowRightMenu(position));
+    private boolean canShowMenu(final int position, @NonNull final DynamicListItemView view) {
+        return mSwipeMenuAdapter != null && (mSwipeMenuAdapter.canShowLeftMenu(position, view) ||
+                mSwipeMenuAdapter.canShowRightMenu(position, view));
+    }
+    
+    
+    private ViewGroup getListView() {
+        ViewGroup result = mListViewWrapper.getListView();
+        if (result instanceof StickyListHeadersListViewAbstract) {
+            result = ((StickyListHeadersListViewAbstract)result).getWrappedList();
+        }
+        return result;
     }
 
     private void disableHorizontalScrollContainerIfNecessary(@NonNull final MotionEvent motionEvent, @NonNull final View view) {
         if (mParentIsHorizontalScrollContainer) {
-            mListViewWrapper.getListView().requestDisallowInterceptTouchEvent(true);
+            getListView().requestDisallowInterceptTouchEvent(true);
         } else if (mTouchChildResId != 0) {
             mParentIsHorizontalScrollContainer = false;
 
@@ -376,7 +395,7 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
             if (childView != null) {
                 final Rect childRect = getChildViewRect(mListViewWrapper.getListView(), childView);
                 if (childRect.contains((int) motionEvent.getX(), (int) motionEvent.getY())) {
-                    mListViewWrapper.getListView().requestDisallowInterceptTouchEvent(true);
+                    getListView().requestDisallowInterceptTouchEvent(true);
                 }
             }
         }
@@ -385,17 +404,17 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
     private boolean fetchMenuButtonsIfNecessary(final int direction) {
         switch (direction) {
             case DynamicListItemView.DIRECTION_LEFT:
-                if (mSwipeMenuAdapter.canShowLeftMenu(mCurrentPosition)) {
+                if (mSwipeMenuAdapter.canShowLeftMenu(mCurrentPosition, mCurrentView)) {
                     if (mCurrentView.getLeftMenu() == null) {
-                        mCurrentView.setLeftButtons(mSwipeMenuAdapter.getLeftButtons(mCurrentPosition));
+                        mCurrentView.setLeftButtons(mSwipeMenuAdapter.getLeftButtons(mCurrentPosition, mCurrentView));
                     }
                     return mCurrentView.getLeftMenu() != null;
                 }
                 break;
             case DynamicListItemView.DIRECTION_RIGHT:
-                if (mSwipeMenuAdapter.canShowRightMenu(mCurrentPosition)) {
+                if (mSwipeMenuAdapter.canShowRightMenu(mCurrentPosition, mCurrentView)) {
                     if (mCurrentView.getRightMenu() == null) {
-                        mCurrentView.setRightButtons(mSwipeMenuAdapter.getRightButtons(mCurrentPosition));
+                        mCurrentView.setRightButtons(mSwipeMenuAdapter.getRightButtons(mCurrentPosition, mCurrentView));
                     }
                     return mCurrentView.getRightMenu() != null;
                 }
