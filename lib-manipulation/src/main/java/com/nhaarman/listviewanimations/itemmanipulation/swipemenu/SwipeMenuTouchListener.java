@@ -453,7 +453,8 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
                 }
 
                 mSwiping = true;
-                mListViewWrapper.getListView().requestDisallowInterceptTouchEvent(true);
+                
+                getListView().requestDisallowInterceptTouchEvent(true);
                 onStartSwipe(mCurrentView, mCurrentPosition, direction);
 
             /* Cancel ListView's touch (un-highlighting the item) */
@@ -530,6 +531,7 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
             } else {
                 closeMenusAnimated();
             }
+            getListView().requestDisallowInterceptTouchEvent(false);
         }
 
         reset();
