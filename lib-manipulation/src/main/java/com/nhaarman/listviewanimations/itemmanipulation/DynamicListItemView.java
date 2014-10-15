@@ -103,7 +103,13 @@ public class DynamicListItemView extends FrameLayout {
             mContainerView.removeView(mContentView);
         }
         mContentView = contentView;
-        mContainerView.addView(mContentView);
+        if (contentView != null) {
+            mContainerView.addView(mContentView);
+        }
+        else {
+            //this is a possible case when for example:
+            //sticky header where you want the header while the section is hidden
+        }
     }
 
     /**
@@ -182,7 +188,9 @@ public class DynamicListItemView extends FrameLayout {
         mCurrentDirection = -1;
         mCurrentMenuWidth = 0;
         mCurrentPercent = 0;
-        ViewHelper.setTranslationX(mContentView, 0);
+        if (mContentView != null) {
+            ViewHelper.setTranslationX(mContentView, 0);
+        }
     }
 
     public void setLeftButtons(View[] buttons) {
@@ -219,7 +227,7 @@ public class DynamicListItemView extends FrameLayout {
      * set Menu showing position using percent, negative is for right menu
      */
     public void setPercent(float percent) {
-        if (mCurrentMenu == null) {
+        if (mCurrentMenu == null || mContentView == null) {
             return;
         }
         mCurrentPercent = percent;
