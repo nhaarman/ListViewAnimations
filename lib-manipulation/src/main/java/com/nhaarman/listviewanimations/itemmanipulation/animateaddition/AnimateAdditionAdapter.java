@@ -25,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.SectionIndexer;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListItemView;
@@ -315,41 +316,11 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             } else {
 
                 View view = getListViewWrapper().getChildAt(i - firstVisiblePosition + headerViewsCount);
+                mRemovedPositions.add(i);
                 if (view == null) {
-                    mRemovedPositions.add(i);
                     continue;
                 }
-                if (view instanceof WrapperView) {
-                    view = ((WrapperView)view).getItem();
-                }
-                int originalHeight = view.getMeasuredHeight();
-
-                if (view instanceof DynamicListItemView) {
-                    //this is to get a nice "closing" animation by making sure the contentView
-                    //height remain fix during the animation
-                    View containerView = ((DynamicListItemView) view).getContainerView();
-                    ViewGroup.LayoutParams params = containerView.getLayoutParams();
-                    params.height = originalHeight;
-                    containerView.setLayoutParams(params);
-                }
-
-                ValueAnimator heightAnimator = ValueAnimator.ofInt(originalHeight, 1);
-                heightAnimator.addUpdateListener(new HeightUpdater(view));
-
-                ValueAnimator[] customAnimators = getAdditionalAnimators(view, i, (ViewGroup) view.getParent());
-                ValueAnimator[] animators = new ValueAnimator[customAnimators.length + 1];
-                animators[0] = heightAnimator;
-                System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
-
-                AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.playTogether(animators);
-
-                allAnimators.add(animatorSet);
-                animatorSet.addListener(new ShrinkToRemoveAnimationListener(i));
-
-                mRemovedViews.add(view);
-                mRemovedPositions.add(i);
-                mActiveRemoveCount++;
+                allAnimators.add(animatorSetForViewRemoval(i, view, (ViewGroup) view.getParent()));
             }
         }
         if (allAnimators.size() > 0) {
@@ -408,29 +379,60 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             animatorSet.addListener(new ExpandAnimationListener(position, view));
             animatorSet.start();
         } else if (mRemovedPositions.contains(position)) {
-            mRemovedViews.add(view);
-            mActiveRemoveCount++;
-            int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.AT_MOST);
-            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED);
-            view.measure(widthMeasureSpec, heightMeasureSpec);
-
-            int originalHeight = view.getMeasuredHeight();
-
-            ValueAnimator heightAnimator = ValueAnimator.ofInt(originalHeight, 1);
-            heightAnimator.addUpdateListener(new HeightUpdater(view));
-
-            ValueAnimator[] customAnimators = getAdditionalAnimators(view, position + getListViewWrapper().getHeaderViewsCount(), parent);
-            ValueAnimator[] animators = new ValueAnimator[customAnimators.length + 1];
-            animators[0] = heightAnimator;
-            System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
-
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(animators);
-            animatorSet.addListener(new ShrinkToRemoveAnimationListener(position));
-            animatorSet.start();
+            animatorSetForViewRemoval(position, view, parent).start();
         }
 
         return view;
+    }
+    
+    private AnimatorSet animatorSetForViewRemoval(final int position, View view, final ViewGroup parent) {
+        if (view instanceof WrapperView) {
+            //StickyListHeadersView WrapperView
+            final BaseAdapter rootAdapter = getRootAdapter();
+            final WrapperView wrapperView =  ((WrapperView)view);
+            boolean animateOnlyItem = true;
+            if (rootAdapter instanceof SectionIndexer) {
+                SectionIndexer sectionIndexer = (SectionIndexer) rootAdapter;
+                if (wrapperView.hasHeader() && 
+                        
+                    ( position+1 >= rootAdapter.getCount() || 
+                            (sectionIndexer.getSectionForPosition(position) != sectionIndexer.getSectionForPosition(position+1)))) {
+                    animateOnlyItem = false; 
+                }
+            }
+            if (animateOnlyItem) {
+                view = wrapperView.getItem();
+            }
+        }
+        
+        
+        int originalHeight = view.getMeasuredHeight();
+
+        if (view instanceof DynamicListItemView) {
+            //this is to get a nice "closing" animation by making sure the contentView
+            //height remain fix during the animation
+            View containerView = ((DynamicListItemView) view).getContainerView();
+            ViewGroup.LayoutParams params = containerView.getLayoutParams();
+            params.height = originalHeight;
+            containerView.setLayoutParams(params);
+        }
+
+        ValueAnimator heightAnimator = ValueAnimator.ofInt(originalHeight, 0);
+        heightAnimator.addUpdateListener(new HeightUpdater(view));
+
+        ValueAnimator[] customAnimators = getAdditionalAnimators(view, position, parent);
+        ValueAnimator[] animators = new ValueAnimator[customAnimators.length + 1];
+        animators[0] = heightAnimator;
+        System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(animators);
+        animatorSet.setDuration(mInsertionAnimationDurationMs);
+        animatorSet.addListener(new ShrinkToRemoveAnimationListener(position));
+        
+        mRemovedViews.add(view);
+        mActiveRemoveCount++;
+        return animatorSet;
     }
 
     /**
