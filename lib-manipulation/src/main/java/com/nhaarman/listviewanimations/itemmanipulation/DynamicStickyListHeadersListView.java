@@ -28,7 +28,7 @@ public class DynamicStickyListHeadersListView extends
         return new DynamicWrapperViewList(context);
     }
     
-    DynamicListView getDynamicListView() {
+    public DynamicListView getDynamicListView() {
         return (DynamicListView) mList;
     }
     
