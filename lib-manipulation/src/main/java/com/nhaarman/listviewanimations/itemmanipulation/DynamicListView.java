@@ -49,6 +49,8 @@ import com.nhaarman.listviewanimations.util.Insertable;
 import java.util.Collection;
 import java.util.HashSet;
 
+import se.emilsjolander.stickylistheaders.AdapterWrapper;
+
 /**
  * A {@link android.widget.ListView} implementation which provides the following functionality:
  * <ul>
@@ -225,12 +227,16 @@ public class DynamicListView extends ListView {
      *                                            and the adapter does not implement {@link com.nhaarman.listviewanimations.util.Swappable}.
      */
     @Override
-    public void setAdapter(final ListAdapter adapter) {
+    public void setAdapter(ListAdapter adapter) {
+        
         ListAdapter wrappedAdapter = adapter;
         mSwipeUndoAdapter = null;
-
+        
+        if (adapter instanceof AdapterWrapper) {
+            adapter = ((AdapterWrapper)adapter).getDelegate();
+        }
         if (adapter instanceof BaseAdapter) {
-            BaseAdapter rootAdapter = (BaseAdapter) wrappedAdapter;
+            BaseAdapter rootAdapter = (BaseAdapter) adapter;
             while (rootAdapter instanceof BaseAdapterDecorator) {
                 if (rootAdapter instanceof SwipeUndoAdapter) {
                     mSwipeUndoAdapter = (SwipeUndoAdapter) rootAdapter;

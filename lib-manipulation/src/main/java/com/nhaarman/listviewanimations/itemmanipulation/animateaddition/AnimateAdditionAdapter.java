@@ -43,6 +43,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import se.emilsjolander.stickylistheaders.WrapperView;
+
 /**
  * An adapter for inserting rows into the {@link android.widget.ListView} with an animation. The root {@link android.widget.BaseAdapter} should implement {@link Insertable},
  * otherwise an {@link IllegalArgumentException} is thrown. This class only works with an instance of {@code ListView}!
@@ -317,10 +319,13 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
                     mRemovedPositions.add(i);
                     continue;
                 }
+                if (view instanceof WrapperView) {
+                    view = ((WrapperView)view).getItem();
+                }
                 int originalHeight = view.getMeasuredHeight();
 
                 if (view instanceof DynamicListItemView) {
-                    //this is to get a nice "closing" animation by make sure the contentView
+                    //this is to get a nice "closing" animation by making sure the contentView
                     //height remain fix during the animation
                     View containerView = ((DynamicListItemView) view).getContainerView();
                     ViewGroup.LayoutParams params = containerView.getLayoutParams();
@@ -514,7 +519,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             containerView.setLayoutParams(params);
         }
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.height = 0;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         view.setLayoutParams(layoutParams);
     }
 

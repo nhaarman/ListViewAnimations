@@ -15,6 +15,7 @@
  */
 package com.nhaarman.listviewanimations;
 
+import se.emilsjolander.stickylistheaders.AdapterWrapper;
 import android.database.DataSetObserver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -96,7 +97,11 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
      */
     @NonNull
     protected BaseAdapter getRootAdapter() {
+        
         BaseAdapter adapter = mDecoratedBaseAdapter;
+        if (adapter instanceof AdapterWrapper && ((AdapterWrapper)adapter).getDelegate() instanceof BaseAdapter) {
+            adapter = (BaseAdapter) ((AdapterWrapper)adapter).getDelegate();
+        }
         while (adapter instanceof BaseAdapterDecorator) {
             adapter = ((BaseAdapterDecorator) adapter).getDecoratedBaseAdapter();
         }
