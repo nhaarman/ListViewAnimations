@@ -405,7 +405,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             animatorSet.playTogether(animators);
 
             animatorSet.setDuration(mInsertionAnimationDurationMs);
-            animatorSet.addListener(new ExpandAnimationListener(position));
+            animatorSet.addListener(new ExpandAnimationListener(position, view));
             animatorSet.start();
         } else if (mRemovedPositions.contains(position)) {
             mRemovedViews.add(view);
@@ -538,21 +538,25 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     private class ExpandAnimationListener extends AnimatorListenerAdapter {
 
         protected final int mPosition;
+        protected final View mView;
 
-        ExpandAnimationListener(final int position) {
+        ExpandAnimationListener(final int position, final View view) {
             mPosition = position;
+            mView = view;
         }
 
         @Override
         public void onAnimationEnd(final Animator animation) {
+            restoreViewPresentation(mView);
             mInsertQueue.removeActiveIndex(mPosition);
         }
     }
 
-    private class ShrinkToRemoveAnimationListener extends ExpandAnimationListener {
+    private class ShrinkToRemoveAnimationListener extends AnimatorListenerAdapter {
 
+        protected final int mPosition;
         ShrinkToRemoveAnimationListener(final int position) {
-            super(position);
+            mPosition = position;
         }
 
         @Override
