@@ -457,13 +457,16 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
                 getListView().requestDisallowInterceptTouchEvent(true);
                 onStartSwipe(mCurrentView, mCurrentPosition, direction);
 
-            /* Cancel ListView's touch (un-highlighting the item) */
+                /* Cancel ListView's touch (un-highlighting the item) */
+                MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
+                cancelEvent.setAction(MotionEvent.ACTION_CANCEL | motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT);
+                //dispatch the cancel touch event in case the highlighting is done
+                //in a deeper view
+                mCurrentView.dispatchTouchEvent(cancelEvent);
                 if (view != null) {
-                    MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
-                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL | motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT);
                     view.onTouchEvent(cancelEvent);
-                    cancelEvent.recycle();
                 }
+                cancelEvent.recycle();
             } else if (Math.abs(deltaY) > mSlop && Math.abs(deltaY) > Math.abs(deltaX)) {
                 //the user is scrolling the listview, prevent menu until up
                 reset();
