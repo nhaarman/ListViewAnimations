@@ -22,12 +22,6 @@ public class DynamicListItemView extends FrameLayout {
     public static final int DIRECTION_RIGHT = 1;
 
     /**
-     * The container view {@link android.view.View}.
-     */
-    @NonNull
-    private final FrameLayout mContainerView;
-
-    /**
      * The content {@link android.view.View}.
      */
     @Nullable
@@ -90,8 +84,6 @@ public class DynamicListItemView extends FrameLayout {
      */
     public DynamicListItemView(final Context context) {
         super(context);
-        mContainerView = new FrameLayout(context);
-        addView(mContainerView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         mContext = context;
     }
 
@@ -100,11 +92,11 @@ public class DynamicListItemView extends FrameLayout {
      */
     public void setContentView(@NonNull final View contentView) {
         if (mContentView != null) {
-            mContainerView.removeView(mContentView);
+            removeView(mContentView);
         }
         mContentView = contentView;
         if (contentView != null) {
-            mContainerView.addView(mContentView);
+            addView(mContentView);
         }
         else {
             //this is a possible case when for example:
@@ -117,21 +109,13 @@ public class DynamicListItemView extends FrameLayout {
      */
     public void setOverlayView(final View overlayView) {
         if (mOverlayView != null) {
-            mContainerView.removeView(mOverlayView);
+            removeView(mOverlayView);
         }
         mOverlayView = overlayView;
         if (mOverlayView != null) {
             mOverlayView.setVisibility(GONE);
-            mContainerView.addView(mOverlayView);
+            addView(mOverlayView);
         }
-    }
-
-    /**
-     * Returns the container {@link android.widget.FrameLayout}.
-     */
-    @Nullable
-    public FrameLayout getContainerView() {
-        return mContainerView;
     }
 
     /**
@@ -168,11 +152,11 @@ public class DynamicListItemView extends FrameLayout {
 
     public void prepareForReuse() {
         if (mLeftMenu != null) {
-            mContainerView.removeView(mLeftMenu);
+            removeView(mLeftMenu);
             mLeftMenu = null;
         }
         if (mRightMenu != null) {
-            mContainerView.removeView(mRightMenu);
+            removeView(mRightMenu);
             mRightMenu = null;
         }
         reset();
@@ -195,22 +179,22 @@ public class DynamicListItemView extends FrameLayout {
 
     public void setLeftButtons(View[] buttons) {
         if (mLeftMenu != null) {
-            mContainerView.removeView(mLeftMenu);
+            removeView(mLeftMenu);
             mLeftMenu = null;
         }
         mLeftMenu = new MenuContainerView(mContext, buttons);
-        mContainerView.addView(mLeftMenu, 0);
+        addView(mLeftMenu, 0);
         mLeftMenu.setVisibility(INVISIBLE);
     }
 
     public void setRightButtons(View[] buttons) {
         if (mRightMenu != null) {
-            mContainerView.removeView(mRightMenu);
+            removeView(mRightMenu);
             mRightMenu = null;
         }
 
         mRightMenu = new MenuContainerView(mContext, buttons);
-        mContainerView.addView(mRightMenu, 0);
+        addView(mRightMenu, 0);
         mRightMenu.setVisibility(INVISIBLE);
     }
 
