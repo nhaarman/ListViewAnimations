@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListItemView;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicStickyListHeadersListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
@@ -61,12 +62,20 @@ public class SwipeMenuAdapter extends BaseAdapterDecorator {
     public void setListViewWrapper(@NonNull final ListViewWrapper listViewWrapper) {
         super.setListViewWrapper(listViewWrapper);
         mSwipeMenuTouchListener = new SwipeMenuTouchListener(listViewWrapper, getRootAdapter(), mMenuCallback);
-
-        if (!(listViewWrapper.getListView() instanceof DynamicListView)) {
-            listViewWrapper.getListView().setOnTouchListener(mSwipeMenuTouchListener);
+        
+        //DynamicStickyListHeadersListView wraps the DynamicListView inside
+        ViewGroup listView = listViewWrapper.getListView();
+        if (!(listView instanceof DynamicListView) && 
+                !(listView instanceof DynamicStickyListHeadersListView)) {
+            listView.setOnTouchListener(mSwipeMenuTouchListener);
         }
         else {
-            ((DynamicListView)listViewWrapper.getListView()).setSwipeMenuTouchListener(mSwipeMenuTouchListener);
+            if (listView instanceof DynamicStickyListHeadersListView) {
+                ((DynamicStickyListHeadersListView)listView).getDynamicListView().setSwipeMenuTouchListener(mSwipeMenuTouchListener);
+            }
+            else {
+                ((DynamicListView)listView).setSwipeMenuTouchListener(mSwipeMenuTouchListener);
+            }
         }
     }
 
