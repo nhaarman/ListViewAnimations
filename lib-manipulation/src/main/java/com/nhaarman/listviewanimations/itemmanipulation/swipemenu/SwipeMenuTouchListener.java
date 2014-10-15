@@ -86,6 +86,7 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
      */
     @Nullable
     private DynamicListItemView mCurrentView;
+    private int mCurrentDirection = DynamicListItemView.DIRECTION_NONE;
     /**
      * The current position being swiped.
      */
@@ -474,8 +475,13 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
         }
 
         if (mSwiping) {
-            if (fetchMenuButtonsIfNecessary(direction)) {
-                mCurrentView.setSwipeOffset(deltaX);
+            if (mCurrentDirection != direction) {
+                mCurrentDirection = direction;
+                fetchMenuButtonsIfNecessary(mCurrentDirection);
+            }
+            if (!mCurrentView.setSwipeOffset(deltaX)) {
+                reset();
+                handleMenuClosed();
             }
             return true;
         }
@@ -535,6 +541,7 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
                 closeMenusAnimated();
             }
             getListView().requestDisallowInterceptTouchEvent(false);
+            mCurrentDirection = DynamicListItemView.DIRECTION_NONE;
         }
 
         reset();
