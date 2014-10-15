@@ -365,13 +365,18 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.AT_MOST);
             int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED);
             view.measure(widthMeasureSpec, heightMeasureSpec);
-
-            int originalHeight = view.getMeasuredHeight();
+            
+            View viewToAnimate = view;
+            if (viewToAnimate instanceof WrapperView) {
+                //StickyListHeadersView WrapperView
+                viewToAnimate =  ((WrapperView)view).getItem();
+            }
+            int originalHeight = viewToAnimate.getMeasuredHeight();
 
             ValueAnimator heightAnimator = ValueAnimator.ofInt(1, originalHeight);
-            heightAnimator.addUpdateListener(new HeightUpdater(view));
+            heightAnimator.addUpdateListener(new HeightUpdater(viewToAnimate));
 
-            Animator[] customAnimators = getAdditionalAnimators(view, position, parent);
+            Animator[] customAnimators = getAdditionalAnimators(viewToAnimate, position, parent);
             Animator[] animators = new Animator[customAnimators.length + 1];
             animators[0] = heightAnimator;
             System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
@@ -380,7 +385,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             animatorSet.playTogether(animators);
 
             animatorSet.setDuration(mInsertionAnimationDurationMs);
-            animatorSet.addListener(new ExpandAnimationListener(position, view));
+            animatorSet.addListener(new ExpandAnimationListener(position, viewToAnimate));
             animatorSet.start();
         } else if (mRemovedPositions.contains(position)) {
             animatorSetForViewRemoval(position, view, parent).start();
