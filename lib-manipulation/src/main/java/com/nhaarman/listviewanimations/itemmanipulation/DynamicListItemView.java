@@ -73,7 +73,7 @@ public class DynamicListItemView extends FrameLayout {
     /**
      * The current direction of the menu being swiped.
      */
-    private int mCurrentDirection = -1;
+    private int mCurrentDirection = DynamicListItemView.DIRECTION_NONE;
     private int mCurrentMenuWidth = -1;
     private int mWidth = 0;
     private float mCurrentPercent = 0;
@@ -90,7 +90,26 @@ public class DynamicListItemView extends FrameLayout {
      */
     public DynamicListItemView(final Context context) {
         super(context);
-        mContainerView = new FrameLayout(context);
+        mContainerView = new FrameLayout(context) {
+            @Override
+            protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec); 
+                //framelayout compute max size whatever the LayoutParams,
+                //consequently while measuring the the buttons, the frame might get higher.
+                //this makes sure we actually use the content height and layout menus accordingly
+                if ((heightMeasureSpec <= 0) && mContentView != null ) {
+                    int height = mContentView.getMeasuredHeight();
+                    setMeasuredDimension(getMeasuredWidth(), height);
+                    heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST);
+                    if (mLeftMenu != null) {
+                        measureChildWithMargins(mLeftMenu, widthMeasureSpec, 0, heightMeasureSpec, 0);
+                    }
+                    if (mRightMenu != null) {
+                        measureChildWithMargins(mRightMenu, widthMeasureSpec, 0, heightMeasureSpec, 0);
+                    }
+                }
+            }
+        };
         addView(mContainerView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         mContext = context;
     }
@@ -104,7 +123,7 @@ public class DynamicListItemView extends FrameLayout {
         }
         mContentView = contentView;
         if (contentView != null) {
-            mContainerView.addView(mContentView);
+            mContainerView.addView(mContentView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         }
         else {
             //this is a possible case when for example:
@@ -198,8 +217,10 @@ public class DynamicListItemView extends FrameLayout {
             mContainerView.removeView(mLeftMenu);
             mLeftMenu = null;
         }
+        
+        if (buttons == null) return;
         mLeftMenu = new MenuContainerView(mContext, buttons);
-        mContainerView.addView(mLeftMenu, 0);
+        mContainerView.addView(mLeftMenu, 0, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         mLeftMenu.setVisibility(INVISIBLE);
     }
 
@@ -209,8 +230,9 @@ public class DynamicListItemView extends FrameLayout {
             mRightMenu = null;
         }
 
+        if (buttons == null) return;
         mRightMenu = new MenuContainerView(mContext, buttons);
-        mContainerView.addView(mRightMenu, 0);
+        mContainerView.addView(mRightMenu, 0, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         mRightMenu.setVisibility(INVISIBLE);
     }
 
@@ -256,7 +278,7 @@ public class DynamicListItemView extends FrameLayout {
         }
     }
 
-    public void setSwipeOffset(final float deltaX) {
+    public boolean setSwipeOffset(final float deltaX) {
         //this is the case where we swipe to 0 from a current menu position
         //we must keep or current value and not risk switching to null
         if (deltaX != 0  || mCurrentDirection == -1) {
@@ -273,10 +295,12 @@ public class DynamicListItemView extends FrameLayout {
                 setPercent((deltaX) / mCurrentMenuWidth);
             }
         } else if (oldMenu != null) {
+            //temp set mCurrentMenu to oldMenu to apply setPercent to it
             mCurrentMenu = oldMenu;
             setPercent(0);
             mCurrentMenu = null;
         }
+        return mCurrentMenu != null;
     }
 
 
