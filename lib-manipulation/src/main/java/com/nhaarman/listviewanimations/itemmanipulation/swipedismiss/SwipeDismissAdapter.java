@@ -21,6 +21,7 @@ import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.ListViewAnimationsBaseAdapter;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nhaarman.listviewanimations.util.OnNotifyDataSetChanged;
 
@@ -60,8 +61,8 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     @Override
     public void setListViewWrapper(@NonNull final ListViewWrapper listViewWrapper) {
         super.setListViewWrapper(listViewWrapper);
-        if (getDecoratedBaseAdapter() instanceof ArrayAdapter<?>) {
-            ((ArrayAdapter<?>) getDecoratedBaseAdapter()).setOnNotifyDataSetChanged(this);
+        if (getDecoratedBaseAdapter() instanceof ListViewAnimationsBaseAdapter) {
+            ((ListViewAnimationsBaseAdapter) getDecoratedBaseAdapter()).setOnNotifyDataSetChanged(this);
         }
         mDismissTouchListener = new SwipeDismissTouchListener(listViewWrapper, mOnDismissCallback);
         if (mParentIsHorizontalScrollContainer) {

@@ -65,8 +65,8 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
      * @param baseAdapter the {@code} BaseAdapter to decorate.
      */
     protected BaseAdapterDecorator(@NonNull final BaseAdapter baseAdapter) {
-        if (baseAdapter instanceof ArrayAdapter<?>) {
-            ((ArrayAdapter<?>) baseAdapter).setOnNotifyDataSetChanged(this);
+        if (baseAdapter instanceof ListViewAnimationsBaseAdapter) {
+            ((ListViewAnimationsBaseAdapter) baseAdapter).setOnNotifyDataSetChanged(this);
         } else if (baseAdapter instanceof BaseAdapterDecorator) {
             ((BaseAdapterDecorator) baseAdapter).setOnNotifyDataSetChanged(this);
         }
