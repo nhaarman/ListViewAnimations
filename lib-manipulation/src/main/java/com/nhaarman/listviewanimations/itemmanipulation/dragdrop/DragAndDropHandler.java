@@ -108,12 +108,12 @@ public class DragAndDropHandler implements TouchEventHandler {
     private OnItemMovedListener mOnItemMovedListener;
 
     /**
-     * The raw x coordinate of the down event.
+     * The x coordinate of the down event.
      */
     private float mDownX;
 
     /**
-     * The raw y coordinate of the down event.
+     * The y coordinate of the down event.
      */
     private float mDownY;
 
@@ -304,8 +304,8 @@ public class DragAndDropHandler implements TouchEventHandler {
      * @return {@code true} if we have started dragging, {@code false} otherwise.
      */
     private boolean handleDownEvent(@NonNull final MotionEvent event) {
-        mDownX = event.getRawX();
-        mDownY = event.getRawY();
+        mDownX = event.getX();
+        mDownY = event.getY();
         return true;
     }
 
@@ -362,15 +362,15 @@ public class DragAndDropHandler implements TouchEventHandler {
     private boolean handleMoveEvent(@NonNull final MotionEvent event) {
         boolean handled = false;
 
-        float deltaX = event.getRawX() - mDownX;
-        float deltaY = event.getRawY() - mDownY;
+        float deltaX = event.getX() - mDownX;
+        float deltaY = event.getY() - mDownY;
 
         if (mHoverDrawable == null && Math.abs(deltaY) > mSlop && Math.abs(deltaY) > Math.abs(deltaX)) {
-            int position = mWrapper.pointToPosition((int) event.getX(), (int) event.getY());
+            int position = mWrapper.pointToPosition((int) mDownX, (int) mDownY);
             if (position != AdapterView.INVALID_POSITION) {
                 View downView = mWrapper.getChildAt(position - mWrapper.getFirstVisiblePosition());
                 assert downView != null;
-                if (mDraggableManager.isDraggable(downView, position - mWrapper.getHeaderViewsCount(), event.getX() - downView.getX(), event.getY() - downView.getY())) {
+                if (mDraggableManager.isDraggable(downView, position - mWrapper.getHeaderViewsCount(), mDownX - downView.getX(), mDownY - downView.getY())) {
                     startDragging(position - mWrapper.getHeaderViewsCount());
                     handled = true;
                 }
