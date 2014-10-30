@@ -86,7 +86,14 @@ public class StickyListHeadersListViewWrapper implements ListViewWrapper {
         mListView.smoothScrollBy(distance, duration);
     }
 
-    public View unwrapItemView(final View view) {
+    /**
+     * Retrieves the original View that is now possibly wrapped in a WrapperView.
+     *
+     * @param view The View to retrieve the original View from.
+     *
+     * @return The original View.
+     */
+    private View unwrapItemView(final View view) {
         if (view instanceof WrapperView) {
             return ((WrapperView) view).getItem();
         }
