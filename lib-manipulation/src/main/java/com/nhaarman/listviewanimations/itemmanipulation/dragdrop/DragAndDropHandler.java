@@ -108,19 +108,14 @@ public class DragAndDropHandler implements TouchEventHandler {
     private OnItemMovedListener mOnItemMovedListener;
 
     /**
-     * The raw x coordinate of the down event.
+     * The x coordinate of the down event.
      */
-    private float mRawDownX;
+    private float mDownX;
 
     /**
-     * The raw y coordinate of the down event.
+     * The y coordinate of the down event.
      */
-    private float mRawDownY;
-
-    /**
-     * The x and y coordinate of the down event.
-     */
-    private float mDownX, mDownY;
+    private float mDownY;
 
     /**
      * Specifies whether or not the hover drawable is currently being animated as result of an up / cancel event.
@@ -309,8 +304,6 @@ public class DragAndDropHandler implements TouchEventHandler {
      * @return {@code true} if we have started dragging, {@code false} otherwise.
      */
     private boolean handleDownEvent(@NonNull final MotionEvent event) {
-        mRawDownX = event.getRawX();
-        mRawDownY = event.getRawY();
         mDownX = event.getX();
         mDownY = event.getY();
         return true;
@@ -369,8 +362,8 @@ public class DragAndDropHandler implements TouchEventHandler {
     private boolean handleMoveEvent(@NonNull final MotionEvent event) {
         boolean handled = false;
 
-        float deltaX = event.getRawX() - mRawDownX;
-        float deltaY = event.getRawY() - mRawDownY;
+        float deltaX = event.getX() - mDownX;
+        float deltaY = event.getY() - mDownY;
 
         if (mHoverDrawable == null && Math.abs(deltaY) > mSlop && Math.abs(deltaY) > Math.abs(deltaX)) {
             int position = mWrapper.pointToPosition((int) mDownX, (int) mDownY);
