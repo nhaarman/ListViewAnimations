@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.ListAdapter;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+import se.emilsjolander.stickylistheaders.WrapperView;
 
 public class StickyListHeadersListViewWrapper implements ListViewWrapper {
 
@@ -41,7 +42,7 @@ public class StickyListHeadersListViewWrapper implements ListViewWrapper {
     @Nullable
     @Override
     public View getChildAt(final int index) {
-        return mListView.getListChildAt(index);
+        return unwrapItemView(mListView.getListChildAt(index));
     }
 
     @Override
@@ -61,7 +62,7 @@ public class StickyListHeadersListViewWrapper implements ListViewWrapper {
 
     @Override
     public int getChildCount() {
-        return mListView.getChildCount();
+        return mListView.getListChildCount();
     }
 
     @Override
@@ -83,5 +84,19 @@ public class StickyListHeadersListViewWrapper implements ListViewWrapper {
     @Override
     public void smoothScrollBy(final int distance, final int duration) {
         mListView.smoothScrollBy(distance, duration);
+    }
+
+    /**
+     * Retrieves the original View that is now possibly wrapped in a WrapperView.
+     *
+     * @param view The View to retrieve the original View from.
+     *
+     * @return The original View.
+     */
+    private View unwrapItemView(final View view) {
+        if (view instanceof WrapperView) {
+            return ((WrapperView) view).getItem();
+        }
+        return view;
     }
 }
