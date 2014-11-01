@@ -108,6 +108,10 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     @Override
     @NonNull
     public View getPrimaryView(@NonNull final View view) {
+        if(!(view instanceof SwipeUndoView)){
+            throw new IllegalArgumentException("Swiped view is not an instance of SwipeUndoView. Did you disable swiping of the header and footer using DismissableManager?");
+        }
+
         View primaryView = ((SwipeUndoView) view).getPrimaryView();
         if (primaryView == null) {
             throw new IllegalStateException("primaryView == null");
