@@ -278,6 +278,26 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
         mVirtualListCount--;
     }
 
+    /**
+     * Dismisses the {@link android.view.View} corresponding to given position from the list.
+     * This will <i>not</i> first fling the item sideways, but immediately does the remove animation.
+     *
+     * @param position The position of the item in the {@link android.widget.ListAdapter}. Must be visible.
+     */
+    public void dismiss(final int position) {
+        int firstVisiblePosition = mListViewWrapper.getFirstVisiblePosition();
+        int lastVisiblePosition = mListViewWrapper.getLastVisiblePosition();
+        if (position < firstVisiblePosition || position > lastVisiblePosition) {
+            throw new IllegalArgumentException("View for position " + position + " not visible!");
+        }
+
+        View downView = AdapterViewUtil.getViewForPosition(mListViewWrapper, position);
+        if (downView == null) {
+            throw new IllegalStateException("No view found for position " + position);
+        }
+        afterViewFling(downView, position);
+    }
+
     @Override
     public boolean isInteracting() {
         return mSwiping;
