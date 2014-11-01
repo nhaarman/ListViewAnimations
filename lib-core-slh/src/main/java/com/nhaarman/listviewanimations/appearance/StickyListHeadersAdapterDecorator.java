@@ -101,7 +101,7 @@ public class StickyListHeadersAdapterDecorator extends BaseAdapterDecorator impl
     @Override
     public View getHeaderView(final int position, final View convertView, final ViewGroup parent) {
         if (getListViewWrapper() == null) {
-            throw new IllegalStateException("Call setStickyListHeadersListView() on this AnimationAdapter first!");
+            throw new IllegalStateException("Call setStickyListHeadersListView() or setListViewWrapper() on this AnimationAdapter first!");
         }
 
         if (convertView != null) {
