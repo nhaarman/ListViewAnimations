@@ -107,7 +107,7 @@ public class MotionEventUtils {
         }
 
         if (wait) {
-        /* We need to wait for the fling animation to complete */
+        /* We need to wait for the swipe animation to complete */
             Thread.sleep(1500);
         }
     }

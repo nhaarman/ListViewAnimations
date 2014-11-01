@@ -261,7 +261,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
      *
      * @param position the position of the item in the {@link android.widget.ListAdapter}. Must be visible.
      */
-    public void fling(final int position) {
+    public void swipe(final int position) {
         int firstVisiblePosition = mListViewWrapper.getFirstVisiblePosition();
         int lastVisiblePosition = mListViewWrapper.getLastVisiblePosition();
         if (position < firstVisiblePosition || position > lastVisiblePosition) {

@@ -132,7 +132,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
     }
 
     /**
-     * Tests whether calling SwipeTouchListener#fling(int) triggers a call to SwipeTouchListener#afterViewFling.
+     * Tests whether calling SwipeTouchListener#swipe(int) triggers a call to SwipeTouchListener#afterViewFling.
      */
     public void testFling() throws InterruptedException {
         mActivity.runOnUiThread(
@@ -140,7 +140,7 @@ public class SwipeTouchListenerTest extends ActivityInstrumentationTestCase2<Swi
 
                     @Override
                     public void run() {
-                        mSwipeTouchListener.fling(0);
+                        mSwipeTouchListener.swipe(0);
                     }
                 }
         );

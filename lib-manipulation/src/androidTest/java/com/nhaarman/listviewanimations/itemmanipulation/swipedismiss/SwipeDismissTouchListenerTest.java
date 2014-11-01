@@ -102,13 +102,13 @@ public class SwipeDismissTouchListenerTest extends ActivityInstrumentationTestCa
 
 
     /**
-     * Tests whether calling SwipeTouchListener#fling triggers a call to OnDismissCallback#onDismiss.
+     * Tests whether calling SwipeTouchListener#swipe triggers a call to OnDismissCallback#onDismiss.
      */
     public void testFling() throws InterruptedException {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mSwipeTouchListener.fling(0);
+                mSwipeTouchListener.swipe(0);
             }
         });
 

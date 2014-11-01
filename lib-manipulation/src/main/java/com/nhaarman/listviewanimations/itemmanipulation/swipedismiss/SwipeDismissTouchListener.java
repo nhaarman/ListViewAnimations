@@ -84,12 +84,12 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
     }
 
     @Override
-    public void fling(final int position) {
+    public void swipe(final int position) {
         int firstVisiblePosition = getListViewWrapper().getFirstVisiblePosition();
         int lastVisiblePosition = getListViewWrapper().getLastVisiblePosition();
 
         if (firstVisiblePosition <= position && position <= lastVisiblePosition) {
-            super.fling(position);
+            super.swipe(position);
         } else if (position > lastVisiblePosition) {
             directDismiss(position);
         } else {

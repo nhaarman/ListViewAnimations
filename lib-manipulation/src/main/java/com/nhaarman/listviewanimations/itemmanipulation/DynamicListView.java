@@ -324,7 +324,7 @@ public class DynamicListView extends ListView {
         return super.computeVerticalScrollRange();
     }
 
-    /* Proxy methods below */
+    /* Delegated methods below */
 
     /**
      * Inserts an item at given index. Will show an entrance animation for the new item if the newly added item is visible.
@@ -460,16 +460,16 @@ public class DynamicListView extends ListView {
     }
 
     /**
-     * Flings the {@link android.view.View} corresponding to given position out of sight.
+     * Swipes the {@link android.view.View} corresponding to given position out of sight.
      * Calling this method has the same effect as manually swiping an item off the screen.
      * <p/>
      * This method does nothing if no swipe functionality is enabled.
      *
      * @param position the position of the item in the {@link android.widget.ListAdapter}. Must be visible.
      */
-    public void fling(final int position) {
+    public void swipe(final int position) {
         if (mSwipeTouchListener != null) {
-            mSwipeTouchListener.fling(position);
+            mSwipeTouchListener.swipe(position);
         }
     }
 
