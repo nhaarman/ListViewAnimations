@@ -17,7 +17,7 @@
 package com.haarman.listviewanimations.util;
 
 import android.graphics.Bitmap;
-import android.util.LruCache;
+import android.support.v4.util.LruCache;
 
 public class BitmapCache extends LruCache<Integer, Bitmap> {
 

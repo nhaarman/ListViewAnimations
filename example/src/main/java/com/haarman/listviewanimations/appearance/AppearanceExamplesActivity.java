@@ -15,11 +15,11 @@
  */
 package com.haarman.listviewanimations.appearance;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,11 +56,11 @@ public class AppearanceExamplesActivity extends MyListActivity implements Action
         setAlphaAdapter();
 
         assert getActionBar() != null;
-        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        getActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         SpinnerAdapter animSelectionAdapter = new AnimSelectionAdapter(this);
-        getActionBar().setListNavigationCallbacks(animSelectionAdapter, this);
+        getSupportActionBar().setListNavigationCallbacks(animSelectionAdapter, this);
     }
 
     private void setAlphaAdapter() {
