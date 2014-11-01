@@ -16,6 +16,7 @@
 
 package com.haarman.listviewanimations;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import com.nhaarman.listviewanimations.appearance.StickyListHeadersAdapterDecorator;
@@ -32,7 +33,9 @@ public class StickyListHeadersActivity extends BaseActivity {
         setContentView(R.layout.activity_stickylistheaders);
 
         StickyListHeadersListView listView = (StickyListHeadersListView) findViewById(R.id.activity_stickylistheaders_listview);
-        listView.setFitsSystemWindows(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            listView.setFitsSystemWindows(true);
+        }
 
         MyListAdapter adapter = new MyListAdapter(this);
         AlphaInAnimationAdapter animationAdapter = new AlphaInAnimationAdapter(adapter);

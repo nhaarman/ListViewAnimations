@@ -126,16 +126,8 @@ public class DynamicListView extends ListView {
 
     /**
      * Enables the drag and drop functionality for this {@code DynamicListView}.
-     * <p/>
-     * <b>NOTE: This method can only be called on devices running ICS (14) and above, otherwise an exception will be thrown.</b>
-     *
-     * @throws java.lang.UnsupportedOperationException if the device uses an older API than 14.
      */
     public void enableDragAndDrop() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            throw new UnsupportedOperationException("Drag and drop is only supported API levels 14 and up!");
-        }
-
         mDragAndDropHandler = new DragAndDropHandler(this);
     }
 

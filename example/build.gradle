@@ -20,6 +20,7 @@ dependencies {
     compile 'com.android.support:support-annotations:21.0.0'
 
     compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.0'
     compile 'se.emilsjolander:stickylistheaders:2.5.0'
 
     compile project(':lib-core')
@@ -32,7 +33,7 @@ android {
     buildToolsVersion '21.0.1'
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 8
         targetSdkVersion 21
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(new Date().format('yyyyMMddHH'))
