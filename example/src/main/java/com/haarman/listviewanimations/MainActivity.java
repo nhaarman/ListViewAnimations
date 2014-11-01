@@ -65,7 +65,10 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bindService(getExplicitIapIntent(), mServiceConn, Context.BIND_AUTO_CREATE);
+        Intent iapIntent = getExplicitIapIntent();
+        if(iapIntent != null) {
+            bindService(iapIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        }
     }
 
     /* http://stackoverflow.com/a/26318757/675383 */
@@ -150,7 +153,9 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindService(mServiceConn);
+        if(mService != null) {
+            unbindService(mServiceConn);
+        }
     }
 
     @Override
