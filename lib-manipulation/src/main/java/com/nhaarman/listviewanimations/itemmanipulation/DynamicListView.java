@@ -261,6 +261,10 @@ public class DynamicListView extends ListView {
     public AnimateAdditionAdapter<Object> additionRemovalAnimatedAdapter(final BaseAdapter wrappedAdapter) {
         return new AnimateAdditionAdapter( wrappedAdapter);
     }
+    
+    public boolean isInteracting() {
+        return mCurrentHandlingTouchEventHandler != null && mCurrentHandlingTouchEventHandler.isInteracting();
+    }
 
     @Override
     public boolean dispatchTouchEvent(@NonNull final MotionEvent ev) {

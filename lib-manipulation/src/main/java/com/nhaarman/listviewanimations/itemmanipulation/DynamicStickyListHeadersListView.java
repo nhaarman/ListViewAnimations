@@ -32,6 +32,10 @@ public class DynamicStickyListHeadersListView extends
         return (DynamicListView) mList;
     }
     
+    public boolean isInteracting() {
+        return getDynamicListView().isInteracting();
+    }
+    
     public void insert(final int index, final Object item) {
         getDynamicListView().insert(index, item);
     }
