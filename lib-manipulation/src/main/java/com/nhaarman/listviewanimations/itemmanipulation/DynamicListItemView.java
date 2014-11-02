@@ -99,13 +99,20 @@ public class DynamicListItemView extends FrameLayout {
                 //this makes sure we actually use the content height and layout menus accordingly
                 if ((heightMeasureSpec <= 0) && mContentView != null ) {
                     int height = mContentView.getMeasuredHeight();
+                    
                     setMeasuredDimension(getMeasuredWidth(), height);
                     heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST);
                     if (mLeftMenu != null) {
-                        measureChildWithMargins(mLeftMenu, widthMeasureSpec, 0, heightMeasureSpec, 0);
+                        int menuHeight = mLeftMenu.getMeasuredHeight();
+                        if (menuHeight > height) {
+                            measureChildWithMargins(mLeftMenu, widthMeasureSpec, 0, heightMeasureSpec, 0);
+                        }
                     }
                     if (mRightMenu != null) {
-                        measureChildWithMargins(mRightMenu, widthMeasureSpec, 0, heightMeasureSpec, 0);
+                        int menuHeight = mRightMenu.getMeasuredHeight();
+                        if (menuHeight > height) {
+                            measureChildWithMargins(mRightMenu, widthMeasureSpec, 0, heightMeasureSpec, 0);
+                        }
                     }
                 }
             }
