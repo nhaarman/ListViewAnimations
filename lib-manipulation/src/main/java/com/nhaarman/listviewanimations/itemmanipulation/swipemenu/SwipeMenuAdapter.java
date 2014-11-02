@@ -118,20 +118,12 @@ public class SwipeMenuAdapter extends BaseAdapterDecorator {
         if (mUndoAdapter != null) {
             View overlayView = mUndoAdapter.getUndoView(position, view.getOverlayView(), view);
             view.setOverlayView(overlayView);
-//            mUndoAdapter.getUndoClickView(overlayView).setOnClickListener(new SimpleSwipeUndoAdapter.UndoClickListener(view, position));
         }
-
 
         boolean isOpenedMenu = position == mSwipeMenuTouchListener.getCurrentMenuPosition();
         if (isOpenedMenu) {
             view.openMenu(mSwipeMenuTouchListener.getCurrentMenuDirection());
         }
-        else if (convertView != null) {
-            view.prepareForReuse();
-        }
-//        primaryView.setVisibility(isInUndoState ? View.GONE : View.VISIBLE);
-//        undoView.setVisibility(isInUndoState ? View.VISIBLE : View.GONE);
-
         return view;
     }
 
