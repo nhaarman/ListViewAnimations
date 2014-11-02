@@ -525,7 +525,9 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
         long animationTime = mAnimationTime;
         if (mVelocityTracker != null) {
             float velocityX = Math.abs(mVelocityTracker.getXVelocity());
-            animationTime /= Math.ceil(velocityX / 2000.0f);
+            if (velocityX != 0.0f) {
+                animationTime /= Math.ceil(velocityX / 2000.0f);
+            }
         }
         return animationTime;
     }
