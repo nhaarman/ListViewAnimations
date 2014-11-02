@@ -550,8 +550,8 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
             int shouldOpenMenu = -1;
 
             if (mCanShowMenuCurrent) {
-                float velocityX = Math.abs(mVelocityTracker.getXVelocity());
-                float velocityY = Math.abs(mVelocityTracker.getYVelocity());
+                float velocityX = mVelocityTracker.getXVelocity();
+                float velocityY = mVelocityTracker.getYVelocity();
                 shouldOpenMenu = mCurrentView.shouldOpenMenuOnUp(deltaX, velocityX, velocityY,
                         mMinFlingVelocity, mMaxFlingVelocity);
             }
