@@ -22,7 +22,7 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="8"
         android:targetSdkVersion="20"
         tools:ignore="GradleOverrides,OldTargetApi" />
 

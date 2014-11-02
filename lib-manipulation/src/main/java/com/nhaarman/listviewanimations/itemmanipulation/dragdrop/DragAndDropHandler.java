@@ -1,9 +1,5 @@
 package com.nhaarman.listviewanimations.itemmanipulation.dragdrop;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -24,6 +20,11 @@ import android.widget.WrapperListAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.TouchEventHandler;
 import com.nhaarman.listviewanimations.util.Swappable;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.animation.ValueAnimator;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 
 /**
  * A class which handles drag and drop functionality for listview implementations backed up by a
@@ -32,7 +33,6 @@ import com.nhaarman.listviewanimations.util.Swappable;
  * <p/>
  * Users of this class must call {@link #onTouchEvent(android.view.MotionEvent)} and {@link #dispatchDraw(android.graphics.Canvas)} on the right moments.
  */
-@TargetApi(14)
 public class DragAndDropHandler implements TouchEventHandler {
 
     private static final int INVALID_ID = -1;
@@ -148,11 +148,7 @@ public class DragAndDropHandler implements TouchEventHandler {
 
         mDraggableManager = new DefaultDraggableManager();
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            mSwitchViewAnimator = new KitKatSwitchViewAnimator();
-        } else {
-            mSwitchViewAnimator = new LSwitchViewAnimator();
-        }
+        mSwitchViewAnimator = new DragSwitchViewAnimator();
 
         mMobileItemId = INVALID_ID;
 
@@ -203,7 +199,6 @@ public class DragAndDropHandler implements TouchEventHandler {
      * Starts dragging the item at given position. User must be touching this {@code DynamicListView}.
      *
      * @param position the position of the item in the adapter to start dragging. Be sure to subtract any header views.
-     *
      * @throws java.lang.IllegalStateException if the user is not touching this {@code DynamicListView},
      *                                         or if there is no adapter set.
      */
@@ -227,10 +222,12 @@ public class DragAndDropHandler implements TouchEventHandler {
         }
 
 
-        mMobileView = mWrapper.getChildAt(position - mWrapper.getFirstVisiblePosition() + mWrapper.getHeaderViewsCount());
+        long itemId = mAdapter.getItemId(position);
+        mMobileView = getViewForId(itemId);
+
         if (mMobileView != null) {
             mOriginalMobileItemPosition = position;
-            mMobileItemId = mAdapter.getItemId(position);
+            mMobileItemId = itemId;
             mHoverDrawable = new HoverDrawable(mMobileView, mLastMotionEventY);
             mMobileView.setVisibility(View.INVISIBLE);
         }
@@ -259,7 +256,6 @@ public class DragAndDropHandler implements TouchEventHandler {
      * Dispatches the {@link android.view.MotionEvent}s to their proper methods if applicable.
      *
      * @param event the {@code MotionEvent}.
-     *
      * @return {@code true} if the event was handled, {@code false} otherwise.
      */
     @Override
@@ -300,7 +296,6 @@ public class DragAndDropHandler implements TouchEventHandler {
      * starts dragging the {@code View}.
      *
      * @param event the {@link android.view.MotionEvent} that was triggered.
-     *
      * @return {@code true} if we have started dragging, {@code false} otherwise.
      */
     private boolean handleDownEvent(@NonNull final MotionEvent event) {
@@ -319,7 +314,7 @@ public class DragAndDropHandler implements TouchEventHandler {
         if (v == null) {
             return AdapterView.INVALID_POSITION;
         } else {
-            return mWrapper.getPositionForView(v);
+            return mWrapper.getPositionForView(v) - mWrapper.getHeaderViewsCount();
         }
     }
 
@@ -356,7 +351,6 @@ public class DragAndDropHandler implements TouchEventHandler {
      * Applies the {@link MotionEvent} to the hover drawable, and switches {@code View}s if necessary.
      *
      * @param event the {@code MotionEvent}.
-     *
      * @return {@code true} if the event was handled, {@code false} otherwise.
      */
     private boolean handleMoveEvent(@NonNull final MotionEvent event) {
@@ -370,7 +364,8 @@ public class DragAndDropHandler implements TouchEventHandler {
             if (position != AdapterView.INVALID_POSITION) {
                 View downView = mWrapper.getChildAt(position - mWrapper.getFirstVisiblePosition());
                 assert downView != null;
-                if (mDraggableManager.isDraggable(downView, position - mWrapper.getHeaderViewsCount(), mDownX - downView.getX(), mDownY - downView.getY())) {
+
+                if (mDraggableManager.isDraggable(downView, position - mWrapper.getHeaderViewsCount(), mDownX - ViewHelper.getX(downView), mDownY - ViewHelper.getY(downView))) {
                     startDragging(position - mWrapper.getHeaderViewsCount());
                     handled = true;
                 }
@@ -395,17 +390,20 @@ public class DragAndDropHandler implements TouchEventHandler {
         }
 
         int position = getPositionForId(mMobileItemId);
-        long aboveItemId = position - 1 - mWrapper.getHeaderViewsCount() >= 0 ? mAdapter.getItemId(position - 1 - mWrapper.getHeaderViewsCount()) : INVALID_ID;
-        long belowItemId = position + 1 - mWrapper.getHeaderViewsCount() < mAdapter.getCount()
-                           ? mAdapter.getItemId(position + 1 - mWrapper.getHeaderViewsCount())
-                           : INVALID_ID;
+        int aboveItemPos = position - 1 >= 0 ? (position - 1) : INVALID_ID;
+        int belowItemPos = position + 1 < mAdapter.getCount() ? (position + 1) : INVALID_ID;
 
-        final long switchId = mHoverDrawable.isMovingUpwards() ? aboveItemId : belowItemId;
-        View switchView = getViewForId(switchId);
+        final int switchPos = mHoverDrawable.isMovingUpwards() ? aboveItemPos : belowItemPos;
 
-        final int deltaY = mHoverDrawable.getDeltaY();
-        if (switchView != null && Math.abs(deltaY) > mHoverDrawable.getIntrinsicHeight()) {
-            switchViews(switchView, switchId, mHoverDrawable.getIntrinsicHeight() * (deltaY < 0 ? -1 : 1));
+        if (switchPos >= 0 && switchPos < mAdapter.getCount()) {
+
+            final long switchId = mAdapter.getItemId(switchPos);
+            View switchView = getViewForId(switchId);
+
+            final int deltaY = mHoverDrawable.getDeltaY();
+            if (switchView != null && Math.abs(deltaY) > mHoverDrawable.getIntrinsicHeight()) {
+                switchViews(switchView, switchId, mHoverDrawable.getIntrinsicHeight() * (deltaY < 0 ? -1 : 1));
+            }
         }
 
         mScrollHandler.handleMobileCellScroll();
@@ -425,16 +423,17 @@ public class DragAndDropHandler implements TouchEventHandler {
     private void switchViews(final View switchView, final long switchId, final float translationY) {
         assert mHoverDrawable != null;
         assert mAdapter != null;
-        assert mMobileView != null;
 
-        final int switchViewPosition = mWrapper.getPositionForView(switchView);
-        int mobileViewPosition = mWrapper.getPositionForView(mMobileView);
+        final int switchViewPosition = getPositionForId(switchId);
+        int mobileViewPosition = getPositionForId(mMobileItemId);
 
-        ((Swappable) mAdapter).swapItems(switchViewPosition - mWrapper.getHeaderViewsCount(), mobileViewPosition - mWrapper.getHeaderViewsCount());
+        ((Swappable) mAdapter).swapItems(switchViewPosition, mobileViewPosition);
         ((BaseAdapter) mAdapter).notifyDataSetChanged();
 
         mHoverDrawable.shift(switchView.getHeight());
-        mSwitchViewAnimator.animateSwitchView(switchId, translationY);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            mSwitchViewAnimator.animateSwitchView(switchId, translationY);
+        }
     }
 
     /**
@@ -450,19 +449,34 @@ public class DragAndDropHandler implements TouchEventHandler {
             return false;
         }
         assert mHoverDrawable != null;
+        refreshMobileView();
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(mHoverDrawable.getTop(), (int) mMobileView.getY());
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(mHoverDrawable.getTop(), (int) ViewHelper.getY(mMobileView));
         SettleHoverDrawableAnimatorListener listener = new SettleHoverDrawableAnimatorListener(mHoverDrawable, mMobileView);
         valueAnimator.addUpdateListener(listener);
         valueAnimator.addListener(listener);
         valueAnimator.start();
 
-        int newPosition = getPositionForId(mMobileItemId) - mWrapper.getHeaderViewsCount();
+        int newPosition = getPositionForId(mMobileItemId);
         if (mOriginalMobileItemPosition != newPosition && mOnItemMovedListener != null) {
             mOnItemMovedListener.onItemMoved(mOriginalMobileItemPosition, newPosition);
         }
 
         return true;
+    }
+
+    /**
+     * Refresh mMobileView from mMobileItemId since views may be shuffled because of ListView implementation
+     */
+    private void refreshMobileView() {
+        if (mMobileView != null) {
+            View view = getViewForId(mMobileItemId);
+            if(mMobileView != view) {
+                mMobileView.setVisibility(View.VISIBLE);
+                mMobileView = view;
+                mMobileView.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     /**
@@ -503,57 +517,9 @@ public class DragAndDropHandler implements TouchEventHandler {
     }
 
     /**
-     * A {@link SwitchViewAnimator} for versions KitKat and below.
-     * This class immediately updates {@link #mMobileView} to be the newly mobile view.
+     * A {@link SwitchViewAnimator}.
      */
-    private class KitKatSwitchViewAnimator implements SwitchViewAnimator {
-
-        @Override
-        public void animateSwitchView(final long switchId, final float translationY) {
-            assert mMobileView != null;
-            mWrapper.getListView().getViewTreeObserver().addOnPreDrawListener(new AnimateSwitchViewOnPreDrawListener(mMobileView, switchId, translationY));
-            mMobileView = getViewForId(mMobileItemId);
-        }
-
-        private class AnimateSwitchViewOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
-
-            private final View mPreviousMobileView;
-
-            private final long mSwitchId;
-
-            private final float mTranslationY;
-
-            AnimateSwitchViewOnPreDrawListener(final View previousMobileView, final long switchId, final float translationY) {
-                mPreviousMobileView = previousMobileView;
-                mSwitchId = switchId;
-                mTranslationY = translationY;
-            }
-
-            @Override
-            public boolean onPreDraw() {
-                mWrapper.getListView().getViewTreeObserver().removeOnPreDrawListener(this);
-
-                View switchView = getViewForId(mSwitchId);
-                if (switchView != null) {
-                    switchView.setTranslationY(mTranslationY);
-                    switchView.animate().translationY(0).start();
-                }
-
-                mPreviousMobileView.setVisibility(View.VISIBLE);
-
-                if (mMobileView != null) {
-                    mMobileView.setVisibility(View.INVISIBLE);
-                }
-                return true;
-            }
-        }
-    }
-
-    /**
-     * A {@link SwitchViewAnimator} for versions L and above.
-     * This class updates {@link #mMobileView} only after the next frame has been drawn.
-     */
-    private class LSwitchViewAnimator implements SwitchViewAnimator {
+    private class DragSwitchViewAnimator implements SwitchViewAnimator {
 
         @Override
         public void animateSwitchView(final long switchId, final float translationY) {
@@ -577,15 +543,11 @@ public class DragAndDropHandler implements TouchEventHandler {
 
                 View switchView = getViewForId(mSwitchId);
                 if (switchView != null) {
-                    switchView.setTranslationY(mTranslationY);
-                    switchView.animate().translationY(0).start();
+                    ViewHelper.setTranslationY(switchView, mTranslationY);
+                    ViewPropertyAnimator.animate(switchView).translationY(0).start();
                 }
 
-                assert mMobileView != null;
-                mMobileView.setVisibility(View.VISIBLE);
-                mMobileView = getViewForId(mMobileItemId);
-                assert mMobileView != null;
-                mMobileView.setVisibility(View.INVISIBLE);
+                refreshMobileView();
                 return true;
             }
         }
@@ -680,8 +642,8 @@ public class DragAndDropHandler implements TouchEventHandler {
             mPreviousLastVisibleItem = mPreviousLastVisibleItem == -1 ? mCurrentLastVisibleItem : mPreviousLastVisibleItem;
 
             if (mHoverDrawable != null) {
-                assert mMobileView != null;
-                float y = mMobileView.getY();
+                refreshMobileView();
+                float y = ViewHelper.getY(mMobileView);
                 mHoverDrawable.onScroll(y);
             }
 
@@ -711,14 +673,15 @@ public class DragAndDropHandler implements TouchEventHandler {
             }
 
             int position = getPositionForId(mMobileItemId);
-            if (position == AdapterView.INVALID_POSITION) {
-                return;
-            }
 
-            long switchItemId = position - 1 - mWrapper.getHeaderViewsCount() >= 0 ? mAdapter.getItemId(position - 1 - mWrapper.getHeaderViewsCount()) : INVALID_ID;
-            View switchView = getViewForId(switchItemId);
-            if (switchView != null) {
-                switchViews(switchView, switchItemId, -switchView.getHeight());
+            int switchItemPos = position - 1 >= 0 ? position - 1 : INVALID_ID;
+
+            if (switchItemPos >= mAdapter.getCount()) {
+                long switchItemId = mAdapter.getItemId(switchItemPos);
+                View switchView = getViewForId(switchItemId);
+                if (switchView != null) {
+                    switchViews(switchView, switchItemId, switchView.getHeight());
+                }
             }
         }
 
@@ -732,16 +695,15 @@ public class DragAndDropHandler implements TouchEventHandler {
             }
 
             int position = getPositionForId(mMobileItemId);
-            if (position == AdapterView.INVALID_POSITION) {
-                return;
-            }
 
-            long switchItemId = position + 1 - mWrapper.getHeaderViewsCount() < mAdapter.getCount()
-                                ? mAdapter.getItemId(position + 1 - mWrapper.getHeaderViewsCount())
-                                : INVALID_ID;
-            View switchView = getViewForId(switchItemId);
-            if (switchView != null) {
-                switchViews(switchView, switchItemId, switchView.getHeight());
+            int switchItemPos = position + 1 < mAdapter.getCount() ? position + 1 : INVALID_ID;
+
+            if (switchItemPos < mAdapter.getCount()) {
+                long switchItemId = mAdapter.getItemId(switchItemPos);
+                View switchView = getViewForId(switchItemId);
+                if (switchView != null) {
+                    switchViews(switchView, switchItemId, switchView.getHeight());
+                }
             }
         }
     }

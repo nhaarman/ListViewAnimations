@@ -41,7 +41,7 @@ public class GridViewActivity extends BaseActivity {
 
         gridView.setAdapter(swingBottomInAnimationAdapter);
 
-        assert getActionBar() != null;
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }

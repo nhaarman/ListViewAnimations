@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,7 +48,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
     private static final String URL_GITHUB_IO = "http://nhaarman.github.io/ListViewAnimations?ref=app";
 
@@ -64,7 +65,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bindService(getExplicitIapIntent(), mServiceConn, Context.BIND_AUTO_CREATE);
+        Intent iapIntent = getExplicitIapIntent();
+        if(iapIntent != null) {
+            bindService(iapIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        }
     }
 
     /* http://stackoverflow.com/a/26318757/675383 */
@@ -149,7 +153,9 @@ public class MainActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindService(mServiceConn);
+        if(mService != null) {
+            unbindService(mServiceConn);
+        }
     }
 
     @Override
