@@ -34,6 +34,11 @@ public class MenuContainerView extends FrameLayout {
             mContainer.addView(button, defaultLayoutParams);
         }
     }
+    
+    //can't use the same name as the super method is final
+    public void setMeasuredDimensions(final int width, final int height) {
+        super.setMeasuredDimension(width, height);
+    }
 
 
 
