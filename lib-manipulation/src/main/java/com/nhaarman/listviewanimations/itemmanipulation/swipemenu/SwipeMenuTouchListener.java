@@ -296,11 +296,30 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
 
         int downPosition = AdapterViewUtil.getPositionForView(mListViewWrapper, downView);
 
-        if (mOpenedPosition != AdapterView.INVALID_POSITION && mOpenedPosition != downPosition) {
-            closeMenusAnimated();
-            //put swiping to true so that interacting get
-            mSwiping = true;
-            return true;
+        if (mOpenedPosition != AdapterView.INVALID_POSITION) {
+            boolean shouldStop = mOpenedPosition != downPosition;
+            if (!shouldStop) {
+                Rect rect = new Rect();
+                int deltaY = 0;
+                View parentView = downView;
+                if (parentView.getParent() instanceof WrapperView) {
+                    parentView = (View) parentView.getParent();
+                    deltaY = ((WrapperView)parentView).getItemTop();
+                }
+                final float screenX = motionEvent.getX();
+                final float screenY = motionEvent.getY();
+                final int viewX = (int) (screenX - parentView.getLeft());
+                final int viewY = (int) (screenY - parentView.getTop() - deltaY);
+                downView.getContentView().getHitRect(rect);
+                shouldStop = rect.contains(viewX, viewY);
+            }
+            if (shouldStop) {
+                closeMenusAnimated();
+                //put swiping to true so that interacting get
+                mSwiping = true;
+                return true;
+            }
+            
         }
 
 
