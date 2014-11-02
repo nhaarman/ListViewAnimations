@@ -388,6 +388,11 @@ public class DynamicListItemView extends FrameLayout {
             mCurrentAnimator.cancel();
             mCurrentAnimator = null;
         }
+        if (mCurrentPercent == percent) {
+            mOnClosedListener.onAnimationEnd(null);
+            listener.onAnimationEnd(null);
+            return;
+        }
         ValueAnimator animation = ValueAnimator.ofFloat(mCurrentPercent, percent);
         animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
