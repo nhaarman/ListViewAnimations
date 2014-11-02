@@ -356,16 +356,23 @@ public class DynamicListItemView extends FrameLayout {
             return -1;
         }
         float percent = (deltaX - mDeltaOffsetX) / mCurrentMenuWidth;
-        if ((percent > 0.5 && mCurrentDirection == DIRECTION_LEFT) ||
-            (percent < -0.5 && mCurrentDirection == DIRECTION_RIGHT)) {
-            return mCurrentDirection;
-        }
-        else if (minVelocity <= velocityX && velocityX <= maxVelocity && velocityY < velocityX) {
+        float absVX = Math.abs(velocityX);
+        float absVY = Math.abs(velocityY);
+        if (minVelocity <= absVX && absVX <= maxVelocity && absVY < absVX) {
+            if ((mCurrentDirection == DIRECTION_LEFT && velocityX < 0) ||
+                (mCurrentDirection == DIRECTION_RIGHT && velocityX > 0)) {
+                return -1;
+            }
             if ((percent >= 0 && mCurrentDirection == DIRECTION_LEFT) ||
                     (percent <= 0 && mCurrentDirection == DIRECTION_RIGHT)   ) {
                 return mCurrentDirection;
             }
         }
+        else if ((percent > 0.5 && mCurrentDirection == DIRECTION_LEFT) ||
+            (percent < -0.5 && mCurrentDirection == DIRECTION_RIGHT)) {
+            return mCurrentDirection;
+        }
+//        else 
         return -1;
     }
     private Animator mCurrentAnimator = null;
