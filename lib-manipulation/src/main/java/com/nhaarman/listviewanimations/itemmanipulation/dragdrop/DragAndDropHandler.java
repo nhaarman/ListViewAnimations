@@ -222,10 +222,12 @@ public class DragAndDropHandler implements TouchEventHandler {
         }
 
 
-        mMobileView = mWrapper.getChildAt(position - mWrapper.getFirstVisiblePosition() + mWrapper.getHeaderViewsCount());
+        long itemId = mAdapter.getItemId(position);
+        mMobileView = getViewForId(itemId);
+
         if (mMobileView != null) {
             mOriginalMobileItemPosition = position;
-            mMobileItemId = mAdapter.getItemId(position);
+            mMobileItemId = itemId;
             mHoverDrawable = new HoverDrawable(mMobileView, mLastMotionEventY);
             mMobileView.setVisibility(View.INVISIBLE);
         }
@@ -468,10 +470,12 @@ public class DragAndDropHandler implements TouchEventHandler {
      */
     private void refreshMobileView() {
         if (mMobileView != null) {
-            mMobileView.setVisibility(View.VISIBLE);
-            mMobileView = getViewForId(mMobileItemId);
-            assert mMobileView != null;
-            mMobileView.setVisibility(View.INVISIBLE);
+            View view = getViewForId(mMobileItemId);
+            if(mMobileView != view) {
+                mMobileView.setVisibility(View.VISIBLE);
+                mMobileView = view;
+                mMobileView.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
