@@ -360,23 +360,24 @@ public class SwipeMenuTouchListener implements View.OnTouchListener, TouchEventH
     @Nullable
     private DynamicListItemView findDownView(@NonNull final MotionEvent motionEvent) {
         Rect rect = new Rect();
-        int childCount = mListViewWrapper.getChildCount();
+        final int childCount = mListViewWrapper.getChildCount();
         int x = (int) motionEvent.getX();
         int y = (int) motionEvent.getY();
         DynamicListItemView downView = null;
         for (int i = 0; i < childCount && downView == null; i++) {
             View child = mListViewWrapper.getChildAt(i);
+            int deltaX = 0;
+            int deltaY = 0;
+            if (child instanceof WrapperView) {
+                deltaX = (int) (child.getLeft());
+                deltaY = (int) (child.getTop());
+                child = ((WrapperView) child).getItem();
+            }
             if (child != null) {
                 child.getHitRect(rect);
-                if (rect.contains(x, y)) {
+                if (rect.contains(x - deltaX, y - deltaY)) {
                     if (child instanceof DynamicListItemView) {
                         downView = (DynamicListItemView) child;
-                    }
-                    else if (child instanceof WrapperView) {
-                        View item = ((WrapperView) child).getItem();
-                        if (item instanceof DynamicListItemView) {
-                            downView = (DynamicListItemView) item;
-                        }
                     }
                 }
             }
