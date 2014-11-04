@@ -1,44 +1,32 @@
 language: android
 jdk: oraclejdk7
 
+android:
+  components:
+    - build-tools-21.1.0
+    - android-21
+    - extra-android-m2repository
+    - extra-android-support
+    - extra-google-m2repository
+
 env:
-  matrix:
-    - ANDROID_TARGET=15 LINT=false MAVEN=false
-    - ANDROID_TARGET=16 LINT=false MAVEN=false
-    - ANDROID_TARGET=17 LINT=false MAVEN=false
-    - ANDROID_TARGET=18 LINT=false MAVEN=false
-    - ANDROID_TARGET=19 LINT=true MAVEN=true
   global:
     - TERM=dumb
-    - COMPONENTS=build-tools-20.0.0,android-20,extra-android-m2repository,extra-android-support,extra-google-m2repository
-    - LICENSES="android-sdk-license-5be876d5|android-sdk-preview-license-52d11cd2"
     - secure: Fo/btrr+HpwmQL6TNxZuh/TWRMouz9Z1RCo77tf3crNP4OHq9EAkduLc/b4i6HCGFM3fyfJ7AM5XMa3OQvXfF84FQnew7NGE6zB/CKFfKBIZyzntvrDg4VqWEAHzunT6+eBnGtxtrAE0bBo4MmUCklXWP8j5UAyjfFpSeJdOywY=
     - secure: s56rqSiiwX40CQWeHTcbyVLRtwLP/pcHWqaVCKuXtZ/m9SgRI/SHp9o8ITI2dzr3syEeAkHjkJOkHQSpH0bHi1xKY4M9ODcCugwv+yDEELw1qmI6Cvwjvj1cKsG7ebt39OnCkz+TqhtI/iOEkxq7mTizFjNIxIImMkKxeQwcFgE=
     - secure: UOQ9keLBuJw5Ed/eYtXarwoGuJSSvgGTob+D9aU8hVRoTUXpSDuHtk9TdS4MNXQ33jgFZEsmkpwRmV54XVEGe6xcri1uys1JDzjc+SqTEgbEh1QktfIWGvOx49YZtI2Zei0324S2qXRtemKMw4N+1XRRMP/IXEogr26Xi5JLVcI=
 
-before_install:
-  - curl -3L https://raw.github.com/embarkmobile/android-sdk-installer/version-2/android-sdk-installer | bash /dev/stdin --install=$COMPONENTS,android-$ANDROID_TARGET,sys-img-armeabi-v7a-android-$ANDROID_TARGET --accept=$LICENSES && source ~/.android-sdk-installer/env
-  - curl -3L -o wait_for_emulator https://github.com/embarkmobile/android-sdk-installer/raw/version-2/wait_for_emulator
-  - sudo chmod +x wait_for_emulator
-
-  # Start the emulator
-  - echo no | android create avd --force -n test -t android-$ANDROID_TARGET --abi armeabi-v7a
-  - emulator -avd test -no-audio -no-window &
-
-before_script:
-  # Downloads gradle stuff
-  - gradle
-  - ./wait_for_emulator
-
 install:
  - true
 
+before_script:
+  - sudo chmod +x gradlew
+
 script:
-  - gradle connectedCheck --info
-  - if [[ $LINT == 'true' ]]; then gradle lint ; fi
+  - ./gradlew lint
 
 after_success:
-  - if [[ $MAVEN == 'true' && $TRAVIS_BRANCH == 'dev' && $TRAVIS_PULL_REQUEST == 'false' ]]; then gradle :lib-core:uploadArchives :lib-manipulation:uploadArchives :lib-core-slh:uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
+  - if [[ $TRAVIS_BRANCH == 'dev' && $TRAVIS_PULL_REQUEST == 'false' ]]; then ./gradlew :lib-core:uploadArchives :lib-manipulation:uploadArchives :lib-core-slh:uploadArchives -PnexusUsername="${nexusUsername}" -PnexusPassword="${nexusPassword}" ; fi
 
 notifications:
   email: false
