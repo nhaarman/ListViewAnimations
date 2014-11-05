@@ -451,9 +451,7 @@ public class DragAndDropHandler implements TouchEventHandler {
         }
         assert mHoverDrawable != null;
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            refreshMobileView();
-        }
+        refreshMobileView();
 
         ValueAnimator valueAnimator = ValueAnimator.ofInt(mHoverDrawable.getTop(), (int) ViewHelper.getY(mMobileView));
         SettleHoverDrawableAnimatorListener listener = new SettleHoverDrawableAnimatorListener(mHoverDrawable, mMobileView);
@@ -646,9 +644,7 @@ public class DragAndDropHandler implements TouchEventHandler {
             mPreviousLastVisibleItem = mPreviousLastVisibleItem == -1 ? mCurrentLastVisibleItem : mPreviousLastVisibleItem;
 
             if (mHoverDrawable != null) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                    refreshMobileView();
-                }
+                refreshMobileView();
                 mHoverDrawable.onScroll(ViewHelper.getY(mMobileView));
             }
 
