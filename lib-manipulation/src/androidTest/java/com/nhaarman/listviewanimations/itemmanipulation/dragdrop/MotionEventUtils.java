@@ -65,7 +65,7 @@ public class MotionEventUtils {
         List<MotionEvent> motionEvents = createMotionEvents(dynamicListView, fromY, toY);
         MotionEvent upEvent = motionEvents.remove(motionEvents.size() - 1);
         dispatchMotionEvents(instrumentation, motionEvents, true);
-        Thread.sleep(10000);
+        Thread.sleep(2000);
         dispatchMotionEvents(instrumentation, Arrays.asList(upEvent), true);
     }
 
@@ -75,9 +75,9 @@ public class MotionEventUtils {
         List<MotionEvent> results = new ArrayList<>();
         results.add(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, x, fromY, 0));
 
-        float diff = (toY - fromY) / 25;
+        float diff = (toY - fromY) / 40;
         float y = fromY;
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 40; i++) {
             y += diff;
             results.add(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_MOVE, x, y, 0));
         }
@@ -101,12 +101,12 @@ public class MotionEventUtils {
                     }
                 }
             } while (i < 3 && !success);
-            Thread.sleep(100);
+            Thread.sleep(30);
         }
 
         if (wait) {
         /* We need to wait for the swipe animation to complete */
-            Thread.sleep(1500);
+            Thread.sleep(750);
         }
     }
 
