@@ -494,12 +494,12 @@ public class DynamicListView extends ListView {
 
     /**
      * Dismisses the {@link android.view.View} corresponding to given position.
-     * Calling this method has the same effect as manually swiping an item off the screen.
+     * This will <i>not</i> first fling the item sideways, but immediately does the remove animation.
      * <p/>
      * This method does nothing if no swipe functionality is enabled.
      * It will however throw an exception if an incompatible swipe functionality is enabled.
      *
-     * @param position the position of the item in the {@link android.widget.ListAdapter}. Must be visible.
+     * @param position the position of the item in the {@link android.widget.ListAdapter}.
      *
      * @throws java.lang.IllegalStateException if the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeTouchListener}
      *                                         that is enabled does not extend {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissTouchListener}.
@@ -507,7 +507,30 @@ public class DynamicListView extends ListView {
     public void dismiss(final int position) {
         if (mSwipeTouchListener != null) {
             if (mSwipeTouchListener instanceof SwipeDismissTouchListener) {
-                ((SwipeDismissTouchListener) mSwipeTouchListener).dismiss(position);
+                mSwipeTouchListener.dismiss(position);
+            } else {
+                throw new IllegalStateException("Enabled swipe functionality does not support dismiss");
+            }
+        }
+    }
+
+
+    /**
+     * Dismisses the {@link android.view.View}s corresponding to given positions.
+     * This will <i>not</i> first fling the items sideways, but immediately does the remove animation.
+     * <p/>
+     * This method does nothing if no swipe functionality is enabled.
+     * It will however throw an exception if an incompatible swipe functionality is enabled.
+     *
+     * @param positions the positions of the items in the {@link android.widget.ListAdapter}.
+     *
+     * @throws java.lang.IllegalStateException if the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeTouchListener}
+     *                                         that is enabled does not extend {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissTouchListener}.
+     */
+    public void dismiss(@NonNull final Collection<Integer> positions) {
+        if (mSwipeTouchListener != null) {
+            if (mSwipeTouchListener instanceof SwipeDismissTouchListener) {
+                mSwipeTouchListener.dismiss(positions);
             } else {
                 throw new IllegalStateException("Enabled swipe functionality does not support dismiss");
             }

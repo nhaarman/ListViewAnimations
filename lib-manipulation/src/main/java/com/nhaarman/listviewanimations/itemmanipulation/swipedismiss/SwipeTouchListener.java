@@ -35,6 +35,8 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
+import java.util.Collection;
+
 /**
  * An {@link android.view.View.OnTouchListener} that makes the list items in a {@link android.widget.AbsListView} swipeable.
  * Implementations of this class should implement {@link #afterViewFling(android.view.View, int)} to specify what to do after an item has been swiped.
@@ -296,6 +298,18 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
             throw new IllegalStateException("No view found for position " + position);
         }
         afterViewFling(downView, position);
+    }
+
+    /**
+     * Dismisses the {@link android.view.View}s corresponding to given positions from the list.
+     * This will <i>not</i> first fling the items sideways, but immediately does the remove animation.
+     *
+     * @param positions The positions of the item in the {@link android.widget.ListAdapter}. Must be visible.
+     */
+    public void dismiss(@NonNull final Collection<Integer> positions) {
+        for (int position : positions) {
+            dismiss(position);
+        }
     }
 
     @Override
@@ -647,7 +661,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
      * Returns whether flinging the item at given position in the current state
      * would cause it to be removed from the data set.
      *
-     * @param view the {@code View} that would be flinged.
+     * @param view     the {@code View} that would be flinged.
      * @param position the position of the item in the {@link android.widget.ListAdapter} corresponding to the {@code View}.
      *
      * @return {@code true} if the item would leave the data set, {@code false} otherwise.
