@@ -78,8 +78,8 @@ public class MotionEventUtils {
         results.add(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, fromX, y, 0));
 
         float diff = fromX - toX;
-        for (int i = 1; i < 10; i++) {
-            float x = fromX + diff / 10 * i;
+        for (int i = 1; i < 40; i++) {
+            float x = fromX + diff / 40 * i;
             results.add(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_MOVE, x, y, 0));
         }
         results.add(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, toX, y, 0));
@@ -99,12 +99,12 @@ public class MotionEventUtils {
                     i++;
                 }
             } while (i < 3 && !success);
-            Thread.sleep(100);
+            Thread.sleep(30);
         }
 
         if (wait) {
         /* We need to wait for the swipe animation to complete */
-            Thread.sleep(1500);
+            Thread.sleep(750);
         }
     }
 
