@@ -71,7 +71,7 @@ public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
      */
     public void setDismissableManager(@Nullable final DismissableManager dismissableManager) {
         if (mSwipeUndoTouchListener == null) {
-            throw new IllegalStateException("You must call setAbsListView() first.");
+            throw new IllegalStateException("You must call setAbsListView() or setListViewWrapper() first.");
         }
         mSwipeUndoTouchListener.setDismissableManager(dismissableManager);
     }
@@ -84,7 +84,7 @@ public abstract class SwipeUndoAdapter extends BaseAdapterDecorator {
     @Override
     public View getView(final int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
         if (getListViewWrapper() == null) {
-            throw new IllegalArgumentException("Call setAbsListView() on this SwipeUndoAdapter before setAdapter()!");
+            throw new IllegalArgumentException("Call setAbsListView() or setListViewWrapper() on this SwipeUndoAdapter before setAdapter()!");
         }
         return super.getView(position, convertView, parent);
     }

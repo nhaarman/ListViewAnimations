@@ -22,10 +22,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
+import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 import com.nhaarman.listviewanimations.util.AdapterViewUtil;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nhaarman.listviewanimations.util.ListViewWrapperSetter;
@@ -109,6 +111,11 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
 
         mExpandedIds = new ArrayList<>();
     }
+
+    public void setAbsListView(@NonNull final AbsListView absListView) {
+        setListViewWrapper(new AbsListViewWrapper(absListView));
+    }
+
 
     @SuppressWarnings("NullableProblems")
     @Override
@@ -401,7 +408,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
     @Nullable
     private View findViewForPosition(final int position) {
         if (mListViewWrapper == null) {
-            throw new IllegalStateException("Call setAbsListView on this ExpanableListItemAdapter!");
+            throw new IllegalStateException("Call setAbsListView or setListViewWrapper on this ExpanableListItemAdapter!");
         }
 
         View result = null;
