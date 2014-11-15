@@ -460,7 +460,10 @@ public class DragAndDropHandler implements TouchEventHandler {
         valueAnimator.start();
 
         int newPosition = getPositionForId(mMobileItemId);
-        if (mOriginalMobileItemPosition != newPosition && mOnItemMovedListener != null) {
+        if (//mOriginalMobileItemPosition != newPosition
+            // we need to know when a drag and drop action stops
+            // even when the view didn't move
+                mOnItemMovedListener != null) {
             mOnItemMovedListener.onItemMoved(mOriginalMobileItemPosition, newPosition);
         }
 
@@ -705,7 +708,10 @@ public class DragAndDropHandler implements TouchEventHandler {
             }
 
             int switchItemPosition = mobilePosition + 1;
-            if (switchItemPosition > mCurrentLastVisibleItem) {
+            if (switchItemPosition > mCurrentLastVisibleItem ||
+                    switchItemPosition >= mAdapter.getCount() // without this, you get exceptions when drag and droping at the last position of the list
+                    // this might not be the perfect fix
+                    ) {
                 return;
             }
 
