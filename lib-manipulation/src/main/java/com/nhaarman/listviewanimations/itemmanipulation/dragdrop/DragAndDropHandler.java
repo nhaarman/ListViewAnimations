@@ -404,7 +404,7 @@ public class DragAndDropHandler implements TouchEventHandler {
         View switchView = getViewForId(switchId);
 
         final int deltaY = mHoverDrawable.getDeltaY();
-        if (switchView != null && Math.abs(deltaY) > mHoverDrawable.getIntrinsicHeight()) {
+        if (switchView != null && Math.abs(deltaY) > switchView.getHeight()) {
             switchViews(switchView, switchId, mHoverDrawable.getIntrinsicHeight() * (deltaY < 0 ? -1 : 1));
         }
 
