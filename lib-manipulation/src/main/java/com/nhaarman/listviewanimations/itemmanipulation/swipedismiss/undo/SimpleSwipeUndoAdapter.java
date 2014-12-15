@@ -57,7 +57,7 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
     /**
      * Create a new {@code SimpleSwipeUndoAdapterGen}, decorating given {@link android.widget.BaseAdapter}.
      *
-     * @param undoAdapter     the {@link android.widget.BaseAdapter} that is decorated. Must implement
+     * @param adapter     the {@link android.widget.BaseAdapter} that is decorated. Must implement
      *                        {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter}.
      * @param context         the {@link android.content.Context}.
      * @param dismissCallback the {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback} that is notified of dismissed items.
@@ -99,7 +99,7 @@ public class SimpleSwipeUndoAdapter extends SwipeUndoAdapter implements UndoCall
         mUndoAdapter.getUndoClickView(undoView).setOnClickListener(new UndoClickListener(view, position));
 
         boolean isInUndoState = mUndoPositions.contains(position);
-        primaryView.setVisibility(isInUndoState ? View.GONE : View.VISIBLE);
+        primaryView.setVisibility(isInUndoState ? View.INVISIBLE : View.VISIBLE);
         undoView.setVisibility(isInUndoState ? View.VISIBLE : View.GONE);
 
         return view;
