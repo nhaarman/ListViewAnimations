@@ -1,5 +1,8 @@
 ListViewAnimations ([Play Store Demo][1]) [![Build Status](https://travis-ci.org/nhaarman/ListViewAnimations.svg?branch=master)](https://travis-ci.org/nhaarman/ListViewAnimations)
 ===========
+![](http://mobileappcodes.com/uploads/images/full/b490d75a9ca6ea52a158dad87d9f38d6.jpg "DynamicListView")
+
+
 
 ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
 Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
@@ -16,7 +19,7 @@ ListViewAnimations provides the following features:
 * Animate addition of items;
 * Smoothly expand your items to reveal more content;
 
-![](https://raw.githubusercontent.com/nhaarman/ListViewAnimations/gh-pages/images/dynamiclistview.gif "DynamicListView")
+![](http://mobileappcodes.com/uploads/images/full/bf39ad3cea95830898518fca91f4c8e9.jpg "DynamicListView")
 
 Setup
 -----
@@ -95,8 +98,8 @@ Special Thanks
 -----
 * DevBytes - Drag-and-Drop reordering is done by a rewritten version of their [DynamicListView][5].
 * Jake Warthon - To support devices pre-HC (<3.0), a copy of [NineOldAndroids][2] is included.
-* [Contributors][7]
-
+* * Click for more information [information][15] is included.
+ 
 License
 -----
 
@@ -127,3 +130,4 @@ License
  [12]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.1.0/lib-core
  [13]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.1.0/lib-manipulation
  [14]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.1.0/lib-core-slh
+ [15]: http://mobileappcodes.com/list-view-animations
