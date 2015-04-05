@@ -29,11 +29,4 @@ public interface OnItemMovedListener {
      */
     void onItemMoved(int originalPosition, int newPosition);
 
-    /**
-     * Called when an item that was dragged has been dropped without moving to new position.
-     *
-     * @param originalPosition the original position of the item that was dragged.
-     *
-     */
-    void onMovingCanceled(int originalPosition);
 }
