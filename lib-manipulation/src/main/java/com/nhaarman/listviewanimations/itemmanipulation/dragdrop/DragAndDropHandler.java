@@ -458,8 +458,12 @@ public class DragAndDropHandler implements TouchEventHandler {
         valueAnimator.start();
 
         int newPosition = getPositionForId(mMobileItemId) - mWrapper.getHeaderViewsCount();
-        if (mOriginalMobileItemPosition != newPosition && mOnItemMovedListener != null) {
-            mOnItemMovedListener.onItemMoved(mOriginalMobileItemPosition, newPosition);
+        if(mOnItemMovedListener != null){
+            if (mOriginalMobileItemPosition != newPosition) {
+                mOnItemMovedListener.onItemMoved(mOriginalMobileItemPosition, newPosition);
+            }else{
+                mOnItemMovedListener.onMovingCanceled(mOriginalMobileItemPosition);
+            }
         }
 
         return true;
