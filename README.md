@@ -124,6 +124,6 @@ License
  [9]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.1.0/listviewanimations_lib-manipulation_3.1.0.jar
  [10]: https://github.com/nhaarman/ListViewAnimations/releases/download/3.1.0/listviewanimations_lib-core-slh_3.1.0.jar
  [11]: https://github.com/nhaarman/ListViewAnimations/wiki
- [12]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.1.0/lib-core
- [13]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.1.0/lib-manipulation
- [14]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.1.0/lib-core-slh
+ [12]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.0.0/lib-core
+ [13]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.0.0/lib-manipulation
+ [14]: http://nhaarman.github.io/ListViewAnimations/javadoc/3.0.0/lib-core-slh
