@@ -11,6 +11,10 @@ When describing an issue, be precise:
 * What happened? What do you think should have happened?
 * On what Android version does this issue occur?
 
+# Asking Questions
+
+Asking questions should preferably be done on a dedicated forum such as [StackOverflow](http://stackoverflow.com/). This is an issue tracker after all. 
+
 # Contributing code
 
 ## Please do!
