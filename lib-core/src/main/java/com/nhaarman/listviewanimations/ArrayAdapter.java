@@ -24,6 +24,7 @@ import com.nhaarman.listviewanimations.util.Swappable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -134,6 +135,20 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements Swappable, 
         T result = mItems.remove(location);
         notifyDataSetChanged();
         return result;
+    }
+
+    public boolean removeAll(@NonNull Collection<?> c) {
+        boolean modified = false;
+        Iterator<?> e = this.mItems.iterator();
+        while (e.hasNext()) {
+            if (c.contains(e.next())) {
+                e.remove();
+                modified = true;
+            }
+        }
+        if(modified)
+            this.notifyDataSetChanged();
+        return modified;
     }
 
     @Override
