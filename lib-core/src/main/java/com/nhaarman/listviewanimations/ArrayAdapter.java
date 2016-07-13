@@ -137,10 +137,11 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements Swappable, 
     }
 
     @Override
-    public void swapItems(final int positionOne, final int positionTwo) {
+    public boolean swapItems(final int positionOne, final int positionTwo) {
         T firstItem = mItems.set(positionOne, getItem(positionTwo));
         notifyDataSetChanged();
         mItems.set(positionTwo, firstItem);
+        return true;
     }
 
     public void propagateNotifyDataSetChanged(@NonNull final BaseAdapter slavedAdapter) {

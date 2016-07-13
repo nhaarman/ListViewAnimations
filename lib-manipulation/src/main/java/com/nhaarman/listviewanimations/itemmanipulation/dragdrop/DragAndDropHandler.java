@@ -430,11 +430,13 @@ public class DragAndDropHandler implements TouchEventHandler {
         final int switchViewPosition = mWrapper.getPositionForView(switchView);
         int mobileViewPosition = mWrapper.getPositionForView(mMobileView);
 
-        ((Swappable) mAdapter).swapItems(switchViewPosition - mWrapper.getHeaderViewsCount(), mobileViewPosition - mWrapper.getHeaderViewsCount());
-        ((BaseAdapter) mAdapter).notifyDataSetChanged();
+        boolean didSwap = ((Swappable) mAdapter).swapItems(switchViewPosition - mWrapper.getHeaderViewsCount(), mobileViewPosition - mWrapper.getHeaderViewsCount());
+        if (didSwap) {
+            ((BaseAdapter) mAdapter).notifyDataSetChanged();
 
-        mHoverDrawable.shift(switchView.getHeight());
-        mSwitchViewAnimator.animateSwitchView(switchId, translationY);
+            mHoverDrawable.shift(switchView.getHeight());
+            mSwitchViewAnimator.animateSwitchView(switchId, translationY);
+        }
     }
 
     /**

@@ -227,12 +227,14 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
     }
 
     @Override
-    public void swapItems(final int positionOne, final int positionTwo) {
+    public boolean swapItems(final int positionOne, final int positionTwo) {
         if (mDecoratedBaseAdapter instanceof Swappable) {
             ((Swappable) mDecoratedBaseAdapter).swapItems(positionOne, positionTwo);
+            return true;
         } else {
             Log.w("ListViewAnimations", "Warning: swapItems called on an adapter that does not implement Swappable!");
         }
+        return false;
     }
 
     @Override
