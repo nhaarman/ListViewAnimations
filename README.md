@@ -1,4 +1,11 @@
-ListViewAnimations ([Play Store Demo][1]) [![Build Status](https://travis-ci.org/nhaarman/ListViewAnimations.svg?branch=master)](https://travis-ci.org/nhaarman/ListViewAnimations)
+DEPRECATED
+==========
+ListViewAnimations is deprecated in favor of new RecyclerView solutions.
+No new development will be taking place, but the existing versions will still function normally.
+
+Thanks for your support!
+
+ListViewAnimations
 ===========
 
 ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
