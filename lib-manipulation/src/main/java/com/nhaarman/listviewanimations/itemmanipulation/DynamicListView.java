@@ -126,16 +126,8 @@ public class DynamicListView extends ListView {
 
     /**
      * Enables the drag and drop functionality for this {@code DynamicListView}.
-     * <p/>
-     * <b>NOTE: This method can only be called on devices running ICS (14) and above, otherwise an exception will be thrown.</b>
-     *
-     * @throws java.lang.UnsupportedOperationException if the device uses an older API than 14.
      */
     public void enableDragAndDrop() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            throw new UnsupportedOperationException("Drag and drop is only supported API levels 14 and up!");
-        }
-
         mDragAndDropHandler = new DragAndDropHandler(this);
     }
 
@@ -324,7 +316,7 @@ public class DynamicListView extends ListView {
         return super.computeVerticalScrollRange();
     }
 
-    /* Proxy methods below */
+    /* Delegated methods below */
 
     /**
      * Inserts an item at given index. Will show an entrance animation for the new item if the newly added item is visible.
@@ -460,16 +452,16 @@ public class DynamicListView extends ListView {
     }
 
     /**
-     * Flings the {@link android.view.View} corresponding to given position out of sight.
+     * Swipes the {@link android.view.View} corresponding to given position out of sight.
      * Calling this method has the same effect as manually swiping an item off the screen.
      * <p/>
      * This method does nothing if no swipe functionality is enabled.
      *
      * @param position the position of the item in the {@link android.widget.ListAdapter}. Must be visible.
      */
-    public void fling(final int position) {
+    public void swipe(final int position) {
         if (mSwipeTouchListener != null) {
-            mSwipeTouchListener.fling(position);
+            mSwipeTouchListener.swipe(position);
         }
     }
 
@@ -555,7 +547,7 @@ public class DynamicListView extends ListView {
 
             if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
                 if (mSwipeTouchListener instanceof SwipeUndoTouchListener) {
-                    ((SwipeUndoTouchListener) mSwipeTouchListener).dimissPending();
+                    ((SwipeUndoTouchListener) mSwipeTouchListener).dismissPending();
                 }
             }
         }

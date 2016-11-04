@@ -23,11 +23,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +46,9 @@ import com.haarman.listviewanimations.itemmanipulation.ItemManipulationsExamples
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends Activity {
+import java.util.List;
+
+public class MainActivity extends ActionBarActivity {
 
     private static final String URL_GITHUB_IO = "http://nhaarman.github.io/ListViewAnimations?ref=app";
 
@@ -60,7 +65,30 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"), mServiceConn, Context.BIND_AUTO_CREATE);
+        Intent iapIntent = getExplicitIapIntent();
+        if(iapIntent != null) {
+            bindService(iapIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    /* http://stackoverflow.com/a/26318757/675383 */
+    private Intent getExplicitIapIntent() {
+        PackageManager pm = getPackageManager();
+        Intent implicitIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        List<ResolveInfo> resolveInfos = pm.queryIntentServices(implicitIntent, 0);
+
+        // Is somebody else trying to intercept our IAP call?
+        if (resolveInfos == null || resolveInfos.size() != 1) {
+            return null;
+        }
+
+        ResolveInfo serviceInfo = resolveInfos.get(0);
+        String packageName = serviceInfo.serviceInfo.packageName;
+        String className = serviceInfo.serviceInfo.name;
+        ComponentName component = new ComponentName(packageName, className);
+        Intent iapIntent = new Intent();
+        iapIntent.setComponent(component);
+        return iapIntent;
     }
 
     @Override
@@ -125,7 +153,9 @@ public class MainActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindService(mServiceConn);
+        if(mService != null) {
+            unbindService(mServiceConn);
+        }
     }
 
     @Override

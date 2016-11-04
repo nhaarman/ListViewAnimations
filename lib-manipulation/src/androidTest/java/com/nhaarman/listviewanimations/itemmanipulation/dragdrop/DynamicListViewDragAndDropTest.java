@@ -50,7 +50,7 @@ public class DynamicListViewDragAndDropTest extends ActivityInstrumentationTestC
         mDynamicListView.setOnItemMovedListener(mOnItemMovedListener);
 
         getInstrumentation().waitForIdleSync();
-        Thread.sleep(5000);
+        Thread.sleep(200);
     }
 
     public void testOnItemMovedListenerCalled() throws InterruptedException {

@@ -83,23 +83,13 @@ public class SwipeDismissTouchListener extends SwipeTouchListener {
         mDismissAnimationTime = listViewWrapper.getListView().getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
     }
 
-    /**
-     * Dismisses the {@link android.view.View} corresponding to given position.
-     * Calling this method has the same effect as manually swiping an item off the screen.
-     *
-     * @param position the position of the item in the {@link android.widget.ListAdapter}. Must be visible.
-     */
-    public void dismiss(final int position) {
-        fling(position);
-    }
-
     @Override
-    public void fling(final int position) {
+    public void swipe(final int position) {
         int firstVisiblePosition = getListViewWrapper().getFirstVisiblePosition();
         int lastVisiblePosition = getListViewWrapper().getLastVisiblePosition();
 
         if (firstVisiblePosition <= position && position <= lastVisiblePosition) {
-            super.fling(position);
+            super.swipe(position);
         } else if (position > lastVisiblePosition) {
             directDismiss(position);
         } else {

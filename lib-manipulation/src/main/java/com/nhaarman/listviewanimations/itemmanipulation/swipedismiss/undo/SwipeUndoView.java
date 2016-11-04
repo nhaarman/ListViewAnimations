@@ -83,4 +83,12 @@ class SwipeUndoView extends FrameLayout {
     View getUndoView() {
         return mUndoView;
     }
+
+    @Override
+    public void setVisibility(final int visibility) {
+        if(mPrimaryView != null) {
+            mPrimaryView.setVisibility(visibility);
+        }
+        super.setVisibility(visibility);
+    }
 }
