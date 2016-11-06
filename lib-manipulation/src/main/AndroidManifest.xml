@@ -18,7 +18,7 @@
     package="com.nhaarman.listviewanimations.itemmanipulation"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application android:allowBackup="true">
+    <application>
         <activity android:name="com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeTouchListenerTestActivity" />
         <activity android:name="com.nhaarman.listviewanimations.itemmanipulation.dragdrop.DynamicListViewTestActivity" />
     </application>
