@@ -132,12 +132,12 @@ public class SwipeUndoTouchListener extends SwipeDismissTouchListener {
     }
 
     /**
-     * Sets the visibility of the primary {@link android.view.View} to {@link android.view.View#GONE}, and animates the undo {@code View} in to view.
+     * Sets the visibility of the primary {@link android.view.View} to {@link android.view.View#INVISIBLE}, and animates the undo {@code View} in to view.
      *
      * @param view the parent {@code View} which contains both primary and undo {@code View}s.
      */
     private void showUndoView(@NonNull final View view) {
-        mCallback.getPrimaryView(view).setVisibility(View.GONE);
+        mCallback.getPrimaryView(view).setVisibility(View.INVISIBLE);
 
         View undoView = mCallback.getUndoView(view);
         undoView.setVisibility(View.VISIBLE);
