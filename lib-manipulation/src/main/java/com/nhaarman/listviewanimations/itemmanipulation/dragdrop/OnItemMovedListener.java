@@ -28,4 +28,5 @@ public interface OnItemMovedListener {
      * @param newPosition the new position of the item that was dragged.
      */
     void onItemMoved(int originalPosition, int newPosition);
+
 }

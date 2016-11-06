@@ -107,6 +107,14 @@ public class DragAndDropHandler implements TouchEventHandler {
     @Nullable
     private OnItemMovedListener mOnItemMovedListener;
 
+
+
+    /**
+     * The {@link OnItemMovingCanceledListener} that is notified of moved items.
+     */
+    @Nullable
+    private OnItemMovingCanceledListener mOnItemMovingCanceledListener;
+
     /**
      * The raw x coordinate of the down event.
      */
@@ -250,6 +258,13 @@ public class DragAndDropHandler implements TouchEventHandler {
         mOnItemMovedListener = onItemMovedListener;
     }
 
+
+    /**
+     * Sets the {@link com.nhaarman.listviewanimations.itemmanipulation.dragdrop.OnItemMovingCanceledListener} that is notified when user has dropped a dragging item in its original position.
+     */
+    public void setOnItemMovingCanceledListener(@Nullable final OnItemMovingCanceledListener onItemMovingCanceledListener) {
+        mOnItemMovingCanceledListener = onItemMovingCanceledListener;
+    }
     @Override
     public boolean isInteracting() {
         return mMobileItemId != INVALID_ID;
@@ -441,7 +456,12 @@ public class DragAndDropHandler implements TouchEventHandler {
      * Handles the up event.
      * <p/>
      * Animates the hover drawable to its final position, and finalizes our drag properties when the animation has finished.
+     *
      * Will also notify the {@link com.nhaarman.listviewanimations.itemmanipulation.dragdrop.OnItemMovedListener} set if applicable.
+     *
+     * Will also notify the
+     * {@link com.nhaarman.listviewanimations.itemmanipulation.dragdrop.OnItemMovingCanceledListener}
+     * if user drop item in its original position.
      *
      * @return {@code true} if the event was handled, {@code false} otherwise.
      */
@@ -458,9 +478,17 @@ public class DragAndDropHandler implements TouchEventHandler {
         valueAnimator.start();
 
         int newPosition = getPositionForId(mMobileItemId) - mWrapper.getHeaderViewsCount();
-        if (mOriginalMobileItemPosition != newPosition && mOnItemMovedListener != null) {
-            mOnItemMovedListener.onItemMoved(mOriginalMobileItemPosition, newPosition);
-        }
+            if (mOriginalMobileItemPosition != newPosition) {
+
+                if(mOnItemMovedListener != null) {
+                    mOnItemMovedListener.onItemMoved(mOriginalMobileItemPosition, newPosition);
+                }
+            }else{
+                if(mOnItemMovingCanceledListener != null){
+                    mOnItemMovingCanceledListener.onItemMovingCanceled(mOriginalMobileItemPosition);
+                }
+
+            }
 
         return true;
     }
