@@ -29,5 +29,5 @@ public interface Swappable {
      * @param positionOne First adapter position.
      * @param positionTwo Second adapter position.
      */
-    void swapItems(int positionOne, int positionTwo);
+    boolean swapItems(int positionOne, int positionTwo);
 }
