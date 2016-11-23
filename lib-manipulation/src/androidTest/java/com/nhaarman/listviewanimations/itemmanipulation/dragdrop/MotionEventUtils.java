@@ -16,21 +16,19 @@
 
 package com.nhaarman.listviewanimations.itemmanipulation.dragdrop;
 
-import android.annotation.TargetApi;
 import android.app.Instrumentation;
 import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 
-
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@TargetApi(14)
 public class MotionEventUtils {
 
     private MotionEventUtils() {
@@ -42,10 +40,10 @@ public class MotionEventUtils {
         dynamicListView.getLocationOnScreen(location);
 
         View view = dynamicListView.getChildAt(fromPosition);
-        float fromY = (int) (view.getY() + view.getHeight() / 2) + location[1];
+        float fromY = (int) (ViewHelper.getY(view) + view.getHeight() / 2) + location[1];
 
         View toView = dynamicListView.getChildAt(toPosition);
-        float toY = (int) toView.getY() + location[1];
+        float toY = (int) ViewHelper.getY(toView) + location[1];
 
         toY += fromPosition < toPosition ? toView.getHeight() : 0;
 
@@ -59,27 +57,27 @@ public class MotionEventUtils {
         dynamicListView.getLocationOnScreen(location);
 
         View view = dynamicListView.getChildAt(fromPosition);
-        float fromY = (int) (view.getY()) + location[1];
+        float fromY = (int) (ViewHelper.getY(view)) + location[1];
 
         View toView = dynamicListView.getChildAt(dynamicListView.getLastVisiblePosition());
-        float toY = (int) (toView.getY() + toView.getHeight()) + location[1] + 2;
+        float toY = (int) (ViewHelper.getY(toView) + toView.getHeight()) + location[1] + 2;
 
         List<MotionEvent> motionEvents = createMotionEvents(dynamicListView, fromY, toY);
         MotionEvent upEvent = motionEvents.remove(motionEvents.size() - 1);
         dispatchMotionEvents(instrumentation, motionEvents, true);
-        Thread.sleep(10000);
+        Thread.sleep(2000);
         dispatchMotionEvents(instrumentation, Arrays.asList(upEvent), true);
     }
 
     public static List<MotionEvent> createMotionEvents(final AbsListView absListView, final float fromY, final float toY) {
-        int x = (int) (absListView.getX() + absListView.getWidth() / 2);
+        int x = (int) (ViewHelper.getX(absListView) + absListView.getWidth() / 2);
 
         List<MotionEvent> results = new ArrayList<>();
         results.add(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, x, fromY, 0));
 
-        float diff = (toY - fromY) / 25;
+        float diff = (toY - fromY) / 40;
         float y = fromY;
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 40; i++) {
             y += diff;
             results.add(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_MOVE, x, y, 0));
         }
@@ -103,12 +101,12 @@ public class MotionEventUtils {
                     }
                 }
             } while (i < 3 && !success);
-            Thread.sleep(100);
+            Thread.sleep(30);
         }
 
         if (wait) {
-        /* We need to wait for the fling animation to complete */
-            Thread.sleep(1500);
+        /* We need to wait for the swipe animation to complete */
+            Thread.sleep(750);
         }
     }
 

@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginBottom="4dp"
-            android:foreground="?android:attr/selectableItemBackground"
+            android:foreground="?attr/selectableItemBackground"
             android:onClick="onGoogleCardsExampleClicked">
 
             <ImageView
@@ -75,7 +75,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
-                android:foreground="?android:attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackground"
                 android:onClick="onItemManipulationClicked">
 
                 <ImageView
@@ -108,7 +108,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="2dp"
                 android:layout_weight="1"
-                android:foreground="?android:attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackground"
                 android:onClick="onAppearanceClicked">
 
                 <ImageView
@@ -150,7 +150,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
-                android:foreground="?android:attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackground"
                 android:onClick="onGridViewExampleClicked">
 
                 <ImageView
@@ -186,7 +186,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_weight="1"
                 android:background="@color/purple_transparent"
-                android:foreground="?android:attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackground"
                 android:onClick="onSLHClicked">
 
                 <ImageView

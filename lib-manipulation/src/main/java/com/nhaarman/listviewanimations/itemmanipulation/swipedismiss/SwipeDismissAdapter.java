@@ -79,7 +79,7 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
      */
     public void setDismissableManager(@Nullable final DismissableManager dismissableManager) {
         if (mDismissTouchListener == null) {
-            throw new IllegalStateException("You must call setAbsListView() first.");
+            throw new IllegalStateException("You must call setAbsListView() or setListViewWrapper() first.");
         }
         mDismissTouchListener.setDismissableManager(dismissableManager);
     }

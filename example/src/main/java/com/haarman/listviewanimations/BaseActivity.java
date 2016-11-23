@@ -17,13 +17,13 @@
 package com.haarman.listviewanimations;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends ActionBarActivity {
 
     @SuppressLint("InlinedApi")
     @Override
@@ -33,8 +33,8 @@ public class BaseActivity extends Activity {
         }
         super.onCreate(savedInstanceState);
 
-        assert getActionBar() != null;
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
