@@ -25,20 +25,26 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.SectionIndexer;
 
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListItemView;
 import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 import com.nhaarman.listviewanimations.util.Insertable;
+import com.nhaarman.listviewanimations.util.Removable;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
-import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import se.emilsjolander.stickylistheaders.WrapperView;
 
 /**
  * An adapter for inserting rows into the {@link android.widget.ListView} with an animation. The root {@link android.widget.BaseAdapter} should implement {@link Insertable},
@@ -50,7 +56,7 @@ import java.util.Collection;
  * - Call {@link AnimateAdditionAdapter#insert(int, Object)} to animate the addition of an item.
  * <p/>
  * Extend this class and override {@link AnimateAdditionAdapter#getAdditionalAnimators(android.view.View,
- * android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
+ * int, android.view.ViewGroup)} to provide extra {@link com.nineoldandroids.animation.Animator}s.
  */
 public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
 
@@ -61,11 +67,30 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
     private static final long DEFAULT_INSERTION_ANIMATION_MS = 300;
 
     private long mInsertionAnimationDurationMs = DEFAULT_INSERTION_ANIMATION_MS;
-
-    private static final String ALPHA = "alpha";
+    private long mRemovalAnimationDurationMs = DEFAULT_INSERTION_ANIMATION_MS;
 
     @NonNull
     private final Insertable<T> mInsertable;
+
+    @NonNull
+    private final Removable<T> mRemovable;
+
+    /**
+     * The {@link android.view.View}s that have been removed.
+     */
+    @NonNull
+    private final Collection<View> mRemovedViews = new LinkedList<>();
+
+    /**
+     * The removed positions.
+     */
+    @NonNull
+    private final List<Integer> mRemovedPositions = new LinkedList<>();
+
+    /**
+     * The number of active remove animations.
+     */
+    private int mActiveRemoveCount;
 
     @NonNull
     private final InsertQueue<T> mInsertQueue;
@@ -90,6 +115,7 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         }
 
         mInsertable = (Insertable<T>) rootAdapter;
+        mRemovable = (Removable<T>) rootAdapter;
         mInsertQueue = new InsertQueue<>(mInsertable);
     }
 
@@ -266,6 +292,52 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         ((ListView) getListViewWrapper().getListView()).setSelectionFromTop(firstVisiblePosition + numInsertedAbove, childTop);
     }
 
+    public void removeItem(final int position) {
+        removeItem(position, 1);
+    }
+
+    /**
+     * Remove items, starting at given index. Will show an leaving animation for the item.
+     * Will also call {@link Removable#remove(int)} of the root {@link android.widget.BaseAdapter}.
+     *
+     * @param position first item to remove.
+     * @param count number of items to remove
+     */
+    public void removeItem(final int position, final int count) {
+        int headerViewsCount = getListViewWrapper().getHeaderViewsCount();
+        int  posRemovable;
+        int firstVisiblePosition = getListViewWrapper().getFirstVisiblePosition();
+        int lastVisiblePosition = getListViewWrapper().getLastVisiblePosition();
+
+        List<Animator> allAnimators = new ArrayList<Animator>();
+        for (int i = position; i < position + count; i++) {
+            if (mRemovedPositions.contains(i)) {
+                //already removing
+                continue;
+            }
+            if (i < firstVisiblePosition || i > lastVisiblePosition) {
+                mRemovedPositions.add(i);
+            } else {
+
+                View view = getListViewWrapper().getChildAt(i - firstVisiblePosition + headerViewsCount);
+                mRemovedPositions.add(i);
+                if (view == null) {
+                    continue;
+                }
+                allAnimators.add(animatorSetForViewRemoval(i, view, (ViewGroup) view.getParent()));
+            }
+        }
+        if (allAnimators.size() > 0) {
+            AnimatorSet allAnimatorSet = new AnimatorSet();
+            allAnimatorSet.playTogether(allAnimators);
+            allAnimatorSet.setDuration(mRemovalAnimationDurationMs);
+            allAnimatorSet.start();
+        }
+        else {
+            finalizeRemove();
+        }
+    }
+
     /**
      * @return true if the children completely fill up the AbsListView.
      */
@@ -293,13 +365,18 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.AT_MOST);
             int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED);
             view.measure(widthMeasureSpec, heightMeasureSpec);
-
-            int originalHeight = view.getMeasuredHeight();
+            
+            View viewToAnimate = view;
+            if (viewToAnimate instanceof WrapperView) {
+                //StickyListHeadersView WrapperView
+                viewToAnimate =  ((WrapperView)view).getItem();
+            }
+            int originalHeight = viewToAnimate.getMeasuredHeight();
 
             ValueAnimator heightAnimator = ValueAnimator.ofInt(1, originalHeight);
-            heightAnimator.addUpdateListener(new HeightUpdater(view));
+            heightAnimator.addUpdateListener(new HeightUpdater(viewToAnimate));
 
-            Animator[] customAnimators = getAdditionalAnimators(view, parent);
+            Animator[] customAnimators = getAdditionalAnimators(viewToAnimate, position, parent);
             Animator[] animators = new Animator[customAnimators.length + 1];
             animators[0] = heightAnimator;
             System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
@@ -307,32 +384,79 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.playTogether(animators);
 
-            ViewHelper.setAlpha(view, 0);
-            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, ALPHA, 0, 1);
-
-            AnimatorSet allAnimatorsSet = new AnimatorSet();
-            allAnimatorsSet.playSequentially(animatorSet, alphaAnimator);
-
-            allAnimatorsSet.setDuration(mInsertionAnimationDurationMs);
-            allAnimatorsSet.addListener(new ExpandAnimationListener(position));
-            allAnimatorsSet.start();
+            animatorSet.setDuration(mInsertionAnimationDurationMs);
+            animatorSet.addListener(new ExpandAnimationListener(position, viewToAnimate));
+            animatorSet.start();
+        } else if (mRemovedPositions.contains(position)) {
+            animatorSetForViewRemoval(position, view, parent).start();
         }
 
         return view;
+    }
+    
+    private AnimatorSet animatorSetForViewRemoval(final int position, View view, final ViewGroup parent) {
+        if (view instanceof WrapperView) {
+            //StickyListHeadersView WrapperView
+            final BaseAdapter rootAdapter = getRootAdapter();
+            final WrapperView wrapperView =  ((WrapperView)view);
+            boolean animateOnlyItem = true;
+            if (rootAdapter instanceof SectionIndexer) {
+                SectionIndexer sectionIndexer = (SectionIndexer) rootAdapter;
+                if (wrapperView.hasHeader() && 
+                        
+                    ( position+1 >= rootAdapter.getCount() || 
+                            (sectionIndexer.getSectionForPosition(position) != sectionIndexer.getSectionForPosition(position+1)))) {
+                    animateOnlyItem = false; 
+                }
+            }
+            if (animateOnlyItem) {
+                view = wrapperView.getItem();
+            }
+        }
+        
+        
+        int originalHeight = view.getMeasuredHeight();
+
+        if (view instanceof DynamicListItemView) {
+            //this is to get a nice "closing" animation by making sure the contentView
+            //height remain fix during the animation
+            View containerView = ((DynamicListItemView) view).getContainerView();
+            ViewGroup.LayoutParams params = containerView.getLayoutParams();
+            params.height = originalHeight;
+            containerView.setLayoutParams(params);
+        }
+
+        ValueAnimator heightAnimator = ValueAnimator.ofInt(originalHeight, 0);
+        heightAnimator.addUpdateListener(new HeightUpdater(view));
+
+        ValueAnimator[] customAnimators = getAdditionalAnimators(view, position, parent);
+        ValueAnimator[] animators = new ValueAnimator[customAnimators.length + 1];
+        animators[0] = heightAnimator;
+        System.arraycopy(customAnimators, 0, animators, 1, customAnimators.length);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(animators);
+        animatorSet.setDuration(mInsertionAnimationDurationMs);
+        animatorSet.addListener(new ShrinkToRemoveAnimationListener(position));
+        
+        mRemovedViews.add(view);
+        mActiveRemoveCount++;
+        return animatorSet;
     }
 
     /**
      * Override this method to provide additional animators on top of the default height and alpha animation.
      *
      * @param view   The {@link android.view.View} that will get animated.
+     * @param position position in adapter
      * @param parent The parent that this view will eventually be attached to.
      *
      * @return a non-null array of Animators.
      */
     @SuppressWarnings({"MethodMayBeStatic", "UnusedParameters"})
     @NonNull
-    protected Animator[] getAdditionalAnimators(@NonNull final View view, @NonNull final ViewGroup parent) {
-        return new Animator[]{};
+    protected ValueAnimator[] getAdditionalAnimators(@NonNull final View view, final int position, @NonNull final ViewGroup parent) {
+        return new ValueAnimator[]{};
     }
 
     /**
@@ -349,9 +473,74 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
         @Override
         public void onAnimationUpdate(final ValueAnimator animation) {
             ViewGroup.LayoutParams layoutParams = mView.getLayoutParams();
+            if (layoutParams == null) return;
             layoutParams.height = (Integer) animation.getAnimatedValue();
             mView.setLayoutParams(layoutParams);
         }
+    }
+
+    /**
+     *
+     * @param removedPositions the positions that have been dismissed.
+     */
+    protected void handleRemoval(@NonNull final List<Integer> removedPositions) {
+        if (!removedPositions.isEmpty()) {
+            Collections.sort(removedPositions, Collections.reverseOrder());
+
+            int[] removePositions = new int[removedPositions.size()];
+            int i = 0;
+            for (Integer removedPosition : removedPositions) {
+                if (removedPosition < mRemovable.getCount()) {
+                    removePositions[i] = removedPosition;
+                    mRemovable.remove(removedPosition);
+                    i++;
+                }
+            }
+        }
+    }
+
+    /**
+     * If necessary, remove removed object from the adapter,
+     * and restores the {@link android.view.View} presentations.
+     */
+    protected void finalizeRemove() {
+        if (mActiveRemoveCount == 0) {
+            restoreViewPresentations(mRemovedViews);
+            handleRemoval(mRemovedPositions);
+
+            mRemovedViews.clear();
+            mRemovedPositions.clear();
+        }
+    }
+
+    /**
+     * Restores the presentation of given {@link android.view.View}s by calling {@link #restoreViewPresentation(android.view.View)}.
+     */
+    protected void restoreViewPresentations(@NonNull final Iterable<View> views) {
+        for (View view : views) {
+            restoreViewPresentation(view);
+        }
+    }
+
+    protected void restoreViewPresentation(@NonNull final View view) {
+        if (view instanceof DynamicListItemView) {
+            View containerView = ((DynamicListItemView) view).getContainerView();
+            ViewGroup.LayoutParams params = containerView.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            containerView.setLayoutParams(params);
+        }
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        view.setLayoutParams(layoutParams);
+    }
+
+    private void handleRemoveItem(final int position) {
+        mRemovable.remove(position);
+    }
+
+    protected void directRemove(final int position) {
+        mRemovedPositions.add(position);
+        finalizeRemove();
     }
 
     /**
@@ -359,15 +548,34 @@ public class AnimateAdditionAdapter<T> extends BaseAdapterDecorator {
      */
     private class ExpandAnimationListener extends AnimatorListenerAdapter {
 
-        private final int mPosition;
+        protected final int mPosition;
+        protected final View mView;
 
-        ExpandAnimationListener(final int position) {
+        ExpandAnimationListener(final int position, final View view) {
+            mPosition = position;
+            mView = view;
+        }
+
+        @Override
+        public void onAnimationEnd(final Animator animation) {
+            //restore view height to wrap_content
+            restoreViewPresentation(mView);
+            mInsertQueue.removeActiveIndex(mPosition);
+        }
+    }
+
+    private class ShrinkToRemoveAnimationListener extends AnimatorListenerAdapter {
+
+        protected final int mPosition;
+        ShrinkToRemoveAnimationListener(final int position) {
             mPosition = position;
         }
 
         @Override
         public void onAnimationEnd(final Animator animation) {
-            mInsertQueue.removeActiveIndex(mPosition);
+            super.onAnimationEnd(animation);
+            mActiveRemoveCount--;
+            finalizeRemove();
         }
     }
 }

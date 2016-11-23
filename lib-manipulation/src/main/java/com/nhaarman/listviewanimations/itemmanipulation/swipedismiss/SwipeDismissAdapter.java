@@ -21,7 +21,9 @@ import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.nhaarman.listviewanimations.BaseAdapterDecorator;
+import com.nhaarman.listviewanimations.ListViewAnimationsBaseAdapter;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
+import com.nhaarman.listviewanimations.util.OnNotifyDataSetChanged;
 
 /**
  * Adds an option to swipe items in an {@link android.widget.AbsListView} away.
@@ -59,8 +61,8 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     @Override
     public void setListViewWrapper(@NonNull final ListViewWrapper listViewWrapper) {
         super.setListViewWrapper(listViewWrapper);
-        if (getDecoratedBaseAdapter() instanceof ArrayAdapter<?>) {
-            ((ArrayAdapter<?>) getDecoratedBaseAdapter()).propagateNotifyDataSetChanged(this);
+        if (getDecoratedBaseAdapter() instanceof ListViewAnimationsBaseAdapter) {
+            ((ListViewAnimationsBaseAdapter) getDecoratedBaseAdapter()).setOnNotifyDataSetChanged(this);
         }
         mDismissTouchListener = new SwipeDismissTouchListener(listViewWrapper, mOnDismissCallback);
         if (mParentIsHorizontalScrollContainer) {
@@ -140,10 +142,10 @@ public class SwipeDismissAdapter extends BaseAdapterDecorator {
     }
 
     @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
+    public void onNotifyDataSetChanged() {
+        super.onNotifyDataSetChanged();
         if (mDismissTouchListener != null) {
-            mDismissTouchListener.notifyDataSetChanged();
+            mDismissTouchListener.onNotifyDataSetChanged();
         }
     }
 }

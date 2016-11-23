@@ -17,9 +17,9 @@ package com.nhaarman.listviewanimations;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.widget.BaseAdapter;
 
 import com.nhaarman.listviewanimations.util.Insertable;
+import com.nhaarman.listviewanimations.util.Removable;
 import com.nhaarman.listviewanimations.util.Swappable;
 
 import java.util.ArrayList;
@@ -33,12 +33,11 @@ import java.util.List;
  * and {@link com.nhaarman.listviewanimations.util.Insertable} for inserting objects.
  */
 @SuppressWarnings("UnusedDeclaration")
-public abstract class ArrayAdapter<T> extends BaseAdapter implements Swappable, Insertable<T> {
+public abstract class ArrayAdapter<T> extends ListViewAnimationsBaseAdapter implements Swappable, Insertable<T>, Removable<T> {
 
     @NonNull
     private final List<T> mItems;
 
-    private BaseAdapter mDataSetChangedSlavedAdapter;
 
     /**
      * Creates a new ArrayAdapter with an empty {@code List}.
@@ -143,15 +142,4 @@ public abstract class ArrayAdapter<T> extends BaseAdapter implements Swappable, 
         mItems.set(positionTwo, firstItem);
     }
 
-    public void propagateNotifyDataSetChanged(@NonNull final BaseAdapter slavedAdapter) {
-        mDataSetChangedSlavedAdapter = slavedAdapter;
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        if (mDataSetChangedSlavedAdapter != null) {
-            mDataSetChangedSlavedAdapter.notifyDataSetChanged();
-        }
-    }
 }

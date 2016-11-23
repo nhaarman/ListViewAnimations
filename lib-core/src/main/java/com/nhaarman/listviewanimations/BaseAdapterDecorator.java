@@ -15,6 +15,7 @@
  */
 package com.nhaarman.listviewanimations;
 
+import se.emilsjolander.stickylistheaders.AdapterWrapper;
 import android.database.DataSetObserver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +30,8 @@ import com.nhaarman.listviewanimations.util.AbsListViewWrapper;
 import com.nhaarman.listviewanimations.util.Insertable;
 import com.nhaarman.listviewanimations.util.ListViewWrapper;
 import com.nhaarman.listviewanimations.util.ListViewWrapperSetter;
+import com.nhaarman.listviewanimations.util.OnNotifyDataSetChanged;
+import com.nhaarman.listviewanimations.util.Removable;
 import com.nhaarman.listviewanimations.util.Swappable;
 
 /**
@@ -36,13 +39,19 @@ import com.nhaarman.listviewanimations.util.Swappable;
  * <p/>
  * Classes extending this class can override methods and provide extra functionality before or after calling the super method.
  */
-public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, Insertable, ListViewWrapperSetter {
+public abstract class BaseAdapterDecorator extends BaseAdapter implements SectionIndexer, Swappable, Insertable, Removable, OnNotifyDataSetChanged, ListViewWrapperSetter {
 
     /**
      * The {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
      */
     @NonNull
     private final BaseAdapter mDecoratedBaseAdapter;
+
+
+    /**
+     * The parent adapter {@link android.widget.BaseAdapter} if any.
+     */
+    private OnNotifyDataSetChanged mOnNotifyDataSetChanged;
 
     /**
      * The {@link com.nhaarman.listviewanimations.util.ListViewWrapper} containing the ListView this {@code BaseAdapterDecorator} will be bound to.
@@ -56,6 +65,11 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
      * @param baseAdapter the {@code} BaseAdapter to decorate.
      */
     protected BaseAdapterDecorator(@NonNull final BaseAdapter baseAdapter) {
+        if (baseAdapter instanceof ListViewAnimationsBaseAdapter) {
+            ((ListViewAnimationsBaseAdapter) baseAdapter).setOnNotifyDataSetChanged(this);
+        } else if (baseAdapter instanceof BaseAdapterDecorator) {
+            ((BaseAdapterDecorator) baseAdapter).setOnNotifyDataSetChanged(this);
+        }
         mDecoratedBaseAdapter = baseAdapter;
     }
 
@@ -67,12 +81,27 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
         return mDecoratedBaseAdapter;
     }
 
+    public void setOnNotifyDataSetChanged(final OnNotifyDataSetChanged onNotifyDataSetChanged) {
+        mOnNotifyDataSetChanged = onNotifyDataSetChanged;
+    }
+
+    public void onNotifyDataSetChanged() {
+        //propagate
+        if (mOnNotifyDataSetChanged != null) {
+            mOnNotifyDataSetChanged.onNotifyDataSetChanged();
+        }
+    }
+
     /**
      * Returns the root {@link android.widget.BaseAdapter} this {@code BaseAdapterDecorator} decorates.
      */
     @NonNull
     protected BaseAdapter getRootAdapter() {
+        
         BaseAdapter adapter = mDecoratedBaseAdapter;
+        if (adapter instanceof AdapterWrapper && ((AdapterWrapper)adapter).getDelegate() instanceof BaseAdapter) {
+            adapter = (BaseAdapter) ((AdapterWrapper)adapter).getDelegate();
+        }
         while (adapter instanceof BaseAdapterDecorator) {
             adapter = ((BaseAdapterDecorator) adapter).getDecoratedBaseAdapter();
         }
@@ -242,6 +271,17 @@ public abstract class BaseAdapterDecorator extends BaseAdapter implements Sectio
             ((Insertable) mDecoratedBaseAdapter).add(index, item);
         } else {
             Log.w("ListViewAnimations", "Warning: add called on an adapter that does not implement Insertable!");
+        }
+    }
+
+    @Override
+    public Object remove(final int index) {
+        if (mDecoratedBaseAdapter instanceof Removable) {
+            //noinspection rawtypes
+            return ((Removable) mDecoratedBaseAdapter).remove(index);
+        } else {
+            Log.w("ListViewAnimations", "Warning: remove called on an adapter that does not implement Removable!");
+            return null;
         }
     }
 }

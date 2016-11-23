@@ -19,7 +19,6 @@ package com.nhaarman.listviewanimations.itemmanipulation;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -44,10 +43,13 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeTouchL
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SwipeUndoAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SwipeUndoTouchListener;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipemenu.SwipeMenuTouchListener;
 import com.nhaarman.listviewanimations.util.Insertable;
 
 import java.util.Collection;
 import java.util.HashSet;
+
+import se.emilsjolander.stickylistheaders.AdapterWrapper;
 
 /**
  * A {@link android.widget.ListView} implementation which provides the following functionality:
@@ -70,6 +72,8 @@ public class DynamicListView extends ListView {
     @Nullable
     private DragAndDropHandler mDragAndDropHandler;
 
+    private boolean dragAndDropEnabled = false;
+
     /**
      * The {@link com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeTouchListener}
      * that will handle swipe movement functionality, if set.
@@ -77,6 +81,14 @@ public class DynamicListView extends ListView {
     @Nullable
     private SwipeTouchListener mSwipeTouchListener;
 
+    /**
+     * The {@link com.nhaarman.listviewanimations.itemmanipulation.swipemenu.SwipeMenuTouchListener}
+     * that will handle menu functionality, if set.
+     */
+    @Nullable
+    private SwipeMenuTouchListener mSwipeMenuTouchListener;
+
+    /**
     /**
      * The {@link com.nhaarman.listviewanimations.itemmanipulation.TouchEventHandler}
      * that is currently actively consuming {@code MotionEvent}s.
@@ -127,23 +139,25 @@ public class DynamicListView extends ListView {
     /**
      * Enables the drag and drop functionality for this {@code DynamicListView}.
      * <p/>
-     * <b>NOTE: This method can only be called on devices running ICS (14) and above, otherwise an exception will be thrown.</b>
-     *
-     * @throws java.lang.UnsupportedOperationException if the device uses an older API than 14.
      */
     public void enableDragAndDrop() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            throw new UnsupportedOperationException("Drag and drop is only supported API levels 14 and up!");
+        dragAndDropEnabled = true;
+        if(mSwipeMenuTouchListener != null) {
+            mSwipeMenuTouchListener.closeMenus();
         }
-
-        mDragAndDropHandler = new DragAndDropHandler(this);
     }
 
     /**
      * Disables the drag and drop functionality.
      */
     public void disableDragAndDrop() {
-        mDragAndDropHandler = null;
+        dragAndDropEnabled = false;
+
+    }
+
+
+    public boolean isDragAndDropEnabled() {
+        return dragAndDropEnabled;
     }
 
     /**
@@ -163,6 +177,9 @@ public class DynamicListView extends ListView {
      *                     that is used.
      */
     public void enableSwipeUndo(@NonNull final UndoCallback undoCallback) {
+        if(mSwipeMenuTouchListener != null) {
+            mSwipeMenuTouchListener.closeMenus();
+        }
         mSwipeTouchListener = new SwipeUndoTouchListener(new DynamicListViewWrapper(this), undoCallback);
     }
 
@@ -177,7 +194,9 @@ public class DynamicListView extends ListView {
         if (mSwipeUndoAdapter == null) {
             throw new IllegalStateException("enableSimpleSwipeUndo requires a SwipeUndoAdapter to be set as an adapter");
         }
-
+        if(mSwipeMenuTouchListener != null) {
+            mSwipeMenuTouchListener.closeMenus();
+        }
         mSwipeTouchListener = new SwipeUndoTouchListener(new DynamicListViewWrapper(this), mSwipeUndoAdapter.getUndoCallback());
         mSwipeUndoAdapter.setSwipeUndoTouchListener((SwipeUndoTouchListener) mSwipeTouchListener);
     }
@@ -188,7 +207,12 @@ public class DynamicListView extends ListView {
      */
     public void disableSwipeToDismiss() {
         mSwipeTouchListener = null;
+        if (mSwipeUndoAdapter != null) {
+            mSwipeUndoAdapter.setSwipeUndoTouchListener(null);
+        }
     }
+
+    public boolean isSwipeToDismissEnabled() {return mSwipeTouchListener != null;};
 
     /**
      * Sets the {@link ListAdapter} for this {@code DynamicListView}.
@@ -203,12 +227,16 @@ public class DynamicListView extends ListView {
      *                                            and the adapter does not implement {@link com.nhaarman.listviewanimations.util.Swappable}.
      */
     @Override
-    public void setAdapter(final ListAdapter adapter) {
+    public void setAdapter(ListAdapter adapter) {
+        
         ListAdapter wrappedAdapter = adapter;
         mSwipeUndoAdapter = null;
-
+        
+        if (adapter instanceof AdapterWrapper) {
+            adapter = ((AdapterWrapper)adapter).getDelegate();
+        }
         if (adapter instanceof BaseAdapter) {
-            BaseAdapter rootAdapter = (BaseAdapter) wrappedAdapter;
+            BaseAdapter rootAdapter = (BaseAdapter) adapter;
             while (rootAdapter instanceof BaseAdapterDecorator) {
                 if (rootAdapter instanceof SwipeUndoAdapter) {
                     mSwipeUndoAdapter = (SwipeUndoAdapter) rootAdapter;
@@ -217,7 +245,7 @@ public class DynamicListView extends ListView {
             }
 
             if (rootAdapter instanceof Insertable) {
-                mAnimateAdditionAdapter = new AnimateAdditionAdapter((BaseAdapter) wrappedAdapter);
+                mAnimateAdditionAdapter = additionRemovalAnimatedAdapter((BaseAdapter) wrappedAdapter);
                 mAnimateAdditionAdapter.setListView(this);
                 wrappedAdapter = mAnimateAdditionAdapter;
             }
@@ -230,6 +258,14 @@ public class DynamicListView extends ListView {
         }
     }
 
+    public AnimateAdditionAdapter<Object> additionRemovalAnimatedAdapter(final BaseAdapter wrappedAdapter) {
+        return new AnimateAdditionAdapter( wrappedAdapter);
+    }
+    
+    public boolean isInteracting() {
+        return mCurrentHandlingTouchEventHandler != null && mCurrentHandlingTouchEventHandler.isInteracting();
+    }
+
     @Override
     public boolean dispatchTouchEvent(@NonNull final MotionEvent ev) {
         if (mCurrentHandlingTouchEventHandler == null) {
@@ -239,7 +275,7 @@ public class DynamicListView extends ListView {
             /* We don't support dragging items when there are items in the undo state. */
             if (!(mSwipeTouchListener instanceof SwipeUndoTouchListener) || !((SwipeUndoTouchListener) mSwipeTouchListener).hasPendingItems()) {
                 /* Offer the event to the DragAndDropHandler */
-                if (mDragAndDropHandler != null) {
+                if (dragAndDropEnabled && mDragAndDropHandler != null) {
                     mDragAndDropHandler.onTouchEvent(ev);
                     firstTimeInteracting = mDragAndDropHandler.isInteracting();
                     if (firstTimeInteracting) {
@@ -250,12 +286,23 @@ public class DynamicListView extends ListView {
             }
 
             /* If not handled, offer the event to the SwipeDismissTouchListener */
-            if (mCurrentHandlingTouchEventHandler == null && mSwipeTouchListener != null) {
-                mSwipeTouchListener.onTouchEvent(ev);
-                firstTimeInteracting = mSwipeTouchListener.isInteracting();
-                if (firstTimeInteracting) {
-                    mCurrentHandlingTouchEventHandler = mSwipeTouchListener;
-                    sendCancelEvent(mDragAndDropHandler, ev);
+            if (mCurrentHandlingTouchEventHandler == null) {
+                if (mSwipeTouchListener != null) {
+                    mSwipeTouchListener.onTouchEvent(ev);
+                    firstTimeInteracting = mSwipeTouchListener.isInteracting();
+                    if (firstTimeInteracting) {
+                        mCurrentHandlingTouchEventHandler = mSwipeTouchListener;
+                        sendCancelEvent(mDragAndDropHandler, ev);
+                    }
+                }
+                else if(!dragAndDropEnabled && mSwipeMenuTouchListener != null) {
+
+                    mSwipeMenuTouchListener.onTouchEvent(ev);
+                    firstTimeInteracting = mSwipeMenuTouchListener.isInteracting();
+                    if (firstTimeInteracting) {
+//                        mSwipeMenuTouchListener.closeMenus();
+                        mCurrentHandlingTouchEventHandler = mSwipeMenuTouchListener;
+                    }
                 }
             }
 
@@ -389,15 +436,45 @@ public class DynamicListView extends ListView {
     }
 
     /**
+     * Remove an item at given index. Will show an leave animation for the item if item is visible.
+     * Will also call {@link com.nhaarman.listviewanimations.util.Removable#remove(int)} of the root {@link android.widget.BaseAdapter}.
+     *
+     * @param position the index of the item to remove
+     *
+     * @throws java.lang.IllegalStateException if the adapter that was set does not implement {@link com.nhaarman.listviewanimations.util.Insertable}.
+     */
+    public <T> void remove(@NonNull final int position) {
+        remove(position, 1);
+    }
+
+    /**
+     * Remove items starting at given index. Will show an leave animation for the item if item is visible.
+     * Will also call {@link com.nhaarman.listviewanimations.util.Removable#remove(int)} of the root {@link android.widget.BaseAdapter}.
+     *
+     * @param position the index of the item to remove
+     * @param count number of items to remove
+     *
+     * @throws java.lang.IllegalStateException if the adapter that was set does not implement {@link com.nhaarman.listviewanimations.util.Insertable}.
+     */
+    public <T> void remove(@NonNull final int position, final int count) {
+        if (mAnimateAdditionAdapter == null) {
+            throw new IllegalStateException("Adapter should implement Removable!");
+        }
+        ((AnimateAdditionAdapter<T>) mAnimateAdditionAdapter).removeItem(position, count);
+    }
+
+
+    /**
      * Sets the {@link com.nhaarman.listviewanimations.itemmanipulation.dragdrop.DraggableManager} to be used
      * for determining whether an item should be dragged when the user issues a down {@code MotionEvent}.
      * <p/>
      * This method does nothing if the drag and drop functionality is not enabled.
      */
     public void setDraggableManager(@NonNull final DraggableManager draggableManager) {
-        if (mDragAndDropHandler != null) {
-            mDragAndDropHandler.setDraggableManager(draggableManager);
+        if (mDragAndDropHandler == null) {
+            mDragAndDropHandler = new DragAndDropHandler(this);
         }
+        mDragAndDropHandler.setDraggableManager(draggableManager);
     }
 
     /**
@@ -410,6 +487,10 @@ public class DynamicListView extends ListView {
         if (mDragAndDropHandler != null) {
             mDragAndDropHandler.setOnItemMovedListener(onItemMovedListener);
         }
+    }
+
+    public void setSwipeMenuTouchListener(@Nullable final SwipeMenuTouchListener swipeMenuTouchListener) {
+        mSwipeMenuTouchListener = swipeMenuTouchListener;
     }
 
     /**
@@ -571,4 +652,5 @@ public class DynamicListView extends ListView {
             mOnScrollListeners.add(onScrollListener);
         }
     }
+
 }

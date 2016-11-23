@@ -221,7 +221,7 @@ public abstract class SwipeTouchListener implements View.OnTouchListener, TouchE
     /**
      * Notifies this {@code SwipeTouchListener} that the adapter contents have changed.
      */
-    public void notifyDataSetChanged() {
+    public void onNotifyDataSetChanged() {
         if (mListViewWrapper.getAdapter() != null) {
             mVirtualListCount = mListViewWrapper.getCount() - mListViewWrapper.getHeaderViewsCount();
         }

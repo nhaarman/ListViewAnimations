@@ -14,11 +14,16 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:ignore="UseCompoundDrawables">
+    android:layout_height="wrap_content">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UseCompoundDrawables">
 
     <com.nhaarman.listviewanimations.itemmanipulation.dragdrop.GripView
         android:id="@+id/list_row_draganddrop_touchview"
@@ -40,4 +45,5 @@
         android:textColor="?android:attr/textColorSecondary"
         android:textSize="20sp"
         tools:ignore="UnusedAttribute" />
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>
