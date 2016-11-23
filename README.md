@@ -7,6 +7,7 @@ Thanks for your support!
 
 ListViewAnimations
 ===========
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/nhaarman/ListViewAnimations?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ListViewAnimations is an Open Source Android library that allows developers to easily create ListViews with animations.
 Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
